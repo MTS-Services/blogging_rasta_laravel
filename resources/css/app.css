@@ -1,5 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 @import 'tailwindcss';
 @import '../../vendor/livewire/flux/dist/flux.css';
+@plugin 'daisyui';
+
+/* ================= CUSTOM CSS START ================= */
+@import './table.css';
+@import './select.css';
+@import './select2.css';
+/* ================= CUSTOM CSS END =================*/
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -8,33 +16,240 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ================= GOOGLE FONTS ================= */
+
+
+
+:root {
+    /* Base Colors */
+    --color-black: #000000;
+    --color-white: #ffffff;
+    --color-bg-base: #1B0C33;
+
+    --color-status-paused: #CB2C30;
+
+    /* Primary: Purple */
+    --color-primary-50: #f5f3ff;
+    --color-primary-100: #ede9fe;
+    --color-primary-200: #ddd6fe;
+    --color-primary-300: #c4b5fd;
+    --color-primary-400: #a78bfa;
+    --color-primary-500: #853EFF;
+    --color-primary-600: #7c3aed;
+    --color-primary-700: #6d28d9;
+    --color-primary-800: #351966;
+    --color-primary-900: #1B0C33;
+    --color-primary-950: #0D061A;
+
+    /* Secondary: Pink */
+    --color-secondary-50: #fdf2f8;
+    --color-secondary-100: #fce7f3;
+    --color-secondary-200: #fbcfe8;
+    --color-secondary-300: #f9a8d4;
+    --color-secondary-400: #f472b6;
+    --color-secondary-500: #FF2E91;
+    --color-secondary-600: #db2777;
+    --color-secondary-700: #be185d;
+    --color-secondary-800: #9d174d;
+    --color-secondary-900: #831843;
+    --color-secondary-950: #50072c;
+
+
+
+    --color-text-new-light: #1b1b1b;
+    --color-text-new-dark: #f1f1f1;
+
+    /* Accent Colors */
+    --color-accent-light: var(--color-primary-600);
+    --color-accent-content-light: var(--color-primary-700);
+    --color-accent-foreground-light: var(--color-secondary-600);
+
+    --color-accent-dark: var(--color-primary-400);
+    --color-accent-content-dark: var(--color-primary-500);
+    --color-accent-foreground-dark: var(--color-secondary-500);
+
+    /* Text Colors */
+    --color-text-primary-light: oklch(21.779% 0.00002 271.152);
+    --color-text-secondary-light: oklch(26.862% 0.00003 271.152);
+    --color-text-muted-light: oklch(32.109% 0.00004 271.152);
+
+    --color-text-primary-dark: oklch(92.494% 0.00011 271.152);
+    --color-text-secondary-dark: oklch(88.531% 0.0001 271.152);
+    --color-text-muted-dark: oklch(84.522% 0.0001 271.152);
+
+    /* Backgrounds */
+    /* Backgrounds */
+    /* --color-bg-primary-light: oklch(96.115% 0.00011 271.152);
+    --color-bg-secondary-light: oklch(92.494% 0.00011 271.152);
+    --color-bg-tertiary-light: oklch(88.531% 0.0001 271.152); */
+
+    /* --color-bg-primary-dark: oklch(15.907% 0.00002 271.152);
+    --color-bg-secondary-dark: oklch(21.779% 0.00002 271.152);
+    --color-bg-tertiary-dark: oklch(26.862% 0.00003 271.152);  */
+
+    --color-bg-primary-light: oklch(96.115% 0.00011 271.152);
+    --color-bg-secondary-light: oklch(92.494% 0.00011 271.152);
+    --color-bg-tertiary-light: oklch(88.531% 0.0001 271.152);
+
+    --color-bg-primary-dark: var(--color-primary-900);
+    --color-bg-secondary-dark: var(--color-primary-950);
+    --color-bg-tertiary-dark: var(--color-secondary-500);
+
+
+}
+
+
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    /* ======================================================
+    	 	 	 	 	 	 # Colors
+    ======================================================== */
+    --color-zinc-50: var(--color-primary-50);
+    --color-zinc-100: var(--color-primary-100);
+    --color-zinc-200: var(--color-primary-200);
+    --color-zinc-300: var(--color-primary-300);
+    --color-zinc-400: var(--color-primary-400);
+    --color-zinc-500: var(--color-primary-500);
+    --color-zinc-600: var(--color-primary-600);
+    --color-zinc-700: var(--color-primary-700);
+    --color-zinc-800: var(--color-primary-800);
+    --color-zinc-900: var(--color-primary-900);
+    --color-zinc-950: var(--color-primary-950);
 
-    --color-zinc-50: #fafafa;
-    --color-zinc-100: #f5f5f5;
-    --color-zinc-200: #e5e5e5;
-    --color-zinc-300: #d4d4d4;
-    --color-zinc-400: #a3a3a3;
-    --color-zinc-500: #737373;
-    --color-zinc-600: #525252;
-    --color-zinc-700: #404040;
-    --color-zinc-800: #262626;
-    --color-zinc-900: #171717;
-    --color-zinc-950: #0a0a0a;
+    /* --- Secondary: Pink Colors Added Here --- */
+    --color-pink-50: var(--color-secondary-50);
+    --color-pink-100: var(--color-secondary-100);
+    --color-pink-200: var(--color-secondary-200);
+    --color-pink-300: var(--color-secondary-300);
+    --color-pink-400: var(--color-secondary-400);
+    --color-pink-500: var(--color-secondary-500);
+    --color-pink-600: var(--color-secondary-600);
+    --color-pink-700: var(--color-secondary-700);
+    --color-pink-800: var(--color-secondary-800);
+    --color-pink-900: var(--color-secondary-900);
+    --color-pink-950: var(--color-secondary-950);
+    /* ------------------------------------------ */
 
-    --color-accent: var(--color-neutral-800);
-    --color-accent-content: var(--color-neutral-800);
-    --color-accent-foreground: var(--color-white);
+    --color-status-paused: var(--color-status-paused);
+    --color-status-completed: var(--color-secondary-500);
+
+    --color-text-new: var(--color-text-new-light);
+    --color-text-white: var(--color-white-light);
+
+    --color-accent: var(--color-accent-light);
+    --color-accent-content: var(--color-accent-content-light);
+    --color-accent-foreground: var(--color-accent-foreground-light);
+
+    --color-text-primary: var(--color-text-primary-light);
+    --color-text-secondary: var(--color-text-secondary-light);
+    --color-text-muted: var(--color-text-muted-light);
+
+    --color-bg-hover: var(--color-zinc-100);
+
+    --color-text-btn-primary: #f8f8f8;
+    --color-text-btn-secondary: var(--color-primary-500);
+    --color-text-btn-tertiary: var(--color-secondary-500);
+
+    /* --color-bg-primary: var(--color-primary-900);
+    --color-bg-secondary: var(--color-primary-950);
+    --color-bg-tertiary: var(--color-secondary-500); */
+
+    --color-bg-primary: var(--color-bg-primary-light);
+    --color-bg-secondary: var(--color-bg-secondary-light);
+    --color-bg-tertiary: var(--color-bg-tertiary-light);
+
+    --hover-bg-theme: var(--color-zinc-200);
+    --color-bg-black: var(--color-black);
+    --color-bg-white: var(--color-white);
+
+    /* ======================================================
+    	 	 	 	 	 	 # Shadows
+    ======================================================== */
+
+    --shadow-glass-card: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+        rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+
+    /* ======================================================
+    	 	 	 	 	 	 # Animations
+    ======================================================== */
+    --animate-gradientBG: gradientBG 15s ease infinite;
+
+    @keyframes gradientBG {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+
+
+    /* ======================================================
+    	 	 	 	 	 	 # font family
+    ======================================================== */
+    --font-open-sans: "Open Sans", sans-serif;
+    --font-lato: "Lato", sans-serif;
+
+
+    /* ======================================================
+    	 	 	 	 	 	 # font size
+    ======================================================== */
+
+    --text-40px: 2.5rem;
+    --text-20px: 1.25rem;
+
+    /* ======================================================
+    	 	 	 	 	 	 # Breakpoints
+    ======================================================== */
+    --breakpoint-xxs: 480px;
+    --breakpoint-xs: 576px;
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1024px;
+    --breakpoint-2xl: 1280px;
+    --breakpoint-3xl: 1536px;
+    --breakpoint-4xl: 1920px;
+    --breakpoint-5xl: 2560px;
+
+
+
+
 }
 
 @layer theme {
+    :root {
+        --color-accent: var(--color-accent-light) !important;
+        --color-accent-content: var(--color-accent-content-light) !important;
+        --color-accent-foreground: var(--color-accent-foreground-light) !important;
+    }
+
     .dark {
-        --color-accent: var(--color-white);
-        --color-accent-content: var(--color-white);
-        --color-accent-foreground: var(--color-neutral-800);
+        --color-accent: var(--color-accent-dark);
+
+        --color-accent-content: var(--color-accent-content-dark);
+        --color-accent-foreground: var(--color-accent-foreground-dark);
+
+        --color-text-primary: var(--color-text-primary-dark);
+        --color-text-secondary: var(--color-text-secondary-dark);
+        --color-text-muted: var(--color-text-muted-dark);
+
+        --color-bg-primary: var(--color-bg-primary-dark);
+        --color-bg-secondary: var(--color-bg-secondary-dark);
+        --color-bg-tertiary: var(--color-bg-tertiary-dark);
+
+        --color-bg-hover: var(--color-zinc-800);
+
+        --color-text-new: var(--color-text-new-dark);
+        --color-text-white: var(--color-white-dark);
     }
 }
+
 
 @layer base {
 
@@ -44,15 +259,161 @@
     ::backdrop,
     ::file-selector-button {
         border-color: var(--color-gray-200, currentColor);
+        scroll-behavior: smooth;
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-accent) var(--color-accent-content) !important;
+        @apply transition-colors duration-200 ease-in-out text-text-primary;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-open-sans;
+    }
+
+    p {
+        @apply font-lato;
+    }
+
+    .dark * {
+        border-color: var(--color-gray-700, currentColor);
+        scrollbar-color: var(--color-accent-dark) var(--color-accent-content-dark) !important;
+    }
+
+    /* For Webkit-based browsers (Chrome, Edge, Safari) */
+    *::-webkit-scrollbar {
+        height: 8px;
+        width: 8px;
+        background-color: var(--color-accent-content) !important;
+    }
+
+    .dark *::-webkit-scrollbar {
+        background-color: var(--color-accent-content-dark) !important;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background-color: var(--color-accent) !important;
+        border-radius: 9999px !important;
+        box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.75);
+    }
+
+    .dark *::-webkit-scrollbar-thumb {
+        background-color: var(--color-accent-dark) !important;
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+        background-color: var(--color-accent) !important;
+    }
+
+    .dark *::-webkit-scrollbar-thumb:hover {
+        background-color: var(--color-accent-dark) !important;
+    }
+
+    *::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+
+
+    /* Custom scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.5);
+    }
+
+    .glass-card {
+        @apply backdrop-blur-md bg-linear-to-tr from-zinc-50/50 via-bg-primary/50 to-zinc-50/50 shadow-glass-card;
+    }
+
+
+    .sidebar-glass-card {
+        @apply bg-linear-to-tr from-zinc-50/50 via-bg-primary/50 to-zinc-50/50 shadow-glass-card;
+    }
+
+    .dark .glass-card,
+    .dark .sidebar-glass-card {
+        @apply from-zinc-50/5 via-bg-primary to-zinc-50/5;
+    }
+
+    .animated-bg {
+        @apply bg-size-[400%_400%] animate-gradientBG bg-linear-to-br from-bg-tertiary via-bg-primary to-bg-secondary;
+    }
+
+    .dark .animated-bg {
+        @apply bg-size-[400%_400%] animate-gradientBG bg-linear-to-br from-bg-secondary via-zinc-950 to-bg-secondary;
+    }
+
+    .navbar_style {
+        @apply relative text-white dark:text-zinc-500 font-medium transition-colors duration-300 hover:text-purple-400 after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-0.5 after:bg-purple-500 after:w-0 hover:after:w-full after:transition-all after:duration-300 [&.active]:text-purple-400 active:after:w-full;
+    }
+
+    .navbar_indicator {
+        @apply absolute inset-x-0 bottom-0 h-5 bg-purple-500/80 blur-md rounded-full opacity-0 group-hover:opacity-100 [&.active]:opacity-100 transition-opacity duration-300 ease-in-out;
+    }
+
+    /* === Global Swiper Pagination Style === */
+    .swiper-pagination-bullet {
+        @apply w-4! h-2.5! bg-bg-secondary! rounded-md! transition-all duration-300 ease-in-out;
+    }
+
+    .swiper-pagination-bullet-active {
+        @apply bg-purple-700! opacity-100;
+    }
+    .mobile-nav-item{
+        @apply text-text-primary hover:bg-bg-secondary block px-3 py-2 rounded-md text-base font-medium;
     }
 }
+
+@utility container {
+    margin-inline: auto;
+    padding-inline: var(--container-padding-inline, 1rem);
+    width: var(--container-width, 100%);
+
+    @variant 2xl {
+        max-width: 1240px;
+    }
+}
+
+@utility container-wide {
+    margin-inline: auto;
+    padding-inline: var(--container-padding-inline, 1rem);
+    width: 100%;
+    max-width: 1680px;
+}
+
+@utility container-fluid {
+    margin-inline: auto;
+    padding-inline: var(--container-padding-inline, 1rem);
+    width: 100%;
+    max-width: none;
+}
+
+button {
+    @apply cursor-pointer transition-all duration-200 ease-in-out hover:scale-[1.01];
+}
+
 
 [data-flux-field]:not(ui-radio, ui-checkbox) {
     @apply grid gap-2;
 }
 
 [data-flux-label] {
-    @apply  !mb-0 !leading-tight;
+    @apply !mb-0 !leading-tight;
 }
 
 input:focus[data-flux-control],
@@ -60,7 +421,3 @@ textarea:focus[data-flux-control],
 select:focus[data-flux-control] {
     @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
 }
-
-/* \[:where(&)\]:size-4 {
-    @apply size-4;
-} */

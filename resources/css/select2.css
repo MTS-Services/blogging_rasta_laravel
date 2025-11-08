@@ -1,0 +1,357 @@
+@import 'tailwindcss';
+/* ================= SELECT2 COMPLETE STYLING - FROM SCRATCH ================= */
+
+/* Reset Select2 default styles */
+.select2-container * {
+    box-sizing: border-box;
+}
+
+/* ====================
+   MAIN SELECTION BOX
+   ==================== */
+.select2-container--default .select2-selection--single {
+    height: auto !important;
+    border-radius: 0.5rem !important;
+
+    padding: 0.5rem 2.5rem 0.5rem 0.75rem !important;
+    border: 1px solid rgb(209, 213, 219) !important;
+    border-top-color: rgb(209, 213, 219) !important;
+    border-right-color: rgb(209, 213, 219) !important;
+    border-bottom-color: rgb(209, 213, 219) !important;
+    border-left-color: rgb(209, 213, 219) !important;
+    background-color: white !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center !important;
+    background-repeat: no-repeat !important;
+    background-size: 1.5em 1.5em !important;
+    appearance: none !important;
+    @apply w-full !border-zinc-300 focus:!border-accent focus:!outline-none focus:!ring-1 focus:!ring-accent !shadow-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:focus:border-accent dark:focus:ring-accent !transition-all !duration-300 !ease-in-out;
+}
+
+/* Dark mode selection box */
+.dark .select2-container--default .select2-selection--single {
+    background-color: rgb(24, 24, 27) !important;
+    border-color: rgb(63, 63, 70) !important;
+}
+
+/* Selection box FOCUSED state */
+.select2-container--default.select2-container--open .select2-selection--single,
+.select2-container--default.select2-container--focus .select2-selection--single {
+    border-color: #bb8106 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 1px #bb8106 !important;
+    /* ring-1 ring-accent */
+}
+
+/* Selection box HOVER state */
+/* .select2-container--default .select2-selection--single:hover {
+    border-color: rgb(161, 161, 170) !important;
+}
+
+.dark .select2-container--default .select2-selection--single:hover {
+    border-color: rgb(82, 82, 91) !important;
+} */
+
+/* Selected text rendering area */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: rgb(41, 37, 36) !important;
+    display: block !important;
+    line-height: 24px !important;
+    padding: 0 !important;
+    height: auto !important;
+    position: relative !important;
+}
+
+.dark .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: rgb(212, 212, 216) !important;
+    line-height: 24px !important;
+
+}
+
+/* Placeholder text */
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: rgb(161, 161, 170) !important;
+    font-size: 14px !important;
+}
+
+.dark .select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: rgb(113, 113, 122) !important;
+    font-size: 14px !important;
+}
+
+/* Arrow container */
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    display: none !important;
+}
+
+/* ====================
+   DROPDOWN PANEL
+   ==================== */
+.select2-container--default .select2-dropdown {
+    background-color: white !important;
+    border: 1px solid rgb(212, 212, 216) !important;
+    border-radius: 0.5rem !important;
+    margin-top: 0.25rem !important;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    left: 0 !important;
+    right: 0 !important;
+}
+
+.dark .select2-container--default .select2-dropdown {
+    background-color: rgb(39, 39, 42) !important;
+    border-color: rgb(63, 63, 70) !important;
+}
+
+/* ====================
+   SEARCH BOX IN DROPDOWN
+   ==================== */
+.select2-container--default .select2-search--dropdown {
+    display: block !important;
+    padding: 0.75rem !important;
+    background-color: white !important;
+    border-bottom: 1px solid rgb(228, 228, 231) !important;
+}
+
+.dark .select2-container--default .select2-search--dropdown {
+    background-color: rgb(39, 39, 42) !important;
+    border-bottom-color: rgb(63, 63, 70) !important;
+}
+
+/* THE ACTUAL SEARCH INPUT FIELD - THIS IS CRITICAL */
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    width: 100% !important;
+    height: 2.5rem !important;
+    border: 1px solid rgb(212, 212, 216) !important;
+    border-radius: 0.375rem !important;
+    background-color: white !important;
+    color: rgb(41, 37, 36) !important;
+    font-size: 0.875rem !important;
+    line-height: 1.25rem !important;
+    outline: none !important;
+    transition: all 150ms ease-in-out !important;
+    box-sizing: border-box !important;
+    display: block !important;
+}
+
+.dark .select2-container--default .select2-search--dropdown .select2-search__field {
+    background-color: rgb(24, 24, 27) !important;
+    border-color: rgb(63, 63, 70) !important;
+    color: rgb(212, 212, 216) !important;
+}
+
+/* Search input FOCUS state */
+.select2-container--default .select2-search--dropdown .select2-search__field:focus {
+    border-color: #bb8106 !important;
+    box-shadow: 0 0 0 1px #bb8106 !important;
+    /* ring-1 ring-accent */
+}
+
+/* ====================
+   RESULTS/OPTIONS LIST
+   ==================== */
+.select2-container--default .select2-results {
+    display: block !important;
+    background-color: white !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+.dark .select2-container--default .select2-results {
+    background-color: rgb(39, 39, 42) !important;
+}
+
+.select2-container--default .select2-results__options {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0.5rem !important;
+    max-height: 300px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+/* Individual option item */
+.select2-container--default .select2-results__option {
+    padding: 0.5rem 0.75rem !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    color: rgb(63, 63, 70) !important;
+    border-radius: 0.375rem !important;
+    margin-bottom: 0.125rem !important;
+    transition: all 100ms ease-in-out !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+}
+
+.dark .select2-container--default .select2-results__option {
+    color: rgb(212, 212, 216) !important;
+}
+
+/* Option HOVER state */
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: rgba(187, 129, 6, 0.1) !important;
+    /* accent/10 */
+    color: #7A4630 !important;
+    /* accent-content */
+}
+
+.dark .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: rgba(183, 147, 71, 0.1) !important;
+    color: #B79347 !important;
+}
+
+/* Option SELECTED state */
+.select2-container--default .select2-results__option[aria-selected="true"] {
+    background-color: rgba(187, 129, 6, 0.2) !important;
+    /* accent/20 */
+    color: #7A4630 !important;
+    /* accent-content */
+    font-weight: 500 !important;
+}
+
+.dark .select2-container--default .select2-results__option[aria-selected="true"] {
+    background-color: rgba(183, 147, 71, 0.2) !important;
+    color: #B79347 !important;
+}
+
+/* No results message */
+.select2-container--default .select2-results__option--no-results {
+    color: rgb(113, 113, 122) !important;
+    padding: 0.75rem !important;
+    text-align: center !important;
+}
+
+.dark .select2-container--default .select2-results__option--no-results {
+    color: rgb(161, 161, 170) !important;
+}
+
+/* ====================
+   DISABLED STATE
+   ==================== */
+.select2-container--default.select2-container--disabled .select2-selection--single {
+    background-color: rgb(244, 244, 245) !important;
+    /* zinc-100 */
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+}
+
+.dark .select2-container--default.select2-container--disabled .select2-selection--single {
+    background-color: rgb(39, 39, 42) !important;
+}
+
+/* ====================
+   MULTIPLE SELECT (TAGS)
+   ==================== */
+.select2-container--default .select2-selection--multiple {
+    height: auto !important;
+    border-radius: 0.5rem !important;
+
+    padding: 0.5rem 2.5rem 0.5rem 0.75rem !important;
+    border: 1px solid rgb(209, 213, 219) !important;
+    border-top-color: rgb(209, 213, 219) !important;
+    border-right-color: rgb(209, 213, 219) !important;
+    border-bottom-color: rgb(209, 213, 219) !important;
+    border-left-color: rgb(209, 213, 219) !important;
+    background-color: white !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center !important;
+    background-repeat: no-repeat !important;
+    background-size: 1.5em 1.5em !important;
+    appearance: none !important;
+    @apply w-full !border-zinc-300 focus:!border-accent focus:!outline-none focus:!ring-1 focus:!ring-accent !shadow-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:focus:border-accent dark:focus:ring-accent !transition-all !duration-300 !ease-in-out;
+}
+
+.dark .select2-container--default .select2-selection--multiple {
+    background-color: rgb(24, 24, 27) !important;
+    border-color: rgb(63, 63, 70) !important;
+}
+
+/* Multiple select focus */
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: #bb8106 !important;
+    box-shadow: 0 0 0 1px #bb8106 !important;
+}
+
+/* Tag/Choice items */
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: rgba(187, 129, 6, 0.1) !important;
+    border: 1px solid rgba(187, 129, 6, 0.3) !important;
+    color: #7A4630 !important;
+    border-radius: 0.375rem !important;
+    padding: 0.25rem 0.5rem !important;
+    margin: 0.25rem 0.25rem 0.25rem 0 !important;
+    display: flex !important;
+    flex-direction: row-reverse !important;
+    gap: 8px !important;
+    align-items: center !important;
+    white-space: nowrap !important;
+    justify-content: space-between !important;
+}
+
+/* Tag remove button */
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    /* color: #7A4630 !important;
+    margin-right: 0.25rem !important;
+    cursor: pointer !important; */
+    @apply !text-zinc-400 hover:!text-zinc-600 cursor-pointer dark:!text-zinc-700 dark:hover:!text-zinc-300;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+    color: #bb8106 !important;
+}
+
+/* Search field inside multiple select */
+.select2-container--default .select2-selection--multiple .select2-search--inline .select2-search__field {
+    @apply !text-zinc-700 dark:!text-zinc-300 !m-0 !p-0;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    @apply !p-0 !m-0 !flex !flex-wrap !items-center !gap-1;
+}
+
+
+/* ====================
+   CLEAR BUTTON
+   ==================== */
+.select2-container--default .select2-selection__clear {
+    @apply !absolute right-2 top-1/2 -translate-y-1/2 transform text-zinc-400 hover:text-zinc-600 cursor-pointer text-lg font-bold dark:text-zinc-700 dark:hover:text-zinc-300;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__clear {
+    @apply !hidden;
+}
+
+/* ====================
+   Z-INDEX & POSITIONING
+   ==================== */
+.select2-container {
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.select2-dropdown {
+}
+
+/* Prevent body overflow when dropdown is open */
+body.select2-dropdown-open {
+    overflow-x: hidden !important;
+}
+
+/* Ensure container doesn't cause overflow */
+.select2-container--open {
+    overflow: visible !important;
+}
+
+/* ====================
+   LOADING STATE
+   ==================== */
+.select2-container--default .select2-results__option--loading {
+    color: rgb(113, 113, 122) !important;
+}
+
+.dark .select2-container--default .select2-results__option--loading {
+    color: rgb(161, 161, 170) !important;
+}

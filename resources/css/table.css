@@ -1,0 +1,295 @@
+/* Enhanced Table Styles for Better UX */
+
+/* Smooth transitions for expandable sections */
+[x-cloak] {
+    display: none !important;
+}
+
+/* Custom scrollbar for table */
+.overflow-x-auto::-webkit-scrollbar {
+    height: 8px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+    background: rgb(243, 244, 246);
+    border-radius: 4px;
+}
+
+.dark .overflow-x-auto::-webkit-scrollbar-track {
+    background: rgb(31, 41, 55);
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+    background: rgb(209, 213, 219);
+    border-radius: 4px;
+}
+
+.dark .overflow-x-auto::-webkit-scrollbar-thumb {
+    background: rgb(75, 85, 99);
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+    background: rgb(156, 163, 175);
+}
+
+.dark .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+    background: rgb(107, 114, 128);
+}
+
+/* Mobile card animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mobile-card-enter {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Loading state styles */
+.table-loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.table-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(99, 102, 241, 0.3);
+    border-top-color: rgb(99, 102, 241);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Checkbox styling */
+.checkbox {
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.checkbox:hover {
+    transform: scale(1.1);
+}
+
+.checkbox:checked {
+    background-color: rgb(99, 102, 241);
+    border-color: rgb(99, 102, 241);
+}
+
+/* Select dropdown styling */
+.select {
+    padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+    border: 1px solid rgb(209, 213, 219);
+    border-radius: 0.5rem;
+    background-color: white;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    appearance: none;
+    transition: all 0.15s ease-in-out;
+}
+
+.dark .select {
+    background-color: rgb(31, 41, 55);
+    border-color: rgb(55, 65, 81);
+    color: rgb(243, 244, 246);
+}
+
+.select:focus {
+    outline: none;
+    border-color: rgb(99, 102, 241);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Table row hover effect */
+tbody tr {
+    transition: background-color 0.15s ease-in-out;
+}
+
+/* Status badge animations */
+@keyframes pulse-subtle {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.status-badge-pulse {
+    animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* Action button hover effect */
+.action-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.action-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+}
+
+.action-button:hover::before {
+    width: 100px;
+    height: 100px;
+}
+
+/* Responsive breakpoint indicators (for development only) */
+.breakpoint-indicator {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 10px;
+    border-radius: 4px;
+    z-index: 9999;
+    display: none;
+}
+
+/* Show breakpoint in development */
+@media (max-width: 640px) {
+    .breakpoint-indicator::after {
+        content: 'XS';
+    }
+}
+
+@media (min-width: 640px) and (max-width: 768px) {
+    .breakpoint-indicator::after {
+        content: 'SM';
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .breakpoint-indicator::after {
+        content: 'MD';
+    }
+}
+
+@media (min-width: 1024px) {
+    .breakpoint-indicator::after {
+        content: 'LG';
+    }
+}
+
+/* Print styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    .glass-card {
+        box-shadow: none;
+        border: 1px solid #e5e7eb;
+    }
+
+    tbody tr {
+        page-break-inside: avoid;
+    }
+}
+
+/* Accessibility improvements */
+.focus-visible:focus {
+    outline: 2px solid rgb(99, 102, 241);
+    outline-offset: 2px;
+}
+
+/* Skeleton loading states */
+.skeleton {
+    background: linear-gradient(90deg,
+            rgb(243, 244, 246) 25%,
+            rgb(229, 231, 235) 50%,
+            rgb(243, 244, 246) 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s ease-in-out infinite;
+}
+
+.dark .skeleton {
+    background: linear-gradient(90deg,
+            rgb(31, 41, 55) 25%,
+            rgb(55, 65, 81) 50%,
+            rgb(31, 41, 55) 75%);
+    background-size: 200% 100%;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Tooltip styles */
+[data-tooltip] {
+    position: relative;
+}
+
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    font-size: 12px;
+    white-space: nowrap;
+    border-radius: 4px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+[data-tooltip]:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-8px);
+}
+
+/* Mobile-first responsive utilities */
+@media (max-width: 1023px) {
+    .mobile-card-shadow {
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    }
+
+    .mobile-card-shadow:hover {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+}

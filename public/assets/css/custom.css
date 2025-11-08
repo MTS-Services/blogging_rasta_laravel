@@ -1,0 +1,86 @@
+ /* --color-primary-50: #fcf8ef;
+    --color-primary-100: #f8f0db;
+    --color-primary-200: #f0e0b3;
+    --color-primary-300: #e5cd84;
+    --color-primary-400: #dcb65a;
+    --color-primary-500: #bb8106;
+    --color-primary-600: #977534;
+    --color-primary-700: #755927;
+    --color-primary-800: #55401c;
+    --color-primary-900: #382a12;
+    --color-primary-950: #1e1608; */
+ :root {
+     --color-primary-50: #fefcf7;
+     --color-primary-100: #f8f0db;
+     --color-primary-200: #f0e0b3;
+     --color-primary-300: #e5cd84;
+     --color-primary-400: #dcb65a;
+     --color-primary-500: #bb8106;
+     --color-primary-600: #977534;
+     --color-primary-700: #755927;
+     --color-primary-800: #55401c;
+     --color-primary-900: #382a12;
+     --color-primary-950: #1e1608;
+ }
+
+ /* Swiper Slider css */
+ .swiper-button-next,
+ .swiper-button-prev {
+     width: 30px !important;
+     height: 30px !important;
+     padding: 4px !important;
+     border-radius: 50% !important;
+     background-color: rgba(0, 0, 0, 0.5);
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     color: white !important;
+ }
+
+ .swiper-button-next {
+     right: 10px !important;
+ }
+
+ .swiper-button-prev {
+     left: 10px !important;
+ }
+
+ .swiper-navigation-icon {
+     font-size: 20px !important;
+     stroke: var(--color-primary-400) !important;
+     height: 15px;
+     width: 15px;
+     padding: 0 !important;
+ }
+
+ .swiper-pagination-fraction,
+ .swiper-pagination-custom,
+ .swiper-horizontal>.swiper-pagination-bullets,
+ .swiper-pagination-bullets.swiper-pagination-horizontal {
+     bottom: 0 !important;
+ }
+
+ .swiper-pagination-bullet {
+     background: var(--color-primary-200) !important;
+     width: 12px !important;
+     height: 12px !important;
+ }
+
+ .swiper-pagination-bullet-active {
+     background: var(--color-primary-400) !important;
+ }
+
+ .swiper-android .swiper-slide,
+ .swiper-ios .swiper-slide,
+ .swiper-wrapper {
+     padding-bottom: 32px !important;
+ }
+
+
+
+
+ /* @media screen and (max-width: 640px) {
+    .swiper {
+        max-width: 100% !important;
+    }
+ } */

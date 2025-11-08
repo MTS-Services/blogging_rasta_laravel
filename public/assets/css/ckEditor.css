@@ -1,0 +1,540 @@
+:root {
+    /* Full Opacity HEX Colors */
+    --clr-purple-light: #b5a0ff;        /* 181, 160, 255 */
+    --clr-purple-mid: #9b87e8;          /* 155, 135, 232 */
+    --clr-purple-dark: #8b78d8;         /* 139, 120, 216 */
+    --clr-purple-lightest: #c5b4ff;     /* 197, 180, 255 */
+    --clr-white: #ffffff;               /* 255, 255, 255 */
+
+    /* RGB Components for Transparent/Variable Colors (Base Colors) */
+    --rgb-purple-light: 181, 160, 255;
+    --rgb-purple-mid: 155, 135, 232;
+    --rgb-purple-dark: 139, 120, 216;
+    --rgb-purple-lightest: 197, 180, 255;
+    --rgb-white: 255, 255, 255;
+    --rgb-purple-deep: 107, 87, 180;    /* For border/bg opacity: rgba(107, 87, 180, ...) */
+    --rgb-header-start: 204, 194, 245;  /* For header gradient: rgba(204, 194, 245, ...) */
+    --rgb-header-end: 174, 161, 235;    /* For header gradient: rgba(174, 161, 235, ...) */
+    --rgb-border-glow: 206, 193, 247;   /* For header border glow: rgba(206, 193, 247, ...) */
+    --rgb-statusbar-start: 170, 155, 228; /* For statusbar gradient: rgba(170, 155, 228, ...) */
+    --rgb-statusbar-end: 166, 153, 221;   /* For statusbar gradient: rgba(166, 153, 221, ...) */
+    --rgb-btn-bg-base: 158, 136, 240;   /* For button background: rgba(158, 136, 240, 0.25) */
+}
+
+/* Main Container */
+.tox-tinymce {
+    border: 2px solid transparent !important;
+    border-radius: 20px !important;
+    /* Uses HEX variables for the main gradient */
+    background: linear-gradient(145deg, var(--clr-purple-light) 0%, var(--clr-purple-mid) 50%, var(--clr-purple-dark) 100%) !important;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+/* Ambient glow effect */
+.tox-tinymce::before {
+    content: '' !important;
+    position: absolute !important;
+    top: -50% !important;
+    left: -50% !important;
+    width: 200% !important;
+    height: 200% !important;
+    /* Uses RGB variable for white with exact opacity */
+    background: radial-gradient(circle, rgba(var(--rgb-white), 0.1) 0%, transparent 70%) !important;
+    pointer-events: none !important;
+    animation: pulse 4s ease-in-out infinite !important;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+.tox-tinymce:focus-within {
+    /* Uses HEX variable for border-color */
+    border-color: var(--clr-purple-lightest) !important;
+    /* Uses RGB variables for shadows with exact opacities */
+    box-shadow: 0 0 0 4px rgba(var(--rgb-purple-lightest), 0.3),
+        0 24px 48px -8px rgba(var(--rgb-purple-dark), 0.6),
+        0 12px 24px -4px rgba(var(--rgb-purple-mid), 0.5),
+        inset 0 1px 0 0 rgba(var(--rgb-white), 0.2) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Editor Header */
+.tox-editor-header {
+    /* Uses RGB variables for header gradient with exact opacities */
+    background: linear-gradient(180deg,
+            rgba(var(--rgb-header-start), 0.95) 0%,
+            rgba(var(--rgb-header-end), 0.98) 100%) !important;
+    /* Uses RGB variable for border-bottom with exact opacity */
+    border-bottom: 1px solid rgba(var(--rgb-purple-deep), 0.4) !important;
+    padding: 16px 20px !important;
+    border-radius: 14px 14px 0 0 !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    position: relative !important;
+}
+
+.tox-editor-header::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 1px !important;
+    /* Uses RGB variable for border glow with exact opacity */
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(var(--rgb-border-glow), 0.6) 50%,
+            transparent 100%) !important;
+    opacity: 0.5 !important;
+}
+
+/* Toolbar */
+.tox-toolbar-overlord {
+    background: transparent !important;
+}
+
+.tox-toolbar__primary {
+    background: transparent !important;
+    padding: 8px !important;
+    border-radius: 12px !important;
+    gap: 6px !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+
+.tox-toolbar__group {
+    padding: 0 16px !important;
+    /* Uses RGB variable for separator with exact opacity */
+    border-right: 1px solid rgba(var(--rgb-purple-deep), 0.3) !important;
+    display: flex !important;
+    gap: 4px !important;
+    align-items: center !important;
+}
+
+.tox-toolbar__group:last-child {
+    border-right: none !important;
+}
+
+/* Buttons */
+.tox-tbtn {
+    /* Uses RGB variable for background with exact opacity */
+    background: rgba(var(--rgb-btn-bg-base), 0.25) !important;
+    /* Uses RGB variable for border with exact opacity */
+    border: 1px solid rgba(var(--rgb-purple-deep), 0.3) !important;
+    border-radius: 10px !important;
+    margin: 0 !important;
+    padding: 10px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    /* Uses RGB variable for color with exact opacity */
+    color: rgba(var(--rgb-white), 0.95) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.tox-tbtn::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    border-radius: 10px !important;
+    /* Uses RGB variables for gradient with exact opacities */
+    background: linear-gradient(135deg, rgba(var(--rgb-purple-lightest), 0.4), rgba(var(--rgb-purple-light), 0.4)) !important;
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+}
+
+.tox-tbtn::after {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    border-radius: 10px !important;
+    /* Uses RGB variable for white with exact opacity */
+    background: radial-gradient(circle at center,
+            rgba(var(--rgb-white), 0.2) 0%,
+            transparent 70%) !important;
+    opacity: 0 !important;
+    transform: scale(0) !important;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.tox-tbtn svg {
+    position: relative !important;
+    z-index: 1 !important;
+    fill: currentColor !important;
+    transition: all 0.3s ease !important;
+}
+
+.tox-tbtn:hover {
+    /* Uses RGB variable for background with exact opacity */
+    background: rgba(var(--rgb-purple-deep), 0.4) !important;
+    /* Uses RGB variable for border-color with exact opacity */
+    border-color: rgba(var(--rgb-purple-lightest), 0.6) !important;
+    /* Uses RGB variable for color with exact opacity */
+    color: rgba(var(--rgb-white), 1) !important;
+    transform: translateY(-2px) scale(1.05) !important;
+    /* Uses RGB variables for shadows with exact opacities */
+    box-shadow: 0 8px 16px rgba(var(--rgb-purple-deep), 0.4),
+        0 4px 8px rgba(var(--rgb-purple-dark), 0.3) !important;
+}
+
+.tox-tbtn:hover::after {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+}
+
+.tox-tbtn:active,
+.tox-tbtn[aria-pressed="true"] {
+    /* Uses RGB variables for active gradient with exact opacities */
+    background: linear-gradient(135deg, rgba(var(--rgb-purple-lightest), 0.6), rgba(var(--rgb-purple-light), 0.6)) !important;
+    border-color: transparent !important;
+    /* Uses RGB variable for color with exact opacity */
+    color: rgba(var(--rgb-white), 1) !important;
+    /* Uses RGB variables for shadows with exact opacities */
+    box-shadow: 0 8px 20px rgba(var(--rgb-purple-deep), 0.5),
+        0 4px 12px rgba(var(--rgb-purple-dark), 0.4),
+        inset 0 2px 4px rgba(var(--rgb-purple-deep), 0.3) !important;
+    transform: translateY(0) scale(1) !important;
+}
+
+.tox-tbtn:active::before,
+.tox-tbtn[aria-pressed="true"]::before {
+    opacity: 1 !important;
+}
+
+.tox-tbtn--disabled {
+    opacity: 0.3 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    filter: grayscale(1) !important;
+}
+
+/* Split Buttons */
+.tox-split-button {
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    /* Uses RGB variable for background with exact opacity */
+    background: rgba(var(--rgb-purple-deep), 0.2) !important;
+    /* Uses RGB variable for border with exact opacity */
+    border: 1px solid rgba(var(--rgb-purple-deep), 0.3) !important;
+}
+
+.tox-split-button__main {
+    border-radius: 10px 0 0 10px !important;
+}
+
+.tox-split-button__chevron {
+    border-radius: 0 10px 10px 0 !important;
+    /* Uses RGB variable for border-left with exact opacity */
+    border-left: 1px solid rgba(var(--rgb-purple-deep), 0.4) !important;
+    transition: all 0.3s ease !important;
+    /* Uses RGB variable for background with exact opacity */
+    background: rgba(var(--rgb-purple-deep), 0.2) !important;
+}
+
+.tox-split-button:hover {
+    /* Uses RGB variable for border-color with exact opacity */
+    border-color: rgba(var(--rgb-purple-lightest), 0.6) !important;
+    /* Uses RGB variable for box-shadow with exact opacity */
+    box-shadow: 0 4px 12px rgba(var(--rgb-purple-deep), 0.35) !important;
+}
+
+.tox-split-button:hover .tox-split-button__chevron {
+    /* Uses RGB variable for background with exact opacity */
+    background: rgba(var(--rgb-purple-deep), 0.35) !important;
+}
+
+/* Select Buttons (Dropdowns) */
+.tox-tbtn--select {
+    /* Uses RGB variable for background with exact opacity */
+    background: rgba(var(--rgb-purple-deep), 0.3) !important;
+    /* Uses RGB variable for border with exact opacity */
+    border: 1px solid rgba(var(--rgb-purple-deep), 0.4) !important;
+    border-radius: 10px !important;
+    padding: 8px 16px !important;
+    min-width: 140px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+.tox-tbtn--select:hover {
+    /* Uses RGB variable for background with exact opacity */
+    background: rgba(var(--rgb-purple-deep), 0.45) !important;
+    /* Uses RGB variable for border-color with exact opacity */
+    border-color: rgba(var(--rgb-purple-lightest), 0.6) !important;
+    /* Uses RGB variable for box-shadow with exact opacity */
+    box-shadow: 0 4px 12px rgba(var(--rgb-purple-deep), 0.4) !important;
+    transform: translateY(-1px) !important;
+}
+
+.tox-tbtn__select-label {
+    /* Uses RGB variable for color with exact opacity */
+    color: rgba(var(--rgb-white), 0.95) !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    /* Uses RGB variable for text-shadow with exact opacity */
+    text-shadow: 0 1px 2px rgba(var(--rgb-purple-deep), 0.3) !important;
+}
+
+.tox-tbtn__select-chevron svg {
+    /* Uses RGB variable for fill with exact opacity */
+    fill: rgba(var(--rgb-white), 0.85) !important;
+    transition: all 0.3s ease !important;
+}
+
+.tox-tbtn--select:hover .tox-tbtn__select-chevron svg {
+    /* Uses RGB variable for fill with exact opacity */
+    fill: rgba(var(--rgb-white), 1) !important;
+    transform: translateY(2px) !important;
+}
+
+/* Edit Area */
+.tox-edit-area {
+    /* Uses RGB variable for background with exact opacity */
+    background: rgba(var(--rgb-white), 0.98) !important;
+    border-radius: 0 0 14px 14px !important;
+    position: relative !important;
+}
+
+.tox-edit-area__iframe {
+    border: none !important;
+    background: transparent !important;
+}
+
+/* Statusbar */
+.tox-statusbar {
+    /* Uses RGB variables for statusbar gradient with exact opacities */
+    background: linear-gradient(180deg,
+            rgba(var(--rgb-statusbar-start), 0.92) 0%,
+            rgba(var(--rgb-statusbar-end), 0.95) 100%) !important;
+    /* Uses RGB variable for border-top with exact opacity */
+    border-top: 1px solid rgba(var(--rgb-purple-deep), 0.4) !important;
+    padding: 15px 20px 30px 20px !important;
+    border-radius: 0 0 14px 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    position: relative !important;
+}
+
+.tox-statusbar::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 1px !important;
+    /* Uses RGB variable for border glow with exact opacity */
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(var(--rgb-purple-lightest), 0.6) 50%,
+            transparent 100%) !important;
+    opacity: 0.5 !important;
+}
+
+.tox-statusbar__path {
+    display: flex !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+}
+
+.tox-statusbar__path-item {
+    /* Uses RGB variable for background with exact opacity */
+    background: rgba(var(--rgb-purple-deep), 0.3) !important;
+    /* Uses RGB variable for color with exact opacity */
+    color: rgba(var(--rgb-white), 0.95) !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    /* Uses RGB variable for border with exact opacity */
+    border: 1px solid rgba(var(--rgb-purple-deep), 0.4) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    cursor: pointer !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.tox-statusbar__path-item::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    /* Uses RGB variables for gradient with exact opacities */
+    background: linear-gradient(135deg, rgba(var(--rgb-purple-lightest), 0.4), rgba(var(--rgb-purple-light), 0.4)) !important;
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+}
+
+.tox-statusbar__path-item span {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.tox-statusbar__path-item:hover {
+    /* Uses RGB variables for hover gradient with exact opacities */
+    background: linear-gradient(135deg, rgba(var(--rgb-purple-lightest), 0.5), rgba(var(--rgb-purple-light), 0.5)) !important;
+    /* Uses RGB variable for color with exact opacity */
+    color: rgba(var(--rgb-white), 1) !important;
+    border-color: transparent !important;
+    transform: translateY(-2px) scale(1.05) !important;
+    /* Uses RGB variables for shadows with exact opacities */
+    box-shadow: 0 8px 16px rgba(var(--rgb-purple-deep), 0.4),
+        0 4px 8px rgba(var(--rgb-purple-dark), 0.3) !important;
+}
+
+.tox-statusbar__path-item:hover::before {
+    opacity: 1 !important;
+}
+
+.tox-statusbar__wordcount {
+    /* Uses RGB variable for background with exact opacity */
+    background: rgba(var(--rgb-purple-deep), 0.25) !important;
+    /* Uses RGB variable for color with exact opacity */
+    color: rgba(var(--rgb-white), 0.95) !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    /* Uses RGB variable for border with exact opacity */
+    border: 1px solid rgba(var(--rgb-purple-deep), 0.35) !important;
+    transition: all 0.3s ease !important;
+    margin-left: auto !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+.tox-statusbar__wordcount:hover {
+    /* Uses RGB variable for background with exact opacity */
+    background: rgba(var(--rgb-purple-deep), 0.4) !important;
+    /* Uses RGB variable for border-color with exact opacity */
+    border-color: rgba(var(--rgb-purple-lightest), 0.6) !important;
+    /* Uses RGB variable for color with exact opacity */
+    color: rgba(var(--rgb-white), 1) !important;
+    /* Uses RGB variable for box-shadow with exact opacity */
+    box-shadow: 0 4px 8px rgba(var(--rgb-purple-deep), 0.35) !important;
+    transform: translateY(-1px) !important;
+}
+
+.tox-statusbar__resize-handle {
+    /* Uses RGB variable for color with exact opacity */
+    color: rgba(var(--rgb-purple-lightest), 0.8) !important;
+    transition: all 0.3s ease !important;
+    cursor: nwse-resize !important;
+}
+
+.tox-statusbar__resize-handle:hover {
+    /* Uses RGB variable for color with exact opacity */
+    color: rgba(var(--rgb-purple-lightest), 1) !important;
+    transform: scale(1.2) !important;
+    /* Uses RGB variable for filter with exact opacity */
+    filter: drop-shadow(0 0 8px rgba(var(--rgb-purple-lightest), 0.6)) !important;
+}
+
+/* Icon Color Indicators */
+.tox-icon-text-color__color,
+.tox-icon-highlight-bg-color__color {
+    /* Uses RGB variable for fill with exact opacity */
+    fill: rgba(var(--rgb-purple-lightest), 0.9) !important;
+}
+
+/* Focus Rings */
+.tox-tbtn:focus-visible,
+.tox-statusbar__path-item:focus-visible,
+.tox-statusbar__wordcount:focus-visible {
+    /* Uses RGB variable for outline with exact opacity */
+    outline: 2px solid rgba(var(--rgb-purple-lightest), 0.8) !important;
+    outline-offset: 3px !important;
+    border-radius: 10px !important;
+    /* Uses RGB variable for box-shadow with exact opacity */
+    box-shadow: 0 0 0 4px rgba(var(--rgb-purple-lightest), 0.3) !important;
+}
+
+/* Menus and Dialogs */
+.tox-menu {
+    /* Uses RGB variable for background with exact opacity */
+    background: rgba(var(--rgb-purple-mid), 0.98) !important;
+    /* Uses RGB variable for border with exact opacity */
+    border: 1px solid rgba(var(--rgb-purple-deep), 0.4) !important;
+    border-radius: 12px !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    /* Uses RGB variables for shadows with exact opacities */
+    box-shadow: 0 16px 32px rgba(var(--rgb-purple-deep), 0.4),
+        0 8px 16px rgba(var(--rgb-purple-dark), 0.3) !important;
+}
+
+.tox-collection__item {
+    /* Uses RGB variable for color with exact opacity */
+    color: rgba(var(--rgb-white), 0.95) !important;
+    transition: all 0.2s ease !important;
+    border-radius: 8px !important;
+    margin: 4px 8px !important;
+}
+
+.tox-collection__item:hover {
+    /* Uses RGB variable for background with exact opacity */
+    background: rgba(var(--rgb-purple-deep), 0.35) !important;
+    /* Uses RGB variable for color with exact opacity */
+    color: rgba(var(--rgb-white), 1) !important;
+    transform: translateX(4px) !important;
+}
+
+.tox-collection__item--active {
+    /* Uses RGB variables for active gradient with exact opacities */
+    background: linear-gradient(135deg, rgba(var(--rgb-purple-lightest), 0.5), rgba(var(--rgb-purple-light), 0.5)) !important;
+    /* Uses RGB variable for color with exact opacity */
+    color: rgba(var(--rgb-white), 1) !important;
+}
+
+/* Scrollbar Styling */
+.tox-tinymce ::-webkit-scrollbar {
+    width: 12px !important;
+    height: 12px !important;
+}
+
+.tox-tinymce ::-webkit-scrollbar-track {
+    /* Uses RGB variable for background with exact opacity */
+    background: rgba(var(--rgb-purple-deep), 0.2) !important;
+    border-radius: 10px !important;
+}
+
+.tox-tinymce ::-webkit-scrollbar-thumb {
+    /* Uses RGB variables for thumb gradient with exact opacities */
+    background: linear-gradient(180deg, rgba(var(--rgb-purple-lightest), 0.6), rgba(var(--rgb-purple-light), 0.6)) !important;
+    border-radius: 10px !important;
+    /* Uses RGB variable for border with exact opacity */
+    border: 2px solid rgba(var(--rgb-purple-deep), 0.2) !important;
+}
+
+.tox-tinymce ::-webkit-scrollbar-thumb:hover {
+    /* Uses RGB variables for hover gradient with exact opacities */
+    background: linear-gradient(180deg, rgba(var(--rgb-purple-lightest), 0.8), rgba(var(--rgb-purple-light), 0.8)) !important;
+    /* Uses RGB variable for box-shadow with exact opacity */
+    box-shadow: 0 0 10px rgba(var(--rgb-purple-lightest), 0.5) !important;
+}
+
+/* Loading Animation */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.tox-tinymce--loading {
+    /* Uses RGB variables for loading gradient with exact opacities */
+    background: linear-gradient(90deg,
+            rgba(var(--rgb-purple-mid), 1) 0%,
+            rgba(var(--rgb-purple-lightest), 0.8) 50%,
+            rgba(var(--rgb-purple-mid), 1) 100%) !important;
+    background-size: 1000px 100% !important;
+    animation: shimmer 2s infinite !important;
+}

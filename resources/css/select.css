@@ -1,0 +1,52 @@
+/*=================NATIVE SELECT (DAISYUI) DROPDOWN STYLING=================*/
+
+/* Style the native select dropdown options */
+select.select option {
+    padding: 0.5rem 0.75rem !important;
+    background-color: white !important;
+    color: rgb(63, 63, 70) !important;
+    cursor: pointer !important;
+    min-height: 2.5rem !important;
+}
+
+.dark select.select option {
+    background-color: rgb(39, 39, 42) !important;
+    color: rgb(212, 212, 216) !important;
+}
+
+/* Option hover/focus state */
+select.select option:hover,
+select.select option:focus,
+select.select option:checked {
+    background-color: rgba(187, 129, 6, 0.1) !important;
+    color: #7A4630 !important;
+    background-image: none !important;
+}
+
+.dark select.select option:hover,
+.dark select.select option:focus,
+.dark select.select option:checked {
+    background-color: rgba(183, 147, 71, 0.1) !important;
+    color: #B79347 !important;
+}
+
+/* Selected option with checkmark effect */
+select.select option:checked {
+    background-color: rgba(187, 129, 6, 0.2) !important;
+    font-weight: 500 !important;
+}
+
+.dark select.select option:checked {
+    background-color: rgba(183, 147, 71, 0.2) !important;
+}
+
+/* Disabled option */
+select.select option:disabled {
+    color: rgb(161, 161, 170) !important;
+    cursor: not-allowed !important;
+    opacity: 0.5 !important;
+}
+
+.dark select.select option:disabled {
+    color: rgb(113, 113, 122) !important;
+}
