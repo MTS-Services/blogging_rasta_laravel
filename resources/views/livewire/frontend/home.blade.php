@@ -14,7 +14,7 @@
                 <!-- 1. Seller / Buyer Portal Card -->
                 <div
                     class="flex flex-col items-center justify-between p-8 bg-gray-50 border border-gray-200 rounded-xl transition duration-300 ease-in-out hover:shadow-lg hover:border-indigo-400">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Seller / Buyer Portal</h3>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">User Portal</h3>
 
                     <div class="flex items-center justify-center space-x-4">
                         @auth('web')
