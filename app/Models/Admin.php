@@ -30,9 +30,11 @@ class Admin extends AuthBaseModel implements Auditable
         'last_login_at',
         'last_login_ip',
 
+        'restored_at',
         'created_by',
         'updated_by',
         'deleted_by',
+        'restored_by',
     ];
 
 

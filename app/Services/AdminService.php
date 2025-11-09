@@ -35,9 +35,9 @@ class AdminService
     }
 
 
-   public function findData($column_value, string $column_name = 'id'): ?Admin
+    public function findData($column_value, string $column_name = 'id'): ?Admin
     {
-      return $this->interface->find($column_value, $column_name);
+        return $this->interface->find($column_value, $column_name);
     }
 
 
@@ -52,7 +52,7 @@ class AdminService
         return $this->interface->paginate($perPage, $filters);
     }
 
-    
+
     public function getTrashedPaginatedData(int $perPage = 15, array $filters = []): LengthAwarePaginator
     {
         return $this->interface->trashPaginate($perPage, $filters);
@@ -89,13 +89,12 @@ class AdminService
         return $this->updateAction->execute($id, $data);
     }
 
-    public function deleteData(int $id, bool $forceDelete = false, ?int $actionerId = null): bool
+    public function deleteData(int $id, ?int $actionerId = null): bool
     {
         if ($actionerId == null) {
             $actionerId = admin()->id;
         }
-
-        return $this->deleteAction->execute($id, $forceDelete, $actionerId);
+        return $this->deleteAction->execute($id, false, $actionerId);
     }
 
     public function restoreData(int $id, ?int $actionerId = null): bool
@@ -106,7 +105,16 @@ class AdminService
 
         return $this->restoreAction->execute($id, $actionerId);
     }
-   public function updateStatusData(int $id, AdminStatus $status, ?int $actionerId = null): Admin
+
+    public function forceDeleteData(int $id, ?int $actionerId = null): bool
+    {
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
+        }
+        return $this->deleteAction->execute($id, true, $actionerId);
+    }
+
+    public function updateStatusData(int $id, AdminStatus $status, ?int $actionerId = null): Admin
     {
         if ($actionerId == null) {
             $actionerId = admin()->id;
@@ -118,9 +126,7 @@ class AdminService
         ]);
     }
 
-
-
-    public function bulkRestoreData(array $ids, ? int $actionerId = null): int
+    public function bulkRestoreData(array $ids, ?int $actionerId = null): int
     {
 
         if ($actionerId == null) {
@@ -132,31 +138,24 @@ class AdminService
 
     public function bulkForceDeleteData(array $ids, ?int $actionerId = null): int
     {
-        if($actionerId == null){
-          $actionerId = admin()->id;
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
         }
 
         return $this->bulkAction->execute($ids, 'forceDelete', null, $actionerId);
     }
 
-
-    
-    public function bulkDeleteData(array $ids , ?int $actionerId = null): int
+    public function bulkDeleteData(array $ids, ?int $actionerId = null): int
     {
-        if($actionerId == null){
-          $actionerId = admin()->id; 
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
         }
 
         return $this->bulkAction->execute($ids, 'delete', null, $actionerId);
     }
 
-
-
     public function bulkUpdateStatus(array $ids, AdminStatus $status, ?int $actionerId = null): int
     {
-
- 
-
         if ($actionerId == null) {
             $actionerId = admin()->id;
         }
@@ -166,27 +165,4 @@ class AdminService
     /* ================== ================== ==================
     *                   Accessors (optionals)
     * ================== ================== ================== */
-
-
-    public function getActiveData($sortField = 'created_at', $order = 'desc'): Collection
-    {
-        return $this->interface->getActive($sortField, $order);
-    }
-
-    public function getInactiveData($sortField = 'created_at', $order = 'desc'): Collection
-    {
-        return $this->interface->getInactive($sortField, $order);
-    }
-
-    public function getSuspendedData($sortField = 'created_at', $order = 'desc'): Collection
-    {
-        return $this->interface->getSuspended($sortField, $order);
-    }
-
-    public function getPendingData($sortField = 'created_at', $order = 'desc'): Collection
-    {
-        return $this->interface->getPending($sortField, $order);
-    }
-
-
 }

@@ -14,7 +14,7 @@ class AdminRepository implements AdminRepositoryInterface
         protected Admin $model
     ) {}
 
-    
+
 
     /* ================== ================== ==================
     *                      Find Methods 
@@ -37,18 +37,14 @@ class AdminRepository implements AdminRepositoryInterface
         return $model->where($column_name, $column_value)->first();
     }
 
-    
+
     public function findTrashed($column_value, string $column_name = 'id'): ?Admin
     {
         $model = $this->model->onlyTrashed();
 
         return $model->where($column_name, $column_value)->first();
-
     }
 
-
-
- 
     public function findByEmail(string $email, $trashed = false): ?Admin
     {
         $model = $this->model;
@@ -63,8 +59,8 @@ class AdminRepository implements AdminRepositoryInterface
         return $this->model->onlyTrashed()->where('email', $email)->first();
     }
 
-    
-        public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator
+
+    public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator
     {
         $search = $filters['search'] ?? null;
         $sortField = $filters['sort_field'] ?? 'created_at';
@@ -143,7 +139,7 @@ class AdminRepository implements AdminRepositoryInterface
     public function update(int $id, array $data): bool
     {
         $admin = $this->find($id);
-        
+
         if (!$admin) {
             return false;
         }
@@ -156,12 +152,12 @@ class AdminRepository implements AdminRepositoryInterface
     public function delete(int $id, $actionerId): bool
     {
         $admin = $this->find($id);
-        
+
         if (!$admin) {
             return false;
         }
 
-        $admin->update(['deleter_id' => $actionerId]);
+        $admin->update(['deleted_by' => $actionerId]);
 
         return $admin->delete();
     }
@@ -169,7 +165,7 @@ class AdminRepository implements AdminRepositoryInterface
     public function forceDelete(int $id): bool
     {
         $admin = $this->findTrashed($id);
-        
+
         if (!$admin) {
             return false;
         }
@@ -180,11 +176,11 @@ class AdminRepository implements AdminRepositoryInterface
     public function restore(int $id, int $actionerId): bool
     {
         $admin = $this->findTrashed($id);
-        
+
         if (!$admin) {
             return false;
         }
-        $admin->update(['restorer_id' => $actionerId]);
+        $admin->update(['restored_by' => $actionerId, 'restored_at' => now()]);
 
         return $admin->restore();
     }
@@ -193,26 +189,26 @@ class AdminRepository implements AdminRepositoryInterface
     public function bulkUpdateStatus(array $ids, string $status, $actionerId): int
     {
 
-        return $this->model->withTrashed()->whereIn('id', $ids)->update(['status' => $status, 'updater_id' => $actionerId]);
+        return $this->model->withTrashed()->whereIn('id', $ids)->update(['status' => $status, 'updated_by' => $actionerId]);
     }
 
     public function bulkRestore(array $ids, int $actionerId): int
     {
 
-            $this->model->onlyTrashed()->whereIn('id', $ids)->update(['restorer_id' => $actionerId]);
+        $this->model->onlyTrashed()->whereIn('id', $ids)->update(['restored_by' => $actionerId, 'restored_at' => now()]);
 
-            return $this->model->onlyTrashed()->whereIn('id', $ids)->restore();
-
+        return $this->model->onlyTrashed()->whereIn('id', $ids)->restore();
     }
 
-    public function bulkDelete(array $ids, int $actionerId): int{
-        
-         $this->model->whereIn('id', $ids)->update(['deleter_id' => $actionerId]);
+    public function bulkDelete(array $ids, int $actionerId): int
+    {
 
-         return $this->model->whereIn('id', $ids)->delete();
+        $this->model->whereIn('id', $ids)->update(['deleted_by' => $actionerId]);
+
+        return $this->model->whereIn('id', $ids)->delete();
     }
     public function bulkForceDelete(array $ids): int //
-    {  
+    {
         return $this->model->withTrashed()->whereIn('id', $ids)->forceDelete();
     }
 
@@ -245,7 +241,4 @@ class AdminRepository implements AdminRepositoryInterface
     {
         return $this->model->suspended()->orderBy($sortField, $order)->get();
     }
-
-
-
 }

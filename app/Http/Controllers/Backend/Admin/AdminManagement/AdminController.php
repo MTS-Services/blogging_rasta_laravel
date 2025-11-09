@@ -10,10 +10,12 @@ class AdminController extends Controller
 {
 
 
-    protected $masterView = 'backend.admin.pages.admin-management.admin.admin';
+    protected $masterView = 'backend.admin.pages.user-management.admin';
+    public function __construct(protected AdminService $service) {}
 
-    public function __construct(protected AdminService $service){}
-
+    /**
+     * Show the list of resources.
+     */
     public function index()
     {
         return view($this->masterView);
@@ -28,17 +30,23 @@ class AdminController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Show the form for editing the specified resource.
      */
-    public function show(string $id)
+    public function edit(string $encryptedId)
     {
-        //
+        $data = $this->service->findData(decrypt($encryptedId));
+        if (!$data) {
+            abort(404);
+        }
+        return view($this->masterView, [
+            'data' => $data
+        ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Display the specified resource.
      */
-    public function edit(string $id)
+    public function view(string $id)
     {
         $data = $this->service->findData($id);
         if (!$data) {
@@ -49,17 +57,9 @@ class AdminController extends Controller
         ]);
     }
 
-    public function view(string $id)
-    {
-       $data = $this->service->findData($id);
-        if (!$data) {
-            abort(404);
-        }
-        return view($this->masterView, [
-            'data' => $data
-        ]);
-    }
-
+    /**
+     * Display the trashed resource.
+     */
     public function trash()
     {
         return view($this->masterView);

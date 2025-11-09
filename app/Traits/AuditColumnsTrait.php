@@ -8,11 +8,12 @@ trait AuditColumnsTrait
 {
     public function addAdminAuditColumns(Blueprint $table): void
     {
+        $table->timestamp('restored_at')->nullable();
+        
         $table->unsignedBigInteger('created_by')->nullable();
         $table->unsignedBigInteger('updated_by')->nullable();
         $table->unsignedBigInteger('deleted_by')->nullable();
         $table->unsignedBigInteger('restored_by')->nullable();
-        $table->timestamp('restored_at')->nullable();
 
         $table->foreign('created_by')->references('id')->on('admins')->onDelete('cascade')->onUpdate('cascade');
         $table->foreign('updated_by')->references('id')->on('admins')->onDelete('cascade')->onUpdate('cascade');
@@ -46,6 +47,8 @@ trait AuditColumnsTrait
 
     public function addMorphedAuditColumns(Blueprint $table): void
     {
+        $table->timestamp('restored_at')->nullable();
+
         $table->unsignedBigInteger('creater_id')->nullable();
         $table->string('creater_type')->nullable();
         $table->unsignedBigInteger('updater_id')->nullable();
@@ -54,8 +57,6 @@ trait AuditColumnsTrait
         $table->string('deleter_type')->nullable();
         $table->unsignedBigInteger('restorer_id')->nullable();
         $table->string('restorer_type')->nullable();
-
-        $table->timestamp('restored_at')->nullable();
 
         $table->index(['creater_id', 'creater_type']);
         $table->index(['updater_id', 'updater_type']);
