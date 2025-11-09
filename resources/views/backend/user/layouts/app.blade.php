@@ -18,40 +18,24 @@
     </style>
 </head>
 
-<body x-data="{ sidebarOpen: false, mobileMenuOpen: false }" class="h-full max-h-screen antialiased bg-bg-secondary">
+<body x-data="{ sidebarOpen: false, mobileMenuOpen: false }" class="max-h-screen antialiased bg-bg-secondary flex flex-col h-screen">
 
-    <div class="flex flex-col h-screen">
-        @if (
-            !(request()->routeIs('login') ||
-                request()->routeIs('register') ||
-                request()->routeIs('password.request') ||
-                request()->routeIs('password.reset') ||
-                request()->routeIs('verify-reset-otp') ||
-                request()->routeIs('verification.notice') ||
-                request()->routeIs('verify-otp') ||
-                request()->routeIs('verification.verify') ||
-                request()->routeIs('two-factor.*') ||
-                request()->routeIs('two-factor.login') ||
-                request()->routeIs('two-factor.login.store') ||
-                request()->routeIs('admin.*')
-            ))
-            <livewire:frontend.partials.header />
-        @endif
+    <livewire:frontend.partials.header />
 
-        <div class="flex flex-1 overflow-hidden">
-            <!-- Sidebar -->
-            <livewire:backend.user.partials.sidebar :pageSlug="$pageSlug" />
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <livewire:backend.user.partials.sidebar :pageSlug="$pageSlug" />
 
-            <!-- Main content -->
-            <div class="flex-1 flex flex-col custom-scrollbar overflow-y-auto">
-                <main class="flex-1 p-4 lg:p-6">
-                    <div class="mx-auto space-y-6">
-                        {{ $slot }}
-                    </div>
-                </main>
-            </div>
+        <!-- Main content -->
+        <div class="flex-1 flex flex-col custom-scrollbar overflow-y-auto">
+            <main class="flex-1 p-4 lg:p-6">
+                <div class="mx-auto space-y-6">
+                    {{ $slot }}
+                </div>
+            </main>
         </div>
     </div>
+
 
     <!-- Mobile Overlay -->
     <div x-show="sidebarOpen" @click="sidebarOpen = false" x-cloak

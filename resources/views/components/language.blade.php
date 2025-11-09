@@ -1,12 +1,12 @@
 <div x-data="{ open: false }" class="relative">
     <!-- Trigger Button -->
     <button @click="open = !open" class="flex items-center gap-2 text-text-white hover:text-black">
-        <x-phosphor-globe class="w-5 h-5" />
+        
         <span>
             {{ strtoupper(session('locale', 'en')) == 'EN' ? 'English' : 'French' }} | 
             {{ session('currency', 'USD') }}
         </span>
-        <x-phosphor-caret-down class="w-4 h-4" />
+        
     </button>
 
     <!-- Dropdown Modal -->
@@ -19,10 +19,10 @@
             <!-- Header -->
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-base font-semibold flex gap-2 items-center text-text-white">
-                    <x-phosphor-globe class="w-5 h-5" /> Choose your language & currency
+                     Choose your language & currency
                 </h2>
                 <button @click="open = false">
-                    <x-phosphor-x class="w-5 h-5 text-gray-500 hover:text-text-white" />
+                   
                 </button>
             </div>
 
