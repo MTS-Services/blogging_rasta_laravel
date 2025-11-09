@@ -10,37 +10,29 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Scout\Attributes\SearchUsingPrefix;
 use Laravel\Scout\Searchable;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\Builder;
 
 class Admin extends AuthBaseModel implements Auditable
 {
     use TwoFactorAuthenticatable, AuditableTrait, Searchable;
-    
+
     protected $guard = 'admin';
 
     protected $fillable = [
         'sort_order',
+        
         'name',
         'email',
         'email_verified_at',
-        'two_factor_confirmed_at',
-        'phone',
-        'phone_verified_at',
         'password',
         'avatar',
         'status',
-        'two_factor_enabled',
-        'two_factor_secret',
-        'two_factor_recovery_codes',
         'last_login_at',
         'last_login_ip',
-
-        
 
         'created_by',
         'updated_by',
         'deleted_by',
-
-
     ];
 
 
@@ -52,21 +44,17 @@ class Admin extends AuthBaseModel implements Auditable
         'two_factor_secret',
     ];
 
- 
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'last_synced_at' => 'datetime',
-            'otp_expires_at' => 'datetime',
-            'status' => AdminStatus::class,
-            'two_factor_confirmed_at' => 'datetime',
-        ];
-    }
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'last_synced_at' => 'datetime',
+        'otp_expires_at' => 'datetime',
+        'status' => AdminStatus::class,
+    ];
 
 
-/* =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
+    /* =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
                 Start of RELATIONSHIPS
      =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#= */
 
@@ -77,48 +65,11 @@ class Admin extends AuthBaseModel implements Auditable
      =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#= */
 
 
- /* 
-    =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
-    |           Query Scopes                                       |
-    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#=
- */
+    /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
+    |          Scout Search Configuration                         |
+    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
 
-
-
-    public function scopeActive($query)
-    {
-        return $query->where('status', AdminStatus::ACTIVE);
-    }
-
-    public function scopeInactive($query)
-    {
-        return $query->where('status', AdminStatus::INACTIVE);
-    }
-
-    public function scopeFilter($query, array $filters)
-    {
-        $query->when($filters['status'] ?? null, function ($query, $status) {
-            $query->where('status', $status);
-        });
-
- 
-
-        return $query;
-    }
- /* 
-    =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
-    |          End of Query Scopes                                       |
-    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#=
- */
-
-    
- /* 
-    =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
-    |          Scout Search Configuration                                    |
-    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#=
- */
-
-    #[SearchUsingPrefix([ 'name', 'email', 'phone', 'status'])]
+    #[SearchUsingPrefix(['name', 'email', 'phone', 'status'])]
     public function toSearchableArray(): array
     {
         return [
@@ -137,61 +88,42 @@ class Admin extends AuthBaseModel implements Auditable
         return is_null($this->deleted_at);
     }
 
- /*
-    =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
+    /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
     |        End  Scout Search Configuration                                    |
-    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#=
- */
+    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
 
 
+    /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
+    |           Query Scopes                                       |
+    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
 
-     /*
-    =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
+    public function scopeFilter(Builder $query, array $filters): Builder
+    {
+        return $query
+            ->when(
+                $filters['status'] ?? null,
+                fn($q, $status) =>
+                $q->where('status', $status)
+            )
+            ->when(
+                $filters['code'] ?? null,
+                fn($q, $code) =>
+                $q->where('code', 'like', "%{$code}%")
+            )
+            ->when(
+                $filters['is_default'] ?? null,
+                fn($q, $isDefault) =>
+                $q->where('is_default', $isDefault)
+            );
+    }
+
+    /*  =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
+    |          End of Query Scopes                                   |
+    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
+
+    /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
     |        Attribute Accessors                                    |
-    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#=
- */
-
-    public function getStatusLabelAttribute(): string
-    {
-        return $this->status->label();
-    }
-
-    public function getStatusColorAttribute(): string
-    {
-        return $this->status->color();
-    }
-
-    public function getAvatarUrlAttribute(): string
-    {
-        return $this->avatar
-            ? asset('storage/' . $this->avatar)
-            : 'https://ui-avatars.com/api/?name=' . urlencode($this->name);
-    }
-
-      /*
-    =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
-    |       Methods                                   |
-    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#=
- */
-    public function isActive(): bool
-    {
-        return $this->status === AdminStatus::ACTIVE;
-    }
-
-    public function activate(): void
-    {
-        $this->update(['status' => AdminStatus::ACTIVE]);
-    }
-
-    public function deactivate(): void
-    {
-        $this->update(['status' => AdminStatus::INACTIVE]);
-    }
-
-    public function suspend(): void
-    {
-        $this->update(['status' => AdminStatus::SUSPENDED]);
-    }
+    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
 
     public function __construct(array $attributes = [])
     {
@@ -202,61 +134,18 @@ class Admin extends AuthBaseModel implements Auditable
     }
 
 
-
-    public function otpVerifications()
+    public function getAvatarUrlAttribute(): string
     {
-        return $this->morphMany(OtpVerification::class, 'verifiable');
+        return $this->avatar
+            ? asset('storage/' . $this->avatar)
+            : 'https://ui-avatars.com/api/?name=' . urlencode($this->name);
     }
 
-    /**
-     * Get the latest OTP verification of a specific type.
-     */
-    public function latestOtp(OtpType $type)
+    /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
+    |       Methods                                   |
+    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
+    public function isActive(): bool
     {
-        return $this->otpVerifications()
-            ->where('type', $type)
-            ->latest()
-            ->first();
-    }
-
-    /**
-     * Create a new OTP verification.
-     */
-    public function createOtp(OtpType $type, int $expiresInMinutes = 10): OtpVerification
-    {
-        // Invalidate old OTPs of same type
-        $this->otpVerifications()
-            ->where('type', $type)
-            ->whereNull('verified_at')
-            ->update(['expires_at' => now()]);
-
-        $otp = sprintf('%06d', mt_rand(0, 999999));
-
-        return $this->otpVerifications()->create([
-            'type' => $type,
-            'code' => $otp,
-            'expires_at' => now()->addMinutes($expiresInMinutes),
-            'attempts' => 0,
-        ]);
-    }
-
-    /**
-     * Mark email as verified.
-     */
-    public function markEmailAsVerified()
-    {
-        return $this->forceFill([
-            'email_verified_at' => now(),
-        ])->save();
-    }
-
-    /**
-     * Mark phone as verified.
-     */
-    public function markPhoneAsVerified()
-    {
-        return $this->forceFill([
-            'phone_verified_at' => now(),
-        ])->save();
+        return $this->status === AdminStatus::ACTIVE;
     }
 }

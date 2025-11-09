@@ -79,7 +79,5 @@ trait AuditColumnsTrait
         $table->dropColumn('restorer_id');
         $table->dropColumn('restorer_type');
         $table->dropColumn('restored_at');
-
-
     }
 }

@@ -8,10 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\AuditableTrait;
+use OwenIt\Auditing\Contracts\Auditable;
+use Laravel\Scout\Attributes\SearchUsingPrefix;
+use Laravel\Scout\Searchable;
 
-class BaseModel extends Model
+class BaseModel extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, AuditableTrait, Searchable;
 
     /* ================================================================
      * *** PROPERTIES ***
