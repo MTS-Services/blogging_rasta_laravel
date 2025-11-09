@@ -68,7 +68,7 @@
                     // ],
                 ]" />
 
-            <x-backend.navlink type="dropdown" icon="user-group" name="Audit Log Management" :page_slug="$active"
+            {{-- <x-backend.navlink type="dropdown" icon="user-group" name="Audit Log Management" :page_slug="$active"
                 :items="[
                     [
                         'name' => 'Audit Logs',
@@ -76,7 +76,7 @@
                         'icon' => 'user',
                         'active' => 'audit-log-management',
                     ],
-                ]" />
+                ]" /> --}}
 
             <div class="pt-4 pb-2">
                 <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 uppercase"
@@ -105,12 +105,12 @@
                         'icon' => 'shield',
                         'active' => 'two-factor',
                     ],
-                    [
-                        'name' => 'Languages',
-                        'route' => route('admin.as.language.index'),
-                        'icon' => 'language',
-                        'active' => 'language',
-                    ],
+                    // [
+                    //     'name' => 'Languages',
+                    //     'route' => route('admin.as.language.index'),
+                    //     'icon' => 'language',
+                    //     'active' => 'language',
+                    // ],
                     // [
                     //     'name' => 'Currencies',
                     //     'route' => '#',
