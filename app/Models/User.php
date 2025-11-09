@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
 
 
 
-class User extends Authenticatable implements Auditable
+class User extends AuthBaseModel implements Auditable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable, AuditableTrait, Searchable;
@@ -41,6 +41,16 @@ class User extends Authenticatable implements Auditable
         'email_verified_at',
         'last_login_at',
         'last_login_ip',
+
+        'restored_at',
+        'creater_id',
+        'creater_type',
+        'updater_id',
+        'updater_type',
+        'deleter_id',
+        'deleter_type',
+        'restorer_id',
+        'restorer_type',
 
     ];
 
@@ -66,6 +76,8 @@ class User extends Authenticatable implements Auditable
         'password' => 'hashed',
         'status' => UserStatus::class,
         'last_login_at' => 'datetime',
+        'last_synced_at' => 'datetime',
+        'restored_at' => 'datetime',
     ];
 
     /**

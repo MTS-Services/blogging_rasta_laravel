@@ -2,26 +2,26 @@
 
 namespace App\Livewire\Backend\Admin\UserManagement\User;
 
-use App\Models\User;
-use Livewire\Component;
-use App\Enums\UserAccountStatus;
+use App\Enums\UserStatus;
 use App\Services\UserService;
-use Illuminate\Support\Facades\Log;
 use App\Traits\Livewire\WithDataTable;
 use App\Traits\Livewire\WithNotification;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
 
 class Index extends Component
 {
     use WithDataTable, WithNotification;
 
+    public $statusFilter = '';
+    public $showDeleteModal = false;
+    public $deleteId = null;
+    public $bulkAction = '';
+    public $showBulkActionModal = false;
+
+    protected $listeners = ['userCreated' => '$refresh', 'userUpdated' => '$refresh'];
 
     protected UserService $service;
-
-    public $statusFilter = '';
-    public $deleteUserId;
-    public $bulkAction = '';
-    public $showDeleteModal = false;
-    public $showBulkActionModal = false;
 
     public function boot(UserService $service)
     {
@@ -30,23 +30,26 @@ class Index extends Component
 
     public function render()
     {
-        $users = $this->service->getPaginateDatas(
+        $datas = $this->service->getPaginatedData(
             perPage: $this->perPage,
             filters: $this->getFilters()
         );
-        $users->load('country');
 
-        // $users = $this->userService->getAllUsers();
+        $datas->load(['creater']);
 
         $columns = [
             [
-                'key' => 'first_name',
-                'label' => 'Name',
-                'sortable' => true
+                'key' => 'avatar',
+                'label' => 'Avatar',
+                'format' => function ($data) {
+                    return $data->avatar_url
+                        ? '<img src="' . $data->avatar_url . '" alt="' . $data->name . '" class="w-10 h-10 rounded-full object-cover shadow-sm">'
+                        : '<div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 font-semibold">' . strtoupper(substr($data->name, 0, 2)) . '</div>';
+                }
             ],
             [
-                'key' => 'username',
-                'label' => 'User Name',
+                'key' => 'name',
+                'label' => 'Name',
                 'sortable' => true
             ],
             [
@@ -55,99 +58,99 @@ class Index extends Component
                 'sortable' => true
             ],
             [
-                'key' => 'phone',
-                'label' => 'Phone',
-                'sortable' => true
-            ],
-            [
-                'key' => 'country_id',
-                'label' => 'Country Name',
-                'sortable' => true,
-                'format' => function ($user) {
-                    return $user?->country?->name ?? '-';
-                }
-            ],
-            [
-                'key' => 'account_status',
+                'key' => 'status',
                 'label' => 'Status',
                 'sortable' => true,
-                // 'format' => function ($user) {
-                //     $colors = [
-                //         'active' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-                //         'inactive' => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-                //         'suspended' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-                //     ];
-                //     $color = $colors[$user->account_status_color ] ?? 'bg-gray-100 text-gray-800';
-                //     return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ' . $color . '">' .
-                //         ucfirst($user->account_status_label) .
-                //         '</span>';
-                'format' => function ($user) {
-                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium '
-                        . $user->account_status_color . '">'
-                        . $user->account_status_label .
+                'format' => function ($data) {
+                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium badge ' . $data->status->color() . '">' .
+                        $data->status->label() .
                         '</span>';
                 }
             ],
+            [
+                'key' => 'created_at',
+                'label' => 'Created',
+                'sortable' => true,
+                'format' => function ($data) {
+                    return $data->created_at_formatted;
+                }
+            ],
+            [
+                'key' => 'created_by',
+                'label' => 'Created By',
+                'format' => function ($data) {
+                    return optional($data->creater)->name
+                        ? '<span class="text-sm font-medium text-gray-900 dark:text-gray-100">' . e($data->creater->name) . '</span>'
+                        : '<span class="text-sm text-gray-500 dark:text-gray-400 italic">System</span>';
+                },
+                'sortable' => true,
+            ],
         ];
+
         $actions = [
             [
                 'key' => 'id',
-                'label' => 'Profile',
-                'route' => 'admin.um.user.profileInfo'
+                'label' => 'View',
+                'route' => 'admin.um.user.view',
+                'encrypt' => true
             ],
             [
                 'key' => 'id',
                 'label' => 'Edit',
-                'route' => 'admin.um.user.edit'
+                'route' => 'admin.um.user.edit',
+                'encrypt' => true
             ],
             [
                 'key' => 'id',
                 'label' => 'Delete',
-                'method' => 'confirmDelete'
+                'method' => 'confirmDelete',
+                'encrypt' => true
             ],
         ];
+
         $bulkActions = [
             ['value' => 'delete', 'label' => 'Delete'],
             ['value' => 'activate', 'label' => 'Activate'],
-            ['value' => 'deactivate', 'label' => 'Deactivate'],
+            ['value' => 'inactive', 'label' => 'Inactive'],
             ['value' => 'suspend', 'label' => 'Suspend'],
+            ['value' => 'pending', 'label' => 'Pending'],
         ];
+
         return view('livewire.backend.admin.user-management.user.index', [
-            'datas' => $users,
+            'datas' => $datas,
+            'statuses' => UserStatus::options(),
             'columns' => $columns,
-            'statuses' => UserAccountStatus::options(),
             'actions' => $actions,
             'bulkActions' => $bulkActions,
-
         ]);
     }
 
-    public function confirmDelete($userId): void
+    public function confirmDelete($encryptedId): void
     {
-        $this->deleteUserId = $userId;
+        $this->deleteId = decrypt($encryptedId);
         $this->showDeleteModal = true;
     }
 
     public function delete(): void
     {
         try {
-            if (!$this->deleteUserId) {
+            if (!$this->deleteId) {
                 return;
             }
 
-            // if ($this->deleteUserId == user()->id) {
-            //     $this->error('You cannot delete your own account');
-            //     return;
-            // }
-
-            $this->service->deleteData($this->deleteUserId);
+            $this->service->deleteData($this->deleteId);
 
             $this->showDeleteModal = false;
-            $this->deleteUserId = null;
+            $this->deleteId = null;
 
-            $this->success('User deleted successfully');
-        } catch (\Exception $e) {
-            $this->error('Failed to delete User: ' . $e->getMessage());
+            $this->success('Admin deleted successfully');
+        } catch (\Throwable $e) {
+            Log::error('Failed to delete Admin', [
+                'admin_id' => $this->deleteId,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            $this->error('Failed to delete Admin.');
         }
     }
 
@@ -157,29 +160,11 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function changeStatus($userId, $status): void
-    {
-        try {
-            $userStatus = UserAccountStatus::from($status);
-
-            match ($userStatus) {
-                UserAccountStatus::ACTIVE => $this->service->activateData($userId),
-                UserAccountStatus::INACTIVE => $this->service->deactivateData($userId),
-                UserAccountStatus::SUSPENDED => $this->service->suspendData($userId),
-                default => null,
-            };
-
-            $this->success('User status updated successfully');
-        } catch (\Exception $e) {
-            $this->error('Failed to update status: ' . $e->getMessage());
-        }
-    }
-
     public function confirmBulkAction(): void
     {
         if (empty($this->selectedIds) || empty($this->bulkAction)) {
-            $this->warning('Please select Users and an action');
-            Log::info('No Users selected or no bulk action selected');
+            $this->warning('Please select Admins and an action');
+            Log::info('No Admins selected or no bulk action selected');
             return;
         }
 
@@ -193,9 +178,10 @@ class Index extends Component
         try {
             match ($this->bulkAction) {
                 'delete' => $this->bulkDelete(),
-                'activate' => $this->bulkUpdateStatus(UserAccountStatus::ACTIVE),
-                'deactivate' => $this->bulkUpdateStatus(UserAccountStatus::INACTIVE),
-                'suspend' => $this->bulkUpdateStatus(UserAccountStatus::SUSPENDED),
+                'activate' => $this->bulkUpdateStatus(UserStatus::ACTIVE),
+                'inactive' => $this->bulkUpdateStatus(UserStatus::INACTIVE),
+                'suspend' => $this->bulkUpdateStatus(UserStatus::SUSPENDED),
+                'pending' => $this->bulkUpdateStatus(UserStatus::PENDING),
                 default => null,
             };
 
@@ -209,21 +195,22 @@ class Index extends Component
 
     protected function bulkDelete(): void
     {
-        $count = $this->service->bulkDeleteDatas($this->selectedIds);
-        $this->success("{$count} Users deleted successfully");
+        $count = $this->service->bulkDeleteData($this->selectedIds, admin()->id);
+
+        $this->success("{$count} Admins deleted successfully");
     }
 
-    protected function bulkUpdateStatus(UserAccountStatus $status): void
+    protected function bulkUpdateStatus(UserStatus $status): void
     {
         $count = $this->service->bulkUpdateStatus($this->selectedIds, $status);
-        $this->success("{$count} Users updated successfully");
+        $this->success("{$count} Admins updated successfully");
     }
 
     protected function getFilters(): array
     {
         return [
             'search' => $this->search,
-            'account_status' => $this->statusFilter,
+            'status' => $this->statusFilter,
             'sort_field' => $this->sortField,
             'sort_direction' => $this->sortDirection,
         ];
@@ -231,10 +218,11 @@ class Index extends Component
 
     protected function getSelectableIds(): array
     {
-        return $this->service->getPaginateDatas(
+        $ids =  $this->service->getPaginatedData(
             perPage: $this->perPage,
             filters: $this->getFilters()
         )->pluck('id')->toArray();
+        return $ids;
     }
 
     public function updatedStatusFilter(): void

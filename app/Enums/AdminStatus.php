@@ -11,7 +11,7 @@ enum AdminStatus: string
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::ACTIVE => 'Active',
             self::INACTIVE => 'Inactive',
             self::SUSPENDED => 'Suspended',
@@ -21,11 +21,11 @@ enum AdminStatus: string
 
     public function color(): string
     {
-        return match($this) {
-            self::ACTIVE => 'success',
-            self::INACTIVE => 'secondary',
-            self::SUSPENDED => 'danger',
-            self::PENDING => 'warning',
+        return match ($this) {
+            self::ACTIVE => 'badge-success',
+            self::INACTIVE => 'badge-secondary',
+            self::SUSPENDED => 'badge-error',
+            self::PENDING => 'badge-warning',
         };
     }
 

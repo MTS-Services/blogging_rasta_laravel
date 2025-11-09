@@ -10,11 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class AdminRepository implements AdminRepositoryInterface
 {
-    public function __construct(
-        protected Admin $model
-    ) {}
-
-
+    public function __construct(protected Admin $model) {}
 
     /* ================== ================== ==================
     *                      Find Methods 
@@ -129,8 +125,6 @@ class AdminRepository implements AdminRepositoryInterface
     *                    Data Modification Methods 
     * ================== ================== ================== */
 
-
-
     public function create(array $data): Admin
     {
         return $this->model->create($data);
@@ -138,51 +132,49 @@ class AdminRepository implements AdminRepositoryInterface
 
     public function update(int $id, array $data): bool
     {
-        $admin = $this->find($id);
+        $findData = $this->find($id);
 
-        if (!$admin) {
+        if (!$findData) {
             return false;
         }
 
-        return $admin->update($data);
+        return $findData->update($data);
     }
-
-
 
     public function delete(int $id, $actionerId): bool
     {
-        $admin = $this->find($id);
+        $findData = $this->find($id);
 
-        if (!$admin) {
+        if (!$findData) {
             return false;
         }
 
-        $admin->update(['deleted_by' => $actionerId]);
+        $findData->update(['deleted_by' => $actionerId]);
 
-        return $admin->delete();
+        return $findData->delete();
     }
 
     public function forceDelete(int $id): bool
     {
-        $admin = $this->findTrashed($id);
+        $findData = $this->findTrashed($id);
 
-        if (!$admin) {
+        if (!$findData) {
             return false;
         }
 
-        return $admin->forceDelete();
+        return $findData->forceDelete();
     }
 
     public function restore(int $id, int $actionerId): bool
     {
-        $admin = $this->findTrashed($id);
+        $findData = $this->findTrashed($id);
 
-        if (!$admin) {
+        if (!$findData) {
             return false;
         }
-        $admin->update(['restored_by' => $actionerId, 'restored_at' => now()]);
+        $findData->update(['restored_by' => $actionerId, 'restored_at' => now()]);
 
-        return $admin->restore();
+        return $findData->restore();
     }
 
 
@@ -213,13 +205,9 @@ class AdminRepository implements AdminRepositoryInterface
     }
 
 
-
-
     /* ================== ================== ==================
     *                  Accessor Methods (Optional)
     * ================== ================== ================== */
-
-
 
     public function getActive(string $sortField = 'created_at', $order = 'desc'): Collection
     {

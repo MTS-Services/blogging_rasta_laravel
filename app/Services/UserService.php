@@ -7,11 +7,12 @@ use App\Actions\User\CreateAction;
 use App\Actions\User\DeleteAction;
 use App\Actions\User\RestoreAction;
 use App\Actions\User\UpdateAction;
+
+use App\Enums\UserStatus;
 use App\Models\User;
-use App\Enums\UserAccountStatus;
-use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserService
 {
@@ -20,38 +21,63 @@ class UserService
         protected CreateAction $createAction,
         protected UpdateAction $updateAction,
         protected DeleteAction $deleteAction,
-        protected BulkAction $bulkAction,
         protected RestoreAction $restoreAction,
+        protected BulkAction $bulkAction,
     ) {}
 
-    public function getAllDatas(): Collection
+    /* ================== ================== ==================
+    *                          Find Methods 
+    * ================== ================== ================== */
+
+    public function getAllDatas($sortfield = 'created_at', $order = 'desc'): Collection
     {
-        return $this->interface->all();
-    }
-    public function getAllSellersData(): Collection
-    {
-        return $this->interface->getSellers();
+        return $this->interface->all($sortfield, $order);
     }
 
-    public function getPaginateDatas(int $perPage = 15, array $filters = []): LengthAwarePaginator
+
+    public function findData($column_value, string $column_name = 'id'): ?User
     {
-        return $this->interface->paginate($perPage, $filters);
+        return $this->interface->find($column_value, $column_name);
     }
 
-    public function getTrashedPaginateDatas(int $perPage = 15, array $filters = []): LengthAwarePaginator
-    {
-        return $this->interface->trashPaginate($perPage, $filters);
-    }
-
-    public function getDataById(int $id): ?User
-    {
-        return $this->interface->find($id);
-    }
 
     public function getDataByEmail(string $email): ?User
     {
         return $this->interface->findByEmail($email);
     }
+
+
+    public function getPaginatedData(int $perPage = 15, array $filters = []): LengthAwarePaginator
+    {
+        return $this->interface->paginate($perPage, $filters);
+    }
+
+
+    public function getTrashedPaginatedData(int $perPage = 15, array $filters = []): LengthAwarePaginator
+    {
+        return $this->interface->trashPaginate($perPage, $filters);
+    }
+
+    public function searchData(string $query, $sortField = 'created_at', $order = 'desc'): Collection
+    {
+        return $this->interface->search($query, $sortField, $order);
+    }
+
+    public function dataExists(int $id): bool
+    {
+        return $this->interface->exists($id);
+    }
+
+    public function getDataCount(array $filters = []): int
+    {
+        return $this->interface->count($filters);
+    }
+
+
+    /* ================== ================== ==================
+    *                   Action Executions
+    * ================== ================== ================== */
+
 
     public function createData(array $data): User
     {
@@ -63,103 +89,80 @@ class UserService
         return $this->updateAction->execute($id, $data);
     }
 
-    public function deleteData(int $id, bool $forceDelete = false): bool
+    public function deleteData(int $id, ?int $actionerId = null): bool
     {
-        return $this->deleteAction->execute($id, $forceDelete);
-    }
-
-    public function restoreData(int $id, int $actioner_id): bool
-    {
-        return $this->restoreAction->execute($id, $actioner_id);
-    }
-
-    public function getActiveData(): Collection
-    {
-        return $this->interface->getActive();
-    }
-
-    public function getInactiveData(): Collection
-    {
-        return $this->interface->getInactive();
-    }
-
-    public function searchDatas(string $query): Collection
-    {
-        return $this->interface->search($query);
-    }
-
-    public function bulkDeleteDatas(array $ids, ?int $actionerId = null): int
-    {
-        if($actionerId == null){
-            $actionerId = admin()->id; 
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
         }
+        return $this->deleteAction->execute($id, false, $actionerId);
+    }
+
+    public function restoreData(int $id, ?int $actionerId = null): bool
+    {
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
+        }
+
+        return $this->restoreAction->execute($id, $actionerId);
+    }
+
+    public function forceDeleteData(int $id, ?int $actionerId = null): bool
+    {
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
+        }
+        return $this->deleteAction->execute($id, true, $actionerId);
+    }
+
+    public function updateStatusData(int $id, UserStatus $status, ?int $actionerId = null): User
+    {
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
+        }
+
+        return $this->updateAction->execute($id, [
+            'status' => $status->value,
+            'updated_by' => $actionerId,
+        ]);
+    }
+
+    public function bulkRestoreData(array $ids, ?int $actionerId = null): int
+    {
+
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
+        }
+
+        return $this->bulkAction->execute($ids, 'restore', null, $actionerId);
+    }
+
+    public function bulkForceDeleteData(array $ids, ?int $actionerId = null): int
+    {
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
+        }
+
+        return $this->bulkAction->execute($ids, 'forceDelete', null, $actionerId);
+    }
+
+    public function bulkDeleteData(array $ids, ?int $actionerId = null): int
+    {
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
+        }
+
         return $this->bulkAction->execute($ids, 'delete', null, $actionerId);
     }
 
-    public function bulkRestoreDatas(array $ids, int $actioner_id): int
+    public function bulkUpdateStatus(array $ids, UserStatus $status, ?int $actionerId = null): int
     {
-        return $this->bulkAction->execute($ids, 'restore', null, $actioner_id);
-    }
-
-
-
-    public function bulkUpdateStatus(array $ids, UserAccountStatus $status, ?int $actionerId = null): int
-    {
-        if($actionerId == null){
-            $actionerId = admin()->id; 
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
         }
-        return $this->bulkAction->execute($ids, 'status', $status->value, $actionerId);
+        return $this->bulkAction->execute(ids: $ids, action: 'status', status: $status->value, actionerId: $actionerId);
     }
 
-
-    public function getDatasCount(array $filters = []): int
-    {
-        return $this->interface->count($filters);
-    }
-
-    public function dataExists(int $id): bool
-    {
-        return $this->interface->exists($id);
-    }
-
-    public function activateData(int $id): bool
-    {
-        $user = $this->getDataById($id);
-        
-        if (!$user) {
-            return false;
-        }
-
-        $user->activate();
-        return true;
-    }
-
-    public function deactivateData(int $id): bool
-    {
-        $user = $this->getDataById($id);
-        
-        if (!$user) {
-            return false;
-        }
-
-        $user->deactivate();
-        return true;
-    }
-
-    public function suspendData(int $id): bool
-    {
-        $user = $this->getDataById($id);
-        
-        if (!$user) {
-            return false;
-        }
-
-        $user->suspend();
-        return true;
-    }
-
-    public function bulkForceDeleteDatas(array $ids): int
-    {
-        return $this->bulkAction->execute($ids, 'forceDelete', null, null);
-    }
+    /* ================== ================== ==================
+    *                   Accessors (optionals)
+    * ================== ================== ================== */
 }

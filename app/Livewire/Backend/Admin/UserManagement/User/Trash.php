@@ -2,52 +2,53 @@
 
 namespace App\Livewire\Backend\Admin\UserManagement\User;
 
-use App\Models\User;
-use App\Models\Admin;
 use Livewire\Component;
-use App\Enums\UserAccountStatus;
-use App\Services\UserService;
+use App\Enums\UserStatus;
 use Illuminate\Support\Facades\Log;
+use App\Services\UserService;
 use App\Traits\Livewire\WithDataTable;
 use App\Traits\Livewire\WithNotification;
-use Throwable;
+
 
 class Trash extends Component
 {
-
     use WithDataTable, WithNotification;
 
+    public $statusFilter = '';
+    public $showDeleteModal = false;
+    public $deleteAdminId = null;
+    public $bulkAction = '';
+    public $showBulkActionModal = false;
+    public $adminId;
+
+    protected $listeners = ['adminCreated' => '$refresh', 'adminUpdated' => '$refresh'];
 
     protected UserService $service;
-
-    public $statusFilter = '';
-    public $userId;
-    public $bulkAction = '';
-    public $showDeleteModal = false;
-    public $showBulkActionModal = false;
 
     public function boot(UserService $service)
     {
         $this->service = $service;
     }
+
     public function render()
     {
-        $users = $this->service->getTrashedPaginateDatas(
+        $datas = $this->service->getTrashedPaginatedData(
             perPage: $this->perPage,
             filters: $this->getFilters()
         );
-
-        // $users = $this->userService->getAllUsers();
-
         $columns = [
             [
-                'key' => 'first_name',
-                'label' => 'Name',
-                'sortable' => true
+                'key' => 'avatar',
+                'label' => 'Avatar',
+                'format' => function ($data) {
+                    return $data->avatar_url
+                        ? '<img src="' . $data->avatar_url . '" alt="' . $data->name . '" class="w-10 h-10 rounded-full object-cover shadow-sm">'
+                        : '<div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 font-semibold">' . strtoupper(substr($data->name, 0, 2)) . '</div>';
+                }
             ],
             [
-                'key' => 'username',
-                'label' => 'User Name',
+                'key' => 'name',
+                'label' => 'Name',
                 'sortable' => true
             ],
             [
@@ -56,117 +57,104 @@ class Trash extends Component
                 'sortable' => true
             ],
             [
-                'key' => 'phone',
-                'label' => 'Phone',
-                'sortable' => true
-            ],
-            [
-                'key' => 'country_id',
-                'label' => 'Country Name',
-                'sortable' => true,
-                'format' => function ($user) {
-                    return $user->country->name;
-                }
-            ],
-            [
-                'key' => 'account_status',
+                'key' => 'status',
                 'label' => 'Status',
                 'sortable' => true,
-                'format' => function ($user) {
+                'format' => function ($data) {
                     $colors = [
                         'active' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
                         'inactive' => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
                         'suspended' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
                     ];
-                    $color = $colors[$user->account_status->value] ?? 'bg-gray-100 text-gray-800';
+                    $color = $colors[$data->status->value] ?? 'bg-gray-100 text-gray-800';
                     return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ' . $color . '">' .
-                        ucfirst($user->account_status->value) .
+                        ucfirst($data->status->value) .
                         '</span>';
                 }
             ],
+            [
+                'key' => 'deleted_at',
+                'label' => 'Deleted At',
+                'sortable' => true,
+                'format' => function ($data) {
+                    return '<div class="text-sm">' .
+                        '<div class="font-medium text-gray-900 dark:text-gray-100">' . $data->deleted_at->format('M d, Y') . '</div>' .
+                        '<div class="text-xs text-gray-500 dark:text-gray-400">' . $data->deleted_at->format('h:i A') . '</div>' .
+                        '</div>';
+                }
+            ],
+            [
+                'key' => 'deleted_by',
+                'label' => 'Deleted By',
+                'format' => function ($data) {
+                    return $data->deleter_admin
+                        ? '<span class="text-sm font-medium text-gray-900 dark:text-gray-100">' . $data->deleter_admin->name . '</span>'
+                        : '<span class="text-sm text-gray-500 dark:text-gray-400 italic">System</span>';
+                }
+            ],
         ];
+
         $actions = [
             [
                 'key' => 'id',
                 'label' => 'Restore',
-                'method' => 'restore'
+                'method' => 'restore',
+                'encrypt' => true
             ],
             [
                 'key' => 'id',
                 'label' => 'Confirm Delete',
-                'method' => 'confirmDelete'
+                'method' => 'confirmDelete',
+                'encrypt' => true
             ],
         ];
+
         $bulkActions = [
             ['value' => 'bulkRestore', 'label' => 'Restore'],
             ['value' => 'bulkForceDelete', 'label' => 'Permanently Delete'],
-            ['value' => 'activate', 'label' => 'Activate'],
-            ['value' => 'deactivate', 'label' => 'Deactivate'],
-            ['value' => 'suspend', 'label' => 'Suspend'],
-
         ];
-        return view('livewire.backend.admin.user-management.user.trash', [
-            'users' => $users,
-            'columns' => $columns,
-            'statuses' => UserAccountStatus::options(),
-            'actions' => $actions,
-            'bulkActions' => $bulkActions,
 
+        return view('livewire.backend.admin.user-management.user.trash', [
+            'admins' => $datas,
+            'statuses' => UserStatus::options(),
+            'columns' => $columns,
+            'actions' => $actions,
+            'bulkActions' => $bulkActions
         ]);
     }
-    public function confirmDelete($userId): void
+
+    public function confirmDelete($encryptedId): void
     {
-        $this->userId = $userId;
+        $this->deleteAdminId = decrypt($encryptedId);
         $this->showDeleteModal = true;
     }
-
     public function forceDelete(): void
     {
         try {
-            $this->service->deleteData($this->userId, forceDelete: true);
+            $this->service->deleteData($this->deleteAdminId);
             $this->showDeleteModal = false;
             $this->resetPage();
 
-            $this->success('User permanently deleted successfully');
-        } catch (Throwable $e) {
-            $this->error('Failed to delete user: ' . $e->getMessage());
-            throw $e;
+            $this->success('Admin deleted successfully');
+        } catch (\Throwable $e) {
+            Log::error('Failed to delete User: ' . $e->getMessage());
+            $this->error('Failed to delete User.');
         }
     }
-
-    public function restore($userId): void
+    public function restore($encryptedId): void
     {
         try {
-            $this->service->restoreData($userId, admin()->id);
-
-            $this->success('User restored successfully');
-        } catch (Throwable $e) {
-            $this->error('Failed to restore user: ' . $e->getMessage());
-            throw $e;
+            $this->service->restoreData(decrypt($encryptedId), User()->id);
+            $this->success('Admin restored successfully');
+        } catch (\Throwable $e) {
+            Log::error('Failed to restore User: ' . $e->getMessage());
+            $this->error('Failed to restore User.');
         }
     }
     public function resetFilters(): void
     {
         $this->reset(['search', 'statusFilter', 'perPage', 'sortField', 'sortDirection', 'selectedIds', 'selectAll', 'bulkAction']);
         $this->resetPage();
-    }
-
-    public function changeStatus($userId, $status): void
-    {
-        try {
-            $userStatus = UserAccountStatus::from($status);
-
-            match ($userStatus) {
-                UserAccountStatus::ACTIVE => $this->service->activateData($userId),
-                UserAccountStatus::INACTIVE => $this->service->deactivateData($userId),
-                UserAccountStatus::SUSPENDED => $this->service->suspendData($userId),
-                default => null,
-            };
-
-            $this->success('User status updated successfully');
-        } catch (\Exception $e) {
-            $this->error('Failed to update status: ' . $e->getMessage());
-        }
     }
 
     public function confirmBulkAction(): void
@@ -188,32 +176,26 @@ class Trash extends Component
             match ($this->bulkAction) {
                 'bulkForceDelete' => $this->bulkForceDeleteDatas(),
                 'bulkRestore' => $this->bulkRestoreDatas(),
-                'activate' => $this->bulkUpdateStatus(UserAccountStatus::ACTIVE),
-                'deactivate' => $this->bulkUpdateStatus(UserAccountStatus::INACTIVE),
-                'suspend' => $this->bulkUpdateStatus(UserAccountStatus::SUSPENDED),
                 default => null,
             };
 
             $this->selectedIds = [];
             $this->selectAll = false;
             $this->bulkAction = '';
-        } catch (\Exception $e) {
-            $this->error('Bulk action failed: ' . $e->getMessage());
+        } catch (\Throwable $e) {
+            Log::error('Bulk action failed: ' . $e->getMessage());
+            $this->error('Bulk action failed.');
         }
     }
-    protected function bulkUpdateStatus(UserAccountStatus $status): void
-    {
-        $count = $this->service->bulkUpdateStatus($this->selectedIds, $status);
-        $this->success("{$count} Users updated successfully");
-    }
+
     protected function bulkRestoreDatas(): void
     {
-        $count = $this->service->bulkRestoreDatas($this->selectedIds, admin()->id);
+        $count = $this->service->bulkRestoreData($this->selectedIds, User()->id);
         $this->success("{$count} Users restored successfully");
     }
     protected function bulkForceDeleteDatas(): void
     {
-        $count = $this->service->bulkForceDeleteDatas($this->selectedIds);
+        $count = $this->service->bulkForceDeleteData($this->selectedIds);
         $this->success("{$count} Users permanently deleted successfully");
     }
 
@@ -221,30 +203,17 @@ class Trash extends Component
     {
         return [
             'search' => $this->search,
-            'account_status' => $this->statusFilter,
+            'status' => $this->statusFilter,
             'sort_field' => $this->sortField,
             'sort_direction' => $this->sortDirection,
         ];
     }
 
-    // protected function getSelectableIds(): array
-    // {
-    //     return $this->userService->getUsersPaginated(
-    //         perPage: $this->perPage,
-    //         filters: $this->getFilters()
-    //     )->pluck('id')->toArray();
-    // }
-
-    public function getSelectableIds(): array
+    protected function getSelectableIds(): array
     {
-        return $this->service->getTrashedPaginateDatas(
+        return $this->service->getTrashedPaginatedData(
             perPage: $this->perPage,
             filters: $this->getFilters()
         )->pluck('id')->toArray();
-    }
-
-    public function updatedStatusFilter(): void
-    {
-        $this->resetPage();
     }
 }

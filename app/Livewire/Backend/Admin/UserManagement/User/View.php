@@ -4,24 +4,12 @@ namespace App\Livewire\Backend\Admin\UserManagement\User;
 
 use App\Models\User;
 use Livewire\Component;
-use App\Services\UserService;
 
-class View extends Component
+class User extends Component
 {
-
-
-    public $user;
-
-    protected UserService $userService;
-    public function boot(UserService $userService)
+    public User $data;
+    public function mount(User $data): void
     {
-        $this->userService = $userService;
-    }
-    public function render()
-    {
-
-        return view('livewire.backend.admin.user-management.user.view', [
-            'user' => $this->user
-        ]);
+        $this->data = $data;
     }
 }

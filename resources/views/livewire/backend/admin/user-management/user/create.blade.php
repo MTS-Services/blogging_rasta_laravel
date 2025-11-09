@@ -14,94 +14,39 @@
     <div class="glass-card rounded-2xl p-6 mb-6">
         <form wire:submit="save">
             <div>
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                    {{ __('Profile Picture') }}
-                </h3>
-                <x-ui.file-input wire:model="form.avatar" label="Avatar" accept="image/*" :error="$errors->first('form.avatar')"
+                <x-ui.file-input wire:model="form.avatar" label="{{ __('Avatar') }}" accept="image/*" :error="$errors->first('form.avatar')"
                     hint="Upload a profile picture (Max: 2MB)" />
             </div>
 
             <!-- Add other form fields here -->
             <div class="mt-6 space-y-4 grid grid-cols-2 gap-5">
-
-                {{-- first_name --}}
-                <div class="w-full">
-                    <x-ui.label value="First Name" class="mb-1" />
-                    <x-ui.input type="text" placeholder="First Name" wire:model="form.first_name" />
-                    <x-ui.input-error :messages="$errors->get('form.first_name')" />
-                </div>
-
-                {{-- Last Name --}}
-                <div class="w-full">
-                    <x-ui.label value="Last Name" class="mb-1" />
-                    <x-ui.input type="text" placeholder="Last Name" wire:model="form.last_name" />
-                    <x-ui.input-error :messages="$errors->get('form.last_name')" />
-                </div>
-
-                {{-- user name --}}
-                <div class="w-full">
-                    <x-ui.label value="User Name" class="mb-1" />
-                    <x-ui.input type="text" placeholder="User Name" wire:model="form.username" />
-                    <x-ui.input-error :messages="$errors->get('form.username')" />
-                </div>
-                {{-- display name --}}
-                {{-- <div class="w-full">
-                    <x-ui.label value="Display Name" class="mb-1" />
-                    <x-ui.input type="text" placeholder="Display Name" wire:model="form.display_name" />
-                    <x-ui.input-error :messages="$errors->get('form.display_name')" />
-                </div> --}}
-                {{-- date_of_birth --}}
-                <div class="w-full">
-                    <x-ui.label value="Date Of Birth" class="mb-1" />
-                    <x-ui.input type="date" wire:model="form.date_of_birth" />
-                    <x-ui.input-error :messages="$errors->get('form.date_of_birth')" />
+                <div class="w-full col-span-2">
+                    <x-ui.label value="{{ __('Name') }}" class="mb-1" />
+                    <x-ui.input type="text" placeholder="{{ __('Full Name') }}" wire:model="form.name" />
+                    <x-ui.input-error :messages="$errors->get('form.name')" />
                 </div>
                 <div class="w-full">
-                    <x-ui.label value="Country Select" class="mb-1" />
-                    <x-ui.select wire:model="form.country_id">
-                        @foreach ($countries as $country)
-                            <option value="{{ $country['id'] }}">{{ $country['name'] }}</option>
-                        @endforeach
-                    </x-ui.select>
-                    <x-ui.input-error :messages="$errors->get('form.country_id')" />
-                </div>
-                <div class="w-full">
-                    <x-ui.label value="Langugae" class="mb-1" />
-                    <x-ui.select wire:model="form.language">
-                        @foreach ($languages as $language)
-                            <option value="{{ $language['id'] }}">{{ $language['name'] }}</option>
-                        @endforeach
-                    </x-ui.select>
-                    <x-ui.input-error :messages="$errors->get('form.language')" />
-                </div>
-                <div class="w-full">
-                    <x-ui.label value="Email" class="mb-1" />
-                    <x-ui.input type="email" placeholder="Email" wire:model="form.email" />
+                    <x-ui.label value="{{ __('Email') }}" class="mb-1" />
+                    <x-ui.input type="email" placeholder="example@example.com" wire:model="form.email" />
                     <x-ui.input-error :messages="$errors->get('form.email')" />
                 </div>
                 <div class="w-full">
-                    <x-ui.label value="Phone" class="mb-1" />
-                    <x-ui.input type="tel" placeholder="Phone" wire:model="form.phone" />
-                    <x-ui.input-error :messages="$errors->get('form.phone')" />
-                </div>
-                <div class="w-full">
-                    <x-ui.label value="Status Select" class="mb-1" />
-                    <x-ui.select wire:model="form.account_status">
+                    <x-ui.label value="{{ __('Select Status') }}" class="mb-1" />
+                    <x-ui.select wire:model="form.status">
                         @foreach ($statuses as $status)
                             <option value="{{ $status['value'] }}">{{ $status['label'] }}</option>
                         @endforeach
                     </x-ui.select>
-                    <x-ui.input-error :messages="$errors->get('form.account_status')" />
+                    <x-ui.input-error :messages="$errors->get('form.status')" />
                 </div>
                 <div class="w-full">
-                    <x-ui.label value="Password" class="mb-1" />
-                    <x-ui.input type="password" placeholder="Password" wire:model="form.password" />
+                    <x-ui.label value="{{ __('Password') }}" class="mb-1" />
+                    <x-ui.input type="password" placeholder="*********" wire:model="form.password" />
                     <x-ui.input-error :messages="$errors->get('form.password')" />
                 </div>
                 <div class="w-full">
-                    <x-ui.label value="Password Confirmation" class="mb-1" />
-                    <x-ui.input type="password" placeholder="Password Confirmation"
-                        wire:model="form.password_confirmation" />
+                    <x-ui.label value="{{ __('Confirm Password') }}" class="mb-1" />
+                    <x-ui.input type="password" placeholder="*********" wire:model="form.password_confirmation" />
                     <x-ui.input-error :messages="$errors->get('form.password_confirmation')" />
                 </div>
             </div>
@@ -111,15 +56,17 @@
                 <x-ui.button wire:click="resetForm" variant="tertiary" class="w-auto! py-2!">
                     <flux:icon name="x-circle"
                         class="w-4 h-4 stroke-text-btn-primary group-hover:stroke-text-btn-tertiary" />
-                    {{ __('Reset') }}
+                    <span wire:loading.remove wire:target="resetForm"
+                        class="text-text-btn-primary group-hover:text-text-btn-secondary">{{ __('Reset') }}</span>
+                    <span wire:loading wire:target="resetForm"
+                        class="text-text-btn-primary group-hover:text-text-btn-secondary">{{ __('Reseting...') }}</span>
                 </x-ui.button>
 
                 <x-ui.button class="w-auto! py-2!" type="submit">
                     <span wire:loading.remove wire:target="save"
-                        class="text-text-btn-primary group-hover:text-text-btn-secondary">{{__('Create
-                        User')}}</span>
+                        class="text-text-btn-primary group-hover:text-text-btn-secondary">{{ __('Create User') }}</span>
                     <span wire:loading wire:target="save"
-                        class="text-text-btn-primary group-hover:text-text-btn-secondary">{{__('Creating...')}}</span>
+                        class="text-text-btn-primary group-hover:text-text-btn-secondary">{{ __('Creating...') }}</span>
                 </x-ui.button>
             </div>
         </form>

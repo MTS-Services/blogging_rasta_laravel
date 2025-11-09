@@ -52,8 +52,4 @@ class Create extends Component
     {
         $this->form->reset();
     }
-    public function cancel(): void
-    {
-        $this->redirect(route('admin.um.admin.index'), navigate: true);
-    }
 }

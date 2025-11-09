@@ -41,10 +41,10 @@ class Index extends Component
             [
                 'key' => 'avatar',
                 'label' => 'Avatar',
-                'format' => function ($admin) {
-                    return $admin->avatar_url
-                        ? '<img src="' . $admin->avatar_url . '" alt="' . $admin->name . '" class="w-10 h-10 rounded-full object-cover shadow-sm">'
-                        : '<div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 font-semibold">' . strtoupper(substr($admin->name, 0, 2)) . '</div>';
+                'format' => function ($data) {
+                    return $data->avatar_url
+                        ? '<img src="' . $data->avatar_url . '" alt="' . $data->name . '" class="w-10 h-10 rounded-full object-cover shadow-sm">'
+                        : '<div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 font-semibold">' . strtoupper(substr($data->name, 0, 2)) . '</div>';
                 }
             ],
             [
@@ -61,15 +61,9 @@ class Index extends Component
                 'key' => 'status',
                 'label' => 'Status',
                 'sortable' => true,
-                'format' => function ($admin) {
-                    $colors = [
-                        'active' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-                        'inactive' => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-                        'suspended' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-                    ];
-                    $color = $colors[$admin->status->value] ?? 'bg-gray-100 text-gray-800';
-                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ' . $color . '">' .
-                        ucfirst($admin->status->value) .
+                'format' => function ($data) {
+                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium badge ' . $data->status->color() . '">' .
+                        $data->status->label() .
                         '</span>';
                 }
             ],
@@ -77,16 +71,16 @@ class Index extends Component
                 'key' => 'created_at',
                 'label' => 'Created',
                 'sortable' => true,
-                'format' => function ($admin) {
-                    return $admin->created_at_formatted;
+                'format' => function ($data) {
+                    return $data->created_at_formatted;
                 }
             ],
             [
                 'key' => 'created_by',
                 'label' => 'Created By',
-                'format' => function ($admin) {
-                    return optional($admin->creater_admin)->name
-                        ? '<span class="text-sm font-medium text-gray-900 dark:text-gray-100">' . e($admin->creater_admin->name) . '</span>'
+                'format' => function ($data) {
+                    return optional($data->creater_admin)->name
+                        ? '<span class="text-sm font-medium text-gray-900 dark:text-gray-100">' . e($data->creater_admin->name) . '</span>'
                         : '<span class="text-sm text-gray-500 dark:text-gray-400 italic">System</span>';
                 },
                 'sortable' => true,

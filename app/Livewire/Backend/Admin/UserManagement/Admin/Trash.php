@@ -61,14 +61,8 @@ class Trash extends Component
                 'label' => 'Status',
                 'sortable' => true,
                 'format' => function ($data) {
-                    $colors = [
-                        'active' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-                        'inactive' => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-                        'suspended' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-                    ];
-                    $color = $colors[$data->status->value] ?? 'bg-gray-100 text-gray-800';
-                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ' . $color . '">' .
-                        ucfirst($data->status->value) .
+                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium badge ' . $data->status->color() . '">' .
+                        $data->status->label() .
                         '</span>';
                 }
             ],
@@ -77,18 +71,15 @@ class Trash extends Component
                 'label' => 'Deleted At',
                 'sortable' => true,
                 'format' => function ($data) {
-                    return '<div class="text-sm">' .
-                        '<div class="font-medium text-gray-900 dark:text-gray-100">' . $data->deleted_at->format('M d, Y') . '</div>' .
-                        '<div class="text-xs text-gray-500 dark:text-gray-400">' . $data->deleted_at->format('h:i A') . '</div>' .
-                        '</div>';
+                    return $data->deleted_at_formatted;;
                 }
             ],
             [
                 'key' => 'deleted_by',
                 'label' => 'Deleted By',
                 'format' => function ($data) {
-                    return $data->deleter_admin
-                        ? '<span class="text-sm font-medium text-gray-900 dark:text-gray-100">' . $data->deleter_admin->name . '</span>'
+                    return optional($data->deleter_admin)->name
+                        ? '<span class="text-sm font-medium text-gray-900 dark:text-gray-100">' . e($data->deleter_admin->name) . '</span>'
                         : '<span class="text-sm text-gray-500 dark:text-gray-400 italic">System</span>';
                 }
             ],

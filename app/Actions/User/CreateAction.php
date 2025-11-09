@@ -28,7 +28,7 @@ class CreateAction
             $user = $this->interface->create($data);
 
             // Dispatch event
-            event(new UserCreated($user));
+            // event(new UserCreated($user));
 
             return $user->fresh();
         });
