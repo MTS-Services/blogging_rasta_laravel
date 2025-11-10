@@ -49,7 +49,7 @@
                         'active' => 'admin',
                     ],
                     [
-                        'name' => 'All Users',
+                        'name' => 'Users',
                         'route' => route('admin.um.user.index'),
                         'icon' => 'user',
                         'active' => 'admin-users',

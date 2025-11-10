@@ -17,11 +17,7 @@ interface UserRepositoryInterface
 
     public function find($column_value, string $column_name = 'id', bool $trashed = false): ?User;
 
-    public function findByEmail(string $email, bool $trashed = false): ?User;
-
     public function findTrashed($column_value, string $column_name = 'id'): ?User;
-
-    public function findTrashedByEmail(string $email): ?User;
 
     public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator;
 
@@ -43,17 +39,17 @@ interface UserRepositoryInterface
 
     public function update(int $id, array $data): bool;
 
-    public function delete(int $id, $actionerId): bool;
+    public function delete(int $id, array $actioner): bool;
 
     public function forceDelete(int $id): bool;
 
-    public function restore(int $id, int $actionerId): bool;
+    public function restore(int $id, array $actioner): bool;
 
-    public function bulkDelete(array $ids, int $actionerId): int;
+    public function bulkDelete(array $ids, array $actioner): int;
 
-    public function bulkUpdateStatus(array $ids, string $status, $actionerId): int;
+    public function bulkUpdateStatus(array $ids, string $status,  array $actioner): int;
 
-    public function bulkRestore(array $ids, int $actionerId): int;
+    public function bulkRestore(array $ids, array $actioner): int;
 
     public function bulkForceDelete(array $ids): int;
 

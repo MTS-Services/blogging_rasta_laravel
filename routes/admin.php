@@ -4,7 +4,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\Admin\Settings\LanguageController;
 use App\Http\Controllers\Backend\Admin\UserManagement\UserController;
-use App\Http\Controllers\Backend\Admin\AdminManagement\AdminController;
+use App\Http\Controllers\Backend\Admin\UserManagement\AdminController;
 use App\Http\Controllers\Backend\Admin\AuditingController;
 
 Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefix('admin')->group(function () {

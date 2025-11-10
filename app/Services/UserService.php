@@ -81,85 +81,64 @@ class UserService
 
     public function createData(array $data): User
     {
-        return $this->createAction->execute($data);
+        return $this->createAction->execute(data: $data);
     }
 
     public function updateData(int $id, array $data): User
     {
-        return $this->updateAction->execute($id, $data);
+        return $this->updateAction->execute(id: $id, data: $data);
     }
 
-    public function deleteData(int $id, ?int $actionerId = null): bool
+    public function deleteData(int $id, array $actioner): bool
     {
-        if ($actionerId == null) {
-            $actionerId = admin()->id;
-        }
-        return $this->deleteAction->execute($id, false, $actionerId);
+        return $this->deleteAction->execute(id: $id, actioner: $actioner, forceDelete: false);
     }
 
-    public function restoreData(int $id, ?int $actionerId = null): bool
+    public function restoreData(int $id, array $actioner): bool
     {
-        if ($actionerId == null) {
-            $actionerId = admin()->id;
-        }
-
-        return $this->restoreAction->execute($id, $actionerId);
+        return $this->restoreAction->execute(id: $id, actioner: $actioner);
     }
 
-    public function forceDeleteData(int $id, ?int $actionerId = null): bool
+    public function forceDeleteData(int $id): bool
     {
-        if ($actionerId == null) {
-            $actionerId = admin()->id;
-        }
-        return $this->deleteAction->execute($id, true, $actionerId);
+        $actioner = [
+            'id' => null,
+            'type' => null
+        ];
+        return $this->deleteAction->execute(id: $id, actioner: $actioner, forceDelete: true);
     }
 
-    public function updateStatusData(int $id, UserStatus $status, ?int $actionerId = null): User
+    public function updateStatusData(int $id, UserStatus $status, array $actioner): User
     {
-        if ($actionerId == null) {
-            $actionerId = admin()->id;
-        }
-
         return $this->updateAction->execute($id, [
             'status' => $status->value,
-            'updated_by' => $actionerId,
+            'updater_id' => $actioner['id'],
+            'updater_type' => $actioner['type']
         ]);
     }
 
-    public function bulkRestoreData(array $ids, ?int $actionerId = null): int
+    public function bulkRestoreData(array $ids, array $actioner): int
     {
-
-        if ($actionerId == null) {
-            $actionerId = admin()->id;
-        }
-
-        return $this->bulkAction->execute($ids, 'restore', null, $actionerId);
+        return $this->bulkAction->execute(ids: $ids, action: 'restore', actioner: $actioner, status: null);
     }
 
-    public function bulkForceDeleteData(array $ids, ?int $actionerId = null): int
+    public function bulkForceDeleteData(array $ids): int
     {
-        if ($actionerId == null) {
-            $actionerId = admin()->id;
-        }
-
-        return $this->bulkAction->execute($ids, 'forceDelete', null, $actionerId);
+        $actioner = [
+            'id' => null,
+            'type' => null
+        ];
+        return $this->bulkAction->execute(ids: $ids, action: 'forceDelete', actioner: $actioner, status: null);
     }
 
-    public function bulkDeleteData(array $ids, ?int $actionerId = null): int
+    public function bulkDeleteData(array $ids, array $actioner): int
     {
-        if ($actionerId == null) {
-            $actionerId = admin()->id;
-        }
-
-        return $this->bulkAction->execute($ids, 'delete', null, $actionerId);
+        return $this->bulkAction->execute(ids: $ids, action: 'delete', actioner: $actioner, status: null);
     }
 
-    public function bulkUpdateStatus(array $ids, UserStatus $status, ?int $actionerId = null): int
+    public function bulkUpdateStatus(array $ids, UserStatus $status, array $actioner): int
     {
-        if ($actionerId == null) {
-            $actionerId = admin()->id;
-        }
-        return $this->bulkAction->execute(ids: $ids, action: 'status', status: $status->value, actionerId: $actionerId);
+        return $this->bulkAction->execute(ids: $ids, action: 'status', actioner: $actioner, status: $status->value);
     }
 
     /* ================== ================== ==================

@@ -40,20 +40,6 @@ class UserRepository implements UserRepositoryInterface
         return $model->where($column_name, $column_value)->first();
     }
 
-    public function findByEmail(string $email, $trashed = false): ?User
-    {
-        $model = $this->model;
-        if ($trashed) {
-            $model = $model->withTrashed();
-        }
-        return $model->where('email', $email)->first();
-    }
-
-    public function findTrashedByEmail(string $email): ?User
-    {
-        return $this->model->onlyTrashed()->where('email', $email)->first();
-    }
-
 
     public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator
     {
@@ -138,13 +124,10 @@ class UserRepository implements UserRepositoryInterface
         if (!$findData) {
             return false;
         }
-
         return $findData->update($data);
     }
 
-
-
-    public function delete(int $id, $actionerId): bool
+    public function delete(int $id, array $actioner): bool
     {
         $findData = $this->find($id);
 
@@ -152,7 +135,7 @@ class UserRepository implements UserRepositoryInterface
             return false;
         }
 
-        $findData->update(['deleted_by' => $actionerId]);
+        $findData->update(['deleter_id' => $actioner['id'], 'deleter_type' => $actioner['type']]);
 
         return $findData->delete();
     }
@@ -168,41 +151,39 @@ class UserRepository implements UserRepositoryInterface
         return $findData->forceDelete();
     }
 
-    public function restore(int $id, int $actionerId): bool
+    public function restore(int $id, array $actioner): bool
     {
-        $findData = $this->findTrashed($id);
+        $findData = $this->findTrashed(column_value: $id);
 
         if (!$findData) {
             return false;
         }
-        $findData->update(['restored_by' => $actionerId, 'restored_at' => now()]);
-
+        $findData->update(['restorer_id' => $actioner['id'], 'restorer_type' => $actioner['type'], 'restored_at' => now(), 'deleter_id' => null, 'deleter_type' => null]);
         return $findData->restore();
     }
 
 
-    public function bulkUpdateStatus(array $ids, string $status, $actionerId): int
+    public function bulkUpdateStatus(array $ids, string $status, array $actioner): int
     {
 
-        return $this->model->withTrashed()->whereIn('id', $ids)->update(['status' => $status, 'updated_by' => $actionerId]);
+        return $this->model->withTrashed()->whereIn('id', $ids)->update(['status' => $status, 'updater_id' => $actioner['id'], 'updater_type' => $actioner['type']]);
     }
 
-    public function bulkRestore(array $ids, int $actionerId): int
+    public function bulkRestore(array $ids, array $actioner): int
     {
 
-        $this->model->onlyTrashed()->whereIn('id', $ids)->update(['restored_by' => $actionerId, 'restored_at' => now()]);
-
+        $this->model->onlyTrashed()->whereIn('id', $ids)->update(['restorer_id' => $actioner['id'], 'restorer_type' => $actioner['type'], 'restored_at' => now(), 'deleter_id' => null, 'deleter_type' => null]);
         return $this->model->onlyTrashed()->whereIn('id', $ids)->restore();
     }
 
-    public function bulkDelete(array $ids, int $actionerId): int
+    public function bulkDelete(array $ids, array $actioner): int
     {
 
-        $this->model->whereIn('id', $ids)->update(['deleted_by' => $actionerId]);
+        $this->model->whereIn('id', $ids)->update(['deleter_id' => $actioner['id'], 'deleter_type' => $actioner['type']]);
 
         return $this->model->whereIn('id', $ids)->delete();
     }
-    public function bulkForceDelete(array $ids): int //
+    public function bulkForceDelete(array $ids): int
     {
         return $this->model->withTrashed()->whereIn('id', $ids)->forceDelete();
     }

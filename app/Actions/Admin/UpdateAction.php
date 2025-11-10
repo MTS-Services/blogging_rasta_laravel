@@ -12,17 +12,15 @@ use Illuminate\Support\Facades\Storage;
 
 class UpdateAction
 {
-    public function __construct(
-        protected AdminRepositoryInterface $interface
-    ) {}
+    public function __construct(public AdminRepositoryInterface $interface) {}
 
     public function execute(int $id,  array $data): Admin
     {
         return DB::transaction(function () use ($id, $data) {
 
-            $admin = $this->interface->find($id);
+            $model = $this->interface->find($id);
 
-            if (!$admin) {
+            if (!$model) {
                 Log::error('Admin not found', ['admin_id' => $id]);
                 throw new \Exception('Admin not found');
             }
@@ -31,7 +29,7 @@ class UpdateAction
                 // Handle Avatar upload Logic will be here....
             }
 
-            $data['password'] = $data['password'] ?? $admin->password;
+            $data['password'] = $data['password'] ?? $model->password;
 
             // Update Admin
             $updated = $this->interface->update($id, $data);
@@ -42,11 +40,11 @@ class UpdateAction
             }
 
             // Refresh the Admin model
-            $admin = $admin->fresh();
+            $model = $model->fresh();
 
-            event(new AdminUpdated($admin, $data));
+            event(new AdminUpdated($model, $data));
 
-            return $admin;
+            return $model;
         });
     }
 }

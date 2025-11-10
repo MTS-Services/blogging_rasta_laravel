@@ -16,7 +16,7 @@ class Edit extends Component
     use WithFileUploads, WithNotification;
 
     public AdminForm $form;
-    public Admin $admin;
+    public Admin $model;
 
     protected AdminService $service;
 
@@ -25,10 +25,10 @@ class Edit extends Component
         $this->service = $service;
     }
 
-    public function mount(Admin $data): void
+    public function mount(Admin $model): void
     {
-        $this->admin = $data;
-        $this->form->setData($data);
+        $this->model = $model;
+        $this->form->setData($model);
     }
 
     public function render()
@@ -43,14 +43,14 @@ class Edit extends Component
         $validated = $this->form->validate();
         try {
             $validated['updated_by'] = admin()->id;
-            $this->admin = $this->service->updateData($this->admin->id, $validated);
+            $this->model = $this->service->updateData($this->model->id, $validated);
 
             $this->dispatch('AdminUpdated');
             $this->success('Admin updated successfully');
             return $this->redirect(route('admin.um.admin.index'), navigate: true);
         } catch (\Throwable $e) {
             Log::error('Failed to update Admin', [
-                'admin_id' => $this->admin->id,
+                'admin_id' => $this->model->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
@@ -60,7 +60,7 @@ class Edit extends Component
 
     public function resetForm(): void
     {
-        $this->form->setData($this->admin);
         $this->form->reset();
+        $this->form->setData($this->model);
     }
 }

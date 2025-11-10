@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 
 namespace App\Actions\Admin;
@@ -8,10 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class RestoreAction
 {
-  public function __construct(public AdminRepositoryInterface $interface)
-  {
-    
-  }
+  public function __construct(public AdminRepositoryInterface $interface) {}
 
   public function execute(int $id, ?int $actionerId)
   {

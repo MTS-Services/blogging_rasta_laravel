@@ -13,7 +13,7 @@
     </div>
 
     {{-- Table Component --}}
-    <x-ui.table :data="$admins" :columns="$columns" :actions="$actions" :bulkActions="$bulkActions" :bulkAction="$bulkAction"
+    <x-ui.table :data="$datas" :columns="$columns" :actions="$actions" :bulkActions="$bulkActions" :bulkAction="$bulkAction"
         :statuses="$statuses" :selectedIds="$selectedIds" :mobileVisibleColumns="2" searchProperty="search" perPageProperty="perPage"
         :showBulkActions="true" emptyMessage="{{ __('No admins found. Create your first admin to get started.') }}" />
 

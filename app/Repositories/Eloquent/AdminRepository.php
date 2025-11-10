@@ -41,21 +41,6 @@ class AdminRepository implements AdminRepositoryInterface
         return $model->where($column_name, $column_value)->first();
     }
 
-    public function findByEmail(string $email, $trashed = false): ?Admin
-    {
-        $model = $this->model;
-        if ($trashed) {
-            $model = $model->withTrashed();
-        }
-        return $model->where('email', $email)->first();
-    }
-
-    public function findTrashedByEmail(string $email): ?Admin
-    {
-        return $this->model->onlyTrashed()->where('email', $email)->first();
-    }
-
-
     public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator
     {
         $search = $filters['search'] ?? null;
@@ -172,7 +157,7 @@ class AdminRepository implements AdminRepositoryInterface
         if (!$findData) {
             return false;
         }
-        $findData->update(['restored_by' => $actionerId, 'restored_at' => now()]);
+        $findData->update(['restored_by' => $actionerId, 'restored_at' => now(), 'deleted_by' => null]);
 
         return $findData->restore();
     }
@@ -187,7 +172,7 @@ class AdminRepository implements AdminRepositoryInterface
     public function bulkRestore(array $ids, int $actionerId): int
     {
 
-        $this->model->onlyTrashed()->whereIn('id', $ids)->update(['restored_by' => $actionerId, 'restored_at' => now()]);
+        $this->model->onlyTrashed()->whereIn('id', $ids)->update(['restored_by' => $actionerId, 'restored_at' => now(), 'deleted_by' => null]);
 
         return $this->model->onlyTrashed()->whereIn('id', $ids)->restore();
     }

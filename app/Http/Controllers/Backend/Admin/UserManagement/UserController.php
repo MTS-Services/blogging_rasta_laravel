@@ -9,95 +9,58 @@ use App\Services\UserService;
 
 class UserController extends Controller
 {
-    protected $masterView = 'backend.admin.pages.user-management.user.user';
+    protected $masterView = 'backend.admin.pages.user-management.user';
 
-    protected UserService $service;
-    public function __construct(UserService $service)
-    {
-        $this->service = $service;
-    }
-
+    public function __construct(protected UserService $service) {}
+    /**
+     * Show the list of resources.
+     */
     public function index()
     {
         return view($this->masterView);
     }
+
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
         return view($this->masterView);
     }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $encryptedId)
+    {
+        $data = $this->service->findData(decrypt($encryptedId));
+        if (!$data) {
+            abort(404);
+        }
+        return view($this->masterView, [
+            'data' => $data
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
     public function view(string $id)
     {
-        $user = $this->service->getDataById($id);
-        if (!$user) {
+        $data = $this->service->findData($id);
+        if (!$data) {
             abort(404);
         }
         return view($this->masterView, [
-            'user' => $user
+            'data' => $data
         ]);
     }
-    public function edit(string $id)
-    {
-        $user = $this->service->getDataById($id);
-        if (!$user) {
-            abort(404);
-        }
-        return view($this->masterView, [
-            'user' => $user
-        ]);
-    }
+
+    /**
+     * Display the trashed resource.
+     */
     public function trash()
     {
         return view($this->masterView);
-    }
-    public function profileInfo($id)
-    {
-        $user = $this->service->getDataById($id);
-        if (!$user) {
-            abort(404);
-        }
-        return view($this->masterView, [
-            'user' => $user
-        ]);
-    }
-    public function shopInfo($id)
-    {
-        $user = $this->service->getDataById($id);
-        if (!$user) {
-            abort(404);
-        }
-        return view($this->masterView, [
-            'user' => $user
-        ]);
-    }
-    public function kycInfo($id)
-    {
-        
-        $user = $this->service->getDataById($id);
-        if (!$user) {
-            abort(404);
-        }
-        return view($this->masterView, [
-            'user' => $user
-        ]);
-    }
-    public function statistic($id)
-    {
-        $user = $this->service->getDataById($id);
-        if (!$user) {
-            abort(404);
-        }
-        return view($this->masterView, [
-            'user' => $user
-        ]);
-    }
-    public function referral($id)
-    {
-        $user = $this->service->getDataById($id);
-        if (!$user) {
-            abort(404);
-        }
-        return view($this->masterView, [
-            'user' => $user
-        ]);
     }
 }

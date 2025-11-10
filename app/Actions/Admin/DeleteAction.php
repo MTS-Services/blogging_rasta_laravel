@@ -10,26 +10,29 @@ use Illuminate\Support\Facades\Storage;
 
 class DeleteAction
 {
-    public function __construct(
-        protected AdminRepositoryInterface $interface
-    ) {}
+    public function __construct(public AdminRepositoryInterface $interface) {}
 
     public function execute(int $id, bool $forceDelete = false, $actionerId): bool
     {
         return DB::transaction(function () use ($id, $forceDelete, $actionerId) {
-            $admin = $this->interface->find($id);
+            $model = null;
+            if ($forceDelete) {
+                $model = $this->interface->findTrashed(column_value: $id);
+            } else {
+                $model = $this->interface->find(column_value: $id);
+            }
 
-            if (!$admin) {
+            if (!$model) {
                 throw new \Exception('Admin not found');
             }
 
             // Dispatch event before deletion
-            event(new AdminDeleted($admin));
+            event(new AdminDeleted($model));
 
             if ($forceDelete) {
                 // Delete avatar
-                if ($admin->avatar) {
-                    Storage::disk('public')->delete($admin->avatar);
+                if ($model->avatar) {
+                    Storage::disk('public')->delete($model->avatar);
                 }
 
                 return $this->interface->forceDelete($id);
@@ -37,10 +40,5 @@ class DeleteAction
 
             return $this->interface->delete($id, $actionerId);
         });
-    }
-
-    public function restore(int $adminId, int $actionerId): bool
-    {
-        return $this->interface->restore($adminId, $actionerId);
     }
 }

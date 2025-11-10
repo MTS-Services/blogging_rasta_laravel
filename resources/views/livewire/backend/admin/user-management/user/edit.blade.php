@@ -1,15 +1,13 @@
 <section>
     <div class="glass-card rounded-2xl p-6 mb-6">
         <div class="flex items-center justify-between">
-            <h2 class="text-xl font-bold text-text-black dark:text-text-white">{{ __('Admin Edit') }}</h2>
+            <h2 class="text-xl font-bold text-text-black dark:text-text-white">{{ __('User Edit') }}</h2>
             <div class="flex items-center gap-2">
-                <div class="flex items-center gap-2">
-                    <x-ui.button href="{{ route('admin.um.admin.index') }}" class="w-auto! py-2!">
-                        <flux:icon name="arrow-left"
-                            class="w-4 h-4 stroke-text-btn-primary group-hover:stroke-text-btn-secondary" />
-                        {{ __('Back') }}
-                    </x-ui.button>
-                </div>
+                <x-ui.button href="{{ route('admin.um.user.index') }}" class="w-auto! py-2!">
+                    <flux:icon name="arrow-left"
+                        class="w-4 h-4 stroke-text-btn-primary group-hover:stroke-text-btn-secondary" />
+                    {{ __('Back') }}
+                </x-ui.button>
             </div>
         </div>
     </div>
@@ -17,7 +15,7 @@
         <form wire:submit="save">
             <div>
                 <x-ui.file-input wire:model="form.avatar" label="{{ __('Avatar') }}" accept="image/*" :error="$errors->first('form.avatar')"
-                    hint="Upload a profile picture (Max: 2MB, Formats: JPG, PNG, GIF, WebP)" />
+                    hint="Upload a profile picture (Max: 2MB)" />
             </div>
 
             <!-- Add other form fields here -->
@@ -52,6 +50,7 @@
                     <x-ui.input-error :messages="$errors->get('form.password_confirmation')" />
                 </div>
             </div>
+
             <!-- Form Actions -->
             <div class="flex items-center justify-end gap-4 mt-6">
                 <x-ui.button wire:click="resetForm" variant="tertiary" class="w-auto! py-2!">
@@ -63,9 +62,11 @@
                         class="text-text-btn-primary group-hover:text-text-btn-secondary">{{ __('Reseting...') }}</span>
                 </x-ui.button>
 
-                <x-ui.button type="submit" class="w-auto! py-2!">
-                    <span wire:loading.remove wire:target="save" class="text-white">{{ __('Update Admin') }}</span>
-                    <span wire:loading wire:target="save" class="text-white">{{ __('Updating...') }}</span>
+                <x-ui.button class="w-auto! py-2!" type="submit">
+                    <span wire:loading.remove wire:target="save"
+                        class="text-text-btn-primary group-hover:text-text-btn-secondary">{{ __('Update User') }}</span>
+                    <span wire:loading wire:target="save"
+                        class="text-text-btn-primary group-hover:text-text-btn-secondary">{{ __('Updating...') }}</span>
                 </x-ui.button>
             </div>
         </form>

@@ -3,6 +3,7 @@
 namespace App\Livewire\Backend\Admin\UserManagement\User;
 
 use App\Enums\UserStatus;
+use App\Models\Admin;
 use App\Services\UserService;
 use App\Traits\Livewire\WithDataTable;
 use App\Traits\Livewire\WithNotification;
@@ -62,7 +63,7 @@ class Index extends Component
                 'label' => 'Status',
                 'sortable' => true,
                 'format' => function ($data) {
-                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium badge ' . $data->status->color() . '">' .
+                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium badge badge-soft ' . $data->status->color() . '">' .
                         $data->status->label() .
                         '</span>';
                 }
@@ -138,19 +139,22 @@ class Index extends Component
                 return;
             }
 
-            $this->service->deleteData($this->deleteId);
+            $this->service->deleteData(id: $this->deleteId, actioner: [
+                'id' => admin()->id,
+                'type' => Admin::class,
+            ]);
 
             $this->showDeleteModal = false;
             $this->deleteId = null;
 
-            $this->success('Admin deleted successfully');
+            $this->success('User deleted successfully');
         } catch (\Throwable $e) {
-            Log::error('Failed to delete Admin', [
-                'admin_id' => $this->deleteId,
+            Log::error('Failed to delete user', [
+                'user_id' => $this->deleteId,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            $this->error('Failed to delete Admin.');
+            $this->error('Failed to delete user.');
         }
     }
 
@@ -163,8 +167,8 @@ class Index extends Component
     public function confirmBulkAction(): void
     {
         if (empty($this->selectedIds) || empty($this->bulkAction)) {
-            $this->warning('Please select Admins and an action');
-            Log::info('No Admins selected or no bulk action selected');
+            $this->warning('Please select Users and an action');
+            Log::info('No Users selected or no bulk action selected');
             return;
         }
 
@@ -195,15 +199,21 @@ class Index extends Component
 
     protected function bulkDelete(): void
     {
-        $count = $this->service->bulkDeleteData($this->selectedIds, admin()->id);
+        $count = $this->service->bulkDeleteData(ids: $this->selectedIds, actioner: [
+            'id' => admin()->id,
+            'type' => Admin::class,
+        ]);
 
-        $this->success("{$count} Admins deleted successfully");
+        $this->success("{$count} Users deleted successfully");
     }
 
     protected function bulkUpdateStatus(UserStatus $status): void
     {
-        $count = $this->service->bulkUpdateStatus($this->selectedIds, $status);
-        $this->success("{$count} Admins updated successfully");
+        $count = $this->service->bulkUpdateStatus(ids: $this->selectedIds, status: $status, actioner: [
+            'id' => admin()->id,
+            'type' => Admin::class,
+        ]);
+        $this->success("{$count} Users updated successfully");
     }
 
     protected function getFilters(): array

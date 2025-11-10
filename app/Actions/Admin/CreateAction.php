@@ -11,28 +11,25 @@ use Illuminate\Support\Facades\Storage;
 
 class CreateAction
 {
-    public function __construct(
-        protected AdminRepositoryInterface $interface
-    ) {}
-
+    public function __construct(public AdminRepositoryInterface $interface) {}
 
     public function execute(array $data): Admin
     {
         return DB::transaction(function () use ($data) {
-          
+
             // Handle avatar upload
             if ($data['avatar']) {
                 $data['avatar'] = Storage::disk('public')->putFile('admins', $data['avatar']);
             }
-            
+
 
             // Create user
-            $admin = $this->interface->create($data);
+            $model = $this->interface->create($data);
 
             // Dispatch event
-            event(new AdminCreated($admin));
+            event(new AdminCreated($model));
 
-            return $admin->fresh();
+            return $model->fresh();
         });
     }
 }

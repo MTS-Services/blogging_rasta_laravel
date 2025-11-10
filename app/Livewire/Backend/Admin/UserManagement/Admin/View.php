@@ -7,9 +7,10 @@ use Livewire\Component;
 
 class View extends Component
 {
-    public Admin $data;
-    public function mount(Admin $data): void
+    public Admin $model;
+
+    public function mount(Admin $model): void
     {
-        $this->data = $data;
+        $this->model = $model;
     }
 }

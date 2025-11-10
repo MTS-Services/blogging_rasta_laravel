@@ -1,36 +1,32 @@
-<?php 
+<?php
 
 
 namespace App\Actions\User;
 
-
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
-class BulkAction {
+class BulkAction
+{
+    public function __construct(public UserRepositoryInterface $interface) {}
 
-    public function __construct(public UserRepositoryInterface $interface)
+    public function execute(array $ids, string $action, array $actioner, ?string $status = null)
     {
-        
-    }
-
-    public function execute(array $ids, string $action, ?string $status = null, ?int $actionerId) {
-      return  DB::transaction(function () use ($ids, $action, $status, $actionerId) {
+        return  DB::transaction(function () use ($ids, $action, $status, $actioner) {
             switch ($action) {
-                case 'delete': 
-                    return $this->interface->bulkDelete($ids , $actionerId);
+                case 'delete':
+                    return $this->interface->bulkDelete(ids: $ids, actioner: $actioner);
                     break;
                 case 'forceDelete':
-                    return $this->interface->bulkForceDelete($ids);
+                    return $this->interface->bulkForceDelete(ids: $ids);
                     break;
                 case 'restore':
-                    return $this->interface->bulkRestore($ids, $actionerId);
+                    return $this->interface->bulkRestore(ids: $ids, actioner: $actioner);
                     break;
                 case 'status':
-                    return $this->interface->bulkUpdateStatus($ids, $status, $actionerId);
+                    return $this->interface->bulkUpdateStatus(ids: $ids, status: $status, actioner: $actioner);
                     break;
-                
-            }  
+            }
         });
     }
 }

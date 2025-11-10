@@ -16,10 +16,10 @@ class Trash extends Component
 
     public $statusFilter = '';
     public $showDeleteModal = false;
-    public $deleteAdminId = null;
+    public $deleteDataId = null;
     public $bulkAction = '';
     public $showBulkActionModal = false;
-    public $adminId;
+    public $data;
 
     protected $listeners = ['adminCreated' => '$refresh', 'adminUpdated' => '$refresh'];
 
@@ -36,6 +36,8 @@ class Trash extends Component
             perPage: $this->perPage,
             filters: $this->getFilters()
         );
+        $datas->load(['deleter_admin']);
+
         $columns = [
             [
                 'key' => 'avatar',
@@ -61,7 +63,7 @@ class Trash extends Component
                 'label' => 'Status',
                 'sortable' => true,
                 'format' => function ($data) {
-                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium badge ' . $data->status->color() . '">' .
+                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium badge badge-soft ' . $data->status->color() . '">' .
                         $data->status->label() .
                         '</span>';
                 }
@@ -71,7 +73,7 @@ class Trash extends Component
                 'label' => 'Deleted At',
                 'sortable' => true,
                 'format' => function ($data) {
-                    return $data->deleted_at_formatted;;
+                    return $data->deleted_at_formatted;
                 }
             ],
             [
@@ -106,7 +108,7 @@ class Trash extends Component
         ];
 
         return view('livewire.backend.admin.user-management.admin.trash', [
-            'admins' => $datas,
+            'datas' => $datas,
             'statuses' => AdminStatus::options(),
             'columns' => $columns,
             'actions' => $actions,
@@ -116,13 +118,13 @@ class Trash extends Component
 
     public function confirmDelete($encryptedId): void
     {
-        $this->deleteAdminId = decrypt($encryptedId);
+        $this->deleteDataId = decrypt($encryptedId);
         $this->showDeleteModal = true;
     }
     public function forceDelete(): void
     {
         try {
-            $this->service->deleteData($this->deleteAdminId);
+            $this->service->deleteData($this->deleteDataId);
             $this->showDeleteModal = false;
             $this->resetPage();
 

@@ -17,11 +17,7 @@ interface AdminRepositoryInterface
 
     public function find($column_value, string $column_name = 'id', bool $trashed = false): ?Admin;
 
-    public function findByEmail(string $email, bool $trashed = false): ?Admin;
-
     public function findTrashed($column_value, string $column_name = 'id'): ?Admin;
-
-    public function findTrashedByEmail(string $email): ?Admin;
 
     public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator;
 

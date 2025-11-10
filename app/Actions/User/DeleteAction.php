@@ -2,44 +2,45 @@
 
 namespace App\Actions\User;
 
-use App\Events\User\UserDeleted;
+// use App\Events\Admin\AdminDeleted;
+use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class DeleteAction
 {
-    public function __construct(
-        protected UserRepositoryInterface $interface
-    ) {}
+    public function __construct(public UserRepositoryInterface $interface) {}
 
-    public function execute(int $userId, bool $forceDelete = false): bool
+    public function execute(int $id, array $actioner,  bool $forceDelete = false): bool
     {
-        return DB::transaction(function () use ($userId, $forceDelete) {
-            $user = $this->interface->find($userId);
+        return DB::transaction(function () use ($id, $actioner, $forceDelete) {
 
-            if (!$user) {
+            $model = null;
+
+            if ($forceDelete) {
+                $model = $this->interface->findTrashed(column_value: $id);
+            } else {
+                $model = $this->interface->find(column_value: $id);
+            }
+
+            if (!$model) {
                 throw new \Exception('User not found');
             }
 
             // Dispatch event before deletion
-            event(new UserDeleted($user));
+            // event(new AdminDeleted($admin));
 
             if ($forceDelete) {
                 // Delete avatar
-                if ($user->avatar) {
-                    Storage::disk('public')->delete($user->avatar);
+                if ($model->avatar) {
+                    Storage::disk('public')->delete($model->avatar);
                 }
 
-                return $this->interface->forceDelete($userId);
+                return $this->interface->forceDelete(id: $id);
             }
 
-            return $this->interface->delete($userId);
+            return $this->interface->delete(id: $id, actioner: $actioner);
         });
-    }
-
-    public function restore(int $userId, int $actionerId): bool
-    {
-        return $this->interface->restore($userId, $actionerId);
     }
 }

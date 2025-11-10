@@ -15,7 +15,7 @@ class Index extends Component
 
     public $statusFilter = '';
     public $showDeleteModal = false;
-    public $deleteAdminId = null;
+    public $deleteDataId = null;
     public $bulkAction = '';
     public $showBulkActionModal = false;
 
@@ -62,7 +62,7 @@ class Index extends Component
                 'label' => 'Status',
                 'sortable' => true,
                 'format' => function ($data) {
-                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium badge ' . $data->status->color() . '">' .
+                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium badge badge-soft ' . $data->status->color() . '">' .
                         $data->status->label() .
                         '</span>';
                 }
@@ -127,31 +127,31 @@ class Index extends Component
 
     public function confirmDelete($encryptedId): void
     {
-        $this->deleteAdminId = decrypt($encryptedId);
+        $this->deleteDataId = decrypt($encryptedId);
         $this->showDeleteModal = true;
     }
 
     public function delete(): void
     {
         try {
-            if (!$this->deleteAdminId) {
+            if (!$this->deleteDataId) {
                 return;
             }
 
-            if ($this->deleteAdminId == admin()->id) {
+            if ($this->deleteDataId == admin()->id) {
                 $this->error('You cannot delete your own account');
                 return;
             }
 
-            $this->service->deleteData($this->deleteAdminId);
+            $this->service->deleteData($this->deleteDataId);
 
             $this->showDeleteModal = false;
-            $this->deleteAdminId = null;
+            $this->deleteDataId = null;
 
             $this->success('Admin deleted successfully');
         } catch (\Throwable $e) {
             Log::error('Failed to delete Admin', [
-                'admin_id' => $this->deleteAdminId,
+                'admin_id' => $this->deleteDataId,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);

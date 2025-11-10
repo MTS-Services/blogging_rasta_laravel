@@ -4,6 +4,7 @@ namespace App\Livewire\Backend\Admin\UserManagement\User;
 
 use Livewire\Component;
 use App\Enums\UserStatus;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Log;
 use App\Services\UserService;
 use App\Traits\Livewire\WithDataTable;
@@ -16,12 +17,12 @@ class Trash extends Component
 
     public $statusFilter = '';
     public $showDeleteModal = false;
-    public $deleteAdminId = null;
+    public $deleteDataId = null;
     public $bulkAction = '';
     public $showBulkActionModal = false;
-    public $adminId;
+    public $dataId;
 
-    protected $listeners = ['adminCreated' => '$refresh', 'adminUpdated' => '$refresh'];
+    protected $listeners = ['userCreated' => '$refresh', 'userUpdated' => '$refresh'];
 
     protected UserService $service;
 
@@ -36,6 +37,8 @@ class Trash extends Component
             perPage: $this->perPage,
             filters: $this->getFilters()
         );
+        $datas->load(['deleter']);
+
         $columns = [
             [
                 'key' => 'avatar',
@@ -61,14 +64,8 @@ class Trash extends Component
                 'label' => 'Status',
                 'sortable' => true,
                 'format' => function ($data) {
-                    $colors = [
-                        'active' => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-                        'inactive' => 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
-                        'suspended' => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-                    ];
-                    $color = $colors[$data->status->value] ?? 'bg-gray-100 text-gray-800';
-                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ' . $color . '">' .
-                        ucfirst($data->status->value) .
+                    return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium badge badge-soft ' . $data->status->color() . '">' .
+                        $data->status->label() .
                         '</span>';
                 }
             ],
@@ -77,18 +74,15 @@ class Trash extends Component
                 'label' => 'Deleted At',
                 'sortable' => true,
                 'format' => function ($data) {
-                    return '<div class="text-sm">' .
-                        '<div class="font-medium text-gray-900 dark:text-gray-100">' . $data->deleted_at->format('M d, Y') . '</div>' .
-                        '<div class="text-xs text-gray-500 dark:text-gray-400">' . $data->deleted_at->format('h:i A') . '</div>' .
-                        '</div>';
+                    return $data->deleted_at_formatted;
                 }
             ],
             [
                 'key' => 'deleted_by',
                 'label' => 'Deleted By',
                 'format' => function ($data) {
-                    return $data->deleter_admin
-                        ? '<span class="text-sm font-medium text-gray-900 dark:text-gray-100">' . $data->deleter_admin->name . '</span>'
+                    return $data->deleter
+                        ? '<span class="text-sm font-medium text-gray-900 dark:text-gray-100">' . $data->deleter->name . '</span>'
                         : '<span class="text-sm text-gray-500 dark:text-gray-400 italic">System</span>';
                 }
             ],
@@ -103,7 +97,7 @@ class Trash extends Component
             ],
             [
                 'key' => 'id',
-                'label' => 'Confirm Delete',
+                'label' => 'Permanently Delete',
                 'method' => 'confirmDelete',
                 'encrypt' => true
             ],
@@ -115,7 +109,7 @@ class Trash extends Component
         ];
 
         return view('livewire.backend.admin.user-management.user.trash', [
-            'admins' => $datas,
+            'datas' => $datas,
             'statuses' => UserStatus::options(),
             'columns' => $columns,
             'actions' => $actions,
@@ -125,17 +119,17 @@ class Trash extends Component
 
     public function confirmDelete($encryptedId): void
     {
-        $this->deleteAdminId = decrypt($encryptedId);
+        $this->deleteDataId = decrypt($encryptedId);
         $this->showDeleteModal = true;
     }
     public function forceDelete(): void
     {
         try {
-            $this->service->deleteData($this->deleteAdminId);
+            $this->service->forceDeleteData($this->deleteDataId);
             $this->showDeleteModal = false;
             $this->resetPage();
 
-            $this->success('Admin deleted successfully');
+            $this->success('User deleted successfully');
         } catch (\Throwable $e) {
             Log::error('Failed to delete User: ' . $e->getMessage());
             $this->error('Failed to delete User.');
@@ -144,8 +138,11 @@ class Trash extends Component
     public function restore($encryptedId): void
     {
         try {
-            $this->service->restoreData(decrypt($encryptedId), User()->id);
-            $this->success('Admin restored successfully');
+            $this->service->restoreData(id: decrypt($encryptedId), actioner: [
+                'id' => admin()->id,
+                'type' => Admin::class,
+            ]);
+            $this->success('User restored successfully');
         } catch (\Throwable $e) {
             Log::error('Failed to restore User: ' . $e->getMessage());
             $this->error('Failed to restore User.');
@@ -190,12 +187,15 @@ class Trash extends Component
 
     protected function bulkRestoreDatas(): void
     {
-        $count = $this->service->bulkRestoreData($this->selectedIds, User()->id);
+        $count = $this->service->bulkRestoreData(ids: $this->selectedIds, actioner: [
+            'id' => admin()->id,
+            'type' => Admin::class,
+        ]);
         $this->success("{$count} Users restored successfully");
     }
     protected function bulkForceDeleteDatas(): void
     {
-        $count = $this->service->bulkForceDeleteData($this->selectedIds);
+        $count = $this->service->bulkForceDeleteData(ids: $this->selectedIds);
         $this->success("{$count} Users permanently deleted successfully");
     }
 

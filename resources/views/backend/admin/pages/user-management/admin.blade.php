@@ -11,7 +11,7 @@
         @case('admin.um.admin.edit')
             <x-slot name="title">{{__('Admins Edit')}}</x-slot>
             <x-slot name="breadcrumb">{{__('Admin Management / Edit')}}</x-slot>
-            <livewire:backend.admin.user-management.admin.edit :data="$data"/>
+            <livewire:backend.admin.user-management.admin.edit :model="$data"/>
         @break
 
         @case('admin.um.admin.trash')
@@ -23,7 +23,7 @@
         @case('admin.um.admin.view')
             <x-slot name="title">{{__('Admins View')}}</x-slot>
             <x-slot name="breadcrumb">{{__('Admin Management / View')}}</x-slot>
-            <livewire:backend.admin.user-management.admin.view :data="$data"/>
+            <livewire:backend.admin.user-management.admin.view :model="$data"/>
         @break
 
         @default

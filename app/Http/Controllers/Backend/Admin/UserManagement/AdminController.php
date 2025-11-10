@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend\Admin\AdminManagement;
+namespace App\Http\Controllers\Backend\Admin\UserManagement;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
@@ -8,8 +8,6 @@ use App\Services\AdminService;
 
 class AdminController extends Controller
 {
-
-
     protected $masterView = 'backend.admin.pages.user-management.admin';
     public function __construct(protected AdminService $service) {}
 
