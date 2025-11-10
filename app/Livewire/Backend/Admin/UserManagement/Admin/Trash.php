@@ -96,7 +96,7 @@ class Trash extends Component
             ],
             [
                 'key' => 'id',
-                'label' => 'Confirm Delete',
+                'label' => 'Permanently Delete',
                 'method' => 'confirmDelete',
                 'encrypt' => true
             ],
