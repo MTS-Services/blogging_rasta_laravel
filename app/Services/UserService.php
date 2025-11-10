@@ -31,46 +31,40 @@ class UserService
 
     public function getAllDatas($sortfield = 'created_at', $order = 'desc'): Collection
     {
-        return $this->interface->all($sortfield, $order);
+        return $this->interface->all(sortField: $sortfield, order: $order);
     }
 
 
     public function findData($column_value, string $column_name = 'id'): ?User
     {
-        return $this->interface->find($column_value, $column_name);
-    }
-
-
-    public function getDataByEmail(string $email): ?User
-    {
-        return $this->interface->findByEmail($email);
+        return $this->interface->find(column_value: $column_value, column_name: $column_name);
     }
 
 
     public function getPaginatedData(int $perPage = 15, array $filters = []): LengthAwarePaginator
     {
-        return $this->interface->paginate($perPage, $filters);
+        return $this->interface->paginate(perPage: $perPage, filters: $filters);
     }
 
 
     public function getTrashedPaginatedData(int $perPage = 15, array $filters = []): LengthAwarePaginator
     {
-        return $this->interface->trashPaginate($perPage, $filters);
+        return $this->interface->trashPaginate(perPage: $perPage, filters: $filters);
     }
 
     public function searchData(string $query, $sortField = 'created_at', $order = 'desc'): Collection
     {
-        return $this->interface->search($query, $sortField, $order);
+        return $this->interface->search(query: $query, sortField: $sortField, order: $order);
     }
 
     public function dataExists(int $id): bool
     {
-        return $this->interface->exists($id);
+        return $this->interface->exists(id: $id);
     }
 
     public function getDataCount(array $filters = []): int
     {
-        return $this->interface->count($filters);
+        return $this->interface->count(filters:$filters);
     }
 
 
