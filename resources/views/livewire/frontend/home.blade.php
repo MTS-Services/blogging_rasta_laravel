@@ -4,8 +4,8 @@
         <div class="flex justify-between gap-6 items-center">
             <div class="w-full">
                 <div class="w-sm bg-second-500/40 rounded-full py-2 px-4">
-                    <span class="text-xs text-muted font-inter font-normal">
-                        <flux:icon name="sun" class="w-6 h-6 inline mr-2.5" />
+                    <span class="text-xs text-text-muted font-inter font-normal">
+                        <flux:icon name="sun" class="w-6 h-6 inline mr-2.5 stroke-second-500!" />
                         {{ __('Trusted by 50K+ beauty lovers') }}
                     </span>
                 </div>
@@ -79,194 +79,194 @@
                     <div class="">
                         <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
                         <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-muted mt-1">{{ __('2.3M views') }}</span>
+                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
                     </div>
                 </div>
             </div>
             <div class="">
                 <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
+                    <img src="{{ asset('assets/images/home_page/Featured 2.png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/Featured 2.1.png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
                         <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
                         <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-muted mt-1">{{ __('2.3M views') }}</span>
+                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
                     </div>
                 </div>
             </div>
             <div class="">
                 <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
+                    <img src="{{ asset('assets/images/home_page/Featured3.png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
                         <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
                         <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-muted mt-1">{{ __('2.3M views') }}</span>
+                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
                     </div>
                 </div>
             </div>
             <div class="">
                 <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
+                    <img src="{{ asset('assets/images/home_page/Featured4.png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/Featured4.1.png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
                         <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
                         <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-muted mt-1">{{ __('2.3M views') }}</span>
+                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
                     </div>
                 </div>
             </div>
             <div class="">
                 <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
+                    <img src="{{ asset('assets/images/home_page/Featured4.png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
                         <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
                         <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-muted mt-1">{{ __('2.3M views') }}</span>
+                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
                     </div>
                 </div>
             </div>
             <div class="">
                 <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
+                    <img src="{{ asset('assets/images/home_page/Featured5.png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
                         <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
                         <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-muted mt-1">{{ __('2.3M views') }}</span>
+                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
                     </div>
                 </div>
             </div>
             <div class="">
                 <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
+                    <img src="{{ asset('assets/images/home_page/Featured6.png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
                         <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
                         <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-muted mt-1">{{ __('2.3M views') }}</span>
+                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
                     </div>
                 </div>
             </div>
             <div class="">
                 <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
+                    <img src="{{ asset('assets/images/home_page/Featured7.png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
                         <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
                         <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-muted mt-1">{{ __('2.3M views') }}</span>
+                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
                     </div>
                 </div>
             </div>
             <div class="">
                 <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
+                    <img src="{{ asset('assets/images/home_page/Featured8.png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
                         <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
                         <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-muted mt-1">{{ __('2.3M views') }}</span>
+                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
                     </div>
                 </div>
             </div>
             <div class="">
                 <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
+                    <img src="{{ asset('assets/images/home_page/Featured9.png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
                         <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
                         <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-muted mt-1">{{ __('2.3M views') }}</span>
+                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
                     </div>
                 </div>
             </div>
             <div class="">
                 <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
+                    <img src="{{ asset('assets/images/home_page/Featured10.png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
                         <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
                         <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-muted mt-1">{{ __('2.3M views') }}</span>
+                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
                     </div>
                 </div>
             </div>
             <div class="">
                 <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
+                    <img src="{{ asset('assets/images/home_page/Featured11.png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
                         <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
                         <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-muted mt-1">{{ __('2.3M views') }}</span>
+                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
                     </div>
                 </div>
             </div>
@@ -274,7 +274,7 @@
     </div>
 
     {{-- Trending --}}
-    <div class="container bg-bg-secondary px-24 py-6">
+    <div class="container bg-bg-secondary px-6 py-24">
         <div class="text-center">
             <h2 class="text-5xl text-text-primary font-bold font-montserrat mb-4">{{ __('Trending Hashtags') }}</h2>
             <span
@@ -285,27 +285,27 @@
         <div class="grid grid-cols-3 gap-5 mt-4">
             <div class="bg-white border border-second-500/40 rounded-xl p-6">
                 <h2 class="text-2xl font-medium font-montserrat">{{ __('#GlowSkin') }}</h2>
-                <span class="text-muted">{{ __('48 videos') }}</span>
+                <span class="text-text-muted">{{ __('48 videos') }}</span>
             </div>
             <div class="bg-white border border-second-500/40 rounded-xl p-6">
                 <h2 class="text-2xl font-medium font-montserrat">{{ __('#DiodioTips') }}</h2>
-                <span class="text-muted">{{ __('32 videos') }}</span>
+                <span class="text-text-muted">{{ __('32 videos') }}</span>
             </div>
             <div class="bg-white border border-second-500/40 rounded-xl p-6">
                 <h2 class="text-2xl font-medium font-montserrat">{{ __('#NaturalBeauty') }}</h2>
-                <span class="text-muted">{{ __('125 videos') }}</span>
+                <span class="text-text-muted">{{ __('125 videos') }}</span>
             </div>
             <div class="bg-white border border-second-500/40 rounded-xl p-6">
                 <h2 class="text-2xl font-medium font-montserrat">{{ __('#SkincareRoutine') }}</h2>
-                <span class="text-muted">{{ __('95 videos') }}</span>
+                <span class="text-text-muted">{{ __('95 videos') }}</span>
             </div>
             <div class="bg-white border border-second-500/40 rounded-xl p-6">
                 <h2 class="text-2xl font-medium font-montserrat">{{ __('#BeaulyHaul') }}</h2>
-                <span class="text-muted">{{ __('72 videos') }}</span>
+                <span class="text-text-muted">{{ __('72 videos') }}</span>
             </div>
             <div class="bg-white border border-second-500/40 rounded-xl p-6">
                 <h2 class="text-2xl font-medium font-montserrat">{{ __('#SkincareTips') }}</h2>
-                <span class="text-muted">{{ __('156 videos') }}</span>
+                <span class="text-text-muted">{{ __('156 videos') }}</span>
             </div>
         </div>
     </div>
@@ -317,7 +317,7 @@
                 <h2 class="text-5xl text-text-primary font-bold font-montserrat mb-4 px-2">
                     {{ __('Ready to Find Your Perfect Routine?') }}</h2>
                 <p
-                    class="text-base text-text-primary font-semibold font-inter px-6! ">{{ __('Discover routines tailored to your lifestyle. From skincare and fitness to productivity and wellness, our tips and guides help you build habits that stick, making everyday life simpler, healthier, and more enjoyable. Start your journey today!') }}</p>
+                    class="text-base text-text-primary font-normal font-inter px-6! ">{{ __('Discover routines tailored to your lifestyle. From skincare and fitness to productivity and wellness, our tips and guides help you build habits that stick, making everyday life simpler, healthier, and more enjoyable. Start your journey today!') }}</p>
             </div>
         </div>
     </div>
