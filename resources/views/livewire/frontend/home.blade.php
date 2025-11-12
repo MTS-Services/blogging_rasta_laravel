@@ -124,7 +124,7 @@
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Featured4.1.png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/1 (4).png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
@@ -141,7 +141,7 @@
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/xcc.png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
@@ -158,7 +158,7 @@
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/1 (2).png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
@@ -175,7 +175,7 @@
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/1 (3).png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
@@ -192,7 +192,7 @@
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/1 (4).png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
@@ -209,7 +209,7 @@
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/1 (5).png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
@@ -226,7 +226,7 @@
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/1 (6).png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
@@ -243,7 +243,7 @@
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/1 (7).png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
@@ -260,7 +260,7 @@
                 </div>
                 <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
+                        <img src="{{ asset('assets/images/home_page/1 (8).png') }}" alt=""
                             class="w-full h-full rounded-full">
                     </div>
                     <div class="">
