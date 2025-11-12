@@ -2,7 +2,7 @@
     <div class="container-wide flex items-center justify-between py-3 px-6">
         <!-- Logo Section -->
         <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-2">
-            <div class="w-10 lg:w-14 h-10 lg:h-14 xl:w-16 xl:h-16 rounded-full bg-linear-to-br from-second-500! to-zinc-500! flex items-center justify-center">
+            <div class="w-10 lg:w-14 h-10 lg:h-14 xl:w-16 xl:h-16 rounded-full btn-gradient flex items-center justify-center">
                 <span class="text-white font-bold text-lg lg:text-2xl xl:text-3xl">{{ __('DG') }}</span>
             </div>
             <span class="text-lg lg:text-2xl xl:text-3xl font-bold font-playfair text-text-primary">{{ __('DiodioGlow') }}</span>
