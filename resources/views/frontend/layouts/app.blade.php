@@ -31,7 +31,7 @@
     @stack('styles')
 </head>
 
-<body class="min-h-screen flex flex-col bg-bg-secondary text-text-primary">
+<body class="min-h-screen flex flex-col bg-linear-to-br from-start! to-end! text-text-primary">
 
     {{-- @if (!(request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.request') || request()->routeIs('password.reset') || request()->routeIs('verify-reset-otp') || request()->routeIs('verification.notice') || request()->routeIs('verify-otp') || request()->routeIs('verification.verify') || request()->routeIs('two-factor.*') || request()->routeIs('two-factor.login') || request()->routeIs('two-factor.login.store') || request()->routeIs('admin.*'))) --}}
     <livewire:frontend.partials.header />
