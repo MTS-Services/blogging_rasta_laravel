@@ -31,7 +31,7 @@
     --color-end: #FFEBEE;
 
     /* Primary: Purple */
-     --color-primary-50:  #FFFDF4;
+     --color-primary-50:  #FFF3F4;
     --color-primary-100: #FFE4E7;
     --color-primary-200: #ffccd9;
     --color-primary-300: #ff99b3;
@@ -89,7 +89,7 @@
     --color-bg-secondary-dark: oklch(21.779% 0.00002 271.152);
     --color-bg-tertiary-dark: oklch(26.862% 0.00003 271.152);  */
 
-    --color-bg-primary-light: var(--color-primary-100);
+    --color-bg-primary-light: var(--color-primary-50);
     --color-bg-secondary-light: var(--color-primary-50);
     --color-bg-tertiary-light: oklch(88.531% 0.0001 271.152);
 
