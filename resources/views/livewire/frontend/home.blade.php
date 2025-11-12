@@ -57,7 +57,7 @@
 
 
     {{-- Featured TikTok Clips section --}}
-    <div class="container bg-bg-primary py-24">
+    <div class="container bg-bg-secondary py-24">
         <div class="px-24">
             <h2 class="text-5xl text-[#212121] font-bold font-montserrat">{{ __('Featured TikTok Clips') }}</h2>
             <p class="text-base text-[#555555] font-semibold font-inter mt-">

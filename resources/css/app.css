@@ -44,7 +44,7 @@
     --color-primary-950: #4d1e2e;
 
     /* Secondary: second */
-     --color-secondary-50:  #fffdf2;
+     --color-secondary-50:  #FFFDF4;
     --color-secondary-100: #FFFCF0;
     --color-secondary-200: #fff2cc;
     --color-secondary-300: #ffe699;
@@ -71,9 +71,9 @@
     --color-accent-foreground-dark: var(--color-secondary-500);
 
     /* Text Colors */
-    --color-text-primary-light: oklch(21.779% 0.00002 271.152);
-    --color-text-secondary-light: oklch(26.862% 0.00003 271.152);
-    --color-text-muted-light: oklch(32.109% 0.00004 271.152);
+    --color-text-primary-light: #555555;
+    --color-text-secondary-light: oklab(43.972% 0.00628 0.00192);
+    --color-text-muted-light: oklab(51.82% 0.0012 0.00031);
 
     --color-text-primary-dark: oklch(92.494% 0.00011 271.152);
     --color-text-secondary-dark: oklch(88.531% 0.0001 271.152);
@@ -90,11 +90,11 @@
     --color-bg-tertiary-dark: oklch(26.862% 0.00003 271.152);  */
 
     --color-bg-primary-light: var(--color-primary-50);
-    --color-bg-secondary-light: var(--color-primary-50);
+    --color-bg-secondary-light: var(--color-secondary-50);
     --color-bg-tertiary-light: oklch(88.531% 0.0001 271.152);
 
     --color-bg-primary-dark: var(--color-primary-900);
-    --color-bg-secondary-dark: var(--color-primary-950);
+    --color-bg-secondary-dark: var(--color-secondary-950);
     --color-bg-tertiary-dark: var(--color-secondary-500);
 
 
@@ -135,8 +135,6 @@
     --color-start: var(--color-start);
     --color-end: var(--color-end);
 
-    --color-status-paused: var(--color-status-paused);
-    --color-status-completed: var(--color-secondary-500);
 
     --color-text-new: var(--color-text-new-light);
     --color-text-white: var(--color-white-light);
@@ -350,7 +348,7 @@
         @apply backdrop-blur-md bg-linear-to-tr from-zinc-50/50 via-bg-primary/50 to-zinc-50/50 shadow-glass-card;
     }
    .bg-gradient {
-        @apply backdrop-blur-md bg-linear-to-r from-second-100  to-zinc-100 ;
+        @apply backdrop-blur-md bg-linear-to-r from-start  to-zinc-100 ;
     }
 
 
