@@ -30,25 +30,25 @@
     --color-status-paused: #CB2C30;
 
     /* Primary: Purple */
-     --color-primary-50:  #fff5f7;
+     --color-primary-50:  #FDFBF7;
     --color-primary-100: #ffe6ed;
     --color-primary-200: #ffccd9;
     --color-primary-300: #ff99b3;
-    --color-primary-400: #ff6690;
-    --color-primary-500: #EEAACC; 
+    --color-primary-400: #EEAACC; 
+    --color-primary-500: #ff6690;
     --color-primary-600: #e695b3;
     --color-primary-700: #d97a9a;
     --color-primary-800: #bf5276;
     --color-primary-900: #993d5c;
     --color-primary-950: #4d1e2e;
 
-    /* Secondary: Pink */
+    /* Secondary: second */
      --color-secondary-50:  #fffdf2;
     --color-secondary-100: #fff9e5;
     --color-secondary-200: #fff2cc;
     --color-secondary-300: #ffe699;
     --color-secondary-400: #ffdb66;
-    --color-secondary-500: #FFD700; 
+    --color-secondary-500: #FBBA2A; 
     --color-secondary-600: #e6c600;
     --color-secondary-700: #cca300;
     --color-secondary-800: #b38600;
@@ -116,18 +116,18 @@
     --color-zinc-900: var(--color-primary-900);
     --color-zinc-950: var(--color-primary-950);
 
-    /* --- Secondary: Pink Colors Added Here --- */
-    --color-pink-50: var(--color-secondary-50);
-    --color-pink-100: var(--color-secondary-100);
-    --color-pink-200: var(--color-secondary-200);
-    --color-pink-300: var(--color-secondary-300);
-    --color-pink-400: var(--color-secondary-400);
-    --color-pink-500: var(--color-secondary-500);
-    --color-pink-600: var(--color-secondary-600);
-    --color-pink-700: var(--color-secondary-700);
-    --color-pink-800: var(--color-secondary-800);
-    --color-pink-900: var(--color-secondary-900);
-    --color-pink-950: var(--color-secondary-950);
+    /* --- Secondary: second Colors Added Here --- */
+    --color-second-50: var(--color-secondary-50);
+    --color-second-100: var(--color-secondary-100);
+    --color-second-200: var(--color-secondary-200);
+    --color-second-300: var(--color-secondary-300);
+    --color-second-400: var(--color-secondary-400);
+    --color-second-500: var(--color-secondary-500);
+    --color-second-600: var(--color-secondary-600);
+    --color-second-700: var(--color-secondary-700);
+    --color-second-800: var(--color-secondary-800);
+    --color-second-900: var(--color-secondary-900);
+    --color-second-950: var(--color-secondary-950);
     /* ------------------------------------------ */
 
     --color-status-paused: var(--color-status-paused);
@@ -193,7 +193,7 @@
     /* ======================================================
     	 	 	 	 	 	 # font family
     ======================================================== */
-    --font-open-sans: "Open Sans", sans-serif;
+       --font-open-sans: "Open Sans", sans-serif;
     --font-lato: "Lato", sans-serif;
     --font-playfair: "Playfair Display", sans-serif;
     --font-inter: "Inter", sans-serif;
