@@ -309,4 +309,16 @@
             </div>
         </div>
     </div>
+
+    {{-- Routine section --}}
+    <div class="max-w-5xl  mx-auto   ">
+        <div class="bg-bg-secondary py-24 ">
+            <div class="text-center">
+                <h2 class="text-5xl text-text-primary font-bold font-montserrat mb-4 px-2">
+                    {{ __('Ready to Find Your Perfect Routine?') }}</h2>
+                <p
+                    class="text-base text-text-primary font-semibold font-inter px-6! ">{{ __('Discover routines tailored to your lifestyle. From skincare and fitness to productivity and wellness, our tips and guides help you build habits that stick, making everyday life simpler, healthier, and more enjoyable. Start your journey today!') }}</p>
+            </div>
+        </div>
+    </div>
 </div>
