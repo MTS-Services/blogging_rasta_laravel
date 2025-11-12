@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import 'tailwindcss';
 @import '../../vendor/livewire/flux/dist/flux.css';
 @plugin 'daisyui';
@@ -26,33 +27,34 @@
     --color-white: #ffffff;
     --color-bg-base: #1B0C33;
 
-    --color-status-paused: #CB2C30;
+    --color-start: #FFFCF0;
+    --color-end: #FFEBEE;
 
     /* Primary: Purple */
-    --color-primary-50: #f5f3ff;
-    --color-primary-100: #ede9fe;
-    --color-primary-200: #ddd6fe;
-    --color-primary-300: #c4b5fd;
-    --color-primary-400: #a78bfa;
-    --color-primary-500: #853EFF;
-    --color-primary-600: #7c3aed;
-    --color-primary-700: #6d28d9;
-    --color-primary-800: #351966;
-    --color-primary-900: #1B0C33;
-    --color-primary-950: #0D061A;
+     --color-primary-50:  #FFFDF4;
+    --color-primary-100: #FFE4E7;
+    --color-primary-200: #ffccd9;
+    --color-primary-300: #ff99b3;
+    --color-primary-400: #EEAACC; 
+    --color-primary-500: #ff6690;
+    --color-primary-600: #e695b3;
+    --color-primary-700: #d97a9a;
+    --color-primary-800: #bf5276;
+    --color-primary-900: #993d5c;
+    --color-primary-950: #4d1e2e;
 
-    /* Secondary: Pink */
-    --color-secondary-50: #fdf2f8;
-    --color-secondary-100: #fce7f3;
-    --color-secondary-200: #fbcfe8;
-    --color-secondary-300: #f9a8d4;
-    --color-secondary-400: #f472b6;
-    --color-secondary-500: #FF2E91;
-    --color-secondary-600: #db2777;
-    --color-secondary-700: #be185d;
-    --color-secondary-800: #9d174d;
-    --color-secondary-900: #831843;
-    --color-secondary-950: #50072c;
+    /* Secondary: second */
+     --color-secondary-50:  #fffdf2;
+    --color-secondary-100: #FFFCF0;
+    --color-secondary-200: #fff2cc;
+    --color-secondary-300: #ffe699;
+    --color-secondary-400: #ffdb66;
+    --color-secondary-500: #FBBA2A; 
+    --color-secondary-600: #e6c600;
+    --color-secondary-700: #cca300;
+    --color-secondary-800: #b38600;
+    --color-secondary-900: #806000;
+    --color-secondary-950: #403000;
 
 
 
@@ -87,8 +89,8 @@
     --color-bg-secondary-dark: oklch(21.779% 0.00002 271.152);
     --color-bg-tertiary-dark: oklch(26.862% 0.00003 271.152);  */
 
-    --color-bg-primary-light: oklch(96.115% 0.00011 271.152);
-    --color-bg-secondary-light: oklch(92.494% 0.00011 271.152);
+    --color-bg-primary-light: var(--color-primary-100);
+    --color-bg-secondary-light: var(--color-primary-50);
     --color-bg-tertiary-light: oklch(88.531% 0.0001 271.152);
 
     --color-bg-primary-dark: var(--color-primary-900);
@@ -115,19 +117,23 @@
     --color-zinc-900: var(--color-primary-900);
     --color-zinc-950: var(--color-primary-950);
 
-    /* --- Secondary: Pink Colors Added Here --- */
-    --color-pink-50: var(--color-secondary-50);
-    --color-pink-100: var(--color-secondary-100);
-    --color-pink-200: var(--color-secondary-200);
-    --color-pink-300: var(--color-secondary-300);
-    --color-pink-400: var(--color-secondary-400);
-    --color-pink-500: var(--color-secondary-500);
-    --color-pink-600: var(--color-secondary-600);
-    --color-pink-700: var(--color-secondary-700);
-    --color-pink-800: var(--color-secondary-800);
-    --color-pink-900: var(--color-secondary-900);
-    --color-pink-950: var(--color-secondary-950);
+    /* --- Secondary: second Colors Added Here --- */
+    --color-second-50: var(--color-secondary-50);
+    --color-second-100: var(--color-secondary-100);
+    --color-second-200: var(--color-secondary-200);
+    --color-second-300: var(--color-secondary-300);
+    --color-second-400: var(--color-secondary-400);
+    --color-second-500: var(--color-secondary-500);
+    --color-second-600: var(--color-secondary-600);
+    --color-second-700: var(--color-secondary-700);
+    --color-second-800: var(--color-secondary-800);
+    --color-second-900: var(--color-secondary-900);
+    --color-second-950: var(--color-secondary-950);
     /* ------------------------------------------ */
+
+    /* linear color gradient  for bg*/
+    --color-start: var(--color-start);
+    --color-end: var(--color-end);
 
     --color-status-paused: var(--color-status-paused);
     --color-status-completed: var(--color-secondary-500);
@@ -192,8 +198,12 @@
     /* ======================================================
     	 	 	 	 	 	 # font family
     ======================================================== */
-    --font-open-sans: "Open Sans", sans-serif;
+       --font-open-sans: "Open Sans", sans-serif;
     --font-lato: "Lato", sans-serif;
+    --font-playfair: "Playfair Display", sans-serif;
+    --font-inter: "Inter", sans-serif;
+    --font-montserrat: "Montserrat", sans-serif;
+    --font-outfit: "Outfit", sans-serif;
 
 
     /* ======================================================
@@ -338,6 +348,9 @@
 
     .glass-card {
         @apply backdrop-blur-md bg-linear-to-tr from-zinc-50/50 via-bg-primary/50 to-zinc-50/50 shadow-glass-card;
+    }
+   .bg-gradient {
+        @apply backdrop-blur-md bg-linear-to-r from-second-100  to-zinc-100 shadow-glass-card;
     }
 
 

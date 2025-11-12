@@ -2,7 +2,7 @@
         <link rel="stylesheet" href="{{ asset('assets/css/ckEditor.css') }}">
     @endpush
     <section class="flex items-center justify-center min-h-screen p-4 sm:p-6 flex-col">
-        <div class="w-full max-w-4xl mx-auto bg-white rounded-xl shadow-2xl p-6 md:p-10">
+        <div class="w-full max-w-4xl mx-auto bg-gradient rounded-xl shadow-2xl p-6 md:p-10">
             <!-- Header -->
             <h2 class="text-3xl font-extrabold text-center text-gray-900 mb-8">
                 Welcome to <span class="text-indigo-600">{{ site_name() }}</span>
@@ -58,13 +58,13 @@
             </div>
         </div>
 
-        <div class="w-full max-w-4xl mx-auto bg-white rounded-xl shadow-2xl p-6 md:p-10 mt-10">
+        <div class="w-full max-w-4xl mx-auto rounded-xl shadow-2xl p-6 md:p-10 mt-10">
             <h2 class="text-3xl font-extrabold text-center text-gray-900 mb-8">
                 Explore UI's
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
                 <div
-                    class="flex flex-col items-center justify-between p-8 bg-gray-50 border border-gray-200 rounded-xl transition duration-300 ease-in-out hover:shadow-lg hover:border-indigo-400 gap-2 mt-4">
+                    class="flex flex-col items-center justify-between p-8 bg-bg-secondary  border border-gray-200 rounded-xl transition duration-300 ease-in-out hover:shadow-lg hover:border-indigo-400 gap-2 mt-4">
                     <h4 class="text-xl font-semibold text-gray-800">Inputs</h4>
                     <div class="w-full">
                         <x-ui.label value="Standard Input" class="mb-1" />
