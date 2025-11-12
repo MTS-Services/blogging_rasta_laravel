@@ -71,9 +71,9 @@
     --color-accent-foreground-dark: var(--color-secondary-500);
 
     /* Text Colors */
-    --color-text-primary-light: #555555;
-    --color-text-secondary-light: oklab(43.972% 0.00628 0.00192);
-    --color-text-muted-light: oklab(51.82% 0.0012 0.00031);
+    --color-text-primary-light: #212121;
+    --color-text-secondary-light: #565151;
+    --color-text-muted-light: #696868;
 
     --color-text-primary-dark: oklch(92.494% 0.00011 271.152);
     --color-text-secondary-dark: oklch(88.531% 0.0001 271.152);
@@ -91,7 +91,7 @@
 
     --color-bg-primary-light: var(--color-primary-50);
     --color-bg-secondary-light: var(--color-secondary-50);
-    --color-bg-tertiary-light: oklch(88.531% 0.0001 271.152);
+    --color-bg-tertiary-light: #FFFAEB;
 
     --color-bg-primary-dark: var(--color-primary-900);
     --color-bg-secondary-dark: var(--color-secondary-950);
@@ -351,6 +351,9 @@
         @apply backdrop-blur-md bg-linear-to-r from-start  to-zinc-100 ;
     }
 
+    .btn-gradient {
+        @apply bg-linear-to-r from-second-500 to-zinc-500;
+    }
 
     .sidebar-glass-card {
         @apply bg-linear-to-tr from-zinc-50/50 via-bg-primary/50 to-zinc-50/50 shadow-glass-card;
