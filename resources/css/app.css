@@ -352,7 +352,7 @@
     }
 
     .btn-gradient {
-        @apply bg-linear-to-r from-second-500 to-zinc-500;
+        @apply bg-linear-to-r! from-second-500! to-zinc-500!;
     }
 
     .sidebar-glass-card {

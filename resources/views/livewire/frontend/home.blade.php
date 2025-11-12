@@ -1,7 +1,7 @@
 <div class="">
     {{-- banner section --}}
     <div class="pt-7 container bg-gradient">
-        <div class="flex justify-between gap-6 items-center">
+        <div class="block lg:flex justify-between gap-6 items-center">
             <div class="w-full">
                 <div class="w-sm bg-second-500/40 rounded-full py-2 px-4">
                     <span class="text-xs text-text-muted font-inter font-normal">
@@ -9,21 +9,21 @@
                         {{ __('Trusted by 50K+ beauty lovers') }}
                     </span>
                 </div>
-                <h3 class="text-8xl font-semibold font-montserrat text-second-800 my-6"><span
+                <h3 class="text-6xl lg:text-8xl font-semibold font-montserrat text-second-800 my-6"><span
                         class="text-zinc-900">{{ __('Glow') }}</span> {{ __('Naturally') }} </h3>
                 <p class="text-xl text-text-primary font-medium font-inter">
                     {{ __('Discover routines that actually work. Explore trending videos, shop vetted products, and get personalized advice tailored to your skin type.') }}
                 </p>
                 <div class="flex gap-4 mt-6">
                     <div class="">
-                        <x-ui.button href="#" class="w-auto py-2! bg-linear-to-br! from-second-500! to-zinc-500!">
+                        <x-ui.button href="#" class="py-4! px-8! bg-linear-to-br! from-second-500! to-zinc-500!">
                             {{ __('Discover Your Glow') }}
                             <flux:icon name="arrow-right"
                                 class="w-4 h-4 stroke-text-btn-primary group-hover:stroke-text-btn-secondary" />
                         </x-ui.button>
                     </div>
                     <div class="">
-                        <x-ui.button href="#" class="w-auto py-2! border-second-500!" variant="secondary">
+                        <x-ui.button href="#" class="py-4! px-8! border-second-500!" variant="secondary">
                             <flux:icon name="play"
                                 class="w-4 h-4 stroke-text-primary group-hover:stroke-text-btn-primary" />
                             <span class="stroke-text-primary group-hover:text-zinc-50!">
@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="w-full">
-                <div class="w-[610px] h-[610px]">
+                <div class="w-full h-[610px] lg:h-[470px]">
                     <img src="{{ asset('assets/images/home_page/image 2.png') }}" alt="" class="w-full h-full">
                 </div>
 
@@ -58,14 +58,12 @@
 
 
     {{-- Featured TikTok Clips section --}}
-    <div class="container bg-bg-primary py-24">
-        <div class="px-24">
-            <h2 class="text-5xl text-text-primary font-bold font-montserrat">{{ __('Featured TikTok Clips') }}</h2>
-            <p class="text-base  text-text-primary font-semibold font-inter mt-4">
-                {{ __('The latest viral skincare trends everyone\'s talking about') }}</p>
-        </div>
+    <div class="container bg-bg-primary py-24 mt-12">
+        <h2 class="text-5xl text-text-primary font-bold font-montserrat">{{ __('Featured TikTok Clips') }}</h2>
+        <p class="text-base  text-text-primary font-semibold font-inter mt-4">
+            {{ __('The latest viral skincare trends everyone\'s talking about') }}</p>
         {{-- video card --}}
-        <div class="grid grid-cols-4 gap-7 mt-8 px-5">
+        <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-7 mt-8 px-5">
             <div class="">
                 <div class="w-[290px] h-[300px]">
                     <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
@@ -274,7 +272,7 @@
     </div>
 
     {{-- Trending --}}
-    <div class="container bg-bg-secondary px-6 py-24">
+    <div class="container bg-bg-secondary px-6 py-24 mt-12">
         <div class="text-center">
             <h2 class="text-5xl text-text-primary font-bold font-montserrat mb-4">{{ __('Trending Hashtags') }}</h2>
             <span
@@ -311,14 +309,23 @@
     </div>
 
     {{-- Routine section --}}
-    <div class="max-w-5xl  mx-auto   ">
-        <div class="bg-bg-secondary py-24 ">
-            <div class="text-center">
+    <div class="max-w-5xl  mx-auto mt-12">
+        <div class="bg-bg-secondary py-20  text-center ">
+            <div class="text-center mb-6">
                 <h2 class="text-5xl text-text-primary font-bold font-montserrat mb-4 px-2">
                     {{ __('Ready to Find Your Perfect Routine?') }}</h2>
-                <p
-                    class="text-base text-text-primary font-normal font-inter px-6! ">{{ __('Discover routines tailored to your lifestyle. From skincare and fitness to productivity and wellness, our tips and guides help you build habits that stick, making everyday life simpler, healthier, and more enjoyable. Start your journey today!') }}</p>
+                <p class="text-base text-text-primary font-normal font-inter px-6! ">
+                    {{ __('Discover routines tailored to your lifestyle. From skincare and fitness to productivity and wellness, our tips and guides help you build habits that stick, making everyday life simpler, healthier, and more enjoyable. Start your journey today!') }}
+                </p>
             </div>
+            <div class="w-xs mx-auto">
+                <x-ui.button href="#" class="py-4! px-8! bg-linear-to-r! from-second-500! to-zinc-500!">
+                    {{ __('Discover Your Glow') }}
+                    <flux:icon name="arrow-right"
+                        class="w-4 h-4 stroke-text-btn-primary group-hover:stroke-text-btn-secondary" />
+                </x-ui.button>
+            </div>
+            <p class="text-base font-normal font-inter text-text-muted mt-6">{{ __('It only takes 2 minutes. No signup required.') }}</p>
         </div>
     </div>
 </div>
