@@ -1,33 +1,33 @@
-<header x-data="{ mobileMenuOpen: false }" x-cloak class="sticky top-0 z-50 bg-white border-b border-gray-200">
-    <div class="container mx-auto flex items-center justify-between py-3 px-6">
+<header x-data="{ mobileMenuOpen: false }" x-cloak class="sticky top-0 z-50 bg-white">
+    <div class="container-wide flex items-center justify-between py-3 px-6">
         <!-- Logo Section -->
         <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-2">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center">
-                <span class="text-white font-bold text-lg">DG</span>
+            <div class="w-10 lg:w-14 h-10 lg:h-14 xl:w-16 xl:h-16 rounded-full bg-linear-to-br from-second-500! to-zinc-500! flex items-center justify-center">
+                <span class="text-white font-bold text-lg lg:text-2xl xl:text-3xl">DG</span>
             </div>
-            <span class="text-3xl font-bold font-playfair text-gray-800">DiodioGlow</span>
+            <span class="text-lg lg:text-2xl xl:text-3xl font-bold font-playfair text-gray-800">DiodioGlow</span>
         </a>
 
         <!-- Desktop Navigation -->
         <nav class="hidden md:flex items-center gap-8">
             <a href="{{ route('home') }}" wire:navigate
-                class="text-gray-700 font-medium transition-colors {{ request()->routeIs('home') ? 'text-orange-500 border-b-2 border-orange-500' : 'hover:text-orange-500' }}">
+                class="text-gray-700 font-medium font-inter transition-colors {{ request()->routeIs('home') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500' }}">
                 Home
             </a>
             <a href="#" wire:navigate
-                class="text-gray-700 font-medium transition-colors {{ request()->routeIs('products') ? 'text-orange-500 border-b-2 border-orange-500' : 'hover:text-orange-500' }}">
+                class="text-gray-700 font-medium font-inter transition-colors {{ request()->routeIs('products') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500' }}">
                 Products
             </a>
             <a href="#" wire:navigate
-                class="text-gray-700 font-medium transition-colors {{ request()->routeIs('video-feed') ? 'text-orange-500 border-b-2 border-orange-500' : 'hover:text-orange-500' }}">
+                class="text-gray-700 font-medium font-inter transition-colors {{ request()->routeIs('video-feed') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500' }}">
                 Video Feed
             </a>
             <a href="#" wire:navigate
-                class="text-gray-700 font-medium transition-colors {{ request()->routeIs('blog') ? 'text-orange-500 border-b-2 border-orange-500' : 'hover:text-orange-500' }}">
+                class="text-gray-700 font-medium font-inter transition-colors {{ request()->routeIs('blog') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500' }}">
                 Blog
             </a>
             <a href="#" wire:navigate
-                class="text-gray-700 font-medium transition-colors {{ request()->routeIs('about') ? 'text-orange-500 border-b-2 border-orange-500' : 'hover:text-orange-500' }}">
+                class="text-gray-700 font-medium font-inter transition-colors {{ request()->routeIs('about') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500' }}">
                 About
             </a>
         </nav>
@@ -35,7 +35,7 @@
         <!-- CTA Button -->
         <div class="hidden md:block">
             <a href="#" wire:navigate
-                class="px-6 py-2.5 bg-gradient-to-r from-[#FB7382] to-[#FBBA2A] text-white font-semibold rounded-full hover:shadow-lg transition-all duration-300">
+                class="px-6 py-2.5 bg-linear-to-r from-second-500 to-zinc-500 text-white font-semibold rounded-full hover:shadow-lg transition-all duration-300">
                 Discover Glow
             </a>
         </div>
@@ -58,23 +58,23 @@
         x-transition:leave-end="opacity-0 transform -translate-y-2" class="md:hidden border-t border-gray-200 bg-white">
         <nav class="container mx-auto px-6 py-4 flex flex-col gap-4">
             <a href="#" wire:navigate
-                class="text-gray-700 font-medium transition-colors {{ request()->routeIs('home') ? 'text-orange-500 border-b-2 border-orange-500' : 'hover:text-orange-500' }}">
+                class="text-gray-700 font-medium font-inter transition-colors {{ request()->routeIs('home') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500' }}">
                 Home
             </a>
             <a href="#" wire:navigate
-                class="text-gray-700 font-medium transition-colors {{ request()->routeIs('products') ? 'text-orange-500 border-b-2 border-orange-500' : 'hover:text-orange-500' }}">
+                class="text-gray-700 font-medium font-inter transition-colors {{ request()->routeIs('products') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500' }}">
                 Products
             </a>
             <a href="#" wire:navigate
-                class="text-gray-700 font-medium transition-colors {{ request()->routeIs('video-feed') ? 'text-orange-500 border-b-2 border-orange-500' : 'hover:text-orange-500' }}">
+                class="text-gray-700 font-medium font-inter transition-colors {{ request()->routeIs('video-feed') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500' }}">
                 Video Feed
             </a>
             <a href="#" wire:navigate
-                class="text-gray-700 font-medium transition-colors {{ request()->routeIs('blog') ? 'text-orange-500 border-b-2 border-orange-500' : 'hover:text-orange-500' }}">
+                class="text-gray-700 font-medium font-inter transition-colors {{ request()->routeIs('blog') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500' }}">
                 Blog
             </a>
             <a href="#" wire:navigate
-                class="text-gray-700 font-medium transition-colors {{ request()->routeIs('about') ? 'text-orange-500 border-b-2 border-orange-500' : 'hover:text-orange-500' }}">
+                class="text-gray-700 font-medium font-inter transition-colors {{ request()->routeIs('about') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500' }}">
                 About
             </a>
             <a href="#" wire:navigate
