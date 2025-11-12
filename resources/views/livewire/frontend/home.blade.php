@@ -26,7 +26,8 @@
                         <x-ui.button href="#" class="w-auto py-2! border-second-500!" variant="secondary">
                             <flux:icon name="play"
                                 class="w-4 h-4 stroke-text-primary group-hover:stroke-text-btn-primary" />
-                           <span class="stroke-text-primary group-hover:text-zinc-50!"> {{ __('Watch Stories') }}</span>
+                            <span class="stroke-text-primary group-hover:text-zinc-50!">
+                                {{ __('Watch Stories') }}</span>
                         </x-ui.button>
                     </div>
                 </div>
@@ -60,7 +61,7 @@
     <div class="container bg-bg-primary py-24">
         <div class="px-24">
             <h2 class="text-5xl text-text-primary font-bold font-montserrat">{{ __('Featured TikTok Clips') }}</h2>
-            <p class="text-base  text-text-primary font-semibold font-inter mt-">
+            <p class="text-base  text-text-primary font-semibold font-inter mt-4">
                 {{ __('The latest viral skincare trends everyone\'s talking about') }}</p>
         </div>
         {{-- video card --}}
@@ -70,7 +71,7 @@
                     <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
-                <div class="flex gap-3">
+                <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
                         <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
                             class="w-full h-full rounded-full">
@@ -87,7 +88,7 @@
                     <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
-                <div class="flex gap-3">
+                <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
                         <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
                             class="w-full h-full rounded-full">
@@ -104,7 +105,7 @@
                     <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
-                <div class="flex gap-3">
+                <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
                         <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
                             class="w-full h-full rounded-full">
@@ -121,7 +122,7 @@
                     <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
-                <div class="flex gap-3">
+                <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
                         <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
                             class="w-full h-full rounded-full">
@@ -138,7 +139,7 @@
                     <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
-                <div class="flex gap-3">
+                <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
                         <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
                             class="w-full h-full rounded-full">
@@ -155,7 +156,7 @@
                     <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
-                <div class="flex gap-3">
+                <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
                         <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
                             class="w-full h-full rounded-full">
@@ -172,7 +173,7 @@
                     <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
-                <div class="flex gap-3">
+                <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
                         <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
                             class="w-full h-full rounded-full">
@@ -189,7 +190,7 @@
                     <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
-                <div class="flex gap-3">
+                <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
                         <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
                             class="w-full h-full rounded-full">
@@ -206,7 +207,7 @@
                     <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
-                <div class="flex gap-3">
+                <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
                         <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
                             class="w-full h-full rounded-full">
@@ -223,7 +224,7 @@
                     <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
-                <div class="flex gap-3">
+                <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
                         <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
                             class="w-full h-full rounded-full">
@@ -240,7 +241,7 @@
                     <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
-                <div class="flex gap-3">
+                <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
                         <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
                             class="w-full h-full rounded-full">
@@ -257,7 +258,7 @@
                     <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
                         class="w-full h-full rounded-2xl">
                 </div>
-                <div class="flex gap-3">
+                <div class="flex gap-3 mt-2">
                     <div class="w-9 h-9">
                         <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
                             class="w-full h-full rounded-full">
@@ -268,6 +269,23 @@
                         <span class="text-xs font-normal text-muted mt-1">{{ __('2.3M views') }}</span>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Trending --}}
+    <div class="container bg-bg-secondary p-10">
+        <div class="text-center">
+            <h2 class="text-5xl text-text-primary font-bold font-montserrat">{{ __('Trending Hashtags') }}</h2>
+            <span
+                class="text-base  text-text-primary font-semibold font-inter mt-"4>{{ __('Join the conversation with beauty lovers worldwide') }}</span>
+        </div>
+
+        {{-- Hashtags card --}}
+        <div class="grid grid-cols-4 gap-4 mt-4">
+            <div class="bg-zinc-50 border border-zinc-500 rounded-xl py-2 px-4">
+                <h2 class="text-2xl font-medium font-montserrat">{{ __('#GlowSkin') }}</h2>
+                <span>{{ __('48 videos') }}</span>
             </div>
         </div>
     </div>
