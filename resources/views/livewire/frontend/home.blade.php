@@ -1,6 +1,6 @@
 <div class="">
     {{-- banner section --}}
-    <div class="pt-7 container bg-linear-to-br from-[#FFFCF0] to-[#FFE4E7]">
+    <div class="pt-7 container bg-gradient">
         <div class="flex justify-between gap-6 items-center">
             <div class="w-full">
                 <div class="w-sm bg-[#FBBA2A66] rounded-full py-2 px-4">

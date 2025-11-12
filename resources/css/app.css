@@ -350,7 +350,7 @@
         @apply backdrop-blur-md bg-linear-to-tr from-zinc-50/50 via-bg-primary/50 to-zinc-50/50 shadow-glass-card;
     }
    .bg-gradient {
-        @apply backdrop-blur-md bg-linear-to-r from-second-100  to-zinc-100 shadow-glass-card;
+        @apply backdrop-blur-md bg-linear-to-r from-second-100  to-zinc-100 ;
     }
 
 
