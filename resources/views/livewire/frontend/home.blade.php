@@ -58,7 +58,7 @@
 
 
     {{-- Featured TikTok Clips section --}}
-    <div class="container bg-bg-secondary py-24">
+    <div class="container bg-bg-primary py-24">
         <div class="px-24">
             <h2 class="text-5xl text-text-primary font-bold font-montserrat">{{ __('Featured TikTok Clips') }}</h2>
             <p class="text-base  text-text-primary font-semibold font-inter mt-4">
@@ -274,18 +274,38 @@
     </div>
 
     {{-- Trending --}}
-    <div class="container bg-bg-secondary p-10">
+    <div class="container bg-bg-secondary px-24 py-6">
         <div class="text-center">
-            <h2 class="text-5xl text-text-primary font-bold font-montserrat">{{ __('Trending Hashtags') }}</h2>
+            <h2 class="text-5xl text-text-primary font-bold font-montserrat mb-4">{{ __('Trending Hashtags') }}</h2>
             <span
-                class="text-base  text-text-primary font-semibold font-inter mt-"4>{{ __('Join the conversation with beauty lovers worldwide') }}</span>
+                class="text-base  text-text-primary font-semibold font-inter">{{ __('Join the conversation with beauty lovers worldwide') }}</span>
         </div>
 
         {{-- Hashtags card --}}
-        <div class="grid grid-cols-4 gap-4 mt-4">
-            <div class="bg-zinc-50 border border-zinc-500 rounded-xl py-2 px-4">
+        <div class="grid grid-cols-3 gap-5 mt-4">
+            <div class="bg-white border border-second-500/40 rounded-xl p-6">
                 <h2 class="text-2xl font-medium font-montserrat">{{ __('#GlowSkin') }}</h2>
-                <span>{{ __('48 videos') }}</span>
+                <span class="text-muted">{{ __('48 videos') }}</span>
+            </div>
+            <div class="bg-white border border-second-500/40 rounded-xl p-6">
+                <h2 class="text-2xl font-medium font-montserrat">{{ __('#DiodioTips') }}</h2>
+                <span class="text-muted">{{ __('32 videos') }}</span>
+            </div>
+            <div class="bg-white border border-second-500/40 rounded-xl p-6">
+                <h2 class="text-2xl font-medium font-montserrat">{{ __('#NaturalBeauty') }}</h2>
+                <span class="text-muted">{{ __('125 videos') }}</span>
+            </div>
+            <div class="bg-white border border-second-500/40 rounded-xl p-6">
+                <h2 class="text-2xl font-medium font-montserrat">{{ __('#SkincareRoutine') }}</h2>
+                <span class="text-muted">{{ __('95 videos') }}</span>
+            </div>
+            <div class="bg-white border border-second-500/40 rounded-xl p-6">
+                <h2 class="text-2xl font-medium font-montserrat">{{ __('#BeaulyHaul') }}</h2>
+                <span class="text-muted">{{ __('72 videos') }}</span>
+            </div>
+            <div class="bg-white border border-second-500/40 rounded-xl p-6">
+                <h2 class="text-2xl font-medium font-montserrat">{{ __('#SkincareTips') }}</h2>
+                <span class="text-muted">{{ __('156 videos') }}</span>
             </div>
         </div>
     </div>
