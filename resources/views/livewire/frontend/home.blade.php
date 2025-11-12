@@ -16,10 +16,10 @@
                 </p>
                 <div class="flex gap-4 mt-6">
                     <div class="">
-                        <x-ui.button href="#" class="py-4! px-8! bg-linear-to-br! from-second-500! to-zinc-500!">
-                            {{ __('Discover Your Glow') }}
-                            <flux:icon name="arrow-right"
-                                class="w-4 h-4 stroke-text-btn-primary group-hover:stroke-text-btn-secondary" />
+                        <x-ui.button href="#"
+                            class="py-4! px-8! bg-linear-to-r! from-second-500! to-zinc-500! hover:shadow-lg!">
+                            <span class="text-white">{{ __('Discover Your Glow') }}</span>
+                            <flux:icon name="arrow-right" class="w-4 h-4 stroke-white" />
                         </x-ui.button>
                     </div>
                     <div class="">
@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="w-full">
-                <div class="w-full h-[610px] lg:h-[470px]">
+                <div class="w-full h-[470px] lg:h-[610px]">
                     <img src="{{ asset('assets/images/home_page/image 2.png') }}" alt="" class="w-full h-full">
                 </div>
 
@@ -309,7 +309,7 @@
     </div>
 
     {{-- Routine section --}}
-    <div class="max-w-5xl  mx-auto mt-12">
+    <div class="max-w-5xl  mx-auto my-12">
         <div class="bg-bg-secondary py-20  text-center ">
             <div class="text-center mb-6">
                 <h2 class="text-5xl text-text-primary font-bold font-montserrat mb-4 px-2">
@@ -319,13 +319,14 @@
                 </p>
             </div>
             <div class="w-xs mx-auto">
-                <x-ui.button href="#" class="py-4! px-8! bg-linear-to-r! from-second-500! to-zinc-500!">
-                    {{ __('Discover Your Glow') }}
-                    <flux:icon name="arrow-right"
-                        class="w-4 h-4 stroke-text-btn-primary group-hover:stroke-text-btn-secondary" />
+                <x-ui.button href="#"
+                    class="py-4! px-8! bg-linear-to-r! from-second-500! to-zinc-500! hover:shadow-lg!">
+                    <span class="text-white">{{ __('Discover Your Glow') }}</span>
+                    <flux:icon name="arrow-right" class="w-4 h-4 stroke-white" />
                 </x-ui.button>
             </div>
-            <p class="text-base font-normal font-inter text-text-muted mt-6">{{ __('It only takes 2 minutes. No signup required.') }}</p>
+            <p class="text-base font-normal font-inter text-text-muted mt-6">
+                {{ __('It only takes 2 minutes. No signup required.') }}</p>
         </div>
     </div>
 </div>
