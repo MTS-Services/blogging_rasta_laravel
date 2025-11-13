@@ -1,332 +1,174 @@
-<div class="">
-    {{-- banner section --}}
-    <div class="pt-7 container bg-gradient">
-        <div class="block lg:flex justify-between gap-6 items-center">
-            <div class="w-full">
-                <div class="w-sm bg-second-500/40 rounded-full py-2 px-4">
-                    <span class="text-xs text-text-muted font-inter font-normal">
-                        <flux:icon name="sun" class="w-6 h-6 inline mr-2.5 stroke-second-500!" />
-                        {{ __('Trusted by 50K+ beauty lovers') }}
-                    </span>
-                </div>
-                <h3 class="text-6xl lg:text-8xl font-semibold font-montserrat text-second-800 my-6"><span
-                        class="text-zinc-900">{{ __('Glow') }}</span> {{ __('Naturally') }} </h3>
-                <p class="text-xl text-text-primary font-medium font-inter">
-                    {{ __('Discover routines that actually work. Explore trending videos, shop vetted products, and get personalized advice tailored to your skin type.') }}
-                </p>
-                <div class="flex gap-4 mt-6">
-                    <div class="">
+<div>
+    <section class="bg-gradient">
+        {{-- Banner Section --}}
+        <div class="container pt-20 pb-16 lg:pt-24">
+            <div class="flex flex-col-reverse lg:flex-row items-center justify-between gap-12">
+                {{-- Text Content --}}
+                <div class="w-full lg:w-1/2 text-center lg:text-left">
+                    {{-- Small Badge --}}
+                    <div class="inline-flex items-center bg-second-500/40 rounded-full py-2 px-4 mb-4">
+                        <flux:icon name="sun" class="w-5 h-5 mr-2 text-second-500" />
+                        <span class="text-xs text-text-muted font-inter">
+                            {{ __('Trusted by 50K+ beauty lovers') }}
+                        </span>
+                    </div>
+
+                    {{-- Heading --}}
+                    <h1
+                        class="text-5xl md:text-7xl lg:text-8xl font-semibold font-montserrat text-second-800 mb-6 leading-tight">
+                        <span class="text-zinc-900">{{ __('Glow') }}</span> {{ __('Naturally') }}
+                    </h1>
+
+                    {{-- Description --}}
+                    <p class="text-lg md:text-xl text-text-primary font-medium font-inter max-w-lg mx-auto lg:mx-0">
+                        {{ __('Discover routines that actually work. Explore trending videos, shop vetted products, and get personalized advice tailored to your skin type.') }}
+                    </p>
+
+                    {{-- Buttons --}}
+                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mt-8">
                         <x-ui.button href="#"
-                            class="py-4! px-8! bg-linear-to-r! from-second-500! to-zinc-500! hover:shadow-lg!">
+                            class="py-4 px-8 bg-gradient-to-r from-second-500 to-zinc-500 hover:shadow-lg transition-all duration-300">
                             <span class="text-white">{{ __('Discover Your Glow') }}</span>
                             <flux:icon name="arrow-right" class="w-4 h-4 stroke-white" />
                         </x-ui.button>
-                    </div>
-                    <div class="">
-                        <x-ui.button href="#" class="py-4! px-8! border-second-500!" variant="secondary">
+
+                        <x-ui.button href="#" variant="secondary"
+                            class="py-4 px-8 border border-second-500 group transition-all duration-300">
                             <flux:icon name="play"
-                                class="w-4 h-4 stroke-text-primary group-hover:stroke-text-btn-primary" />
-                            <span class="stroke-text-primary group-hover:text-zinc-50!">
-                                {{ __('Watch Stories') }}</span>
+                                class="w-4 h-4 stroke-text-primary group-hover:stroke-white transition-colors" />
+                            <span class="text-text-primary group-hover:text-white transition-colors">
+                                {{ __('Watch Stories') }}
+                            </span>
                         </x-ui.button>
                     </div>
                 </div>
-            </div>
-            <div class="w-full">
-                <div class="w-full h-[470px] lg:h-[610px]">
-                    <img src="{{ asset('assets/images/home_page/image 2.png') }}" alt="" class="w-full h-full">
-                </div>
 
+                {{-- Image Section --}}
+                <div class="w-full lg:w-1/2 flex justify-center">
+                    <img src="{{ asset('assets/images/home_page/image 2.png') }}" alt="Banner image"
+                        class="w-full max-w-[500px] lg:max-w-none h-auto rounded-lg object-cover">
+                </div>
             </div>
-        </div>
-        <div class="flex gap-6 pb-24">
-            <div class="p-6">
-                <h3 class="text-5xl font-normal font-playfair text-second-800 mb-2">{{ __('50K+') }}</h3>
-                <p class="text-base font-normal font-inter">{{ __('Followers') }}</p>
-            </div>
-            <div class="p-6">
-                <h3 class="text-5xl font-normal font-playfair text-zinc-500 mb-2">{{ __('100+') }}</h3>
-                <p class="text-base font-normal font-inter">{{ __('Products Curated') }}</p>
-            </div>
-            <div class="p-6">
-                <h3 class="text-5xl font-normal font-playfair text-second-800 mb-2">{{ __('95%') }}</h3>
-                <p class="text-base font-normal font-inter">{{ __('Satisfaction') }}</p>
-            </div>
-        </div>
-    </div>
 
-
-
-    {{-- Featured TikTok Clips section --}}
-    <div class="container bg-bg-primary py-24 mt-12">
-        <h2 class="text-5xl text-text-primary font-bold font-montserrat">{{ __('Featured TikTok Clips') }}</h2>
-        <p class="text-base  text-text-primary font-semibold font-inter mt-4">
-            {{ __('The latest viral skincare trends everyone\'s talking about') }}</p>
-        {{-- video card --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-7 mt-8 px-5">
-            <div class="">
-                <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Image(video thumbnail).png') }}" alt=""
-                        class="w-full h-full rounded-2xl">
+            {{-- Stats Section --}}
+            <div class="flex flex-wrap justify-center lg:justify-start gap-10 mt-16">
+                <div class="text-center lg:text-left">
+                    <h3 class="text-4xl md:text-5xl font-playfair text-second-800 mb-1">50K+</h3>
+                    <p class="text-base font-inter text-text-primary">{{ __('Followers') }}</p>
                 </div>
-                <div class="flex gap-3 mt-2">
-                    <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Image (user avatar).png') }}" alt=""
-                            class="w-full h-full rounded-full">
-                    </div>
-                    <div class="">
-                        <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
-                        <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
-                    </div>
+                <div class="text-center lg:text-left">
+                    <h3 class="text-4xl md:text-5xl font-playfair text-zinc-500 mb-1">100+</h3>
+                    <p class="text-base font-inter text-text-primary">{{ __('Products Curated') }}</p>
                 </div>
-            </div>
-            <div class="">
-                <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Featured 2.png') }}" alt=""
-                        class="w-full h-full rounded-2xl">
-                </div>
-                <div class="flex gap-3 mt-2">
-                    <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Featured 2.1.png') }}" alt=""
-                            class="w-full h-full rounded-full">
-                    </div>
-                    <div class="">
-                        <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
-                        <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="">
-                <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Featured3.png') }}" alt=""
-                        class="w-full h-full rounded-2xl">
-                </div>
-                <div class="flex gap-3 mt-2">
-                    <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/Featured3.1.png') }}" alt=""
-                            class="w-full h-full rounded-full">
-                    </div>
-                    <div class="">
-                        <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
-                        <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="">
-                <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Featured4.png') }}" alt=""
-                        class="w-full h-full rounded-2xl">
-                </div>
-                <div class="flex gap-3 mt-2">
-                    <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/1 (4).png') }}" alt=""
-                            class="w-full h-full rounded-full">
-                    </div>
-                    <div class="">
-                        <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
-                        <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="">
-                <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Featured4.png') }}" alt=""
-                        class="w-full h-full rounded-2xl">
-                </div>
-                <div class="flex gap-3 mt-2">
-                    <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/xcc.png') }}" alt=""
-                            class="w-full h-full rounded-full">
-                    </div>
-                    <div class="">
-                        <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
-                        <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="">
-                <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Featured5.png') }}" alt=""
-                        class="w-full h-full rounded-2xl">
-                </div>
-                <div class="flex gap-3 mt-2">
-                    <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/1 (2).png') }}" alt=""
-                            class="w-full h-full rounded-full">
-                    </div>
-                    <div class="">
-                        <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
-                        <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="">
-                <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Featured6.png') }}" alt=""
-                        class="w-full h-full rounded-2xl">
-                </div>
-                <div class="flex gap-3 mt-2">
-                    <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/1 (3).png') }}" alt=""
-                            class="w-full h-full rounded-full">
-                    </div>
-                    <div class="">
-                        <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
-                        <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="">
-                <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Featured7.png') }}" alt=""
-                        class="w-full h-full rounded-2xl">
-                </div>
-                <div class="flex gap-3 mt-2">
-                    <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/1 (4).png') }}" alt=""
-                            class="w-full h-full rounded-full">
-                    </div>
-                    <div class="">
-                        <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
-                        <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="">
-                <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Featured8.png') }}" alt=""
-                        class="w-full h-full rounded-2xl">
-                </div>
-                <div class="flex gap-3 mt-2">
-                    <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/1 (5).png') }}" alt=""
-                            class="w-full h-full rounded-full">
-                    </div>
-                    <div class="">
-                        <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
-                        <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="">
-                <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Featured9.png') }}" alt=""
-                        class="w-full h-full rounded-2xl">
-                </div>
-                <div class="flex gap-3 mt-2">
-                    <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/1 (6).png') }}" alt=""
-                            class="w-full h-full rounded-full">
-                    </div>
-                    <div class="">
-                        <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
-                        <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="">
-                <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Featured10.png') }}" alt=""
-                        class="w-full h-full rounded-2xl">
-                </div>
-                <div class="flex gap-3 mt-2">
-                    <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/1 (7).png') }}" alt=""
-                            class="w-full h-full rounded-full">
-                    </div>
-                    <div class="">
-                        <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
-                        <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="">
-                <div class="w-[290px] h-[300px]">
-                    <img src="{{ asset('assets/images/home_page/Featured11.png') }}" alt=""
-                        class="w-full h-full rounded-2xl">
-                </div>
-                <div class="flex gap-3 mt-2">
-                    <div class="w-9 h-9">
-                        <img src="{{ asset('assets/images/home_page/1 (8).png') }}" alt=""
-                            class="w-full h-full rounded-full">
-                    </div>
-                    <div class="">
-                        <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
-                        <p class="text-ms font-normal text-text-primary font-outfit">{{ __('Creator name') }}</p>
-                        <span class="text-xs font-normal text-text-muted mt-1">{{ __('2.3M views') }}</span>
-                    </div>
+                <div class="text-center lg:text-left">
+                    <h3 class="text-4xl md:text-5xl font-playfair text-second-800 mb-1">95%</h3>
+                    <p class="text-base font-inter text-text-primary">{{ __('Satisfaction') }}</p>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    {{-- Trending --}}
-    <div class="container bg-bg-secondary px-6 py-24 mt-12">
-        <div class="text-center">
-            <h2 class="text-5xl text-text-primary font-bold font-montserrat mb-4">{{ __('Trending Hashtags') }}</h2>
-            <span
-                class="text-base  text-text-primary font-semibold font-inter">{{ __('Join the conversation with beauty lovers worldwide') }}</span>
-        </div>
 
-        {{-- Hashtags card --}}
-        <div class="grid grid-cols-3 gap-5 mt-4">
-            <div class="bg-white border border-second-500/40 rounded-xl p-6">
-                <h2 class="text-2xl font-medium font-montserrat">{{ __('#GlowSkin') }}</h2>
-                <span class="text-text-muted">{{ __('48 videos') }}</span>
-            </div>
-            <div class="bg-white border border-second-500/40 rounded-xl p-6">
-                <h2 class="text-2xl font-medium font-montserrat">{{ __('#DiodioTips') }}</h2>
-                <span class="text-text-muted">{{ __('32 videos') }}</span>
-            </div>
-            <div class="bg-white border border-second-500/40 rounded-xl p-6">
-                <h2 class="text-2xl font-medium font-montserrat">{{ __('#NaturalBeauty') }}</h2>
-                <span class="text-text-muted">{{ __('125 videos') }}</span>
-            </div>
-            <div class="bg-white border border-second-500/40 rounded-xl p-6">
-                <h2 class="text-2xl font-medium font-montserrat">{{ __('#SkincareRoutine') }}</h2>
-                <span class="text-text-muted">{{ __('95 videos') }}</span>
-            </div>
-            <div class="bg-white border border-second-500/40 rounded-xl p-6">
-                <h2 class="text-2xl font-medium font-montserrat">{{ __('#BeaulyHaul') }}</h2>
-                <span class="text-text-muted">{{ __('72 videos') }}</span>
-            </div>
-            <div class="bg-white border border-second-500/40 rounded-xl p-6">
-                <h2 class="text-2xl font-medium font-montserrat">{{ __('#SkincareTips') }}</h2>
-                <span class="text-text-muted">{{ __('156 videos') }}</span>
-            </div>
-        </div>
-    </div>
 
-    {{-- Routine section --}}
-    <div class="max-w-5xl  mx-auto my-12">
-        <div class="bg-bg-secondary py-20  text-center ">
-            <div class="text-center mb-6">
-                <h2 class="text-5xl text-text-primary font-bold font-montserrat mb-4 px-2">
-                    {{ __('Ready to Find Your Perfect Routine?') }}</h2>
-                <p class="text-base text-text-primary font-normal font-inter px-6! ">
-                    {{ __('Discover routines tailored to your lifestyle. From skincare and fitness to productivity and wellness, our tips and guides help you build habits that stick, making everyday life simpler, healthier, and more enjoyable. Start your journey today!') }}
+
+
+    <section class="bg-bg-primary">
+        {{-- Featured TikTok Clips Section --}}
+        <div class="container py-20 lg:py-24">
+            {{-- Header --}}
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="text-4xl md:text-5xl font-bold font-montserrat text-text-primary">
+                    {{ __('Featured TikTok Clips') }}
+                </h2>
+                <p class="text-base md:text-lg text-text-primary font-semibold font-inter mt-4">
+                    {{ __('The latest viral skincare trends everyone\'s talking about') }}
                 </p>
             </div>
-            <div class="w-xs mx-auto">
+
+            {{-- Video Grid --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 mt-12 px-4">
+                @foreach ($featuredVideos as $video)
+                    <div class="group w-full">
+                        {{-- Thumbnail --}}
+                        <div class="relative w-full aspect-[1/1.1] overflow-hidden rounded-2xl">
+                            <img src="{{ asset('assets/images/home_page/' . $video['thumb']) }}" alt="TikTok thumbnail"
+                                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                            {{-- Play button overlay --}}
+                            <div
+                                class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/40 rounded-2xl">
+                                <flux:icon name="play" class="w-12 h-12 stroke-white" />
+                            </div>
+                        </div>
+
+                        {{-- Creator Info --}}
+                        <div class="flex items-center gap-3 mt-3">
+                            <div class="w-10 h-10">
+                                <img src="{{ asset('assets/images/home_page/' . $video['avatar']) }}" alt="User avatar"
+                                    class="w-full h-full rounded-full object-cover">
+                            </div>
+                            <div>
+                                <h6 class="text-text-primary font-semibold font-inter">Getty</h6>
+                                <p class="text-sm font-normal text-text-primary font-outfit">{{ __('Creator name') }}
+                                </p>
+                                <span class="text-xs text-text-muted">{{ __('2.3M views') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-bg-secondary">
+        {{-- Trending Hashtags --}}
+        <div class="container py-20 lg:py-24 px-6">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold font-montserrat text-text-primary mb-3">
+                    {{ __('Trending Hashtags') }}
+                </h2>
+                <p class="text-base md:text-lg text-text-primary font-semibold font-inter">
+                    {{ __('Join the conversation with beauty lovers worldwide') }}
+                </p>
+            </div>
+
+            {{-- Hashtag Cards --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach ($hashtags as $hash)
+                    <div
+                        class="bg-white border border-second-500/30 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                        <h3 class="text-2xl font-medium font-montserrat text-text-primary mb-1">
+                            {{ __($hash['tag']) }}
+                        </h3>
+                        <span class="text-sm text-text-muted">{{ __($hash['videos'] . ' videos') }}</span>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-second-200">
+        {{-- Routine Section --}}
+        <div class="max-w-5xl mx-auto px-6 py-20 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold font-montserrat text-text-primary mb-4">
+                {{ __('Ready to Find Your Perfect Routine?') }}
+            </h2>
+            <p class="text-base md:text-lg text-text-primary font-normal font-inter max-w-3xl mx-auto mb-8">
+                {{ __('Discover routines tailored to your lifestyle. From skincare and fitness to productivity and wellness, our tips and guides help you build habits that stick — making everyday life simpler, healthier, and more enjoyable. Start your journey today!') }}
+            </p>
+
+            {{-- CTA Button --}}
+            <div class="w-fit mx-auto">
                 <x-ui.button href="#"
-                    class="py-4! px-8! bg-linear-to-r! from-second-500! to-zinc-500! hover:shadow-lg!">
+                    class="py-4 px-8 bg-gradient-to-r from-second-500 to-zinc-500 hover:shadow-lg transition-all duration-300">
                     <span class="text-white">{{ __('Discover Your Glow') }}</span>
                     <flux:icon name="arrow-right" class="w-4 h-4 stroke-white" />
                 </x-ui.button>
             </div>
-            <p class="text-base font-normal font-inter text-text-muted mt-6">
-                {{ __('It only takes 2 minutes. No signup required.') }}</p>
+
+            <p class="text-sm md:text-base font-normal font-inter text-text-muted mt-6">
+                {{ __('It only takes 2 minutes. No signup required.') }}
+            </p>
         </div>
-    </div>
+    </section>
+
 </div>
