@@ -237,7 +237,7 @@
         --color-accent-foreground: var(--color-accent-foreground-light) !important;
     }
 
-    .dark {
+    /* .dark {
         --color-accent: var(--color-accent-dark);
 
         --color-accent-content: var(--color-accent-content-dark);
@@ -255,7 +255,7 @@
 
         --color-text-new: var(--color-text-new-dark);
         --color-text-white: var(--color-white-dark);
-    }
+    } */
 }
 
 
