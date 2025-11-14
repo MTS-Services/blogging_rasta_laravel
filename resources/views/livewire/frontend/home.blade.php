@@ -53,15 +53,15 @@
             {{-- Stats Section --}}
             <div class="flex flex-wrap justify-center lg:justify-start gap-10 mt-16">
                 <div class="text-center lg:text-left">
-                    <h3 class="text-4xl md:text-5xl font-playfair text-second-800 mb-1">50K+</h3>
+                    <h3 class="text-4xl md:text-5xl font-playfair text-second-800 mb-1">{{ __('50K+') }}</h3>
                     <p class="text-base font-inter text-text-primary">{{ __('Followers') }}</p>
                 </div>
                 <div class="text-center lg:text-left">
-                    <h3 class="text-4xl md:text-5xl font-playfair text-zinc-500 mb-1">100+</h3>
+                    <h3 class="text-4xl md:text-5xl font-playfair text-zinc-500 mb-1">{{ __('100+') }}</h3>
                     <p class="text-base font-inter text-text-primary">{{ __('Products Curated') }}</p>
                 </div>
                 <div class="text-center lg:text-left">
-                    <h3 class="text-4xl md:text-5xl font-playfair text-second-800 mb-1">95%</h3>
+                    <h3 class="text-4xl md:text-5xl font-playfair text-second-800 mb-1">{{ __('95%') }}</h3>
                     <p class="text-base font-inter text-text-primary">{{ __('Satisfaction') }}</p>
                 </div>
             </div>
@@ -107,7 +107,7 @@
                                     class="w-full h-full rounded-full object-cover">
                             </div>
                             <div>
-                                <h6 class="text-text-primary font-semibold font-inter">Getty</h6>
+                                <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
                                 <p class="text-sm font-normal text-text-primary font-outfit">{{ __('Creator name') }}
                                 </p>
                                 <span class="text-xs text-text-muted">{{ __('2.3M views') }}</span>
