@@ -9,3 +9,4 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 //         route('admin.login')
 //     );
 // })->name('home');
+// routes/web.php
