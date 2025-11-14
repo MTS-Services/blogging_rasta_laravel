@@ -34,33 +34,10 @@
             </a>
         </nav>
 
-        <!-- CTA Button -->
-        <div x-data="{ open: false }" class="relative hidden md:block">
-            <button @click="open = !open" wire:navigate
-                class="flex items-center gap-1 px-6 py-2.5 btn-gradient text-white font-semibold rounded-full hover:shadow-lg transition-all duration-300">
-                {{ __('English') }}
-
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mt-0.5 transition-transform  duration-200"
-                    :class="open ? 'rotate-180' : 'rotate-0'" fill="none" viewBox="0 0 24 24" stroke="white">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-            </button>
-            <div x-show="open" @click.outside="open = false" x-transition
-                class="absolute right-0  w-36 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
-                <ul class="py-2 text-gray-700">
-                    <li>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 transition">
-                            English
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 transition">
-                            Français
-                        </a>
-                    </li>
-                </ul>
-            </div>
+        <div class="hidden md:block">
+            <x-language />
         </div>
+
 
         <!-- Mobile Menu Button -->
         <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 text-text-muted"
