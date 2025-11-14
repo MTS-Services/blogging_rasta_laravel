@@ -279,11 +279,11 @@
     h4,
     h5,
     h6 {
-        @apply font-open-sans;
+        @apply font-montserrat;
     }
 
     p {
-        @apply font-lato;
+        @apply font-inter;
     }
 
     .dark * {
