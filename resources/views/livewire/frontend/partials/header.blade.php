@@ -13,23 +13,23 @@
         <!-- Desktop Navigation -->
         <nav class="hidden md:flex items-center gap-8">
             <a href="{{ route('home') }}" wire:navigate
-                class="text-text-muted font-inter transition-colors {{ request()->routeIs('home') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500 hover:border-b-2 hover:border-second-500' }}">
+                class="text-text-muted font-inter transition-colors {{ request()->routeIs('home') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500! hover:border-b-2 hover:border-second-500' }}">
                 {{ __('Home') }}
             </a>
             <a href="#" wire:navigate
-                class="text-text-muted font-inter transition-colors {{ request()->routeIs('products') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500 hover:border-b-2 hover:border-second-500' }}">
+                class="text-text-muted font-inter transition-colors {{ request()->routeIs('products') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500! hover:border-b-2 hover:border-second-500' }}">
                 {{ __('Products') }}
             </a>
             <a href="{{ route('video-feed') }}" wire:navigate
-                class="text-text-muted font-inter transition-colors {{ request()->routeIs('video-feed') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500 hover:border-b-2 hover:border-second-500' }}">
+                class="text-text-muted font-inter transition-colors {{ request()->routeIs('video-feed') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500! hover:border-b-2 hover:border-second-500' }}">
                 {{ __('Video Feed') }}
             </a>
             <a href="#" wire:navigate
-                class="text-text-muted font-inter transition-colors {{ request()->routeIs('blog') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500 hover:border-b-2 hover:border-second-500' }}">
+                class="text-text-muted font-inter transition-colors {{ request()->routeIs('blog') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500! hover:border-b-2 hover:border-second-500' }}">
                 {{ __('Blog') }}
             </a>
             <a href="#" wire:navigate
-                class="text-text-muted font-inter transition-colors {{ request()->routeIs('about') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500 hover:border-b-2 hover-border-second-500' }}">
+                class="text-text-muted font-inter transition-colors {{ request()->routeIs('about') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500! hover:border-b-2 hover-border-second-500' }}">
                 {{ __('About') }}
             </a>
         </nav>
@@ -55,23 +55,23 @@
         x-transition:leave-end="opacity-0 transform -translate-y-2" class="md:hidden border-t border-gray-200 bg-white">
         <nav class="container mx-auto px-6 py-4 flex flex-col gap-4">
             <a href="#" wire:navigate
-                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('home') ? 'text-second-500! underline ' : 'hover:text-second-500' }}">
+                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('home') ? 'text-second-500!! underline ' : 'hover:text-second-500!' }}">
                 {{ __('Home') }}
             </a>
             <a href="#" wire:navigate
-                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('products') ? 'text-second-500! ' : 'hover:text-second-500!' }}">
+                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('products') ? 'text-second-500!! ' : 'hover:text-second-500!!' }}">
                 {{ __('Products') }}
             </a>
             <a href="{{ route('video-feed') }}" wire:navigate
-                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('video-feed') ? 'text-second-500! ' : 'hover:text-second-500!' }}">
+                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('video-feed') ? 'text-second-500!! ' : 'hover:text-second-500!!' }}">
                 {{ __('Video Feed') }}
             </a>
             <a href="#" wire:navigate
-                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('blog') ? 'text-second-500! ' : 'hover:text-second-500!' }}">
+                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('blog') ? 'text-second-500!! ' : 'hover:text-second-500!!' }}">
                 {{ __('Blog') }}
             </a>
             <a href="#" wire:navigate
-                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('about') ? 'text-second-500! ' : 'hover:text-second-500!' }}">
+                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('about') ? 'text-second-500!! ' : 'hover:text-second-500!!' }}">
                 {{ __('About') }}
             </a>
             <div x-data="{ openLang: false }" class="relative">
