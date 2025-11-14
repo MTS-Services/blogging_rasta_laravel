@@ -1,7 +1,6 @@
 <div class="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-pink-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        <!-- API Subscription Warning -->
         @if(!config('tiktok.rapidapi_key'))
             <div class="mb-6 bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-500 rounded-lg p-6 shadow-lg">
                 <div class="flex items-start">
@@ -10,22 +9,22 @@
                     </svg>
                     <div class="flex-1">
                         <h3 class="text-lg font-bold text-yellow-800 mb-2">
-                            ⚠️ API Subscription প্রয়োজন
+                            ⚠️ API Subscription **Required**
                         </h3>
                         <p class="text-yellow-700 mb-3">
-                            এখন <strong>Demo Data</strong> দেখাচ্ছে। আসল TikTok ভিডিও দেখার জন্য:
+                            Currently showing **Demo Data**. To see real TikTok videos:
                         </p>
                         <ol class="list-decimal list-inside space-y-2 text-yellow-800 mb-4">
                             <li>
                                 <a href="https://rapidapi.com/DataFanatic/api/tiktok-scraper7" 
                                    target="_blank" 
                                    class="underline hover:text-yellow-900 font-semibold">
-                                    RapidAPI TikTok Scraper
-                                </a> তে যান
+                                    Go to RapidAPI TikTok Scraper
+                                </a>
                             </li>
-                            <li><strong>"Subscribe to Test"</strong> বাটনে ক্লিক করুন</li>
-                            <li><strong>Free/Basic Plan</strong> সিলেক্ট করুন</li>
-                            <li>API Key copy করে <code class="bg-yellow-100 px-2 py-1 rounded text-sm">.env</code> ফাইলে যোগ করুন</li>
+                            <li>Click the **"Subscribe to Test"** button</li>
+                            <li>Select the **Free/Basic Plan**</li>
+                            <li>Copy the API Key and add it to the <code class="bg-yellow-100 px-2 py-1 rounded text-sm">.env</code> file</li>
                         </ol>
                         <div class="flex gap-3">
                             <a href="https://rapidapi.com/DataFanatic/api/tiktok-scraper7" 
@@ -34,7 +33,7 @@
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                                 </svg>
-                                Subscribe করুন
+                                **Subscribe**
                             </a>
                         </div>
                     </div>
@@ -42,7 +41,6 @@
             </div>
         @endif
 
-        <!-- Header -->
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-gray-900 mb-2">
                 Featured TikTok Creators
@@ -55,7 +53,6 @@
             </p>
         </div>
 
-        <!-- Featured Users Cards -->
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
             @foreach($featuredUsers as $user)
                 @php
@@ -111,7 +108,6 @@
             </button>
         </div>
 
-        <!-- Refresh Button -->
         <div class="flex justify-end mb-6">
             <button 
                 wire:click="refresh" 
@@ -130,7 +126,6 @@
             </button>
         </div>
 
-        <!-- Error Message -->
         @if($error)
             <div class="bg-red-50 border-l-4 border-red-400 rounded-lg p-6 mb-8">
                 <div class="flex items-start">
@@ -142,7 +137,6 @@
             </div>
         @endif
 
-        <!-- Loading Skeleton -->
         @if($loading)
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @for($i = 0; $i < 12; $i++)
@@ -173,7 +167,6 @@
                         </span>
                     </div>
 
-                    <!-- Videos Grid -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         @foreach($displayVideos as $index => $video)
                             @php
@@ -194,10 +187,8 @@
                             
                             <div class="group bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2">
                                 <div class="relative aspect-[9/16] bg-gradient-to-br from-pink-100 to-purple-100 overflow-hidden">
-                                    <!-- Video Player with Poster -->
                                     <div class="video-container-{{ $index }} relative w-full h-full">
                                         @if($playAddr)
-                                            <!-- Video Element (Hidden by default) -->
                                             <video 
                                                 id="video-{{ $index }}"
                                                 class="w-full h-full object-cover hidden"
@@ -210,7 +201,6 @@
                                                 Your browser does not support the video tag.
                                             </video>
                                             
-                                            <!-- Cover Image (Shown by default) -->
                                             <img 
                                                 id="cover-{{ $index }}"
                                                 src="{{ $cover }}" 
@@ -219,7 +209,6 @@
                                                 loading="lazy"
                                             >
                                         @else
-                                            <!-- Fallback to cover image only -->
                                             <img 
                                                 src="{{ $cover }}" 
                                                 alt="{{ $desc }}"
@@ -228,7 +217,6 @@
                                             >
                                         @endif
                                         
-                                        <!-- Play Button Overlay -->
                                         @if($playAddr)
                                             <div id="play-overlay-{{ $index }}" class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center cursor-pointer transition-all duration-300 hover:bg-opacity-50">
                                                 <div class="transform hover:scale-110 transition-transform duration-300">
