@@ -67,11 +67,6 @@
             </div>
         </div>
     </section>
-
-
-
-
-
     <section class="bg-bg-primary">
         {{-- Featured TikTok Clips Section --}}
         <div class="container py-20 lg:py-24">
