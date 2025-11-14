@@ -1,7 +1,7 @@
 <div x-data="{ open: false }" class="relative">
     <!-- Dropdown Button -->
     <button @click="open = !open"
-        class="flex items-center gap-1 px-6 py-2.5 btn-gradient text-white font-semibold rounded-full hover:shadow-lg transition-all duration-300">
+        class="flex items-center justify-between gap-2 px-4 py-2 md:px-6 md:py-2.5 btn-gradient text-white font-semibold rounded-full hover:shadow-lg transition-all duration-300 w-full md:w-auto">
 
         {{ session('locale') === 'fr' ? 'French' : 'English' }}
 
@@ -13,20 +13,19 @@
 
     <!-- Dropdown Menu -->
     <div x-show="open" @click.outside="open = false" x-transition
-        class="absolute right-0  w-36 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
+        class="absolute right-0 md:right-0 mt-2 w-full md:w-36 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
 
         <form action="{{ route('lang.change') }}" method="POST" class="py-2">
             @csrf
             <button type="submit" name="lang" value="en"
-                class="block w-full text-left px-4 py-2 hover:bg-gray-100 {{ session('locale') == 'en' ? 'font-semibold' : '' }}">
+                class="block w-full text-left px-4 py-3 md:py-2 hover:bg-gray-100 {{ session('locale') == 'en' ? 'font-semibold' : '' }}">
                 English
             </button>
 
             <button type="submit" name="lang" value="fr"
-                class="block w-full text-left px-4 py-2 hover:bg-gray-100 {{ session('locale') == 'fr' ? 'font-semibold' : '' }}">
+                class="block w-full text-left px-4 py-3 md:py-2 hover:bg-gray-100 {{ session('locale') == 'fr' ? 'font-semibold' : '' }}">
                 French
             </button>
         </form>
     </div>
 </div>
-
