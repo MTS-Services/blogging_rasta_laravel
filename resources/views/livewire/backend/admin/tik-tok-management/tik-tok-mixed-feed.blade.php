@@ -82,7 +82,9 @@
                     <h3 class="font-semibold text-gray-900 text-sm mb-1 truncate">
                         {{ $user['display_name'] }}
                     </h3>
-                    <p class="text-xs text-gray-500 truncate">@{{ $user['username'] }}</p>
+                    
+                    {{-- FINAL FIX APPLIED HERE: Using string concatenation to ensure the variable is rendered and the @ symbol is included. --}}
+                    <p class="text-xs text-gray-500 truncate">{{ '@' . $user['username'] }}</p>
                     
                     @if($followerCount > 0)
                         <p class="text-xs text-gray-600 mt-2">
