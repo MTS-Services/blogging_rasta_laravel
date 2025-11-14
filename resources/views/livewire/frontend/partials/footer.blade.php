@@ -25,13 +25,13 @@
                 </h3>
                 <ul class="space-y-1">
                     <li><a href="#"
-                            class="text-text-secondary hover:text-orange-500 transition-colors text-sm sm:text-base">{{ __('Home') }}</a>
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Home') }}</a>
                     </li>
                     <li><a href="#"
-                            class="text-text-secondary hover:text-orange-500 transition-colors text-sm sm:text-base">{{ __('Videos') }}</a>
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Videos') }}</a>
                     </li>
                     <li><a href="#"
-                            class="text-text-secondary hover:text-orange-500 transition-colors text-sm sm:text-base">{{ __('Products') }}</a>
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Products') }}</a>
                     </li>
                 </ul>
             </div>
@@ -43,16 +43,16 @@
                 </h3>
                 <ul class="space-y-1">
                     <li><a href="https://tiktok.com" target="_blank" rel="noopener noreferrer"
-                            class="text-text-secondary hover:text-orange-500 transition-colors text-sm sm:text-base">{{ __('TikTok') }}</a>
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('TikTok') }}</a>
                     </li>
                     <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
-                            class="text-text-secondary hover:text-orange-500 transition-colors text-sm sm:text-base">{{ __('Instagram') }}</a>
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Instagram') }}</a>
                     </li>
                     <li><a href="https://youtube.com" target="_blank" rel="noopener noreferrer"
-                            class="text-text-secondary hover:text-orange-500 transition-colors text-sm sm:text-base">{{ __('YouTube') }}</a>
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('YouTube') }}</a>
                     </li>
                     <li><a href="#"
-                            class="text-text-secondary hover:text-orange-500 transition-colors text-sm sm:text-base">{{ __('Contact') }}</a>
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Contact') }}</a>
                     </li>
                 </ul>
             </div>
@@ -64,16 +64,16 @@
                 </h3>
                 <ul class="space-y-1">
                     <li><a href="#"
-                            class="text-text-secondary hover:text-orange-500 transition-colors text-sm sm:text-base">{{ __('Privacy Policy') }}</a>
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Privacy Policy') }}</a>
                     </li>
                     <li><a href="#"
-                            class="text-text-secondary hover:text-orange-500 transition-colors text-sm sm:text-base">{{ __('Terms of Service') }}</a>
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Terms of Service') }}</a>
                     </li>
                     <li><a href="#"
-                            class="text-text-secondary hover:text-orange-500 transition-colors text-sm sm:text-base">{{ __('Affiliate Disclosure') }}</a>
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Affiliate Disclosure') }}</a>
                     </li>
                     <li><a href="#"
-                            class="text-text-secondary hover:text-orange-500 transition-colors text-sm sm:text-base">{{ __('Support') }}</a>
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Support') }}</a>
                     </li>
                 </ul>
             </div>
