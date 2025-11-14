@@ -20,7 +20,7 @@
                 class="text-text-muted font-inter transition-colors {{ request()->routeIs('products') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500 hover:border-b-2 hover:border-second-500' }}">
                 {{ __('Products') }}
             </a>
-            <a href="#" wire:navigate
+            <a href="{{ route('video-feed') }}" wire:navigate
                 class="text-text-muted font-inter transition-colors {{ request()->routeIs('video-feed') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500 hover:border-b-2 hover:border-second-500' }}">
                 {{ __('Video Feed') }}
             </a>
@@ -62,7 +62,7 @@
                 class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('products') ? 'text-second-500! ' : 'hover:text-second-500!' }}">
                 {{ __('Products') }}
             </a>
-            <a href="#" wire:navigate
+            <a href="{{ route('video-feed') }}" wire:navigate
                 class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('video-feed') ? 'text-second-500! ' : 'hover:text-second-500!' }}">
                 {{ __('Video Feed') }}
             </a>
