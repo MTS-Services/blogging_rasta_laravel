@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Backend\Admin\TikTokManagement;
 
-
 use Livewire\Component;
 use App\Services\TikTokMultiUserService;
+use Illuminate\Support\Facades\Log;
 
 class TikTokMixedFeed extends Component
 {
@@ -14,6 +14,7 @@ class TikTokMixedFeed extends Component
     public $loading = true;
     public $error = null;
     public $selectedUser = 'all'; // Filter by user
+    public $debugInfo = []; // Add debug information
 
     protected $service;
 
@@ -25,6 +26,14 @@ class TikTokMixedFeed extends Component
     public function mount()
     {
         $this->featuredUsers = $this->service->getFeaturedUsers();
+
+        // Check if API key is configured
+        if (empty(config('tiktok.rapidapi_key'))) {
+            $this->error = 'RapidAPI key is not configured. Please set RAPIDAPI_KEY in your .env file.';
+            $this->loading = false;
+            return;
+        }
+
         $this->loadData();
     }
 
@@ -32,19 +41,47 @@ class TikTokMixedFeed extends Component
     {
         $this->loading = true;
         $this->error = null;
+        $this->debugInfo = [];
 
         try {
+            // Test API connection first
+            $connectionTest = $this->service->testConnection();
+            $this->debugInfo['connection_test'] = $connectionTest;
+
+            if (!$connectionTest['success']) {
+                throw new \Exception('API connection failed: ' . ($connectionTest['error'] ?? 'Unknown error'));
+            }
+
             $usernames = array_column($this->featuredUsers, 'username');
-            
+
+            Log::info('Loading TikTok data for users', ['usernames' => $usernames]);
+
             // Load profiles
             $this->profiles = $this->service->getMultipleProfiles($usernames);
-            
+            $this->debugInfo['profiles_loaded'] = count($this->profiles);
+
             // Load videos
             $videosPerUser = config('tiktok.videos_per_user', 12);
             $this->videos = $this->service->getMultipleUsersVideos($usernames, $videosPerUser);
-            
+            $this->debugInfo['videos_loaded'] = count($this->videos);
+
+            Log::info('TikTok data loaded successfully', [
+                'profiles' => count($this->profiles),
+                'videos' => count($this->videos)
+            ]);
+
+            if (empty($this->videos)) {
+                $this->error = 'কোনো ভিডিও পাওয়া যায়নি। API থেকে ডেটা আসছে না। লগ চেক করুন।';
+            }
         } catch (\Exception $e) {
             $this->error = 'ভিডিও লোড করতে সমস্যা হয়েছে: ' . $e->getMessage();
+            $this->debugInfo['error'] = $e->getMessage();
+            $this->debugInfo['trace'] = $e->getTraceAsString();
+
+            Log::error('TikTok data loading failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
         }
 
         $this->loading = false;
@@ -55,25 +92,31 @@ class TikTokMixedFeed extends Component
         $this->selectedUser = $username;
     }
 
-    public function getFilteredVideos()
+    public function getFilteredVideosProperty()
     {
         if ($this->selectedUser === 'all') {
             return $this->videos;
         }
-        
-        return array_filter($this->videos, function ($video) {
+
+        return array_values(array_filter($this->videos, function ($video) {
             return ($video['_username'] ?? '') === $this->selectedUser;
-        });
+        }));
     }
 
     public function refresh()
     {
         $this->service->clearAllCache();
         $this->loadData();
+
+        session()->flash('message', 'ক্যাশ ক্লিয়ার করা হয়েছে এবং ডেটা রিফ্রেশ করা হয়েছে!');
     }
 
     public function formatNumber($number)
     {
+        if (!is_numeric($number)) {
+            return '0';
+        }
+
         if ($number >= 1000000) {
             return round($number / 1000000, 1) . 'M';
         } else if ($number >= 1000) {
@@ -82,10 +125,15 @@ class TikTokMixedFeed extends Component
         return number_format($number);
     }
 
+    public function showDebugInfo()
+    {
+        return !empty($this->debugInfo);
+    }
+
     public function render()
     {
         return view('livewire.backend.admin.tik-tok-management.tik-tok-mixed-feed', [
-            'filteredVideos' => $this->getFilteredVideos(),
+            'filteredVideos' => $this->getFilteredVideosProperty(),
         ]);
     }
 }
