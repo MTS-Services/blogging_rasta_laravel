@@ -19,16 +19,6 @@
                         <x-ui.file-input wire:model="form.app_logo" id="app_logo" label="{{ __('App Logo') }}"
                             hint="{{ __('Max: 400x400') }}" accept="image/jpeg,image/png,image/jpg,image/webp,image/svg"
                             :error="$errors->first('form.app_logo')" />
-
-                        @if ($form->app_logo && is_object($form->app_logo))
-                            <div class="mt-2">
-                                <img src="{{ $form->app_logo->temporaryUrl() }}" class="max-w-[200px] rounded">
-                            </div>
-                        @elseif(isset($general_settings['app_logo']) && $general_settings['app_logo'])
-                            <div class="mt-2">
-                                <img src="{{ asset($general_settings['app_logo']) }}" class="max-w-[200px] rounded">
-                            </div>
-                        @endif
                     </div>
 
                     <!-- Favicon -->
@@ -36,16 +26,6 @@
                         <x-ui.file-input wire:model="form.favicon" id="favicon" label="{{ __('Favicon') }}"
                             hint="{{ __('16x16') }}" accept="image/jpeg,image/png,image/jpg,image/webp,image/svg"
                             :error="$errors->first('form.favicon')" />
-
-                        @if ($form->favicon && is_object($form->favicon))
-                            <div class="mt-2">
-                                <img src="{{ $form->favicon->temporaryUrl() }}" class="max-w-[50px] rounded">
-                            </div>
-                        @elseif(isset($general_settings['favicon']) && $general_settings['favicon'])
-                            <div class="mt-2">
-                                <img src="{{ asset($general_settings['favicon']) }}" class="max-w-[50px] rounded">
-                            </div>
-                        @endif
                     </div>
 
                 </div>

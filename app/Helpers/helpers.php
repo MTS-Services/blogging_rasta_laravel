@@ -102,6 +102,12 @@ if (!function_exists('site_short_name')) {
         return app(ApplicationSettingsService::class)->findData('short_name', 'LA');
     }
 }
+if (!function_exists('site_logo')) {
+    function site_logo()
+    {
+        return app(ApplicationSettingsService::class)->findData('app_logo', 'app_logo.png');
+    }
+}
 
 if (!function_exists('site_tagline')) {
     function site_tagline()

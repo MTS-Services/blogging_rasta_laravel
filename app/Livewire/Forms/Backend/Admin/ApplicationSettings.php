@@ -4,16 +4,23 @@ namespace App\Livewire\Forms\Backend\Admin;
 
 use Livewire\Form;
 use App\Models\ApplicationSetting;
+use App\Traits\FileManagementTrait;
 use Illuminate\Validation\Rule;
 
 class ApplicationSettings extends Form
 {
+    use FileManagementTrait;
+
     public $app_name, $short_name, $timezone, $date_format, $time_format;
     public $favicon, $app_logo, $theme_mode;
     public $public_registration, $registration_approval;
     public $environment, $app_debug, $debugbar;
     public $database_driver, $database_host, $database_port, $database_name, $database_username, $database_password;
     public $smtp_driver, $smtp_host, $smtp_port, $smtp_encryption, $smtp_username, $smtp_password, $smtp_from_address, $smtp_from_name;
+
+    // Store old file paths for deletion
+    private $oldAppLogo = null;
+    private $oldFavicon = null;
 
     public function rules(): array
     {
@@ -56,15 +63,34 @@ class ApplicationSettings extends Form
     {
         $validated = $this->validate();
 
-        // Filter out null/empty values
+        // Get old file paths before updating
+        $this->oldAppLogo = ApplicationSetting::get('app_logo');
+        $this->oldFavicon = ApplicationSetting::get('favicon');
+
+        // Filter out null/empty values, but keep file uploads even if they're objects
         $validated = array_filter($validated, function($value) {
+            if (is_object($value)) {
+                // Keep Livewire file uploads (TemporaryUploadedFile)
+                return true;
+            }
             return !is_null($value) && $value !== '';
         });
 
         foreach ($validated as $key => $value) {
             // Handle file uploads
-            if (in_array($key, ['app_logo', 'favicon']) && $value) {
-                $value = app('App\Http\Traits\FileManagementTrait')->handleFileUpload($value, 'application_settings', $key);
+            if (in_array($key, ['app_logo', 'favicon']) && $value && is_object($value)) {
+                // Upload new file
+                $uploadedPath = $this->handleFileUpload($value, 'application_settings', $key);
+                
+                // Delete old file if exists
+                if ($key === 'app_logo' && $this->oldAppLogo) {
+                    $this->fileDelete($this->oldAppLogo);
+                } elseif ($key === 'favicon' && $this->oldFavicon) {
+                    $this->fileDelete($this->oldFavicon);
+                }
+                
+                // Use the uploaded path for storage
+                $value = $uploadedPath;
             }
 
             // Get env_key mapping
