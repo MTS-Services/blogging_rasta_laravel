@@ -2,7 +2,7 @@
     <section class="bg-gradient">
         {{-- Banner Section --}}
         <div class="container pt-20 pb-16 lg:pt-24">
-            <div class="flex flex-col-reverse lg:flex-row items-center justify-between gap-12">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-12">
                 {{-- Text Content --}}
                 <div class="w-full lg:w-1/2 text-center lg:text-left">
                     {{-- Small Badge --}}
@@ -14,10 +14,24 @@
                     </div>
 
                     {{-- Heading --}}
-                    <h1
-                        class="text-5xl md:text-7xl lg:text-8xl font-semibold font-montserrat text-second-800 mb-6 leading-tight">
-                        <span class="text-zinc-900">{{ __('Glow') }}</span> {{ __('Naturally') }}
-                    </h1>
+                    <h2
+                        class="text-5xl md:text-7xl lg:text-8xl font-semibold font-montserrat text-second-800 mb-6 text-zinc-900">
+                        {{ __('Glow') }}</h2>
+
+                    <h2
+                        class="font-semibold font-montserrat text-second-800 mb-6 wrap-break-word
+                        @if (session('locale') === 'fr')
+                            text-4xl 
+                            md:text-6xl 
+                            lg:text-7xl
+                        @else
+                            text-5xl 
+                            md:text-7xl 
+                            lg:text-8xl 
+                            @endif
+                        ">
+                        {{ __('Naturally') }}
+                    </h2>
 
                     {{-- Description --}}
                     <p class="text-lg md:text-xl text-text-primary font-medium font-inter max-w-lg mx-auto lg:mx-0">
@@ -46,7 +60,7 @@
                 {{-- Image Section --}}
                 <div class="w-full lg:w-1/2 flex justify-center">
                     <img src="{{ asset('assets/images/home_page/image 2.png') }}" alt="Banner image"
-                        class="w-full max-w-[500px] lg:max-w-none h-auto rounded-lg object-cover">
+                        class="w-full max-w-[500px] lg:max-w-none h-auto rounded-lg object-cover block">
                 </div>
             </div>
 
@@ -103,7 +117,8 @@
                             </div>
                             <div>
                                 <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
-                                <p class="text-sm font-normal text-text-primary font-outfit">{{ __('Creator name') }}
+                                <p class="text-sm font-normal text-text-primary font-outfit">
+                                    {{ __('Creator name') }}
                                 </p>
                                 <span class="text-xs text-text-muted">{{ __('2.3M views') }}</span>
                             </div>
