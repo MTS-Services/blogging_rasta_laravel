@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Frontend\AboutController;
 use App\Http\Controllers\Frontend\BlogController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\HomeController;
@@ -11,3 +12,4 @@ Route::get('/video-feed', [VideoFeedController::class,'index'])->name('video-fee
 Route::get('/product', [ProductController::class, 'product'])->name('product');
 Route::get('/blog', [BlogController::class, 'blog'])->name('blog');
 Route::get('/blog/details', [BlogController::class, 'details'])->name('blog.details');
+Route::get('/about', [AboutController::class, 'about'])->name('about');
