@@ -13,4 +13,9 @@ class BlogController extends Controller
     {
         return view($this->masterView);
     }
+
+    public function details()
+    {
+        return view($this->masterView);
+    }
 }

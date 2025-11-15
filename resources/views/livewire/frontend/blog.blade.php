@@ -8,25 +8,29 @@
                 <h3 class="text-3xl font-semibold font-montserrat text-text-primary">{{ __('Trending Routines: ') }}</h3>
 
                 <div class="mt-6">
-                    <h6 class="text-base font-semibold font-inter text-text-primary">
-                        {{ __('1. The “Glass Skin” Routine') }}</h6>
+                    <a wire:navigate href="{{ route('blog.details') }}">
+                        <h6 class="text-base font-semibold font-inter text-text-primary">
+                            {{ __('1. The “Glass Skin” Routine') }}</h6>
 
-                    <p class="text-base font-normal font-inter text-text-primary mt-2">
-                        {{ __('Originating from Korean beauty, the glass skin trend is all about achieving a complexion that’s smooth, clear, and luminous—just like glass.') }}
-                    </p>
+                        <p class="text-base font-normal font-inter text-text-primary mt-2">
+                            {{ __('Originating from Korean beauty, the glass skin trend is all about achieving a complexion that’s smooth, clear, and luminous—just like glass.') }}
+                        </p>
 
-                    <p class="text-base font-normal font-inter text-text-primar mt-2">{{ __('How it works:') }}</p>
-                    <ul class="text-base font-normal font-inter text-text-primar list-disc pl-5 mt-2">
-                        <li class="text-base font-normal font-inter text-text-primar">
-                            {{ __('Double cleanse to remove every trace of dirt and makeup') }}</li>
-                        <li class="text-base font-normal font-inter text-text-primar">
-                            {{ __('Apply hydrating toners and serums (look for hyaluronic acid)') }}</li>
-                        <li class="text-base font-normal font-inter text-text-primar">
-                            {{ __('Seal it all in with a lightweight moisturizer and sunscreen') }}</li>
-                    </ul>
-                    <P class="text-base font-normal font-inter text-text-primar mt-2">{{ __('Why it’s trending:') }}</P>
-                    <P class="text-base font-normal font-inter text-text-primar">
-                        {{ __(' It delivers that natural, dewy glow everyone’s chasing—no filters needed.') }}</P>
+                        <p class="text-base font-normal font-inter text-text-primar mt-2">{{ __('How it works:') }}</p>
+                        <ul class="text-base font-normal font-inter text-text-primar list-disc pl-5 mt-2">
+                            <li class="text-base font-normal font-inter text-text-primar">
+                                {{ __('Double cleanse to remove every trace of dirt and makeup') }}</li>
+                            <li class="text-base font-normal font-inter text-text-primar">
+                                {{ __('Apply hydrating toners and serums (look for hyaluronic acid)') }}</li>
+                            <li class="text-base font-normal font-inter text-text-primar">
+                                {{ __('Seal it all in with a lightweight moisturizer and sunscreen') }}</li>
+                        </ul>
+                        <P class="text-base font-normal font-inter text-text-primar mt-2">{{ __('Why it’s trending:') }}
+                        </P>
+                        <P class="text-base font-normal font-inter text-text-primar">
+                            {{ __(' It delivers that natural, dewy glow everyone’s chasing—no filters needed.') }}</P>
+                    </a>
+
                 </div>
             </div>
             <div class="mx-auto mt-12 lg:mt-0 lg:mx-0">
@@ -61,7 +65,7 @@
 
         {{-- Tips & Guides:   --}}
         <div class="block lg:flex gap-12 items-center justify-between mt-20">
-            <div class="bg-second-500/15 p-6">
+            <div class="bg-blog p-6">
                 <h3 class="text-3xl font-semibold font-montserrat text-text-primary">{{ __('Tips & Guides: ') }}</h3>
 
                 <div class="mt-6">
