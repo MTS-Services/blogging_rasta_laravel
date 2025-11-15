@@ -13,19 +13,25 @@
 
     <!-- Dropdown Menu -->
     <div x-show="open" @click.outside="open = false" x-transition
-        class="absolute right-0 md:right-0 mt-2 w-full md:w-36 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
+        class="absolute right-0 md:right-0  w-full md:w-36 bg-white border border-zinc-200 rounded-xl shadow-lg z-50 overflow-hidden">
 
-        <form action="{{ route('lang.change') }}" method="POST" class="py-2">
+        <form action="{{ route('lang.change') }}" method="POST" >
             @csrf
+
+            <!-- English -->
             <button type="submit" name="lang" value="en"
-                class="block w-full text-left px-4 py-3 md:py-2 hover:bg-gray-100 {{ session('locale') == 'en' ? 'font-semibold' : '' }}">
+                class="block w-full text-left px-4 py-3 md:py-2 hover:bg-zinc-100
+                {{ session('locale') == 'en' ? 'bg-zinc-300/60 font-semibold' : '' }}">
                 English
             </button>
 
+            <!-- French -->
             <button type="submit" name="lang" value="fr"
-                class="block w-full text-left px-4 py-3 md:py-2 hover:bg-gray-100 {{ session('locale') == 'fr' ? 'font-semibold' : '' }}">
+                class="block w-full text-left px-4 py-3 md:py-2 hover:bg-zinc-100
+                {{ session('locale') == 'fr' ? 'bg-zinc-300/60 font-semibold' : '' }}">
                 French
             </button>
+
         </form>
     </div>
 </div>
