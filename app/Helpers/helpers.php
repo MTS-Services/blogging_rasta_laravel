@@ -127,81 +127,81 @@ if (!function_exists('generate_otp')) {
     }
 }
 
-if (!function_exists('create_otp')) {
-    /**
-     * Create OTP for a model
-     *
-     * @param mixed $model Model instance (Admin, User, etc.)
-     * @param OtpType $type OTP type
-     * @param int $expiresInMinutes Expiration time in minutes
-     * @return OtpVerification
-     */
-    function create_otp($model, OtpType $type, int $expiresInMinutes = 10): OtpVerification
-    {
-        return $model->createOtp($type, $expiresInMinutes);
-    }
-}
+// if (!function_exists('create_otp')) {
+//     /**
+//      * Create OTP for a model
+//      *
+//      * @param mixed $model Model instance (Admin, User, etc.)
+//      * @param OtpType $type OTP type
+//      * @param int $expiresInMinutes Expiration time in minutes
+//      * @return OtpVerification
+//      */
+//     function create_otp($model, OtpType $type, int $expiresInMinutes = 10): OtpVerification
+//     {
+//         return $model->createOtp($type, $expiresInMinutes);
+//     }
+// }
 
-if (!function_exists('verify_otp')) {
-    /**
-     * Verify OTP code for a model
-     *
-     * @param mixed $model Model instance
-     * @param string $code OTP code to verify
-     * @param OtpType $type OTP type
-     * @return bool
-     */
-    function verify_otp($model, string $code, OtpType $type): bool
-    {
-        $otp = $model->latestOtp($type);
+// if (!function_exists('verify_otp')) {
+//     /**
+//      * Verify OTP code for a model
+//      *
+//      * @param mixed $model Model instance
+//      * @param string $code OTP code to verify
+//      * @param OtpType $type OTP type
+//      * @return bool
+//      */
+//     function verify_otp($model, string $code, OtpType $type): bool
+//     {
+//         $otp = $model->latestOtp($type);
 
-        if (!$otp) {
-            return false;
-        }
+//         if (!$otp) {
+//             return false;
+//         }
 
-        return $otp->verify($code);
-    }
-}
+//         return $otp->verify($code);
+//     }
+// }
 
-if (!function_exists('has_valid_otp')) {
-    /**
-     * Check if model has valid unexpired OTP
-     *
-     * @param mixed $model Model instance
-     * @param OtpType $type OTP type
-     * @return bool
-     */
-    function has_valid_otp($model, OtpType $type): bool
-    {
-        $otp = $model->latestOtp($type);
+// if (!function_exists('has_valid_otp')) {
+//     /**
+//      * Check if model has valid unexpired OTP
+//      *
+//      * @param mixed $model Model instance
+//      * @param OtpType $type OTP type
+//      * @return bool
+//      */
+//     function has_valid_otp($model, OtpType $type): bool
+//     {
+//         $otp = $model->latestOtp($type);
 
-        if (!$otp) {
-            return false;
-        }
+//         if (!$otp) {
+//             return false;
+//         }
 
-        return !$otp->isExpired() && !$otp->isVerified();
-    }
-}
+//         return !$otp->isExpired() && !$otp->isVerified();
+//     }
+// }
 
-if (!function_exists('get_otp_remaining_time')) {
-    /**
-     * Get remaining time for OTP expiration in seconds
-     *
-     * @param mixed $model Model instance
-     * @param OtpType $type OTP type
-     * @return int|null Remaining seconds or null
-     */
-    function get_otp_remaining_time($model, OtpType $type): ?int
-    {
-        $otp = $model->latestOtp($type);
+// if (!function_exists('get_otp_remaining_time')) {
+//     /**
+//      * Get remaining time for OTP expiration in seconds
+//      *
+//      * @param mixed $model Model instance
+//      * @param OtpType $type OTP type
+//      * @return int|null Remaining seconds or null
+//      */
+//     function get_otp_remaining_time($model, OtpType $type): ?int
+//     {
+//         $otp = $model->latestOtp($type);
 
-        if (!$otp || $otp->isExpired()) {
-            return null;
-        }
+//         if (!$otp || $otp->isExpired()) {
+//             return null;
+//         }
 
-        return max(0, $otp->expires_at->diffInSeconds(now()));
-    }
-}
+//         return max(0, $otp->expires_at->diffInSeconds(now()));
+//     }
+// }
 
 if (!function_exists('format_otp_time')) {
     /**
