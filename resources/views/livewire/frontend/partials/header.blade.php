@@ -24,11 +24,11 @@
                 class="text-text-muted font-inter transition-colors {{ request()->routeIs('video-feed') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500! hover:border-b-2 hover:border-second-500' }}">
                 {{ __('Video Feed') }}
             </a>
-            <a href="#" wire:navigate
-                class="text-text-muted font-inter transition-colors {{ request()->routeIs('blog') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500! hover:border-b-2 hover:border-second-500' }}">
+            <a href="{{ route('blog') }}" wire:navigate
+                class="text-text-muted font-inter transition-colors {{ request()->routeIs('blog*') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500! hover:border-b-2 hover:border-second-500' }}">
                 {{ __('Blog') }}
             </a>
-            <a href="#" wire:navigate
+            <a href="{{ route('about') }}" wire:navigate
                 class="text-text-muted font-inter transition-colors {{ request()->routeIs('about') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500! hover:border-b-2 hover-border-second-500' }}">
                 {{ __('About') }}
             </a>
@@ -66,11 +66,11 @@
                 class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('video-feed') ? 'text-second-500!! ' : 'hover:text-second-500!!' }}">
                 {{ __('Video Feed') }}
             </a>
-            <a href="#" wire:navigate
+            <a href="{{ route('blog') }}" wire:navigate
                 class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('blog') ? 'text-second-500!! ' : 'hover:text-second-500!!' }}">
                 {{ __('Blog') }}
             </a>
-            <a href="#" wire:navigate
+            <a href="{{ route('about') }}" wire:navigate
                 class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('about') ? 'text-second-500!! ' : 'hover:text-second-500!!' }}">
                 {{ __('About') }}
             </a>
