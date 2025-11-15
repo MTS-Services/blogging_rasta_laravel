@@ -138,9 +138,9 @@
                     // ],
                     [
                         'name' => 'Database',
-                        'route' => '#',
+                        'route' => route('admin.as.database-settings'),
                         'icon' => 'database',
-                        'active' => 'settings-database',
+                        'active' => 'database_settings',
                     ],
                 ]" />
 
