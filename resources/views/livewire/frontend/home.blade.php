@@ -27,7 +27,7 @@
                     {{-- Buttons --}}
                     <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mt-8">
                         <x-ui.button href="#"
-                            class="py-4 px-8 bg-gradient-to-r from-second-500 to-zinc-500 hover:shadow-lg transition-all duration-300">
+                            class="py-4 px-8 bg-lradient-to-r from-second-500 to-zinc-500 hover:shadow-lg transition-all duration-300">
                             <span class="text-white">{{ __('Discover Your Glow') }}</span>
                             <flux:icon name="arrow-right" class="w-4 h-4 stroke-white" />
                         </x-ui.button>
