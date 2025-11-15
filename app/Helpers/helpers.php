@@ -105,7 +105,13 @@ if (!function_exists('site_short_name')) {
 if (!function_exists('site_logo')) {
     function site_logo()
     {
-        return app(ApplicationSettingsService::class)->findData('app_logo', 'app_logo.png');
+        return storage_url(app(ApplicationSettingsService::class)->findData('app_logo'));
+    }
+}
+if (!function_exists('site_favicon')) {
+    function site_favicon()
+    {
+        return storage_url(app(ApplicationSettingsService::class)->findData('favicon'));
     }
 }
 
