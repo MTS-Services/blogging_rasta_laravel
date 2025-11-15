@@ -1,5 +1,5 @@
-<div>
-    <div class="container bg-gradient px-0 lg:px-24 pb-0 sm:pb-24 my-12 ">
+<div class="bg-gradient">
+    <div class="container  px-0 lg:px-24 pb-0 sm:pb-24 py-12 ">
         <h2 class="text-4xl md:text-5xl font-bold font-montserrat text-text-primary text-center">{{ __('Blog') }}</h2>
 
         {{-- Trending Routines --}}
