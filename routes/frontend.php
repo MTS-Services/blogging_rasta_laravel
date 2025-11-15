@@ -17,3 +17,4 @@ Route::get('/blog/details', [BlogController::class, 'details'])->name('blog.deta
 Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/PrivacyPolicy', [StaticController::class, 'PrivacyPolicy'])->name('PrivacyPolicy');
 Route::get('/TermsOfService', [StaticController::class, 'TermsOfService'])->name('TermsOfService');
+Route::get('/affiliate', [StaticController::class, 'affiliate'])->name('affiliate');

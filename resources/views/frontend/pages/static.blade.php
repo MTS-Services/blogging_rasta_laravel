@@ -7,6 +7,12 @@
             <livewire:frontend.terms-of-service />
         @break
 
+        @case('affiliate')
+            <x-slot name="title">{{ __('Affiliate Disclosure') }}</x-slot>
+            <x-slot name="pageSlug">{{ __('affiliate_disclosure') }}</x-slot>
+            <livewire:frontend.affiliate />
+        @break
+
         @default
             <x-slot name="title">{{ __('Privacy Policy ') }}</x-slot>
             <x-slot name="pageSlug">{{ __('privacy_policy') }}</x-slot>
