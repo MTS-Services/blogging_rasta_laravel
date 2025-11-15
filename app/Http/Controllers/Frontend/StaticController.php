@@ -16,4 +16,9 @@ class StaticController extends Controller
     {
         return view($this->masterView);
     }
+
+    public function affiliate()
+    {
+        return view($this->masterView);
+    }
 }
