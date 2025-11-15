@@ -9,12 +9,12 @@
                         class="w-full max-w-[500px] lg:max-w-none h-auto rounded-lg object-cover block">
                 </div>
 
-
                 {{-- Text Content --}}
                 <div class="w-full lg:w-1/2 lg:text-left">
 
                     <div>
-                        <p class="text-xs font-normal text-muted font-inter pb-4 text-center lg:text-left">{{ __('About the Founder') }}</p>
+                        <p class="text-xs font-normal text-muted font-inter pb-4 text-center lg:text-left">
+                            {{ __('About the Founder') }}</p>
                         {{-- Heading --}}
                         <h2
                             class="text-5xl font-bold font-montserrat text-second-800 pb-6 text-text-primary lg:text-left">
@@ -49,10 +49,12 @@
                                 {{ __('95% satisfaction rate from product recommendations') }}</p>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </section>
+
     <section class="bg-bg-tertiary/40 py-12 lg:py-24 mb-12 sm:mb-0">
         <div class="container">
             <h2 class="text-5xl font-bold font-montserrat pb-6 text-text-primary text-center">
@@ -68,17 +70,20 @@
                     <h2 class="text-2xl font-bold font-montserrat text-text-primary py-2">{{ __('Instagram') }}</h2>
                     <p class="text-sm font-normal font-inter text-muted">{{ __('@diodio.glow') }}</p>
                 </div>
+
                 <div class="w-full bg-white py-6 px-6 border border-second-500/30 rounded-lg text-center">
                     <img src="{{ asset('assets/images/home_page/Vector (1).png') }}" alt=""
                         class="w-10 h-10 mx-auto">
                     <h2 class="text-2xl font-bold font-montserrat text-text-primary py-2">{{ __('TikTok') }}</h2>
                     <p class="text-sm font-normal font-inter text-muted">{{ __('@diodio.glow') }}</p>
                 </div>
+
                 <div class="w-full bg-white py-6 px-6 border border-second-500/30 rounded-lg text-center">
                     <flux:icon name="youtube" class="w-10 h-10 stroke-zinc-500 mx-auto" />
                     <h2 class="text-2xl font-bold font-montserrat text-text-primary py-2">{{ __('YouTube') }}</h2>
                     <p class="text-sm font-normal font-inter text-muted">{{ __('@diodio.glow') }}</p>
                 </div>
+
                 <div
                     class="w-full bg-white py-6 px-6 border border-second-500/30 rounded-lg text-center md:col-span-3 lg:col-span-1 md:max-w-xs md:mx-auto lg:max-w-full">
                     <flux:icon name="mail" class="w-10 h-10 stroke-zinc-500 mx-auto" />
@@ -89,7 +94,7 @@
 
             {{-- Collaboration Text --}}
             <p class="text-center text-sm font-inter text-text-primary pt-6">
-                {{ __('Collaboration inquiries? ') }}
+                {{ __('Collaboration inquiries?') }}
                 <a href="mailto:contact@diodioglow.com"
                     class="text-muted">{{ __('Email us for partnership opportunities.') }}</a>
             </p>
