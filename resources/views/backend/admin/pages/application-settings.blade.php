@@ -2,15 +2,16 @@
 
 
     @switch(Route::currentRouteName())
-        @case('admin.asm.application-settings.view')
-            <x-slot name="title">{{ __('') }}</x-slot>
-            <x-slot name="breadcrumb">{{ __('') }} </x-slot>
-            <livewire:backend.admin.audit-log-management.view />
+        @case('admin.as.database-settings')
+            <x-slot name="title">{{ __('Database Settings') }}</x-slot>
+              <x-slot name="pageSlug">{{ __('database_settings') }}</x-slot>
+            <x-slot name="breadcrumb">{{ __('Application Settings / Database Settings') }} </x-slot>
+            <livewire:backend.admin.application-settings.database-settings />
         @break
 
         @default
             <x-slot name="pageSlug">{{ __('general_settings') }}</x-slot>
-            <x-slot name="title">{{ __('general_settings') }}</x-slot>
+            <x-slot name="title">{{ __('General Settings') }}</x-slot>
             <x-slot name="breadcrumb">{{ __('Application Settings / General Settings') }}</x-slot>
             <livewire:backend.admin.application-settings.general-settings />
     @endswitch

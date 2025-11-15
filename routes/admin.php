@@ -45,6 +45,7 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
         });
         Route::controller(ApplicationSettingsController::class)->prefix('application-settings')->group(function () {
             Route::get('/general-settings', 'generalSettings')->name('general-settings');
+            Route::get('/database-settings','databaseSettings')->name('database-settings');
         });
     });
 

@@ -14,4 +14,9 @@ class ApplicationSettingsController extends Controller
     {
         return view($this->masterView);
     }
+
+    public function databaseSettings()
+    {
+        return view($this->masterView);
+    }
 }
