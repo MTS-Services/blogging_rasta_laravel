@@ -17,5 +17,75 @@
     "videos": "videos",
     "Ready to Find Your Perfect Routine?": "Ready to Find Your Perfect Routine?",
     "Discover routines tailored to your lifestyle. From skincare and fitness to productivity and wellness, our tips and guides help you build habits that stick — making everyday life simpler, healthier, and more enjoyable. Start your journey today!": "Discover routines tailored to your lifestyle. From skincare and fitness to productivity and wellness, our tips and guides help you build habits that stick — making everyday life simpler, healthier, and more enjoyable. Start your journey today!",
-    "It only takes 2 minutes. No signup required.": "It only takes 2 minutes. No signup required."
+    "It only takes 2 minutes. No signup required.": "It only takes 2 minutes. No signup required.",
+
+    "home": "Home",
+    "DiodioGlow": "DiodioGlow",
+    "DG": "DG",
+    "Curating viral skincare trends and AI-powered product recommendations for natural, glowing skin.": "Curating viral skincare trends and AI-powered product recommendations for natural, glowing skin.",
+    "Explore": "Explore",
+    "Videos": "Videos",
+    "Products": "Products",
+    "Connect": "Connect",
+    "Instagram": "Instagram",
+    "Legal": "Legal",
+    "Privacy Policy": "Privacy Policy",
+    "Terms of Service": "Terms of Service",
+    "Affiliate Disclosure": "Affiliate Disclosure",
+    "Support": "Support",
+
+
+     "Video Feed": "Video Feed",
+     "Blog": "Blog",
+     "About" : "About",
+     "Toggle menu": "Toggle menu",
+     "Home": "Home",
+
+     "Profile" : "Profile",
+     "Messages" : "Messages",
+     "Settings" : "Settings",
+     "Billing" : "Billing",
+     "Logout" : "Logout",
+     "Login" : "Login",
+     "Register" : "Register",
+
+
+     "Curated Products": "Curated Products",
+     "All products handpicked by Diodio Glow • Shop from trusted affiliate stores": "All products handpicked by Diodio Glow • Shop from trusted affiliate stores",
+     "Essences": "Essences",
+     "Dry": "Dry",
+     "Trending skincare routines and beauty tips from TikTok": "Trending skincare routines and beauty tips from TikTok",
+     "Share": "Share",
+     "2FA Recovery Codes": "2FA Recovery Codes",
+     "View Recovery Codes": "View Recovery Codes",
+     "Hide Recovery Codes": "Hide Recovery Codes",
+     "Regenerate Codes": "Regenerate Codes",
+     "Each recovery code can be used once to access your account and will be removed after use. If you need more, click Regenerate Codes above.": "Each recovery code can be used once to access your account and will be removed after use. If you need more, click Regenerate Codes above.",
+
+    "Light": "Light",
+    "Dark": "Dark",
+    "System": "System",
+
+
+    "Delete account": "Delete account",
+    "Delete your account and all of its resources": "Delete your account and all of its resources",
+    "Are you sure you want to delete your account?": "Are you sure you want to delete your account?",
+    "Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.": "Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.",
+     "Cancel": "Cancel",
+     "Save": "Save",
+
+     "Your email address is unverified." : "Your email address is unverified.",
+     "Click here to re-send the verification email." : "Click here to re-send the verification email.",
+     "A new verification link has been sent to your email address." : "A new verification link has been sent to your email address.",
+     "Saved." : "Saved.",
+
+     "Enabled": "Enabled",
+     "With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you can retrieve from the TOTP-supported application on your phone.": "With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you can retrieve from the TOTP-supported application on your phone.",
+     "Disable 2FA": "Disable 2FA",
+     "Disabled": "Disabled",
+     "When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can be retrieved from a TOTP-supported application on your phone.": "When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can be retrieved from a TOTP-supported application on your phone.",
+     "Enable 2FA": "Enable 2FA",
+     "or, enter the code manually": "or, enter the code manually"
+
+
 }
