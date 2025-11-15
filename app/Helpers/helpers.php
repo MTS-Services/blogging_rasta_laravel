@@ -96,7 +96,7 @@ if (!function_exists('site_name')) {
 if (!function_exists('site_short_name')) {
     function site_short_name()
     {
-        return config('app.short_name', 'LA');
+        return env('APP_SHORT_NAME', 'LA');
     }
 }
 
