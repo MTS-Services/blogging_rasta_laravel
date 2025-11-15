@@ -57,6 +57,15 @@ class ApplicationSetting extends Model
         'env_key',
     ];
 
+    public static function getDatabaseDriverInfos()
+    {
+        return [
+            self::DATATBASE_DRIVER_MYSQL => 'MySQL',
+            self::DATATBASE_DRIVER_PGSQL => 'PostgreSQL',
+            self::DATATBASE_DRIVER_SQLITE => 'SQLite',
+            self::DATATBASE_DRIVER_SQLSRV => 'SQL Server',
+        ];
+    }
     /**
      * Get a single setting value by key
      */
@@ -74,11 +83,11 @@ class ApplicationSetting extends Model
     public static function getMany(array $keys)
     {
         $settings = [];
-        
+
         foreach ($keys as $key) {
             $settings[$key] = self::get($key);
         }
-        
+
         return $settings;
     }
 
@@ -123,14 +132,14 @@ class ApplicationSetting extends Model
     private static function updateEnvFile($key, $value)
     {
         $path = base_path('.env');
-        
+
         if (!file_exists($path)) {
             return;
         }
 
         $envContent = file_get_contents($path);
         $value = str_replace('"', '\"', $value);
-        
+
         // Check if key exists
         if (preg_match("/^{$key}=/m", $envContent)) {
             // Update existing key
