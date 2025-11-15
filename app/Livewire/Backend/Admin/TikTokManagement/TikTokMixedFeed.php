@@ -70,11 +70,12 @@ class TikTokMixedFeed extends Component
                 'videos' => count($this->videos)
             ]);
 
+          
             if (empty($this->videos)) {
-                $this->error = 'কোনো ভিডিও পাওয়া যায়নি। API থেকে ডেটা আসছে না। লগ চেক করুন।';
+                $this->error = 'No videos found. API returned no data. Check logs.';
             }
         } catch (\Exception $e) {
-            $this->error = 'ভিডিও লোড করতে সমস্যা হয়েছে: ' . $e->getMessage();
+            $this->error = 'Failed to load videos: ' . $e->getMessage();
             $this->debugInfo['error'] = $e->getMessage();
             $this->debugInfo['trace'] = $e->getTraceAsString();
 
@@ -108,7 +109,7 @@ class TikTokMixedFeed extends Component
         $this->service->clearAllCache();
         $this->loadData();
 
-        session()->flash('message', 'ক্যাশ ক্লিয়ার করা হয়েছে এবং ডেটা রিফ্রেশ করা হয়েছে!');
+         session()->flash('message', 'Cache cleared and data refreshed successfully!');
     }
 
     public function formatNumber($number)
