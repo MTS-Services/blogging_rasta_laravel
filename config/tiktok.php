@@ -14,6 +14,12 @@ return [
             'display_name' => 'Wasif Ahmed',
             'description' => 'Gaming',
             'color' => 'red',
+        ],
+        [
+            'username' => 'aksumonn',
+            'display_name' => 'Sumon Akash',
+            'description' => 'Gaming',
+            'color' => 'green',
         ]
     ],
 
