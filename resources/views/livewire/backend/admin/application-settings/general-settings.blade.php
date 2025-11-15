@@ -24,7 +24,7 @@
                             <div class="mt-2">
                                 <img src="{{ $form->app_logo->temporaryUrl() }}" class="max-w-[200px] rounded">
                             </div>
-                        @elseif(isset($general_settings['app_logo']))
+                        @elseif(isset($general_settings['app_logo']) && $general_settings['app_logo'])
                             <div class="mt-2">
                                 <img src="{{ asset($general_settings['app_logo']) }}" class="max-w-[200px] rounded">
                             </div>
@@ -41,7 +41,7 @@
                             <div class="mt-2">
                                 <img src="{{ $form->favicon->temporaryUrl() }}" class="max-w-[50px] rounded">
                             </div>
-                        @elseif(isset($general_settings['favicon']))
+                        @elseif(isset($general_settings['favicon']) && $general_settings['favicon'])
                             <div class="mt-2">
                                 <img src="{{ asset($general_settings['favicon']) }}" class="max-w-[50px] rounded">
                             </div>
@@ -89,7 +89,7 @@
                     <div>
                         <x-ui.label value="{{ __('Environment') }}" />
                         <x-ui.select wire:model="form.environment" class="select">
-                            @foreach (App\Models\ApplicationSetting::getEnvironmentInfos() as $key => $info)
+                            @foreach ($environment_infos as $key => $info)
                                 <option value="{{ $key }}">{{ $info }}</option>
                             @endforeach
                         </x-ui.select>
@@ -103,7 +103,7 @@
                     <div>
                         <x-ui.label value="{{ __('App Debug') }}" />
                         <x-ui.select wire:model="form.app_debug" class="select">
-                            @foreach (App\Models\ApplicationSetting::getAppDebugInfos() as $key => $info)
+                            @foreach ($app_debug_infos as $key => $info)
                                 <option value="{{ $key }}">{{ $info }}</option>
                             @endforeach
                         </x-ui.select>
@@ -130,6 +130,5 @@
 
         </form>
     </div>
-
 
 </section>

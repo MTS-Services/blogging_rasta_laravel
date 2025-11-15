@@ -17,6 +17,9 @@ class GeneralSettings extends Component
     
     public $timezones = [];
     public $general_settings = [];
+    public $environment_infos = [];
+    public $app_debug_infos = [];
+    public $debugbar_infos = [];
 
     public function mount()
     {
@@ -29,6 +32,11 @@ class GeneralSettings extends Component
         ]);
         
         $this->timezones = availableTimezones();
+        
+        // Load dropdown data using constants
+        $this->environment_infos = ApplicationSetting::getEnvironmentInfos();
+        $this->app_debug_infos = ApplicationSetting::getAppDebugInfos();
+        $this->debugbar_infos = ApplicationSetting::getDebugbarInfos();
         
         // Load form data
         $this->form->app_name = $this->general_settings['app_name'] ?? '';
@@ -48,6 +56,10 @@ class GeneralSettings extends Component
     {
         try {
             $this->form->save();
+
+            // Reset file inputs after successful save
+            $this->form->app_logo = null;
+            $this->form->favicon = null;
 
             // Refresh settings
             $this->general_settings = ApplicationSetting::getMany([
