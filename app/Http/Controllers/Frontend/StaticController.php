@@ -21,4 +21,9 @@ class StaticController extends Controller
     {
         return view($this->masterView);
     }
+
+    public function support()
+    {
+        return view($this->masterView);
+    }
 }
