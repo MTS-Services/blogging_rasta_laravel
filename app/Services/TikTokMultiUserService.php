@@ -11,7 +11,6 @@ class TikTokMultiUserService
     protected $client;
     protected $apiKey;
     protected $baseUrl = 'https://tiktok-scraper7.p.rapidapi.com/';
-    protected $useDummyData = false;
 
     public function __construct()
     {
@@ -23,77 +22,15 @@ class TikTokMultiUserService
         $this->apiKey = config('tiktok.rapidapi_key');
     }
 
-    protected function getDummyVideos($username, $count = 12)
-    {
-        $videos = [];
-        $themes = [
-            'Tech Review', 'Gaming Highlights', 'Tutorial', 'Funny Moments', 
-            'Daily Vlog', 'Food Review', 'Travel Diary', 'Music Cover',
-            'Dance Challenge', 'Prank Video', 'Life Hacks', 'Product Review'
-        ];
-
-        for ($i = 1; $i <= $count; $i++) {
-            $videos[] = [
-                'aweme_id' => '7' . str_pad($i, 18, '0', STR_PAD_LEFT),
-                'desc' => "🎥 {$themes[array_rand($themes)]} #{$i} by @{$username} 🔥 " . 
-                         "This is sample content. Subscribe to TikTok API on RapidAPI to see real videos! " .
-                         "#trending #viral #tiktok",
-                'create_time' => time() - ($i * 3600 * rand(1, 48)),
-                'video' => [
-                    'cover' => 'https://placehold.co/405x720/667eea/ffffff?text=Video+' . $i . '+by+' . urlencode($username),
-                    'duration' => rand(15, 180),
-                    'play_addr' => [
-                        'url_list' => [
-                            'https://www.tiktok.com/@' . $username
-                        ]
-                    ],
-                ],
-                'statistics' => [
-                    'play_count' => rand(10000, 5000000),
-                    'digg_count' => rand(500, 500000),
-                    'comment_count' => rand(50, 50000),
-                    'share_count' => rand(100, 100000),
-                ],
-                '_username' => $username,
-            ];
-        }
-        return $videos;
-    }
-
-    protected function getDummyProfile($username)
-    {
-        $colors = ['667eea', 'f093fb', '4facfe', 'fa709a', 'feca57', '48dbfb'];
-        $color = $colors[array_rand($colors)];
-        
-        return [
-            'user' => [
-                'id' => 'demo_' . md5($username),
-                'unique_id' => $username,
-                'nickname' => ucwords(str_replace('_', ' ', $username)),
-                'avatar_larger' => "https://ui-avatars.com/api/?name=" . urlencode($username) . 
-                                  "&size=200&background={$color}&color=fff&bold=true",
-                'signature' => "📱 Content Creator | 🎬 Demo Profile\n" .
-                              "⚠️ Subscribe to TikTok API on RapidAPI to see real data",
-                'follower_count' => rand(10000, 5000000),
-                'following_count' => rand(100, 50000),
-                'aweme_count' => rand(50, 1000),
-            ]
-        ];
-    }
-
-    protected function shouldUseDummyData()
-    {
-        return empty($this->apiKey) || $this->useDummyData;
-    }
-
     public function getUserProfile($username)
     {
-        if ($this->shouldUseDummyData()) {
-            Log::info("Using dummy profile data for {$username}");
+        // Check if API key exists
+        if (empty($this->apiKey)) {
+            Log::error("TikTok API key not configured");
             return [
-                'success' => true,
-                'data' => $this->getDummyProfile($username),
-                'dummy' => true,
+                'success' => false,
+                'error' => 'API key not configured',
+                'data' => null,
             ];
         }
 
@@ -112,20 +49,25 @@ class TikTokMultiUserService
                 $statusCode = $response->getStatusCode();
                 $body = $response->getBody()->getContents();
 
+                Log::info("TikTok Profile API Response", [
+                    'username' => $username,
+                    'status' => $statusCode,
+                    'body_length' => strlen($body)
+                ]);
+
                 if ($statusCode === 403) {
-                    $this->useDummyData = true;
                     return [
-                        'success' => true,
-                        'data' => $this->getDummyProfile($username),
-                        'dummy' => true,
+                        'success' => false,
+                        'error' => 'API subscription required. Subscribe at: https://rapidapi.com/DataFanatic/api/tiktok-scraper7',
+                        'data' => null,
                     ];
                 }
 
                 if ($statusCode !== 200) {
                     return [
-                        'success' => true,
-                        'data' => $this->getDummyProfile($username),
-                        'dummy' => true,
+                        'success' => false,
+                        'error' => "API returned status code: {$statusCode}",
+                        'data' => null,
                     ];
                 }
 
@@ -133,9 +75,9 @@ class TikTokMultiUserService
                 
                 if (json_last_error() !== JSON_ERROR_NONE) {
                     return [
-                        'success' => true,
-                        'data' => $this->getDummyProfile($username),
-                        'dummy' => true,
+                        'success' => false,
+                        'error' => 'Invalid JSON response from API',
+                        'data' => null,
                     ];
                 }
 
@@ -144,15 +86,14 @@ class TikTokMultiUserService
                 return [
                     'success' => true,
                     'data' => $userData,
-                    'dummy' => false,
                 ];
             } catch (\Exception $e) {
                 Log::error("TikTok Profile Error ({$username}): " . $e->getMessage());
                 
                 return [
-                    'success' => true,
-                    'data' => $this->getDummyProfile($username),
-                    'dummy' => true,
+                    'success' => false,
+                    'error' => $e->getMessage(),
+                    'data' => null,
                 ];
             }
         });
@@ -160,13 +101,13 @@ class TikTokMultiUserService
 
     public function getUserVideos($username, $count = 12)
     {
-        if ($this->shouldUseDummyData()) {
-            Log::info("Using dummy video data for {$username}");
+        if (empty($this->apiKey)) {
+            Log::error("TikTok API key not configured");
             return [
-                'success' => true,
-                'videos' => $this->getDummyVideos($username, $count),
-                'user' => $this->getDummyProfile($username)['user'],
-                'dummy' => true,
+                'success' => false,
+                'error' => 'API key not configured',
+                'videos' => [],
+                'user' => null,
             ];
         }
 
@@ -174,14 +115,15 @@ class TikTokMultiUserService
         
         return Cache::remember($cacheKey, 1800, function() use ($username, $count) {
             try {
+                // First get profile to extract user ID
                 $profileResponse = $this->getUserProfile($username);
                 
-                if ($profileResponse['dummy'] || !$profileResponse['success']) {
+                if (!$profileResponse['success']) {
                     return [
-                        'success' => true,
-                        'videos' => $this->getDummyVideos($username, $count),
-                        'user' => $this->getDummyProfile($username)['user'],
-                        'dummy' => true,
+                        'success' => false,
+                        'error' => $profileResponse['error'] ?? 'Failed to get user profile',
+                        'videos' => [],
+                        'user' => null,
                     ];
                 }
 
@@ -189,13 +131,14 @@ class TikTokMultiUserService
                 
                 if (!$userId) {
                     return [
-                        'success' => true,
-                        'videos' => $this->getDummyVideos($username, $count),
-                        'user' => $this->getDummyProfile($username)['user'],
-                        'dummy' => true,
+                        'success' => false,
+                        'error' => 'User ID not found in profile response',
+                        'videos' => [],
+                        'user' => null,
                     ];
                 }
 
+                // Fetch videos using user ID
                 $response = $this->client->get($this->baseUrl . 'user/posts', [
                     'headers' => [
                         'x-rapidapi-host' => 'tiktok-scraper7.p.rapidapi.com',
@@ -210,28 +153,28 @@ class TikTokMultiUserService
                 $statusCode = $response->getStatusCode();
                 $body = $response->getBody()->getContents();
                 
-                Log::info("TikTok Videos API", [
+                Log::info("TikTok Videos API Response", [
                     'username' => $username,
+                    'user_id' => $userId,
                     'status' => $statusCode,
-                    'body_preview' => substr($body, 0, 500)
+                    'body_length' => strlen($body)
                 ]);
 
                 if ($statusCode === 403) {
-                    $this->useDummyData = true;
                     return [
-                        'success' => true,
-                        'videos' => $this->getDummyVideos($username, $count),
-                        'user' => $this->getDummyProfile($username)['user'],
-                        'dummy' => true,
+                        'success' => false,
+                        'error' => 'API subscription required. Subscribe at: https://rapidapi.com/DataFanatic/api/tiktok-scraper7',
+                        'videos' => [],
+                        'user' => $profileResponse['data']['user'] ?? null,
                     ];
                 }
 
                 if ($statusCode !== 200) {
                     return [
-                        'success' => true,
-                        'videos' => $this->getDummyVideos($username, $count),
-                        'user' => $this->getDummyProfile($username)['user'],
-                        'dummy' => true,
+                        'success' => false,
+                        'error' => "API returned status code: {$statusCode}",
+                        'videos' => [],
+                        'user' => $profileResponse['data']['user'] ?? null,
                     ];
                 }
 
@@ -239,13 +182,14 @@ class TikTokMultiUserService
                 
                 if (json_last_error() !== JSON_ERROR_NONE) {
                     return [
-                        'success' => true,
-                        'videos' => $this->getDummyVideos($username, $count),
-                        'user' => $this->getDummyProfile($username)['user'],
-                        'dummy' => true,
+                        'success' => false,
+                        'error' => 'Invalid JSON response from API',
+                        'videos' => [],
+                        'user' => $profileResponse['data']['user'] ?? null,
                     ];
                 }
                 
+                // Extract videos from various possible response structures
                 $videos = [];
                 
                 if (isset($data['data']['videos'])) {
@@ -265,36 +209,31 @@ class TikTokMultiUserService
                     'count' => count($videos)
                 ]);
                 
+                // Add username to each video
                 foreach ($videos as &$video) {
                     $video['_username'] = $username;
                 }
                 
+                // Limit to requested count
                 $videos = array_slice($videos, 0, $count);
                 
                 if (empty($videos)) {
-                    Log::warning("No videos found, using dummy data");
-                    return [
-                        'success' => true,
-                        'videos' => $this->getDummyVideos($username, $count),
-                        'user' => $this->getDummyProfile($username)['user'],
-                        'dummy' => true,
-                    ];
+                    Log::warning("No videos found for user: {$username}");
                 }
                 
                 return [
                     'success' => true,
                     'videos' => $videos,
                     'user' => $data['data']['user'] ?? $data['user'] ?? $profileResponse['data']['user'] ?? null,
-                    'dummy' => false,
                 ];
             } catch (\Exception $e) {
-                Log::error("TikTok Videos Error: " . $e->getMessage());
+                Log::error("TikTok Videos Error ({$username}): " . $e->getMessage());
                 
                 return [
-                    'success' => true,
-                    'videos' => $this->getDummyVideos($username, $count),
-                    'user' => $this->getDummyProfile($username)['user'],
-                    'dummy' => true,
+                    'success' => false,
+                    'error' => $e->getMessage(),
+                    'videos' => [],
+                    'user' => null,
                 ];
             }
         });
@@ -306,7 +245,7 @@ class TikTokMultiUserService
         
         foreach ($usernames as $username) {
             $profile = $this->getUserProfile($username);
-            if ($profile['success']) {
+            if ($profile['success'] && $profile['data']) {
                 $profiles[$username] = $profile['data'];
             }
         }
@@ -329,6 +268,7 @@ class TikTokMultiUserService
             }
         }
         
+        // Sort by creation time (newest first)
         usort($allVideos, function ($a, $b) {
             $timeA = $a['create_time'] ?? $a['createTime'] ?? 0;
             $timeB = $b['create_time'] ?? $b['createTime'] ?? 0;
@@ -341,6 +281,8 @@ class TikTokMultiUserService
     public function clearUserCache($username)
     {
         Cache::forget("tiktok_profile_{$username}");
+        
+        // Clear video caches for various counts
         for ($i = 1; $i <= 50; $i++) {
             Cache::forget("tiktok_videos_{$username}_{$i}");
         }
@@ -365,7 +307,7 @@ class TikTokMultiUserService
             return [
                 'success' => false,
                 'error' => 'RAPIDAPI_KEY not configured',
-                'dummy_mode' => true,
+                'message' => 'Please add RAPIDAPI_KEY to your .env file',
             ];
         }
 
@@ -385,23 +327,43 @@ class TikTokMultiUserService
                     'success' => false,
                     'status' => 403,
                     'error' => 'Not subscribed to API',
-                    'message' => 'Subscribe at: https://rapidapi.com/DataFanatic/api/tiktok-scraper7',
-                    'dummy_mode' => true,
+                    'message' => 'Please subscribe at: https://rapidapi.com/DataFanatic/api/tiktok-scraper7',
+                ];
+            }
+
+            if ($statusCode === 200) {
+                return [
+                    'success' => true,
+                    'status' => 200,
+                    'message' => 'API connection successful',
                 ];
             }
 
             return [
-                'success' => $statusCode === 200,
+                'success' => false,
                 'status' => $statusCode,
-                'message' => 'Connection OK',
-                'dummy_mode' => false,
+                'error' => "Unexpected status code: {$statusCode}",
             ];
         } catch (\Exception $e) {
             return [
                 'success' => false,
                 'error' => $e->getMessage(),
-                'dummy_mode' => true,
             ];
         }
+    }
+
+    public function formatNumber($number)
+    {
+        if (!is_numeric($number)) {
+            return '0';
+        }
+
+        if ($number >= 1000000) {
+            return round($number / 1000000, 1) . 'M';
+        } elseif ($number >= 1000) {
+            return round($number / 1000, 1) . 'K';
+        }
+        
+        return number_format($number);
     }
 }
