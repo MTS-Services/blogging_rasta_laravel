@@ -89,9 +89,9 @@
                 :items="[
                     [
                         'name' => 'Settings',
-                        'route' => '#',
+                        'route' => route('admin.as.general-settings'),
                         'icon' => 'cog-8-tooth',
-                        'active' => '',
+                        'active' => 'general_settings',
                     ],
                     // [
                     //     'name' => 'Appearance',
