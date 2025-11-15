@@ -11,7 +11,8 @@
         <a href="{{ route('admin.dashboard') }}" wire:navigate class="p-4 inline-block">
             <div class="flex items-center gap-4">
                 <div class="w-10 h-10  shadow inset-shadow-lg p-0 rounded-xl flex items-center justify-center">
-                    <flux:icon name="bolt" class="w-5 h-5 text-zinc-500" />
+                    {{-- <flux:icon name="bolt" class="w-5 h-5 text-zinc-500" /> --}}
+                    <img src="{{ site_logo() }}" alt="">
                 </div>
                 <div x-show="(desktop && sidebar_expanded) || (!desktop && mobile_menu_open)"
                     x-transition:enter="transition-all duration-300 delay-75"
@@ -89,9 +90,9 @@
                 :items="[
                     [
                         'name' => 'Settings',
-                        'route' => '#',
+                        'route' => route('admin.as.general-settings'),
                         'icon' => 'cog-8-tooth',
-                        'active' => '',
+                        'active' => 'general_settings',
                     ],
                     // [
                     //     'name' => 'Appearance',
@@ -137,9 +138,9 @@
                     // ],
                     [
                         'name' => 'Database',
-                        'route' => '#',
+                        'route' => route('admin.as.database-settings'),
                         'icon' => 'database',
-                        'active' => 'settings-database',
+                        'active' => 'database_settings',
                     ],
                 ]" />
 
