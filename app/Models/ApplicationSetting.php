@@ -2,249 +2,216 @@
 
 namespace App\Models;
 
-use App\Models\BaseModel;
-use OwenIt\Auditing\Contracts\Auditable;
-class ApplicationSetting extends BaseModel implements Auditable
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
+
+class ApplicationSetting extends Model
 {
-    protected $fillable = ['key', 'value', 'env_key'];
+    // Constants for theme modes
+    const THEME_MODE_LIGHT = 'light';
+    const THEME_MODE_DARK = 'dark';
+    const THEME_MODE_SYSTEM = 'system';
 
-    public const ALLOW_PUBLIC_REGISTRATION = 1;
-    public const DENY_PUBLIC_REGISTRATION = 2;
+    // Constants for registration
+    const ALLOW_PUBLIC_REGISTRATION = 1;
+    const DENY_PUBLIC_REGISTRATION = 0;
+    const REGISTRATION_APPROVAL_AUTO = 0;
+    const REGISTRATION_APPROVAL_MANUAL = 1;
 
-    public static function getPublicRegistrationInfos()
-    {
-        return [
-            self::ALLOW_PUBLIC_REGISTRATION => 'Allow',
-            self::DENY_PUBLIC_REGISTRATION => 'Deny',
-        ];
-    }
+    // Constants for environment
+    const ENVIRONMENT_DEVELOPMENT = 'local';
+    const ENVIRONMENT_PRODUCTION = 'production';
 
+    // Constants for debug
+    const APP_DEBUG_TRUE = 1;
+    const APP_DEBUG_FALSE = 0;
+    const ENABLE_DEBUGBAR = 1;
+    const DISABLE_DEBUGBAR = 0;
 
+    // Constants for database drivers
+    const DATATBASE_DRIVER_MYSQL = 'mysql';
+    const DATATBASE_DRIVER_PGSQL = 'pgsql';
+    const DATATBASE_DRIVER_SQLITE = 'sqlite';
+    const DATATBASE_DRIVER_SQLSRV = 'sqlsrv';
 
-    public const PAYMENT_GATEWAY_SANDBOX = 'sandbox';
-    public const PAYMENT_GATEWAY_LIVE = 'live';
+    // Constants for SMTP
+    const SMTP_DRIVER_MAILER = 'smtp';
+    const SMTP_DRIVER_MAILGUN = 'mailgun';
+    const SMTP_DRIVER_SES = 'ses';
+    const SMTP_DRIVER_POSTMARK = 'postmark';
+    const SMTP_DRIVER_SENDMAIL = 'sendmail';
+    const SMTP_ENCRYPTION_TLS = 'tls';
+    const SMTP_ENCRYPTION_SSL = 'ssl';
+    const SMTP_ENCRYPTION_NONE = 'none';
 
-    public const PAYMENT_GATEWAY_MODES = [
-        self::PAYMENT_GATEWAY_SANDBOX => 'Sandbox',
-        self::PAYMENT_GATEWAY_LIVE => 'Live',
+    // Constants for date/time formats
+    const DATE_FORMAT_ONE = 'd/m/Y';
+    const DATE_FORMAT_TWO = 'm/d/Y';
+    const DATE_FORMAT_THREE = 'Y-m-d';
+    const TIME_FORMAT_12 = 'h:i A';
+    const TIME_FORMAT_24 = 'H:i:s';
+
+    protected $fillable = [
+        'key',
+        'value',
+        'env_key',
     ];
 
-
-    public const PAYMENT_GATEWAY_STATUS_ACTIVE = '1';
-    public const PAYMENT_GATEWAY_STATUS_INACTIVE = '0';
-
-    public const PAYMENT_GATEWAY_STATUSES = [
-        self::PAYMENT_GATEWAY_STATUS_ACTIVE => 'Active',
-        self::PAYMENT_GATEWAY_STATUS_INACTIVE => 'Inactive',
-    ];
-
-    // public function getPublicRegistrationLabelAttribute()
-    // {
-    //     return $this->key == 'public_registration' ? self::getPublicRegistrationInfos()[$this->value] : 'Unknown';
-    // }
-
-    public const REGISTRATION_APPROVAL_AUTO = 1;
-    public const REGISTRATION_APPROVAL_MANUAL = 2;
-
-    public static function getRegistrationApprovalInfos()
+    /**
+     * Get a single setting value by key
+     */
+    public static function get($key, $default = null)
     {
-        return [
-            self::REGISTRATION_APPROVAL_AUTO => 'Auto',
-            self::REGISTRATION_APPROVAL_MANUAL => 'Manual',
-        ];
+        return Cache::rememberForever("app_setting_{$key}", function () use ($key, $default) {
+            $setting = self::where('key', $key)->first();
+            return $setting ? $setting->value : $default;
+        });
     }
 
-    // public function getRegistrationApprovalLabelAttribute()
-    // {
-    //     return $this->key == 'registration_approval' ? self::getRegistrationApprovalInfos()[$this->value] : 'Unknown';
-    // }
-
-    public const ENVIRONMENT_PRODUCTION = 'production';
-    public const ENVIRONMENT_DEVELOPMENT = 'local';
-
-    public static function getEnvironmentInfos()
+    /**
+     * Get multiple settings at once
+     */
+    public static function getMany(array $keys)
     {
-        return [
-            self::ENVIRONMENT_PRODUCTION => 'Production',
-            self::ENVIRONMENT_DEVELOPMENT => 'Local',
-        ];
+        $settings = [];
+        
+        foreach ($keys as $key) {
+            $settings[$key] = self::get($key);
+        }
+        
+        return $settings;
     }
 
-    // public function getEnvironmentLabelAttribute()
-    // {
-    //     return $this->key == 'environment' ? self::getEnvironmentInfos()[$this->value] : 'Unknown';
-    // }
-
-    public const APP_DEBUG_TRUE = 1;
-    public const APP_DEBUG_FALSE = 0;
-
-    public static function getAppDebugInfos()
+    /**
+     * Set a setting value
+     */
+    public static function set($key, $value, $envKey = null)
     {
-        return [
-            self::APP_DEBUG_FALSE => 'False',
-            self::APP_DEBUG_TRUE => 'True',
-        ];
+        $setting = self::updateOrCreate(
+            ['key' => $key],
+            [
+                'value' => $value,
+                'env_key' => $envKey,
+            ]
+        );
+
+        // Update .env file if env_key is provided
+        if ($envKey) {
+            self::updateEnvFile($envKey, $value);
+        }
+
+        // Clear cache
+        Cache::forget("app_setting_{$key}");
+
+        return $setting;
     }
 
-    // public function getAppDebugLabelAttribute()
-    // {
-    //     return $this->key == 'app_debug' ? self::getAppDebugInfos()[$this->value] : 'Unknown';
-    // }
-
-    public const ENABLE_DEBUGBAR = 1;
-    public const DISABLE_DEBUGBAR = 0;
-
-    public static function getDebugbarInfos()
+    /**
+     * Clear all settings cache
+     */
+    public static function clearCache()
     {
-        return [
-            self::DISABLE_DEBUGBAR => 'False',
-            self::ENABLE_DEBUGBAR => 'True',
-        ];
+        $settings = self::all();
+        foreach ($settings as $setting) {
+            Cache::forget("app_setting_{$setting->key}");
+        }
     }
 
-    public const PUSHER_CLUSTER_AP1 = 'ap1';
-    public const PUSHER_CLUSTER_AP2 = 'ap2';
-    public const PUSHER_CLUSTER_AP3 = 'ap3';
-    public const PUSHER_CLUSTER_AP4 = 'ap4';
-    public const PUSHER_CLUSTER_EU = 'eu';
-    public const PUSHER_CLUSTER_EU_WEST_1 = 'eu-west-1';
-    public const PUSHER_CLUSTER_MT1 = 'mt1';
-    public const PUSHER_CLUSTER_SA1 = 'sa1';
-    public const PUSHER_CLUSTER_US2 = 'us2';
-    public const PUSHER_CLUSTER_US3 = 'us3';
-
-
-    public const PUSHER_CLUSTERS = [
-        self::PUSHER_CLUSTER_AP1 => 'Asia Pacific 1 (ap1)',
-        self::PUSHER_CLUSTER_AP2 => 'Asia Pacific 2 (ap2)',
-        self::PUSHER_CLUSTER_AP3 => 'Asia Pacific 3 (ap3)',
-        self::PUSHER_CLUSTER_AP4 => 'Asia Pacific 4 (ap4)',
-        self::PUSHER_CLUSTER_EU => 'Europe (eu)',
-        self::PUSHER_CLUSTER_EU_WEST_1 => 'Europe West 1 (eu-west-1)',
-        self::PUSHER_CLUSTER_MT1 => 'Montreal (mt1)',
-        self::PUSHER_CLUSTER_SA1 => 'South America 1 (sa1)',
-        self::PUSHER_CLUSTER_US2 => 'US East 2 (us2)',
-        self::PUSHER_CLUSTER_US3 => 'US East 3 (us3)',
-    ];
-
-    public const PUSHER_ENCRYPTION_TLS = 'tls';
-    public const PUSHER_ENCRYPTION_SSL = 'ssl';
-    public const PUSHER_ENCRYPTION_NONE = 'none';
-
-    public const PUSHER_ENCRYPTIONS = [
-        self::PUSHER_ENCRYPTION_TLS => 'TLS',
-        self::PUSHER_ENCRYPTION_SSL => 'SSL',
-        self::PUSHER_ENCRYPTION_NONE => 'None',
-    ];
-
-    public const PUSHER_SCHEME_HTTP = 'http';
-    public const PUSHER_SCHEME_HTTPS = 'https';
-    public const PUSHER_SCHEMES = [
-        self::PUSHER_SCHEME_HTTP => 'HTTP',
-        self::PUSHER_SCHEME_HTTPS => 'HTTPS',
-    ];
-
-
-
-    // public function getDebugbarLabelAttribute()
-    // {
-    //     return $this->key == 'debugbar' ? self::getDebugbarInfos()[$this->value] : 'Unknown';
-    // }
-
-    public const DATE_FORMAT_ONE = 'Y-m-d';
-    public const DATE_FORMAT_TWO = 'd/m/Y';
-    public const DATE_FORMAT_THREE = 'm/d/Y';
-
-    public static function getDateFormatInfos()
+    /**
+     * Update .env file
+     */
+    private static function updateEnvFile($key, $value)
     {
-        return [
-            self::DATE_FORMAT_ONE => 'YYYY-MM-DD',
-            self::DATE_FORMAT_TWO => 'DD/MM/YYYY',
-            self::DATE_FORMAT_THREE => 'MM/DD/YYYY',
-        ];
+        $path = base_path('.env');
+        
+        if (!file_exists($path)) {
+            return;
+        }
+
+        $envContent = file_get_contents($path);
+        $value = str_replace('"', '\"', $value);
+        
+        // Check if key exists
+        if (preg_match("/^{$key}=/m", $envContent)) {
+            // Update existing key
+            $envContent = preg_replace(
+                "/^{$key}=.*/m",
+                "{$key}=\"{$value}\"",
+                $envContent
+            );
+        } else {
+            // Add new key
+            $envContent .= "\n{$key}=\"{$value}\"";
+        }
+
+        file_put_contents($path, $envContent);
     }
 
-    // public function getDateFormatLabelAttribute()
-    // {
-    //     return $this->key == 'date_format' ? self::getDateFormatInfos()[$this->value] : 'Unknown';
-    // }
-
-    public const TIME_FORMAT_12 = 'H:i:s';
-    public const TIME_FORMAT_24 = 'H:i:s A';
-
-    public static function getTimeFormatInfos()
-    {
-        return [
-            self::TIME_FORMAT_12 => '12-hour format (HH:mm:ss AM/PM)',
-            self::TIME_FORMAT_24 => '24-hour format (HH:mm:ss)',
-        ];
-    }
-
-    // public function getTimeFormatLabelAttribute()
-    // {
-    //     return $this->key == 'time_format' ? self::getTimeFormatInfos()[$this->value] : 'Unknown';
-    // }
-
-    public const THEME_MODE_SYSTEM = 'system';
-    public const THEME_MODE_LIGHT = 'light';
-    public const THEME_MODE_DARK = 'dark';
-
+    /**
+     * Get theme mode options
+     */
     public static function getThemeModeInfos()
     {
         return [
-            self::THEME_MODE_SYSTEM => 'System',
-            self::THEME_MODE_LIGHT => 'Light',
-            self::THEME_MODE_DARK => 'Dark',
+            self::THEME_MODE_LIGHT => __('Light'),
+            self::THEME_MODE_DARK => __('Dark'),
+            self::THEME_MODE_SYSTEM => __('System'),
         ];
     }
 
-    // public function getThemeModeLabelAttribute()
-    // {
-    //     return $this->key == 'theme_mode' ? self::getThemeInfos()[$this->value] : 'Unknown';
-    // }
-
-    public const DATATBASE_DRIVER_MYSQL = 'mysql';
-    public const DATATBASE_DRIVER_PGSQL = 'pgsql';
-    public const DATATBASE_DRIVER_SQLITE = 'sqlite';
-    public const DATATBASE_DRIVER_SQLSRV = 'sqlsrv';
-
-    public static function getDatabaseDriverInfos()
+    /**
+     * Get environment options
+     */
+    public static function getEnvironmentInfos()
     {
         return [
-            self::DATATBASE_DRIVER_MYSQL => 'MySQL',
-            self::DATATBASE_DRIVER_PGSQL => 'PostgreSQL',
-            self::DATATBASE_DRIVER_SQLITE => 'SQLite',
-            self::DATATBASE_DRIVER_SQLSRV => 'SQL Server',
+            self::ENVIRONMENT_DEVELOPMENT => __('Local'),
+            self::ENVIRONMENT_PRODUCTION => __('Production'),
         ];
     }
 
-    public const SMTP_DRIVER_MAILER = 'smtp';
-    public const SMTP_DRIVER_SENDMAIL = 'sendmail';
-    public const SMTP_DRIVER_MAILGUN = 'mailgun';
-    public const SMTP_DRIVER_SES = 'ses';
-    public const SMTP_DRIVER_POSTMARK = 'postmark';
-
-    public static function getSmtpDriverInfos()
+    /**
+     * Get app debug options
+     */
+    public static function getAppDebugInfos()
     {
         return [
-            self::SMTP_DRIVER_MAILER => 'SMTP Mailer',
-            self::SMTP_DRIVER_SENDMAIL => 'Sendmail Mailer',
-            self::SMTP_DRIVER_MAILGUN => 'Mailgun Mailer',
-            self::SMTP_DRIVER_SES => 'Amazon SES',
-            self::SMTP_DRIVER_POSTMARK => 'Postmark Mailer',
+            self::APP_DEBUG_TRUE => __('Enable'),
+            self::APP_DEBUG_FALSE => __('Disable'),
         ];
     }
 
-    public const SMTP_ENCRYPTION_NONE = 'none';
-    public const SMTP_ENCRYPTION_TLS = 'tls';
-    public const SMTP_ENCRYPTION_SSL = 'ssl';
-
-    public static function getSmtpEncryptionInfos()
+    /**
+     * Get debugbar options
+     */
+    public static function getDebugbarInfos()
     {
         return [
-            self::SMTP_ENCRYPTION_NONE => 'None',
-            self::SMTP_ENCRYPTION_TLS => 'TLS',
-            self::SMTP_ENCRYPTION_SSL => 'SSL',
+            self::ENABLE_DEBUGBAR => __('Enable'),
+            self::DISABLE_DEBUGBAR => __('Disable'),
+        ];
+    }
+
+    /**
+     * Get date format options
+     */
+    public static function getDateFormatInfos()
+    {
+        return [
+            self::DATE_FORMAT_ONE => 'd/m/Y',
+            self::DATE_FORMAT_TWO => 'm/d/Y',
+            self::DATE_FORMAT_THREE => 'Y-m-d',
+        ];
+    }
+
+    /**
+     * Get time format options
+     */
+    public static function getTimeFormatInfos()
+    {
+        return [
+            self::TIME_FORMAT_12 => '12 Hour',
+            self::TIME_FORMAT_24 => '24 Hour',
         ];
     }
 }

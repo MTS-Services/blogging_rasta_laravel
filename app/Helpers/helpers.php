@@ -255,207 +255,24 @@ if (!function_exists('is_phone_verified')) {
     }
 }
 
-
-if (!function_exists('gameCategories')) {
-    function gameCategories()
+if (!function_exists('availableTimezones')) {
+    function availableTimezones()
     {
-        return [
-            [
-                'name' => 'Currency',
-                'slug' => 'currency',
-                'games' => [
-                    'popular' => [
-                        ['name' => 'New World Coins', 'icon' => 'Frame 100.png', 'slug' => 'new-world-coins'],
-                        ['name' => 'Worldforge Legends', 'icon' => 'Frame 94.png', 'slug' => 'worldforge-legends'],
-                        ['name' => 'Exilecon Official Trailer', 'icon' => 'Frame 93.png', 'slug' => 'exilecon-official-trailer'],
-                        ['name' => 'Echoes of the Terra', 'icon' => 'Frame 96.png', 'slug' => 'echoes-of-the-terra'],
-                        ['name' => 'Path of Exile 2 Currency', 'icon' => 'Frame 103.png', 'slug' => 'path-of-exile-2-currency'],
-                        ['name' => 'Epochs of Gaia', 'icon' => 'Frame 102.png', 'slug' => 'epochs-of-gaia'],
-                        ['name' => 'Throne and Liberty Lucent', 'icon' => 'Frame 105.png', 'slug' => 'throne-and-liberty-lucent'],
-                        ['name' => 'Titan Realms', 'icon' => 'Frame 98.png', 'slug' => 'titan-realms'],
-                        ['name' => 'Blade Ball Tokens', 'icon' => 'Frame 97.png', 'slug' => 'blade-ball-tokens'],
-                        ['name' => 'Kingdoms Across Skies', 'icon' => 'Frame 99.png', 'slug' => 'kingdoms-across-skies'],
-                        ['name' => 'EA Sports FC Coins', 'icon' => 'Frame1001.png', 'slug' => 'ea-sports-fc-coins'],
-                        ['name' => 'Realmwalker: New Dawn', 'icon' => 'Frame 111.png', 'slug' => 'realmwalker-new-dawn'],
-                    ],
-                    'all' => [
-                        'EA Sports FC Coins',
-                        'Albion Online Silver',
-                        'Animal Crossing: New Horizons Bells',
-                        'Black Desert Online Silver',
-                        'Blade & Soul NEO Divine Gems',
-                        'Blade Ball Tokens',
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Gift Cards',
-                'slug' => 'gift-cards',
-                'games' => [
-                    'popular' => [
-                        ['name' => 'New World Coins', 'icon' => 'Frame 100.png', 'slug' => 'new-world-coins'],
-                        ['name' => 'Worldforge Legends', 'icon' => 'Frame 94.png', 'slug' => 'worldforge-legends'],
-                        ['name' => 'Exilecon Official Trailer', 'icon' => 'Frame 93.png', 'slug' => 'exilecon-official-trailer'],
-                        ['name' => 'Echoes of the Terra', 'icon' => 'Frame 96.png', 'slug' => 'echoes-of-the-terra'],
-                        ['name' => 'Path of Exile 2 Currency', 'icon' => 'Frame 103.png', 'slug' => 'path-of-exile-2-currency'],
-                        ['name' => 'Epochs of Gaia', 'icon' => 'Frame 102.png', 'slug' => 'epochs-of-gaia'],
-                        ['name' => 'Throne and Liberty Lucent', 'icon' => 'Frame 105.png', 'slug' => 'throne-and-liberty-lucent'],
-                        ['name' => 'Titan Realms', 'icon' => 'Frame 98.png', 'slug' => 'titan-realms'],
-                        ['name' => 'Blade Ball Tokens', 'icon' => 'Frame 97.png', 'slug' => 'blade-ball-tokens'],
-                        ['name' => 'Kingdoms Across Skies', 'icon' => 'Frame 99.png', 'slug' => 'kingdoms-across-skies'],
-                        ['name' => 'EA Sports FC Coins', 'icon' => 'Frame1001.png', 'slug' => 'ea-sports-fc-coins'],
-                        ['name' => 'Realmwalker: New Dawn', 'icon' => 'Frame 111.png', 'slug' => 'realmwalker-new-dawn'],
-                    ],
-                    'all' => [
-                        'EA Sports FC Coins',
-                        'Albion Online Silver',
-                        'Animal Crossing: New Horizons Bells',
-                        'Black Desert Online Silver',
-                        'Blade & Soul NEO Divine Gems',
-                        'Blade Ball Tokens',
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Boosting',
-                'slug' => 'boosting',
-                'games' => [
-                    'popular' => [
-                        ['name' => 'New World Coins', 'icon' => 'Frame 100.png', 'slug' => 'new-world-coins'],
-                        ['name' => 'Worldforge Legends', 'icon' => 'Frame 94.png', 'slug' => 'worldforge-legends'],
-                        ['name' => 'Exilecon Official Trailer', 'icon' => 'Frame 93.png', 'slug' => 'exilecon-official-trailer'],
-                        ['name' => 'Echoes of the Terra', 'icon' => 'Frame 96.png', 'slug' => 'echoes-of-the-terra'],
-                        ['name' => 'Path of Exile 2 Currency', 'icon' => 'Frame 103.png', 'slug' => 'path-of-exile-2-currency'],
-                        ['name' => 'Epochs of Gaia', 'icon' => 'Frame 102.png', 'slug' => 'epochs-of-gaia'],
-                        ['name' => 'Throne and Liberty Lucent', 'icon' => 'Frame 105.png', 'slug' => 'throne-and-liberty-lucent'],
-                        ['name' => 'Titan Realms', 'icon' => 'Frame 98.png', 'slug' => 'titan-realms'],
-                        ['name' => 'Blade Ball Tokens', 'icon' => 'Frame 97.png', 'slug' => 'blade-ball-tokens'],
-                        ['name' => 'Kingdoms Across Skies', 'icon' => 'Frame 99.png', 'slug' => 'kingdoms-across-skies'],
-                        ['name' => 'EA Sports FC Coins', 'icon' => 'Frame1001.png', 'slug' => 'ea-sports-fc-coins'],
-                        ['name' => 'Realmwalker: New Dawn', 'icon' => 'Frame 111.png', 'slug' => 'realmwalker-new-dawn'],
-                    ],
-                    'all' => [
-                        'EA Sports FC Coins',
-                        'Albion Online Silver',
-                        'Animal Crossing: New Horizons Bells',
-                        'Black Desert Online Silver',
-                        'Blade & Soul NEO Divine Gems',
-                        'Blade Ball Tokens',
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Items',
-                'slug' => 'items',
-                'games' => [
-                    'popular' => [
-                        ['name' => 'New World Coins', 'icon' => 'Frame 100.png', 'slug' => 'new-world-coins'],
-                        ['name' => 'Worldforge Legends', 'icon' => 'Frame 94.png', 'slug' => 'worldforge-legends'],
-                        ['name' => 'Exilecon Official Trailer', 'icon' => 'Frame 93.png', 'slug' => 'exilecon-official-trailer'],
-                        ['name' => 'Echoes of the Terra', 'icon' => 'Frame 96.png', 'slug' => 'echoes-of-the-terra'],
-                        ['name' => 'Path of Exile 2 Currency', 'icon' => 'Frame 103.png', 'slug' => 'path-of-exile-2-currency'],
-                        ['name' => 'Epochs of Gaia', 'icon' => 'Frame 102.png', 'slug' => 'epochs-of-gaia'],
-                        ['name' => 'Throne and Liberty Lucent', 'icon' => 'Frame 105.png', 'slug' => 'throne-and-liberty-lucent'],
-                        ['name' => 'Titan Realms', 'icon' => 'Frame 98.png', 'slug' => 'titan-realms'],
-                        ['name' => 'Blade Ball Tokens', 'icon' => 'Frame 97.png', 'slug' => 'blade-ball-tokens'],
-                        ['name' => 'Kingdoms Across Skies', 'icon' => 'Frame 99.png', 'slug' => 'kingdoms-across-skies'],
-                        ['name' => 'EA Sports FC Coins', 'icon' => 'Frame1001.png', 'slug' => 'ea-sports-fc-coins'],
-                        ['name' => 'Realmwalker: New Dawn', 'icon' => 'Frame 111.png', 'slug' => 'realmwalker-new-dawn'],
-                    ],
-                    'all' => [
-                        'EA Sports FC Coins',
-                        'Albion Online Silver',
-                        'Animal Crossing: New Horizons Bells',
-                        'Black Desert Online Silver',
-                        'Blade & Soul NEO Divine Gems',
-                        'Blade Ball Tokens',
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Accounts',
-                'slug' => 'accounts',
-                'games' => [
-                    'popular' => [
-                        ['name' => 'New World Coins', 'icon' => 'Frame 100.png', 'slug' => 'new-world-coins'],
-                        ['name' => 'Worldforge Legends', 'icon' => 'Frame 94.png', 'slug' => 'worldforge-legends'],
-                        ['name' => 'Exilecon Official Trailer', 'icon' => 'Frame 93.png', 'slug' => 'exilecon-official-trailer'],
-                        ['name' => 'Echoes of the Terra', 'icon' => 'Frame 96.png', 'slug' => 'echoes-of-the-terra'],
-                        ['name' => 'Path of Exile 2 Currency', 'icon' => 'Frame 103.png', 'slug' => 'path-of-exile-2-currency'],
-                        ['name' => 'Epochs of Gaia', 'icon' => 'Frame 102.png', 'slug' => 'epochs-of-gaia'],
-                        ['name' => 'Throne and Liberty Lucent', 'icon' => 'Frame 105.png', 'slug' => 'throne-and-liberty-lucent'],
-                        ['name' => 'Titan Realms', 'icon' => 'Frame 98.png', 'slug' => 'titan-realms'],
-                        ['name' => 'Blade Ball Tokens', 'icon' => 'Frame 97.png', 'slug' => 'blade-ball-tokens'],
-                        ['name' => 'Kingdoms Across Skies', 'icon' => 'Frame 99.png', 'slug' => 'kingdoms-across-skies'],
-                        ['name' => 'EA Sports FC Coins', 'icon' => 'Frame1001.png', 'slug' => 'ea-sports-fc-coins'],
-                        ['name' => 'Realmwalker: New Dawn', 'icon' => 'Frame 111.png', 'slug' => 'realmwalker-new-dawn'],
-                    ],
-                    'all' => [
-                        'EA Sports FC Coins',
-                        'Albion Online Silver',
-                        'Animal Crossing: New Horizons Bells',
-                        'Black Desert Online Silver',
-                        'Blade & Soul NEO Divine Gems',
-                        'Blade Ball Tokens',
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Top Ups',
-                'slug' => 'top-ups',
-                'games' => [
-                    'popular' => [
-                        ['name' => 'New World Coins', 'icon' => 'Frame 100.png', 'slug' => 'new-world-coins'],
-                        ['name' => 'Worldforge Legends', 'icon' => 'Frame 94.png', 'slug' => 'worldforge-legends'],
-                        ['name' => 'Exilecon Official Trailer', 'icon' => 'Frame 93.png', 'slug' => 'exilecon-official-trailer'],
-                        ['name' => 'Echoes of the Terra', 'icon' => 'Frame 96.png', 'slug' => 'echoes-of-the-terra'],
-                        ['name' => 'Path of Exile 2 Currency', 'icon' => 'Frame 103.png', 'slug' => 'path-of-exile-2-currency'],
-                        ['name' => 'Epochs of Gaia', 'icon' => 'Frame 102.png', 'slug' => 'epochs-of-gaia'],
-                        ['name' => 'Throne and Liberty Lucent', 'icon' => 'Frame 105.png', 'slug' => 'throne-and-liberty-lucent'],
-                        ['name' => 'Titan Realms', 'icon' => 'Frame 98.png', 'slug' => 'titan-realms'],
-                        ['name' => 'Blade Ball Tokens', 'icon' => 'Frame 97.png', 'slug' => 'blade-ball-tokens'],
-                        ['name' => 'Kingdoms Across Skies', 'icon' => 'Frame 99.png', 'slug' => 'kingdoms-across-skies'],
-                        ['name' => 'EA Sports FC Coins', 'icon' => 'Frame1001.png', 'slug' => 'ea-sports-fc-coins'],
-                        ['name' => 'Realmwalker: New Dawn', 'icon' => 'Frame 111.png', 'slug' => 'realmwalker-new-dawn'],
-                    ],
-                    'all' => [
-                        'EA Sports FC Coins',
-                        'Albion Online Silver',
-                        'Animal Crossing: New Horizons Bells',
-                        'Black Desert Online Silver',
-                        'Blade & Soul NEO Divine Gems',
-                        'Blade Ball Tokens',
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Coaching',
-                'slug' => 'coaching',
-                'games' => [
-                    'popular' => [
-                        ['name' => 'New World Coins', 'icon' => 'Frame 100.png', 'slug' => 'new-world-coins'],
-                        ['name' => 'Worldforge Legends', 'icon' => 'Frame 94.png', 'slug' => 'worldforge-legends'],
-                        ['name' => 'Exilecon Official Trailer', 'icon' => 'Frame 93.png', 'slug' => 'exilecon-official-trailer'],
-                        ['name' => 'Echoes of the Terra', 'icon' => 'Frame 96.png', 'slug' => 'echoes-of-the-terra'],
-                        ['name' => 'Path of Exile 2 Currency', 'icon' => 'Frame 103.png', 'slug' => 'path-of-exile-2-currency'],
-                        ['name' => 'Epochs of Gaia', 'icon' => 'Frame 102.png', 'slug' => 'epochs-of-gaia'],
-                        ['name' => 'Throne and Liberty Lucent', 'icon' => 'Frame 105.png', 'slug' => 'throne-and-liberty-lucent'],
-                        ['name' => 'Titan Realms', 'icon' => 'Frame 98.png', 'slug' => 'titan-realms'],
-                        ['name' => 'Blade Ball Tokens', 'icon' => 'Frame 97.png', 'slug' => 'blade-ball-tokens'],
-                        ['name' => 'Kingdoms Across Skies', 'icon' => 'Frame 99.png', 'slug' => 'kingdoms-across-skies'],
-                        ['name' => 'EA Sports FC Coins', 'icon' => 'Frame1001.png', 'slug' => 'ea-sports-fc-coins'],
-                        ['name' => 'Realmwalker: New Dawn', 'icon' => 'Frame 111.png', 'slug' => 'realmwalker-new-dawn'],
-                    ],
-                    'all' => [
-                        'EA Sports FC Coins',
-                        'Albion Online Silver',
-                        'Animal Crossing: New Horizons Bells',
-                        'Black Desert Online Silver',
-                        'Blade & Soul NEO Divine Gems',
-                        'Blade Ball Tokens',
-                    ]
-                ]
-            ]
-        ];
+        $timezones = [];
+        $timezoneIdentifiers = DateTimeZone::listIdentifiers();
+
+        foreach ($timezoneIdentifiers as $timezoneIdentifier) {
+            $timezone = new DateTimeZone($timezoneIdentifier);
+            $offset = $timezone->getOffset(new DateTime());
+            $offsetPrefix = $offset < 0 ? '-' : '+';
+            $offsetFormatted = gmdate('H:i', abs($offset));
+
+            $timezones[] = [
+                'timezone' => $timezoneIdentifier,
+                'name' => "(UTC $offsetPrefix$offsetFormatted) $timezoneIdentifier",
+            ];
+        }
+
+        return $timezones;
     }
 }
