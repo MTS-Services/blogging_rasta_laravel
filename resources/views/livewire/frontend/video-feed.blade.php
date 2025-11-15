@@ -53,7 +53,7 @@
                                 <button
                                     class="flex items-center gap-1 text-scond-800/20 0 transition-colors">
                                     <flux:icon name="share" class="w-5 h-5" />
-                                    <span class="text-base text-text-muted">Share</span>
+                                    <span class="text-base text-text-muted">{{__('Share') }}</span>
                                 </button>
                             </div>
 

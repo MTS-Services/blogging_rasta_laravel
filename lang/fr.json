@@ -17,5 +17,74 @@
     "videos": "vidéos",
     "Ready to Find Your Perfect Routine?": "Prêt à trouver votre routine parfaite ?",
     "Discover routines tailored to your lifestyle. From skincare and fitness to productivity and wellness, our tips and guides help you build habits that stick — making everyday life simpler, healthier, and more enjoyable. Start your journey today!": "Découvrez des routines adaptées à votre style de vie. De la skincare au fitness, en passant par la productivité et le bien-être, nos conseils vous aident à créer des habitudes durables — pour une vie plus simple, plus saine et plus agréable. Commencez votre voyage dès aujourd’hui !",
-    "It only takes 2 minutes. No signup required.": "Cela ne prend que 2 minutes. Aucun compte requis."
-}
+    "It only takes 2 minutes. No signup required.": "Cela ne prend que 2 minutes. Aucun compte requis.",
+
+
+    "home": "maison",
+    "DiodioGlow": "DiodioGlow",
+    "DG": "DG",
+    "Curating viral skincare trends and AI-powered product recommendations for natural, glowing skin.": "Sélection des tendances virales en matière de soins de la peau et recommandations de produits basées sur l'IA pour une peau naturellement éclatante.",
+    "Explore": "Explorer",
+    "Videos": "Videsos",
+    "Products": "Produits",
+    "Connect" : "Connecter",
+    "Instagram" : "Instagram",
+    "Legal" : "Légale",
+    "Privacy Policy" : "politique de confidentialité",
+    "Terms of Service" : "Conditions d'utilisation",
+    "Affiliate Disclosure" : "Divulgation des affiliés",
+     "Support" : "Soutien",
+
+     "Video Feed": "Flux de vidéos",
+     "Blog": "Blog",
+     "About" : "propos",
+     "Toggle menu": "Basculer le menu",
+     "Home": "Maison",
+     "Profile" : "Profil",
+     "Messages": "Messages",
+     "Settings" : "Paramètres",
+     "Billing" : "Facturation",
+     "Logout" : "Deconnexion",
+     "Login" : "Connexion",
+     "Register" : "S'inscrire",
+
+
+     "Curated Products": "Produits curatifs",
+     "All products handpicked by Diodio Glow • Shop from trusted affiliate stores": "Tous les produits sont sélectionnés avec soin par Diodio Glow • Achetez auprès de nos partenaires de confiance",
+      "Essences": "Essences",
+      "Dry": "Sec",
+      "Trending skincare routines and beauty tips from TikTok": "Les routines de soins de la peau et les astuces beauté tendance de TikTok",
+      "Share": "Partager",
+      "Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.": "Les codes de restauration vous permettent de reprendre accès si vous perdez votre dispositif 2FA. Les stockez dans un gestionnaire de mots de passe securis.",
+      "2FA Recovery Codes": "Codes de restauration 2FA",
+      "View Recovery Codes": "Voir les codes de restauration",
+      "Hide Recovery Codes": "Masquer les codes de restauration",
+      "Regenerate Codes" : "Regenerez les codes",
+      "Each recovery code can be used once to access your account and will be removed after use. If you need more, click Regenerate Codes above.": "Chaque code de récupération est à usage unique et sera supprimé après utilisation. Si vous avez besoin de codes supplémentaires, cliquez sur « Régénérer les codes » ci-dessus.",
+       "Light": "Lumiere",
+       "Dark": "Sombre",
+       "System": "Système",
+
+       "Delete account": "Supprimer le compte",
+        "Delete your account and all of its resources" : "Supprimez votre compte et toutes ses ressources",
+        "Are you sure you want to delete your account?": "Êtes-vous sûr de vouloir supprimer votre compte ?",
+        "Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.": "Une fois votre compte supprimé, toutes ses ressources et données seront définitivement effacées. Veuillez saisir votre mot de passe pour confirmer la suppression définitive de votre compte.",
+        "Cancel": "Annuler",
+        "Save": "Sauvegarder",
+
+
+
+        "Your email address is unverified.": "Votre adresse courriel n'est pas vérifiée.",
+        "Click here to re-send the verification email.": "Click here to re-send the verification email.",
+        "A new verification link has been sent to your email address.": "Un nouveau lien de vérification a été envoyé à votre adresse électronique.",
+        "Saved.": "Sauvegardé.",
+        "Enabled": "Activé",
+        "With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you can retrieve from the TOTP-supported application on your phone.": "Lorsque l'authentification à deux facteurs est activée, un code PIN sécurisé et aléatoire vous sera demandé lors de la connexion. Vous pourrez le récupérer depuis l'application compatible TOTP sur votre téléphone.",
+        "Disable 2FA": "Désactiver 2FA",
+        "Disabled": "Desactivé",
+        "When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can be retrieved from a TOTP-supported application on your phone.": "Lorsque vous activez l'authentification à deux facteurs, un code PIN sécurisé vous sera demandé lors de la connexion. Ce code PIN peut être récupéré depuis une application compatible TOTP installée sur votre téléphone.",
+        "Enable 2FA": "Activer 2FA",
+        "or, enter the code manually": "ou, entrez le code manuellement",
+
+
+    }
