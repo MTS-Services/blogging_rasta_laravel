@@ -3,9 +3,12 @@
 
 use App\Enums\OtpType;
 use App\Models\OtpVerification;
+use App\Services\ApplicationSettingsService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+
+
 
 // ==================== Existing Auth Helpers ====================
 
@@ -96,7 +99,7 @@ if (!function_exists('site_name')) {
 if (!function_exists('site_short_name')) {
     function site_short_name()
     {
-        return env('APP_SHORT_NAME', 'LA');
+        return app(ApplicationSettingsService::class)->findData('short_name', 'LA');
     }
 }
 
