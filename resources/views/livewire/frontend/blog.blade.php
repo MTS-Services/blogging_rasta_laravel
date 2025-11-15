@@ -29,9 +29,9 @@
 
                         <P class="text-base font-normal font-inter text-text-primar mt-2">{{ __('Why it’s trending:') }}
                         </P>
-                        
+
                         <P class="text-base font-normal font-inter text-text-primar">
-                            {{ __(' It delivers that natural, dewy glow everyone’s chasing—no filters needed.') }}</P>
+                            {{ __('It delivers that natural, dewy glow everyone’s chasing—no filters needed.') }}</P>
                     </a>
                 </div>
 

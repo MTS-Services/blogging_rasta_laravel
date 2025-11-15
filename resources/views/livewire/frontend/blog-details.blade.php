@@ -29,7 +29,7 @@
             </div>
             <div class="mt-6">
                 <h6 class="text-base font-semibold font-inter text-text-primary">
-                    {{ __('2. The Minimalist Routine') }}</h6>
+                    {{ __('2.The Minimalist Routine') }}</h6>
 
                 <p class="text-base font-normal font-inter text-text-primary mt-2">
                     {{ __('Less is more! Many people are moving away from 10-step routines and focusing on just a few high-quality essentials.') }}
@@ -51,7 +51,7 @@
             </div>
             <div class="mt-6">
                 <h6 class="text-base font-semibold font-inter text-text-primary">
-                    {{ __('3. The “Skin Cycling” Method') }}</h6>
+                    {{ __('3.The “Skin Cycling” Method') }}</h6>
 
                 <p class="text-base font-normal font-inter text-text-primary mt-2">
                     {{ __('This dermatologist-approved trend, made famous by TikTok, involves rotating your products over a 4-day cycle.') }}
@@ -69,11 +69,11 @@
                 <P class="text-base font-normal font-inter text-text-primary mt-2">{{ __('Why it’s trending:') }}
                 </P>
                 <P class="text-base font-normal font-inter text-text-primary">
-                    {{ __(' It prevents irritation while maximizing the benefits of active ingredients.') }}</P>
+                    {{ __('It prevents irritation while maximizing the benefits of active ingredients.') }}</P>
             </div>
             <div class="mt-6">
                 <h6 class="text-base font-semibold font-inter text-text-primary">
-                    {{ __('4. The Nighttime Reset Routine') }}</h6>
+                    {{ __('4.The Nighttime Reset Routine') }}</h6>
 
                 <p class="text-base font-normal font-inter text-text-primary mt-2">
                     {{ __('Evenings are perfect for giving your skin a reset after a long day.') }}
@@ -91,12 +91,12 @@
                 <P class="text-base font-normal font-inter text-text-primary mt-2">{{ __('Why it’s trending:') }}
                 </P>
                 <P class="text-base font-normal font-inter text-text-primary">
-                    {{ __(' People are realizing that consistent nighttime care can dramatically improve texture and tone.') }}
+                    {{ __('People are realizing that consistent nighttime care can dramatically improve texture and tone.') }}
                 </P>
             </div>
             <div class="mt-6">
                 <h6 class="text-base font-semibold font-inter text-text-primary">
-                    {{ __('5. The Natural Glow Routine') }}</h6>
+                    {{ __('5.The Natural Glow Routine') }}</h6>
 
                 <p class="text-base font-normal font-inter text-text-primary mt-2">
                     {{ __('African and tropical skincare communities are embracing routines built around natural, locally sourced ingredients—like shea butter, baobab oil, and black soap.') }}
@@ -105,7 +105,7 @@
                 <P class="text-base font-normal font-inter text-text-primary mt-2">{{ __('Why it’s trending:') }}
                 </P>
                 <P class="text-base font-normal font-inter text-text-primary">
-                    {{ __(' It celebrates authenticity, cultural beauty rituals, and the power of nature in achieving healthy skin.') }}
+                    {{ __('It celebrates authenticity, cultural beauty rituals, and the power of nature in achieving healthy skin.') }}
                 </P>
             </div>
             <div class="mt-6">
@@ -117,7 +117,7 @@
                 </p>
 
                 <P class="text-base font-normal font-inter text-text-primary mt-2">
-                    {{ __(' Stay tuned to our Trending Routines section—we’ll keep you updated with the latest beauty rituals, expert insights, and viral skincare trends loved by real people around the world.') }}
+                    {{ __('Stay tuned to our Trending Routines section—we’ll keep you updated with the latest beauty rituals, expert insights, and viral skincare trends loved by real people around the world.') }}
                 </P>
             </div>
         </div>
@@ -138,22 +138,22 @@
                     {{ __('1. The Ordinary Niacinamide 10% + Zinc 1%') }}</h6>
 
                 <p class="text-base font-semibold font-inter text-text-primary mt-2">
-                    {{ __('Best For: ') }}
+                    {{ __('Best For:') }}
                     <span
                         class="text-base font-normal font-inter text-text-primary">{{ __('Oily and acne-prone skin') }}</span>
                 </p>
                 <p class="text-base font-semibold font-inter text-text-primary mt-2">
-                    {{ __('What it does: ') }}
+                    {{ __('What it does:') }}
                     <span
                         class="text-base font-normal font-inter text-text-primary">{{ __('This serum helps reduce blemishes, control oil, and minimize large pores.') }}</span>
                 </p>
                 <p class="text-base font-semibold font-inter text-text-primary mt-2">
-                    {{ __('Our review: ') }}
+                    {{ __('Our review:') }}
                     <span
                         class="text-base font-normal font-inter text-text-primary">{{ __('Lightweight and affordable, it’s a go-to for beginners. Some users may experience slight dryness initially, so pairing it with a hydrating moisturizer is key.') }}</span>
                 </p>
                 <div class="flex gap-1 items-center mt-2">
-                    <p class="text-base font-semibold font-inter text-text-primary">{{ __('Rating: ') }}</p>
+                    <p class="text-base font-semibold font-inter text-text-primary">{{ __('Rating:') }}</p>
                     <div class="flex items-center">
                         <flux:icon name="star" class="w-6 h-6 stroke-second-500" />
                         <flux:icon name="star" class="w-6 h-6 stroke-second-500" />
@@ -169,12 +169,12 @@
                     {{ __('2. CeraVe Hydrating Cleanser') }}</h6>
 
                 <p class="text-base font-semibold font-inter text-text-primary mt-2">
-                    {{ __('Best For: ') }}
+                    {{ __('Best For:') }}
                     <span
                         class="text-base font-normal font-inter text-text-primary">{{ __('Normal to dry skin') }}</span>
                 </p>
                 <p class="text-base font-semibold font-inter text-text-primary mt-2">
-                    {{ __('What it does: ') }}
+                    {{ __('What it does:') }}
                     <span
                         class="text-base font-normal font-inter text-text-primary">{{ __('Gently cleanses without stripping your skin’s natural moisture barrier.') }}</span>
                 </p>
@@ -200,17 +200,17 @@
                     {{ __('3. Fenty Skin Fat Water Pore-Refining Toner Serum') }}</h6>
 
                 <p class="text-base font-semibold font-inter text-text-primary mt-2">
-                    {{ __('Best For: ') }}
+                    {{ __('Best For:') }}
                     <span
                         class="text-base font-normal font-inter text-text-primary">{{ __('Combination and dull skin') }}</span>
                 </p>
                 <p class="text-base font-semibold font-inter text-text-primary mt-2">
-                    {{ __('What it does: ') }}
+                    {{ __('What it does:') }}
                     <span
                         class="text-base font-normal font-inter text-text-primary">{{ __('A hybrid toner-serum that brightens, tightens, and hydrates at once.') }}</span>
                 </p>
                 <p class="text-base font-semibold font-inter text-text-primary mt-2">
-                    {{ __('Our review: ') }}
+                    {{ __('Our review:') }}
                     <span
                         class="text-base font-normal font-inter text-text-primary">{{ __('Smooth texture and light fragrance make it a pleasant experience. It gives an instant glow, though sensitive skin types may want to patch-test first.') }}</span>
                 </p>
@@ -269,7 +269,7 @@
                 <p class="text-base font-semibold font-inter text-text-primary mt-2">
                     {{ __('What it does: ') }}
                     <span
-                        class="text-base font-normal font-inter text-text-primary">{{ __(' A Senegalese favorite made with natural plant oils and gentle exfoliants.') }}</span>
+                        class="text-base font-normal font-inter text-text-primary">{{ __('A Senegalese favorite made with natural plant oils and gentle exfoliants.') }}</span>
                 </p>
                 <p class="text-base font-semibold font-inter text-text-primary mt-2">
                     {{ __('Our review: ') }}
@@ -297,7 +297,7 @@
                     </p>
 
                     <P class="text-base font-normal font-inter text-text-primary mt-2">
-                        {{ __(' Stay tuned as we continue to test and review both global favorites and local gems loved by real users across Africa and beyond.') }}
+                        {{ __('Stay tuned as we continue to test and review both global favorites and local gems loved by real users across Africa and beyond.') }}
                     </P>
                 </div>
             </div>
@@ -324,14 +324,16 @@
                 <p class="text-base font-normal font-inter text-text-primary mt-2">{{ __('For example:') }}</p>
                 <ul class="text-base font-normal font-inter text-text-primary list-disc pl-5 mt-2">
                     <li class="text-base font-normal font-inter text-text-primary">
-                        {{ __('If you want to improve productivity, look for guides specifically about time management.') }}</li>
+                        {{ __('If you want to improve productivity, look for guides specifically about time management.') }}
+                    </li>
                     <li class="text-base font-normal font-inter text-text-primary">
                         {{ __('If your goal is learning a new hobby, search for beginner-friendly tutorials.') }}</li>
                 </ul>
                 <P class="text-base font-normal font-inter text-text-primary">
-                    {{ __('Pro Tip: Write down your goal in one sentence. This simple step will help you stay focused on actionable tips.') }}</P>
+                    {{ __('Pro Tip: Write down your goal in one sentence. This simple step will help you stay focused on actionable tips.') }}
+                </P>
             </div>
-             <div class="mt-6">
+            <div class="mt-6">
                 <h6 class="text-base font-semibold font-inter text-text-primary">
                     {{ __('2. Prioritize Simplicity Over Complexity') }}</h6>
 
@@ -342,7 +344,7 @@
                     {{ __('Example: Instead of following a 10-step skincare routine, start with the 3 essentials: cleanse, moisturize, and protect.') }}
                 </P>
             </div>
-             <div class="mt-6">
+            <div class="mt-6">
                 <h6 class="text-base font-semibold font-inter text-text-primary">
                     {{ __('3. Take Notes & Create a Checklist') }}</h6>
 
@@ -353,7 +355,7 @@
                     {{ __('Pro Tip: Digital tools like Notion, Evernote, or simple Google Docs can help you organize tips and mark completed steps.') }}
                 </P>
             </div>
-             <div class="mt-6">
+            <div class="mt-6">
                 <h6 class="text-base font-semibold font-inter text-text-primary">
                     {{ __('4. Test & Adapt') }}</h6>
 
@@ -364,7 +366,7 @@
                     {{ __('Example: A productivity tip like “work in 90-minute sprints” might be perfect for one person but ineffective for someone with short attention spans. Modify it to suit your workflow.') }}
                 </P>
             </div>
-             <div class="mt-6">
+            <div class="mt-6">
                 <h6 class="text-base font-semibold font-inter text-text-primary">
                     {{ __('5. Learn from Multiple Sources') }}</h6>
 
@@ -375,7 +377,7 @@
                     {{ __('Pro Tip: Look for updated content since outdated guides may no longer be effective.') }}
                 </P>
             </div>
-             <div class="mt-6">
+            <div class="mt-6">
                 <h6 class="text-base font-semibold font-inter text-text-primary">
                     {{ __('6. Stay Consistent') }}</h6>
 
@@ -386,7 +388,7 @@
                     {{ __('Example: Reading 15 minutes a day, following a fitness routine, or applying a skincare regimen regularly yields better results than sporadic attempts.') }}
                 </P>
             </div>
-             <div class="mt-6">
+            <div class="mt-6">
                 <h6 class="text-base font-semibold font-inter text-text-primary">
                     {{ __('7. Share and Teach Others') }}</h6>
 
@@ -394,7 +396,7 @@
                     {{ __('One of the best ways to reinforce what you’ve learned is to teach it. Sharing tips with friends, family, or your online community can deepen your understanding and even uncover new insights.') }}
                 </p>
             </div>
-             <div class="mt-6">
+            <div class="mt-6">
                 <h6 class="text-base font-semibold font-inter text-text-primary">
                     {{ __('Final Thoughts') }}</h6>
 

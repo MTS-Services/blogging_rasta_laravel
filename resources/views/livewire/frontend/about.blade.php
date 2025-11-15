@@ -1,4 +1,5 @@
 <div>
+
     <section class="bg-gradient mb-12 sm:mb-0">
         {{-- Banner Section --}}
         <div class="container pt-20 pb-16 lg:pt-24">
@@ -19,7 +20,6 @@
                         <h2
                             class="text-5xl font-bold font-montserrat text-second-800 pb-6 text-text-primary lg:text-left">
                             {{ __('Meet Diodio Glow') }}</h2>
-
                         {{-- Description --}}
                         <p class="text-base text-text-primary font-normal font-inter lg:text-left">
                             {{ __('Diodio Glow is one of Senegal\'s most popular skincare and beauty influencers, with a passionate community of 50K+ followers who trust her recommendations.') }}
@@ -49,7 +49,6 @@
                                 {{ __('95% satisfaction rate from product recommendations') }}</p>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -112,4 +111,5 @@
             </p>
         </div>
     </section>
+
 </div>
