@@ -20,15 +20,15 @@
 
             <!-- English -->
             <button type="submit" name="lang" value="en"
-                class="block w-full text-left px-4 py-3 md:py-2 hover:bg-zinc-200
+                class="block w-full text-left px-4 py-3 md:py-2 hover:bg-zinc-100
                 {{ session('locale') == 'en' ? 'bg-zinc-300/60 font-semibold' : '' }}">
                 English
             </button>
 
             <!-- French -->
             <button type="submit" name="lang" value="fr"
-                class="block w-full text-left px-4 py-3 md:py-2 hover:bg-zinc-200
-                {{ session('locale') == 'fr' ? 'bg-zinc-300/70 font-semibold' : '' }}">
+                class="block w-full text-left px-4 py-3 md:py-2 hover:bg-zinc-100
+                {{ session('locale') == 'fr' ? 'bg-zinc-300/60 font-semibold' : '' }}">
                 French
             </button>
 
