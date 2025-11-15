@@ -10,17 +10,11 @@ return [
             'color' => 'blue',
         ],
         [
-            'username' => 'sahedulh4k',
-            'display_name' => 'Sahedul Haq',
+            'username' => 'wasifahmed996',
+            'display_name' => 'Wasif Ahmed',
             'description' => 'Gaming',
             'color' => 'red',
-        ],
-        [
-            'username' => 'bdtechtuber',
-            'display_name' => 'BD Tech',
-            'description' => 'Technology',
-            'color' => 'green',
-        ],
+        ]
     ],
 
     'videos_per_user' => 12,
