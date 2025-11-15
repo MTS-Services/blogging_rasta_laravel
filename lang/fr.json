@@ -84,7 +84,7 @@
         "Disabled": "Desactivé",
         "When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can be retrieved from a TOTP-supported application on your phone.": "Lorsque vous activez l'authentification à deux facteurs, un code PIN sécurisé vous sera demandé lors de la connexion. Ce code PIN peut être récupéré depuis une application compatible TOTP installée sur votre téléphone.",
         "Enable 2FA": "Activer 2FA",
-        "or, enter the code manually": "ou, entrez le code manuellement",
+        "or, enter the code manually": "ou, entrez le code manuellement"
 
 
     }
