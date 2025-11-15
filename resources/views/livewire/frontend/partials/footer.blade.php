@@ -69,7 +69,7 @@
                     <li><a href="{{ route('TermsOfService') }}"
                             class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Terms of Service') }}</a>
                     </li>
-                    <li><a href="#"
+                    <li><a href="{{ route('affiliate') }}"
                             class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Affiliate Disclosure') }}</a>
                     </li>
                     <li><a href="#"
