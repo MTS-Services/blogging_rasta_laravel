@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\Frontend\AboutController;
-use App\Http\Controllers\Frontend\BlogController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\HomeController;
-use App\Http\Controllers\Frontend\ProductController;
+use App\Http\Controllers\Frontend\AboutController;
 use App\Http\Controllers\Frontend\StaticController;
+
+use App\Http\Controllers\Frontend\ProductController;
 use App\Http\Controllers\Frontend\VideoFeedController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
