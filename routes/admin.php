@@ -7,6 +7,7 @@ use App\Http\Controllers\Backend\Admin\UserManagement\UserController;
 use App\Http\Controllers\Backend\Admin\UserManagement\AdminController;
 use App\Http\Controllers\Backend\Admin\AuditingController;
 use App\Http\Controllers\Backend\Admin\BlogController;
+use App\Http\Controllers\Backend\Admin\BannerVideo\BannerVideoController;
 use App\Http\Controllers\Backend\Admin\TikTokManagement\TikTokMixedFeedController;
 use App\Livewire\Frontend\Blog;
 
@@ -65,6 +66,8 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
             Route::get('/trash', 'trash')->name('trash');
         });
     });
+
+    Route::get('banner-video', [BannerVideoController::class, 'index'])->name('banner-video');
 });
  Route::controller(TikTokMixedFeedController::class)->prefix('tiktok-mixed-feed')->group(function () {
         Route::get('/', 'index')->name('tiktok-mixed-feed');
