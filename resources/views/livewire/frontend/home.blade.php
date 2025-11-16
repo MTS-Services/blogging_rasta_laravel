@@ -149,12 +149,11 @@
 
                             // Statistics
                             $stats = $video['statistics'] ?? ($video['stats'] ?? []);
-                            $playCount = $video['play_count'] ?? 
-                                     $video['statistics']['play_count'] ?? 
-                                     $video['stats']['play_count'] ?? 
-                                     $video['statistics']['playCount'] ?? 
-                                     $video['stats']['playCount'] ?? 
-                                     0;
+                            $playCount =
+                                $video['play_count'] ??
+                                ($video['statistics']['play_count'] ??
+                                    ($video['stats']['play_count'] ??
+                                        ($video['statistics']['playCount'] ?? ($video['stats']['playCount'] ?? 0))));
                             $diggCount = $stats['digg_count'] ?? ($stats['diggCount'] ?? 0);
                             $commentCount = $stats['comment_count'] ?? ($stats['commentCount'] ?? 0);
 
@@ -215,19 +214,25 @@
                                     {{-- Video Element (hidden until playing) --}}
                                     <video x-ref="video" x-show="playing" x-on:ended="stopVideo()"
                                         x-on:error="playing = false; alert('Video error');"
-                                        class="w-full h-full object-cover" poster="{{ $cover }}" controls
-                                        playsinline preload="metadata" controlsList="nodownload" style="display: none;"
-                                        x-cloak>
+                                        class="w-full h-full object-cover" poster="{{ $cover }}" playsinline
+                                        preload="metadata" controls controlsList="nodownload" x-cloak
+                                        x-on:play.window="
+                                            if ($event.detail !== $refs.video) {
+                                                $refs.video.pause();
+                                            }
+                                        "
+                                                                            x-on:play="
+                                            window.dispatchEvent(new CustomEvent('video-playing', { detail: $refs.video }));
+                                        ">
                                         <source src="{{ $playUrl }}" type="video/mp4">
                                     </video>
-                                    
+
                                     {{-- Thumbnail (visible until video plays) --}}
                                     <div x-show="!playing" x-on:click="playVideo()"
                                         class="absolute inset-0 cursor-pointer">
                                         @if ($cover)
                                             <img src="{{ $cover }}" alt="{{ $desc }}"
-                                                class="w-full h-full object-cover" loading="lazy"
-                                               >
+                                                class="w-full h-full object-cover" loading="lazy">
                                         @else
                                             <div
                                                 class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
@@ -303,7 +308,8 @@
                                     </p>
                                     <div class="flex items-center gap-3 text-xs text-text-muted mt-0.5">
                                         @if ($playCount >= 0)
-                                            <span>{{ $this->formatNumber($playCount ?? 0) }} {{ __('views') }}</span>
+                                            <span>{{ $this->formatNumber($playCount ?? 0) }}
+                                                {{ __('views') }}</span>
                                         @endif
                                         @if ($diggCount > 0)
                                             <span class="flex items-center gap-1">
