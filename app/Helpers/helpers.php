@@ -215,6 +215,28 @@ if (!function_exists('generate_otp')) {
 //     }
 // }
 
+if (! function_exists('detectFileType')) {
+    function detectFileType($filePath)
+    {
+        // Get MIME type
+        $mime = mime_content_type($filePath);
+ 
+        if (!$mime) {
+            return 'unknown';
+        }
+ 
+        if (str_starts_with($mime, 'image/')) {
+            return 'image';
+        }
+ 
+        if (str_starts_with($mime, 'video/')) {
+            return 'video';
+        }
+ 
+        return 'unknown';
+    }
+}
+
 if (!function_exists('format_otp_time')) {
     /**
      * Format OTP remaining time in human-readable format
