@@ -158,4 +158,14 @@ class AdminService
     /* ================== ================== ==================
     *                   Accessors (optionals)
     * ================== ================== ================== */
+
+    public function getActiveData($sortField = 'created_at', $order = 'desc'): Collection
+    {
+        return $this->interface->getActive($sortField, $order);
+    }
+
+    public function getInactiveData($sortField = 'created_at', $order = 'desc'): Collection
+    {
+        return $this->interface->getInactive($sortField, $order);
+    }
 }

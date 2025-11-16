@@ -20,7 +20,7 @@ class Admin extends AuthBaseModel implements Auditable
 
     protected $fillable = [
         'sort_order',
-        
+
         'name',
         'email',
         'email_verified_at',
@@ -67,33 +67,6 @@ class Admin extends AuthBaseModel implements Auditable
      =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#= */
 
 
-    /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
-    |          Scout Search Configuration                         |
-    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
-
-    #[SearchUsingPrefix(['name', 'email', 'phone', 'status'])]
-    public function toSearchableArray(): array
-    {
-        return [
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'status' => $this->status,
-        ];
-    }
-
-    /**
-     * Include only non-deleted data in search index.
-     */
-    public function shouldBeSearchable(): bool
-    {
-        return is_null($this->deleted_at);
-    }
-
-    /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
-    |        End  Scout Search Configuration                                    |
-    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
-
 
     /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
     |           Query Scopes                                       |
@@ -123,9 +96,54 @@ class Admin extends AuthBaseModel implements Auditable
     |          End of Query Scopes                                   |
     =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
 
+
+
+
+    /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
+    |          Scout Search Configuration                         |
+    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
+
+    #[SearchUsingPrefix(['name', 'email', 'phone', 'status'])]
+    public function toSearchableArray(): array
+    {
+        return [
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'status' => $this->status,
+        ];
+    }
+
+    /**
+     * Include only non-deleted data in search index.
+     */
+    public function shouldBeSearchable(): bool
+    {
+        return is_null($this->deleted_at);
+    }
+
+    /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
+    |        End  Scout Search Configuration                                    |
+    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
+
+
+
+
     /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
     |        Attribute Accessors                                    |
     =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
+
+
+    public function getStatusLabelAttribute(): string
+    {
+        return $this->status->label();
+    }
+
+    public function getStatusColorAttribute(): string
+    {
+        return $this->status->color();
+    }
+
 
     public function __construct(array $attributes = [])
     {
@@ -149,5 +167,15 @@ class Admin extends AuthBaseModel implements Auditable
     public function isActive(): bool
     {
         return $this->status === AdminStatus::ACTIVE;
+    }
+
+    public function activate(): void
+    {
+        $this->update(['status' => AdminStatus::ACTIVE]);
+    }
+
+    public function deactivate(): void
+    {
+        $this->update(['status' => AdminStatus::INACTIVE]);
     }
 }
