@@ -15,42 +15,21 @@ class BannerVideoRepository implements BannerVideoRepositoryInterface
     /* ================== ================== ==================
     *                      Find Methods 
     * ================== ================== ================== */
-    public function first(): ?BannerVideo
+    public function getFirst(): ?BannerVideo
     {
         return $this->model->first();
     }
 
-
-
-
     /* ================== ================== ==================
     *                    Data Modification Methods 
     * ================== ================== ================== */
-    public function updateOrCreate(array $data): BannerVideo
+    public function updateOrCreate(array $data, ?BannerVideo $exists = null): BannerVideo
     {
-        $firstRecord = $this->first();
-
-        if ($firstRecord) {
-
-            return $this->model->updateOrCreate(
-                ['id' => $firstRecord->id],
-                $data
-            );
+        if ($exists) {
+            $exists->update($data);
+            return $exists;
         } else {
-
             return $this->model->create($data);
         }
-    }
-
-
-    public function update(int $id, array $data): bool
-    {
-        $record = $this->model->find($id);
-
-        if (!$record) {
-            return false;
-        }
-
-        return $record->update($data);
     }
 }

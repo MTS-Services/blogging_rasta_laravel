@@ -15,8 +15,9 @@ class Edit extends Component
     use WithFileUploads, WithNotification;
 
     public BannerVideoForm $form;
-    public BannerVideo $data;
+    public ?BannerVideo $data;
     public $existingFile;
+    public $existingThumbnail;
 
     protected BannerVideoService $service;
 
@@ -25,11 +26,14 @@ class Edit extends Component
         $this->service = $service;
     }
 
-    public function mount(BannerVideo $data): void
+    public function mount(): void
     {
-        $this->data = $data;
-        $this->form->setData($data);
-        $this->existingFile = $data->thumbnail;
+        $this->data = $this->service->getFirstData();
+        if ($this->data) {
+            $this->form->setData($this->data);
+            $this->existingFile = $this->data->file;
+            $this->existingThumbnail = $this->data->thumbnail;
+        }
     }
 
     public function render()
@@ -40,21 +44,10 @@ class Edit extends Component
     public function update()
     {
         $validated = $this->form->validate();
-
         try {
-
-
-            $validated['updated_by'] = admin()->id;
-
             $this->data = $this->service->createOrUpdateData($validated);
-
-
-            $this->form->setData($this->model);
-
-            $this->form->reset(['thumbnail', 'file']);
-
-            $this->dispatch('BannerVideoUpdated');
             $this->success('Data updated successfully');
+            return $this->redirect(route('admin.banner-video'), navigate: true);
         } catch (\Throwable $e) {
             Log::error('Failed to update BannerVideo', [
                 'banner_video_id' => $this->model->id ?? null,
@@ -68,16 +61,10 @@ class Edit extends Component
     public function resetForm(): void
     {
         $this->form->reset();
-        $this->form->setData($this->model);
-    }
-
-    public function removeThumbnail(): void
-    {
-        $this->form->reset('thumbnail');
-    }
-
-    public function removeFile(): void
-    {
-        $this->form->reset('file');
+        if ($this->data !== null) {
+            $this->form->setData($this->data);
+            $this->existingFile = $this->data->file;
+            $this->existingThumbnail = $this->data->thumbnail;
+        }
     }
 }

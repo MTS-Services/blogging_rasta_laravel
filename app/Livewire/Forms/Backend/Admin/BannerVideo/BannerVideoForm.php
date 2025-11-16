@@ -17,16 +17,17 @@ class BannerVideoForm extends Form
     public ?UploadedFile $thumbnail = null;
     public ?UploadedFile $file = null;
 
-    // public ?UploadedFile $avatar = null;
+    public $removeThumbnail = false;
+    public $removeFile = false;
 
 
     public function rules(): array
     {
-
-
         return [
             'thumbnail' => 'nullable|image|max:2048',
-            'file' => 'nullable|image|max:2048',
+            'file' => 'nullable',
+            'removeThumbnail' => 'boolean',
+            'removeFile' => 'boolean',
         ];
     }
 
@@ -35,8 +36,6 @@ class BannerVideoForm extends Form
     public function setData($data): void
     {
         $this->id = $data->id;
-        $this->thumbnail = null;
-        $this->file = null;
     }
 
     public function reset(...$properties): void
@@ -45,10 +44,5 @@ class BannerVideoForm extends Form
         $this->thumbnail = null;
         $this->file = null;
         $this->resetValidation();
-    }
-
-    protected function isUpdating(): bool
-    {
-        return !empty($this->id);
     }
 }

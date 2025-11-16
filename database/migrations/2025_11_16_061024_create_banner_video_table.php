@@ -17,8 +17,8 @@ return new class extends Migration
         Schema::create('banner_video', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sort_order')->index()->default(0);
-            $table->string('thumbnail');
-            $table->string('file');
+            $table->string('thumbnail')->nullable();
+            $table->string('file')->nullable();
 
 
             $table->timestamps();

@@ -9,13 +9,11 @@ interface BannerVideoRepositoryInterface
     /* ================== ================== ==================
     *                      Find Methods 
     * ================== ================== ================== */
-    public function first(): ?BannerVideo;
+    public function getFirst(): ?BannerVideo;
 
 
     /* ================== ================== ==================
     *                    Data Modification Methods 
     * ================== ================== ================== */
-    public function updateOrCreate(array  $data): BannerVideo;
-
-    public function update(int $id, array $data): bool;
+    public function updateOrCreate(array $data, ?BannerVideo $exists = null): ?BannerVideo;
 }

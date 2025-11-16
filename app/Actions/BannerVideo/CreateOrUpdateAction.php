@@ -15,64 +15,74 @@ class CreateOrUpdateAction
 {
     public function __construct(protected BannerVideoRepositoryInterface $interface) {}
 
-    public function execute(int $id, array $data): BannerVideo
+    public function execute(array $data): BannerVideo
     {
-        // 1. Initialize variables to track newly uploaded files for rollback
-        $newSingleAvatarPath = null;
-        $uploadedPaths = []; // Multiple avatar paths
-        return DB::transaction(function () use ($id, $data, &$newSingleAvatarPath, &$uploadedPaths) {
+        return DB::transaction(function () use ($data) {
 
-
-
-            $bannerVideo = $id ? $this->interface->first() : null;
-
-            if (!$bannerVideo) {
-                Log::error('bannerVideo not found', ['bannerVideo_id' => $id]);
-                throw new \Exception('Data not found');
+            $oldData = [];
+            $exists = $this->interface->getFirst();
+            if ($exists) {
+                $data['updated_by'] = admin()->id;
+                $oldData = $exists->getAttributes();
+            } else {
+                $data['created_by'] = admin()->id;
             }
-
-            $oldData = $bannerVideo->getAttributes();
             $newData = $data;
 
-            // --- 1. Single Avatar Handling ---
-            $oldAvatarPath = Arr::get($oldData, 'thumbnail');
-            $uploadedAvatar = Arr::get($data, 'thumbnail');
 
-            if ($uploadedAvatar instanceof UploadedFile) {
-                // Delete old file permanently (File deletion is non-reversible)
-                if ($oldAvatarPath && Storage::disk('public')->exists($oldAvatarPath)) {
-                    Storage::disk('public')->delete($oldAvatarPath);
+            // File 
+            $oldFilePath = Arr::get($oldData, 'file');
+            $uploadedFile = Arr::get($data, 'file');
+            $newFilePath = null;
+            if ($uploadedFile instanceof UploadedFile) {
+                if ($oldFilePath && Storage::disk('public')->exists($oldFilePath)) {
+                    Storage::disk('public')->delete($oldFilePath);
                 }
-                // Store the new file and track path for rollback
                 $prefix = uniqid('IMX') . '-' . time() . '-' . uniqid();
-                $fileName = $prefix . '-' . $uploadedAvatar->getClientOriginalName();
+                $fileName = $prefix . '-' . $uploadedFile->getClientOriginalName();
+                $newFilePath = Storage::disk('public')->putFileAs('banner_videos', $uploadedFile, $fileName);
+                $newData['file'] = $newFilePath;
+            } elseif (Arr::get($data, 'removeFile')) {
+                if ($oldFilePath && Storage::disk('public')->exists($oldFilePath)) {
+                    Storage::disk('public')->delete($oldFilePath);
+                }
+                $newData['file'] = null;
+            }
 
-                $newSingleAvatarPath = Storage::disk('public')->putFileAs('banner_video', $uploadedAvatar, $fileName);
-                $newData['thumbnail'] = $newSingleAvatarPath;
-            } elseif (Arr::get($data, 'remove_file')) {
-                if ($oldAvatarPath && Storage::disk('public')->exists($oldAvatarPath)) {
-                    Storage::disk('public')->delete($oldAvatarPath);
+
+            if (!$newData['removeFile'] && !$newFilePath) {
+                $newData['file'] = $oldFilePath ?? null;
+            }
+            unset($newData['removeFile']);
+
+            // Thumbnail 
+            $oldThumbnailPath = Arr::get($oldData, 'thumbnail');
+            $uploadedThumbnail = Arr::get($data, 'thumbnail');
+            $newThumbnailPath = null;
+            if ($uploadedThumbnail instanceof UploadedFile) {
+                if ($oldThumbnailPath && Storage::disk('public')->exists($oldThumbnailPath)) {
+                    Storage::disk('public')->delete($oldThumbnailPath);
+                }
+                $prefix = uniqid('IMX') . '-' . time() . '-' . uniqid();
+                $fileName = $prefix . '-' . $uploadedThumbnail->getClientOriginalName();
+                $newThumbnailPath = Storage::disk('public')->putFileAs('banner_videos', $uploadedThumbnail, $fileName);
+                $newData['thumbnail'] = $newThumbnailPath;
+            } elseif (Arr::get($data, 'removeThumbnail')) {
+                if ($oldThumbnailPath && Storage::disk('public')->exists($oldThumbnailPath)) {
+                    Storage::disk('public')->delete($oldThumbnailPath);
                 }
                 $newData['thumbnail'] = null;
             }
-            // Cleanup temporary/file object keys
-            if (!$newData['remove_file'] && !$newSingleAvatarPath) {
-                $newData['thumbnail'] = $oldAvatarPath ?? null;
+
+
+            if (!$newData['removeThumbnail'] && !$newThumbnailPath) {
+                $newData['thumbnail'] = $oldThumbnailPath ?? null;
             }
-            // unset($newData['remove_file']);
-
-           
-            if (!isset($newData['remove_file']) || !$newData['remove_file']) {
-                if (!$newSingleAvatarPath) {
-                    $newData['thumbnail'] = $oldAvatarPath ?? null;
-                }
-            }
-
-        
-            $newData = Arr::except($newData, ['remove_file']);
+            unset($newData['removeThumbnail']);
 
 
-            return $this->interface->updateOrCreate($newData);
+
+            return $this->interface->updateOrCreate($newData, $exists);
         });
     }
 }
