@@ -9,6 +9,8 @@ use App\Repositories\Contracts\BlogRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Arr;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UpdateAction
 {
@@ -24,15 +26,35 @@ class UpdateAction
                 Log::error('Data not found', ['blog_id' => $id]);
                 throw new \Exception('Blog not found');
             }
+            $oldData = $model->getAttributes();
+            $newData = $data;
 
-            if ($data['avatar']) {
-                // Handle Avatar upload Logic will be here....
+            $oldAvatarPath = Arr::get($oldData, 'file');
+            $uploadedAvatar = Arr::get($data, 'file');
+
+            if ($uploadedAvatar instanceof UploadedFile) {
+                // Delete old file permanently (File deletion is non-reversible)
+                if ($oldAvatarPath && Storage::disk('public')->exists($oldAvatarPath)) {
+                    Storage::disk('public')->delete($oldAvatarPath);
+                }
+
+                // Store the new file and track path for rollback
+                $prefix = uniqid('IMX') . '-' . time() . '-' . uniqid();
+                $fileName = $prefix . '-' . $uploadedAvatar->getClientOriginalName();
+
+                $newSingleAvatarPath = Storage::disk('public')->putFileAs('blogs', $uploadedAvatar, $fileName);
+                $newData['file'] = $newSingleAvatarPath;
+            } elseif (Arr::get($data, 'remove_file')) {
+                if ($oldAvatarPath && Storage::disk('public')->exists($oldAvatarPath)) {
+                    Storage::disk('public')->delete($oldAvatarPath);
+                }
+                $newData['file'] = null;
             }
+            unset($newData['remove_file']);
 
-            $data['password'] = $data['password'] ?? $model->password;
 
             // Update Admin
-            $updated = $this->interface->update($id, $data);
+            $updated = $this->interface->update($id, $newData);
 
             if (!$updated) {
                 Log::error('Failed to update Data in repository', ['blog_id' => $id]);
