@@ -16,10 +16,10 @@
                 class="text-text-muted font-inter transition-colors {{ request()->routeIs('home') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500! hover:border-b-2 hover:border-second-500' }}">
                 {{ __('Home') }}
             </a>
-            <a href="{{ route('tiktok-mixed-feed') }}" wire:navigate
+            {{-- <a href="{{ route('tiktok-mixed-feed') }}" wire:navigate
                 class="text-text-muted font-inter transition-colors {{ request()->routeIs('tiktok-mixed-feed') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500 hover:border-b-2 hover:border-second-500' }}">
                 {{ __('Tiktok') }}
-            </a>
+            </a> --}}
             <a href="{{ route('product') }}" wire:navigate
                 class="text-text-muted font-inter transition-colors {{ request()->routeIs('product') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500 hover:border-b-2 hover:border-second-500' }}">
                 {{ __('Products') }}
