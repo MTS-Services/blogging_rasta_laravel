@@ -181,7 +181,6 @@
                                 $video['video']['play_addr']['url_list'][0] ??
                                 ($video['video']['play'] ?? ($video['video']['play_addr'] ?? ($video['play'] ?? '')));
                         @endphp
-
                         <div x-data="{
                             playing: false,
                             playVideo() {
@@ -221,14 +220,14 @@
                                         x-cloak>
                                         <source src="{{ $playUrl }}" type="video/mp4">
                                     </video>
-
+                                    
                                     {{-- Thumbnail (visible until video plays) --}}
                                     <div x-show="!playing" x-on:click="playVideo()"
                                         class="absolute inset-0 cursor-pointer">
                                         @if ($cover)
                                             <img src="{{ $cover }}" alt="{{ $desc }}"
                                                 class="w-full h-full object-cover" loading="lazy"
-                                                onerror="this.src='https://via.placeholder.com/400x500/667eea/ffffff?text=TikTok+Video'">
+                                               >
                                         @else
                                             <div
                                                 class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
@@ -242,7 +241,7 @@
 
                                         {{-- Play button overlay --}}
                                         <div
-                                            class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center transition-all duration-300 hover:bg-opacity-50">
+                                            class="absolute inset-0 flex items-center justify-center transition-all duration-300 hover:bg-opacity-50">
                                             <div class="transform hover:scale-110 transition-transform duration-300">
                                                 <div
                                                     class="w-16 h-16 rounded-full bg-white bg-opacity-90 flex items-center justify-center shadow-2xl">
