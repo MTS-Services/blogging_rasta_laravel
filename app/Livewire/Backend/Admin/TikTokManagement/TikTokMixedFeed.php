@@ -15,7 +15,7 @@ class TikTokMixedFeed extends Component
     public $error = null;
     public $selectedUser = 'all';
     public $debugInfo = [];
-    public $showDebug = false; // Toggle for debug panel
+    public $showDebug = false; 
 
     protected $service;
 
@@ -241,6 +241,7 @@ class TikTokMixedFeed extends Component
 
     public function render()
     {
+        // dd($this->getFilteredVideosProperty()[1]);
         return view('livewire.backend.admin.tik-tok-management.tik-tok-mixed-feed', [
             'filteredVideos' => $this->getFilteredVideosProperty(),
             'statsSummary' => $this->getStatsSummary(),
