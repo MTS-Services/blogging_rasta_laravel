@@ -250,14 +250,20 @@
                                             class="absolute inset-0 flex items-center justify-center transition-all duration-300 hover:bg-opacity-50">
                                             <div class="transform hover:scale-110 transition-transform duration-300">
                                                 <div
-                                                    class="w-16 h-16 rounded-full bg-white bg-opacity-90 flex items-center justify-center shadow-2xl">
-                                                    <svg class="w-8 h-8 text-pink-600 ml-1" fill="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path d="M8 5v14l11-7z" />
-                                                    </svg>
+                                                    class="w-20 h-20 flex items-center justify-center ">
+                                                   <flux:icon name="play" class="w-full h-full stroke-white/60 fill-white/50 " />
                                                 </div>
                                             </div>
                                         </div>
+                                        {{-- <div
+                                            class="absolute inset-0 flex items-center justify-center transition-all duration-300 hover:bg-opacity-50">
+                                            <div class="transform hover:scale-110 transition-transform duration-300">
+                                                <div
+                                                    class="w-20 h-20 flex items-center justify-center ">
+                                                   <flux:icon name="pause" class="w-full h-full stroke-white/60 fill-white/50 " />
+                                                </div>
+                                            </div>
+                                        </div> --}}
                                     </div>
                                 @else
                                     {{-- No video available --}}
@@ -304,8 +310,8 @@
                                         {{ $videoTitle ?? 'TikTok Video' }}
                                     </h6>
                                     <p class="text-sm font-normal text-text-primary font-outfit truncate"
-                                        title="{{ '@' . $username }}">
-                                        {{ '@' . $username }}
+                                        title="{{ $authorName }}">
+                                        {{ $authorName }}
                                     </p>
                                     <div class="flex items-center gap-3 text-xs text-text-muted mt-0.5">
                                         @if ($playCount >= 0)
