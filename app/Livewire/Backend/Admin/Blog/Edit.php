@@ -18,6 +18,8 @@ class Edit extends Component
 
     public BlogForm $form;
     public Blog $model;
+     public $existingFile;
+    public $existingFiles;
 
     protected BlogService $service;
 
@@ -30,6 +32,7 @@ class Edit extends Component
     {
         $this->model = $model;
         $this->form->setData($model);
+          $this->existingFile = $model->file;
     }
 
     public function render()
@@ -47,9 +50,9 @@ class Edit extends Component
             $this->model = $this->service->updateData($this->model->id, $validated);
 
             $this->success('Data updated successfully');
-            return $this->redirect(route('admin.um.admin.index'), navigate: true);
+            return $this->redirect(route('admin.blog.index'), navigate: true);
         } catch (\Throwable $e) {
-            Log::error('Failed to update Admin', [
+            Log::error('Failed to update data', [
                 'admin_id' => $this->model->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()

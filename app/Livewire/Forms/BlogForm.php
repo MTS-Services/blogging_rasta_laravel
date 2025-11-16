@@ -3,12 +3,10 @@
 namespace App\Livewire\Forms;
 
 use App\Enums\BlogStatus;
-use App\Livewire\Frontend\Blog;
 use Illuminate\Http\UploadedFile;
 use Livewire\Attributes\Locked;
 use Livewire\Form;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
-use Illuminate\Support\Str;
 
 class BlogForm extends Form
 {
@@ -18,9 +16,9 @@ class BlogForm extends Form
     public ?int $id = null;
 
     public int $sort_order = 0;
-    public string $title = '';
-    public string $slug = '';
-    public string $status = BlogStatus::UNPUBLISHED->value;
+    public ?string $title = '';
+    public ?string $slug = '';
+    public ?string $status = BlogStatus::UNPUBLISHED->value;
 
     public ?UploadedFile $file = null;
 
@@ -35,7 +33,6 @@ class BlogForm extends Form
     // ---------------------------
     public function rules(): array
     {
-        $slug = Str::slug((string) $this->slug);
         return [
             'title'             => 'required|string|max:255',
             'slug'              => 'required|string|max:255|unique:blogs,slug,' . $this->id,
@@ -55,20 +52,17 @@ class BlogForm extends Form
     // ---------------------------
     // Fill Form with Existing Data
     // ---------------------------
-    public function setData($blog): void
+    public function setData($data): void
     {
-        $this->id                = $blog->id;
-        $this->sort_order        = $blog->sort_order;
-        $this->title             = $blog->title;
-        $this->slug              = $blog->slug;
-        $this->status            = $blog->status;
-        $this->description       = $blog->description ?? '';
+        $this->id                = $data->id;
+        $this->title             = $data->title;
+        $this->slug              = $data->slug;
+        $this->status            = $data->status;
+        $this->description       = $data->description ?? '';
 
-        $this->meta_title        = $blog->meta_title ?? '';
-        $this->meta_description  = $blog->meta_description ?? '';
-        $this->meta_keywords     = $blog->meta_keywords ?? [];
-
-        $this->file = null; // reset file upload
+        $this->meta_title        = $data->meta_title ?? '';
+        $this->meta_description  = $data->meta_description ?? '';
+        $this->meta_keywords     = $data->meta_keywords ?? [];
     }
 
     // ---------------------------
