@@ -99,6 +99,7 @@
 
         </div>
     </section> --}}
+    
     <section class="bg-bg-tertiary mb-12 sm:mb-0">
         <div class="container py-12">
             <h2 class="text-5xl font-bold font-montserrat pb-6 text-text-primary ">{{ __('Our Mission') }}</h2>
