@@ -22,6 +22,13 @@ Route::middleware(['auth'])->group(function () {
     //     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 });
 
+
+
+// Individual user page (optional)
+Route::get('/user/{username}', function ($username) {
+    return view('tiktok-single-user', ['username' => $username]);
+})->name('user.profile');
+
 Route::post('language',[MultiLangController::class,'langChange'])->name('lang.change');
 
 require __DIR__ . '/auth.php';

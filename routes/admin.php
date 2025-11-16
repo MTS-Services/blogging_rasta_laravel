@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\Admin\Settings\LanguageController;
 use App\Http\Controllers\Backend\Admin\UserManagement\UserController;
 use App\Http\Controllers\Backend\Admin\UserManagement\AdminController;
 use App\Http\Controllers\Backend\Admin\AuditingController;
+use App\Http\Controllers\Backend\Admin\TikTokManagement\TikTokMixedFeedController;
 
 Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
@@ -35,6 +36,7 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
             Route::get('/referral/{id}', 'referral')->name('referral');
         });
     });
+   
     Route::group(['prefix' => 'application-settings', 'as' => 'as.'], function () {
         Route::controller(LanguageController::class)->name('language.')->prefix('language')->group(function () {
             Route::get('/', 'index')->name('index');
@@ -59,3 +61,6 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
         });
     });
 });
+ Route::controller(TikTokMixedFeedController::class)->prefix('tiktok-mixed-feed')->group(function () {
+        Route::get('/', 'index')->name('tiktok-mixed-feed');
+    });
