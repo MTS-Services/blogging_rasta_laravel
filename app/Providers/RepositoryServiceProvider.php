@@ -11,8 +11,10 @@ use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Contracts\AdminRepositoryInterface;
 use App\Repositories\Contracts\ApplicationSettingsIntarface;
 use App\Repositories\Contracts\AuditRepositoryInterface;
+use App\Repositories\Contracts\BlogRepositoryInterface;
 use App\Repositories\Contracts\LanguageRepositoryInterface;
 use App\Repositories\Eloquent\ApplicationSettingsRepository;
+use App\Repositories\Eloquent\BlogRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -38,6 +40,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             ApplicationSettingsIntarface::class,
             ApplicationSettingsRepository::class
+        );
+
+        $this->app->bind(
+            BlogRepositoryInterface::class,
+            BlogRepository::class
         );
     }
 
