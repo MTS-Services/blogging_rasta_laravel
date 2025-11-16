@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Frontend;
 
+use App\Enums\BlogStatus;
 use App\Services\BlogService;
 use Livewire\Component;
 
@@ -16,7 +17,16 @@ class Blog extends Component
 
     public function render()
     {
-        $blogs = $this->blogService->getAllDatas();
+        $blogs = $this->blogService->getPaginatedData(
+            filters: $this->getFilters()
+        );
         return view('livewire.frontend.blog', compact('blogs'));
+    }
+
+    protected function getFilters()
+    {
+        return [
+            'status' => BlogStatus::PUBLISHED->value,
+        ];
     }
 }
