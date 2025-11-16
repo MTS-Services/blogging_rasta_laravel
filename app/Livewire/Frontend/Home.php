@@ -50,7 +50,7 @@ class Home extends Component
             }
 
             // Load videos from TikTok API (limit to 12 videos for home page)
-            $this->featuredVideos = $this->service->getMultipleUsersVideos($usernames, 4);
+            $this->featuredVideos = $this->service->getMultipleUsersVideos($usernames, 8);
 
             // Limit to 12 videos for home page display
             $this->featuredVideos = array_slice($this->featuredVideos, 0, 12);

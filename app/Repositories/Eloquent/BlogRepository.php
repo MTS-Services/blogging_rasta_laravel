@@ -26,6 +26,7 @@ class BlogRepository implements BlogRepositoryInterface
 
     public function find($column_value, string $column_name = 'id', bool $trashed = false): ?Blog
     {
+       
         $model = $this->model;
         if ($trashed) {
             $model = $model->withTrashed();
@@ -122,7 +123,6 @@ class BlogRepository implements BlogRepositoryInterface
         if (!$findData) {
             return false;
         }
-
         return $findData->update($data);
     }
 

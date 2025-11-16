@@ -11,7 +11,7 @@ use App\Models\BaseModel;
 
 class Blog extends BaseModel implements Auditable
 {
-       protected $fillable = [
+    protected $fillable = [
         'sort_order',
         'title',
         'slug',
@@ -31,10 +31,10 @@ class Blog extends BaseModel implements Auditable
 
     protected $casts = [
         'status' => BlogStatus::class,
-         'meta_keywords' => 'array',
+        'meta_keywords' => 'array',
     ];
 
-      /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
+    /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
     |           Query Scopes                                       |
     =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
 
@@ -45,16 +45,6 @@ class Blog extends BaseModel implements Auditable
                 $filters['status'] ?? null,
                 fn($q, $status) =>
                 $q->where('status', $status)
-            )
-            ->when(
-                $filters['code'] ?? null,
-                fn($q, $code) =>
-                $q->where('code', 'like', "%{$code}%")
-            )
-            ->when(
-                $filters['is_default'] ?? null,
-                fn($q, $isDefault) =>
-                $q->where('is_default', $isDefault)
             );
     }
 
@@ -62,7 +52,7 @@ class Blog extends BaseModel implements Auditable
     |          End of Query Scopes                                   |
     =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
 
-    
+
     /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
     |          Scout Search Configuration                         |
     =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
@@ -90,6 +80,12 @@ class Blog extends BaseModel implements Auditable
     |        End  Scout Search Configuration                                    |
     =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
 
-
-
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->where('status', BlogStatus::PUBLISHED->value);
+    }
+    public function scopeUnpublished(Builder $query): Builder
+    {
+        return $query->where('status', BlogStatus::UNPUBLISHED->value);
+    }
 }
