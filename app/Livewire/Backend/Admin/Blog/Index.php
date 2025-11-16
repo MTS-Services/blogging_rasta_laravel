@@ -25,6 +25,7 @@ class Index extends Component
 
     public function boot(BlogService $service)
     {
+      
         $this->service = $service;
     }
 
@@ -34,25 +35,24 @@ class Index extends Component
             perPage: $this->perPage,
             filters: $this->getFilters()
         )->load('creater_admin');
-
         $columns = [
+            // [
+            //     'key' => 'avatar',
+            //     'label' => 'Avatar',
+            //     'format' => function ($data) {
+            //         return $data->avatar_url
+            //             ? '<img src="' . $data->avatar_url . '" alt="' . $data->name . '" class="w-10 h-10 rounded-full object-cover shadow-sm">'
+            //             : '<div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 font-semibold">' . strtoupper(substr($data->name, 0, 2)) . '</div>';
+            //     }
+            // ],
             [
-                'key' => 'avatar',
-                'label' => 'Avatar',
-                'format' => function ($data) {
-                    return $data->avatar_url
-                        ? '<img src="' . $data->avatar_url . '" alt="' . $data->name . '" class="w-10 h-10 rounded-full object-cover shadow-sm">'
-                        : '<div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 font-semibold">' . strtoupper(substr($data->name, 0, 2)) . '</div>';
-                }
-            ],
-            [
-                'key' => 'name',
-                'label' => 'Name',
+                'key' => 'title',
+                'label' => 'Title',
                 'sortable' => true
             ],
             [
-                'key' => 'email',
-                'label' => 'Email',
+                'key' => 'slug',
+                'label' => 'Slug',
                 'sortable' => true
             ],
             [
@@ -89,13 +89,13 @@ class Index extends Component
             [
                 'key' => 'id',
                 'label' => 'View',
-                'route' => 'admin.um.admin.view',
+                'route' => 'admin.blog.view',
                 'encrypt' => true
             ],
             [
                 'key' => 'id',
                 'label' => 'Edit',
-                'route' => 'admin.um.admin.edit',
+                'route' => 'admin.blog.edit',
                 'encrypt' => true
             ],
             [
@@ -108,8 +108,8 @@ class Index extends Component
 
         $bulkActions = [
             ['value' => 'delete', 'label' => 'Delete'],
-            ['value' => 'activate', 'label' => 'Activate'],
-            ['value' => 'inactive', 'label' => 'Inactive'],
+            ['value' => 'published', 'label' => 'Published'],
+            ['value' => 'unpublished', 'label' => 'Unpublished'],
         ];
 
         return view('livewire.backend.admin.blog.index', [

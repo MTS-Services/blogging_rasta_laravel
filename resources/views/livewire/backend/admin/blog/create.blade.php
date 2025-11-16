@@ -1,5 +1,3 @@
-@extends('layouts.app')
-
-@section('content')
-
-@endsection
+<div>
+    this is create blog
+</div>

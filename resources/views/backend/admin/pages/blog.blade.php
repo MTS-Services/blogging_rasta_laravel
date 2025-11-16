@@ -2,25 +2,25 @@
     <x-slot name="pageSlug">{{__('blog')}}</x-slot>
 
     @switch(Route::currentRouteName())
-        @case('admin.um.admin.create')
+        @case('admin.blog.create')
             <x-slot name="title">{{__('Blogs Create')}}</x-slot>
             <x-slot name="breadcrumb">{{__('Blog Management / Create')}}</x-slot>
             <livewire:backend.admin.blog.create />
         @break
 
-        @case('admin.um.admin.edit')
+        @case('admin.blog.edit')
             <x-slot name="title">{{__('Blogs Edit')}}</x-slot>
             <x-slot name="breadcrumb">{{__('Blog Management / Edit')}}</x-slot>
             <livewire:backend.admin.blog.edit :data="$data"/>
         @break
 
-        @case('admin.um.admin.trash')
+        @case('admin.blog.trash')
             <x-slot name="title">{{__('Blogs Trash')}}</x-slot>
             <x-slot name="breadcrumb">{{__('Blog Management / Trash')}}</x-slot>
             <livewire:backend.admin.blog.trash />
         @break
 
-        @case('admin.um.admin.view')
+        @case('admin.blog.view')
             <x-slot name="title">{{__('Blogs View')}}</x-slot>
             <x-slot name="breadcrumb">{{__('Blog Management / View')}}</x-slot>
             <livewire:backend.admin.blog.view :data="$data"/>
