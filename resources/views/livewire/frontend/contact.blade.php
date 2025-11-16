@@ -1,0 +1,71 @@
+<div>
+    <div class=" font-sans text-slate-800">
+        <main class="min-h-screen flex items-center justify-center p-6">
+            <section
+                class="w-full max-w-6xl bg-bg-tertiary rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
+
+                <!-- Slider side (left on desktop) -->
+                <div class="relative md:order-1 order-2">
+                    <div id="slider" class="h-96 md:h-full">
+                        <!-- Slides will be injected here by JS -->
+                    </div>
+
+                    <!-- Controls -->
+                    <button id="prevBtn" aria-label="Previous"
+                        class="absolute top-1/2 -translate-y-1/2 z-20 bg-white/70 rounded-xl backdrop-blur-sm p-2 ">
+                        <img src="{{ asset('/assets/images/blog_page/image 6.png') }}"
+                            class="lg:h-140 lg:w-200 sm:w-full sm:h-full" alt="">
+                    </button>
+
+                    <!-- Indicators -->
+                    <div id="indicators" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-20"></div>
+                </div>
+
+                <!-- Content side (right on desktop) -->
+                <div class="p-8 md:p-12 flex flex-col justify-center md:order-2 order-1">
+                    <h2 class="text-3xl font-semibold mb-2">Contact Us</h2>
+                    <p class="text-text-secondary mb-6">We'd love to hear from you. Slide through some of our locations
+                        and
+                        reach out using the form below or via the listed contact methods.</p>
+
+                    <div id="slideContent" class="space-y-6">
+                        <!-- text for each slide will be injected here -->
+                    </div>
+
+                    <form class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+                        <div class="w-full">
+                            <x-ui.label value="Your name" class="mb-1" />
+                            <x-ui.input type="Your name" placeholder="Your name" wire:model="form.Your name" />
+                            <x-ui.input-error :messages="$errors->get('form.Your name')" />
+                        </div>
+
+                        <div class="w-full">
+                            <x-ui.label value="Email" class="mb-1" />
+                            <x-ui.input type="email" placeholder="Email" wire:model="form.email" />
+                            <x-ui.input-error :messages="$errors->get('form.email')" />
+                        </div>
+
+                        <div class="w-full col-span-2 ">
+                            <x-ui.label value="Message" class="mb-1 " />
+                            <x-ui.input type="message" placeholder="Message" wire:model="form.message" class="p-10!" />
+                            <x-ui.input-error :messages="$errors->get('form.message')" />
+                        </div>
+
+                        <x-ui.button href="#"
+                            class="font-medium col-span-2 inline-flex items-center justify-center gap-2 rounded-lg">
+                            <span class="text-text-white">{{ __('Send Message') }}</span>
+                            <flux:icon name="arrow-right" class="w-4 h-4 text-white !fill-white !stroke-white" />
+                        </x-ui.button>
+
+                    </form>
+
+                    <div class="mt-6 text-sm text-slate-500">
+                        <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                        <p><strong>Email:</strong> hello@example.com</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
