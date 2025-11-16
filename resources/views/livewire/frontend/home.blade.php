@@ -160,6 +160,7 @@
                             // Author/User info
                             $author = $video['author'] ?? [];
                             $username = $video['_username'] ?? ($author['unique_id'] ?? 'unknown');
+                            $videoTitle = $video['title'] ?? 'TikTok Video';
                             $authorName = $author['nickname'] ?? ($author['nick_name'] ?? $username);
                             $authorAvatar =
                                 $author['avatar_larger'] ??
@@ -299,8 +300,8 @@
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <h6 class="text-text-primary font-semibold font-inter truncate"
-                                        title="{{ $authorName }}">
-                                        {{ $authorName }}
+                                        title="{{ $videoTitle}}">
+                                        {{ $videoTitle ?? 'TikTok Video' }}
                                     </h6>
                                     <p class="text-sm font-normal text-text-primary font-outfit truncate"
                                         title="{{ '@' . $username }}">
