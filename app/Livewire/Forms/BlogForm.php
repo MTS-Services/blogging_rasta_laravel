@@ -38,12 +38,10 @@ class BlogForm extends Form
             'slug'              => 'required|string|max:255|unique:blogs,slug,' . $this->id,
             'status' => 'required|string|in:' . implode(',', array_column(BlogStatus::cases(), 'value')),
 
-            'file'              => $this->isUpdating()
-                ? 'nullable|file|mimes:jpg,jpeg,png,webp,mp4,mov,avi|max:10240'
-                : 'nullable|file|mimes:jpg,jpeg,png,webp,mp4,mov,avi|max:10240',
+            'file'              => 'nullable|max:1024',
 
             'description'       => 'nullable|string',
-            'meta_title'        => 'nullable|string|max:255',
+            'meta_title'        => 'nullable|string',
             'meta_description'  => 'nullable|string',
             'meta_keywords'     => 'nullable|array',
         ];

@@ -21,7 +21,7 @@ class UpdateAction
         return DB::transaction(function () use ($id, $data) {
 
             $model = $this->interface->find($id);
-
+            
             if (!$model) {
                 Log::error('Data not found', ['blog_id' => $id]);
                 throw new \Exception('Blog not found');
