@@ -3,9 +3,12 @@
 
 use App\Enums\OtpType;
 use App\Models\OtpVerification;
+use App\Services\ApplicationSettingsService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+
+
 
 // ==================== Existing Auth Helpers ====================
 
@@ -96,7 +99,19 @@ if (!function_exists('site_name')) {
 if (!function_exists('site_short_name')) {
     function site_short_name()
     {
-        return config('app.short_name', 'LA');
+        return app(ApplicationSettingsService::class)->findData('short_name', 'LA');
+    }
+}
+if (!function_exists('site_logo')) {
+    function site_logo()
+    {
+        return storage_url(app(ApplicationSettingsService::class)->findData('app_logo'));
+    }
+}
+if (!function_exists('site_favicon')) {
+    function site_favicon()
+    {
+        return storage_url(app(ApplicationSettingsService::class)->findData('favicon'));
     }
 }
 
@@ -124,81 +139,81 @@ if (!function_exists('generate_otp')) {
     }
 }
 
-if (!function_exists('create_otp')) {
-    /**
-     * Create OTP for a model
-     *
-     * @param mixed $model Model instance (Admin, User, etc.)
-     * @param OtpType $type OTP type
-     * @param int $expiresInMinutes Expiration time in minutes
-     * @return OtpVerification
-     */
-    function create_otp($model, OtpType $type, int $expiresInMinutes = 10): OtpVerification
-    {
-        return $model->createOtp($type, $expiresInMinutes);
-    }
-}
+// if (!function_exists('create_otp')) {
+//     /**
+//      * Create OTP for a model
+//      *
+//      * @param mixed $model Model instance (Admin, User, etc.)
+//      * @param OtpType $type OTP type
+//      * @param int $expiresInMinutes Expiration time in minutes
+//      * @return OtpVerification
+//      */
+//     function create_otp($model, OtpType $type, int $expiresInMinutes = 10): OtpVerification
+//     {
+//         return $model->createOtp($type, $expiresInMinutes);
+//     }
+// }
 
-if (!function_exists('verify_otp')) {
-    /**
-     * Verify OTP code for a model
-     *
-     * @param mixed $model Model instance
-     * @param string $code OTP code to verify
-     * @param OtpType $type OTP type
-     * @return bool
-     */
-    function verify_otp($model, string $code, OtpType $type): bool
-    {
-        $otp = $model->latestOtp($type);
+// if (!function_exists('verify_otp')) {
+//     /**
+//      * Verify OTP code for a model
+//      *
+//      * @param mixed $model Model instance
+//      * @param string $code OTP code to verify
+//      * @param OtpType $type OTP type
+//      * @return bool
+//      */
+//     function verify_otp($model, string $code, OtpType $type): bool
+//     {
+//         $otp = $model->latestOtp($type);
 
-        if (!$otp) {
-            return false;
-        }
+//         if (!$otp) {
+//             return false;
+//         }
 
-        return $otp->verify($code);
-    }
-}
+//         return $otp->verify($code);
+//     }
+// }
 
-if (!function_exists('has_valid_otp')) {
-    /**
-     * Check if model has valid unexpired OTP
-     *
-     * @param mixed $model Model instance
-     * @param OtpType $type OTP type
-     * @return bool
-     */
-    function has_valid_otp($model, OtpType $type): bool
-    {
-        $otp = $model->latestOtp($type);
+// if (!function_exists('has_valid_otp')) {
+//     /**
+//      * Check if model has valid unexpired OTP
+//      *
+//      * @param mixed $model Model instance
+//      * @param OtpType $type OTP type
+//      * @return bool
+//      */
+//     function has_valid_otp($model, OtpType $type): bool
+//     {
+//         $otp = $model->latestOtp($type);
 
-        if (!$otp) {
-            return false;
-        }
+//         if (!$otp) {
+//             return false;
+//         }
 
-        return !$otp->isExpired() && !$otp->isVerified();
-    }
-}
+//         return !$otp->isExpired() && !$otp->isVerified();
+//     }
+// }
 
-if (!function_exists('get_otp_remaining_time')) {
-    /**
-     * Get remaining time for OTP expiration in seconds
-     *
-     * @param mixed $model Model instance
-     * @param OtpType $type OTP type
-     * @return int|null Remaining seconds or null
-     */
-    function get_otp_remaining_time($model, OtpType $type): ?int
-    {
-        $otp = $model->latestOtp($type);
+// if (!function_exists('get_otp_remaining_time')) {
+//     /**
+//      * Get remaining time for OTP expiration in seconds
+//      *
+//      * @param mixed $model Model instance
+//      * @param OtpType $type OTP type
+//      * @return int|null Remaining seconds or null
+//      */
+//     function get_otp_remaining_time($model, OtpType $type): ?int
+//     {
+//         $otp = $model->latestOtp($type);
 
-        if (!$otp || $otp->isExpired()) {
-            return null;
-        }
+//         if (!$otp || $otp->isExpired()) {
+//             return null;
+//         }
 
-        return max(0, $otp->expires_at->diffInSeconds(now()));
-    }
-}
+//         return max(0, $otp->expires_at->diffInSeconds(now()));
+//     }
+// }
 
 if (!function_exists('format_otp_time')) {
     /**
@@ -255,207 +270,24 @@ if (!function_exists('is_phone_verified')) {
     }
 }
 
-
-if (!function_exists('gameCategories')) {
-    function gameCategories()
+if (!function_exists('availableTimezones')) {
+    function availableTimezones()
     {
-        return [
-            [
-                'name' => 'Currency',
-                'slug' => 'currency',
-                'games' => [
-                    'popular' => [
-                        ['name' => 'New World Coins', 'icon' => 'Frame 100.png', 'slug' => 'new-world-coins'],
-                        ['name' => 'Worldforge Legends', 'icon' => 'Frame 94.png', 'slug' => 'worldforge-legends'],
-                        ['name' => 'Exilecon Official Trailer', 'icon' => 'Frame 93.png', 'slug' => 'exilecon-official-trailer'],
-                        ['name' => 'Echoes of the Terra', 'icon' => 'Frame 96.png', 'slug' => 'echoes-of-the-terra'],
-                        ['name' => 'Path of Exile 2 Currency', 'icon' => 'Frame 103.png', 'slug' => 'path-of-exile-2-currency'],
-                        ['name' => 'Epochs of Gaia', 'icon' => 'Frame 102.png', 'slug' => 'epochs-of-gaia'],
-                        ['name' => 'Throne and Liberty Lucent', 'icon' => 'Frame 105.png', 'slug' => 'throne-and-liberty-lucent'],
-                        ['name' => 'Titan Realms', 'icon' => 'Frame 98.png', 'slug' => 'titan-realms'],
-                        ['name' => 'Blade Ball Tokens', 'icon' => 'Frame 97.png', 'slug' => 'blade-ball-tokens'],
-                        ['name' => 'Kingdoms Across Skies', 'icon' => 'Frame 99.png', 'slug' => 'kingdoms-across-skies'],
-                        ['name' => 'EA Sports FC Coins', 'icon' => 'Frame1001.png', 'slug' => 'ea-sports-fc-coins'],
-                        ['name' => 'Realmwalker: New Dawn', 'icon' => 'Frame 111.png', 'slug' => 'realmwalker-new-dawn'],
-                    ],
-                    'all' => [
-                        'EA Sports FC Coins',
-                        'Albion Online Silver',
-                        'Animal Crossing: New Horizons Bells',
-                        'Black Desert Online Silver',
-                        'Blade & Soul NEO Divine Gems',
-                        'Blade Ball Tokens',
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Gift Cards',
-                'slug' => 'gift-cards',
-                'games' => [
-                    'popular' => [
-                        ['name' => 'New World Coins', 'icon' => 'Frame 100.png', 'slug' => 'new-world-coins'],
-                        ['name' => 'Worldforge Legends', 'icon' => 'Frame 94.png', 'slug' => 'worldforge-legends'],
-                        ['name' => 'Exilecon Official Trailer', 'icon' => 'Frame 93.png', 'slug' => 'exilecon-official-trailer'],
-                        ['name' => 'Echoes of the Terra', 'icon' => 'Frame 96.png', 'slug' => 'echoes-of-the-terra'],
-                        ['name' => 'Path of Exile 2 Currency', 'icon' => 'Frame 103.png', 'slug' => 'path-of-exile-2-currency'],
-                        ['name' => 'Epochs of Gaia', 'icon' => 'Frame 102.png', 'slug' => 'epochs-of-gaia'],
-                        ['name' => 'Throne and Liberty Lucent', 'icon' => 'Frame 105.png', 'slug' => 'throne-and-liberty-lucent'],
-                        ['name' => 'Titan Realms', 'icon' => 'Frame 98.png', 'slug' => 'titan-realms'],
-                        ['name' => 'Blade Ball Tokens', 'icon' => 'Frame 97.png', 'slug' => 'blade-ball-tokens'],
-                        ['name' => 'Kingdoms Across Skies', 'icon' => 'Frame 99.png', 'slug' => 'kingdoms-across-skies'],
-                        ['name' => 'EA Sports FC Coins', 'icon' => 'Frame1001.png', 'slug' => 'ea-sports-fc-coins'],
-                        ['name' => 'Realmwalker: New Dawn', 'icon' => 'Frame 111.png', 'slug' => 'realmwalker-new-dawn'],
-                    ],
-                    'all' => [
-                        'EA Sports FC Coins',
-                        'Albion Online Silver',
-                        'Animal Crossing: New Horizons Bells',
-                        'Black Desert Online Silver',
-                        'Blade & Soul NEO Divine Gems',
-                        'Blade Ball Tokens',
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Boosting',
-                'slug' => 'boosting',
-                'games' => [
-                    'popular' => [
-                        ['name' => 'New World Coins', 'icon' => 'Frame 100.png', 'slug' => 'new-world-coins'],
-                        ['name' => 'Worldforge Legends', 'icon' => 'Frame 94.png', 'slug' => 'worldforge-legends'],
-                        ['name' => 'Exilecon Official Trailer', 'icon' => 'Frame 93.png', 'slug' => 'exilecon-official-trailer'],
-                        ['name' => 'Echoes of the Terra', 'icon' => 'Frame 96.png', 'slug' => 'echoes-of-the-terra'],
-                        ['name' => 'Path of Exile 2 Currency', 'icon' => 'Frame 103.png', 'slug' => 'path-of-exile-2-currency'],
-                        ['name' => 'Epochs of Gaia', 'icon' => 'Frame 102.png', 'slug' => 'epochs-of-gaia'],
-                        ['name' => 'Throne and Liberty Lucent', 'icon' => 'Frame 105.png', 'slug' => 'throne-and-liberty-lucent'],
-                        ['name' => 'Titan Realms', 'icon' => 'Frame 98.png', 'slug' => 'titan-realms'],
-                        ['name' => 'Blade Ball Tokens', 'icon' => 'Frame 97.png', 'slug' => 'blade-ball-tokens'],
-                        ['name' => 'Kingdoms Across Skies', 'icon' => 'Frame 99.png', 'slug' => 'kingdoms-across-skies'],
-                        ['name' => 'EA Sports FC Coins', 'icon' => 'Frame1001.png', 'slug' => 'ea-sports-fc-coins'],
-                        ['name' => 'Realmwalker: New Dawn', 'icon' => 'Frame 111.png', 'slug' => 'realmwalker-new-dawn'],
-                    ],
-                    'all' => [
-                        'EA Sports FC Coins',
-                        'Albion Online Silver',
-                        'Animal Crossing: New Horizons Bells',
-                        'Black Desert Online Silver',
-                        'Blade & Soul NEO Divine Gems',
-                        'Blade Ball Tokens',
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Items',
-                'slug' => 'items',
-                'games' => [
-                    'popular' => [
-                        ['name' => 'New World Coins', 'icon' => 'Frame 100.png', 'slug' => 'new-world-coins'],
-                        ['name' => 'Worldforge Legends', 'icon' => 'Frame 94.png', 'slug' => 'worldforge-legends'],
-                        ['name' => 'Exilecon Official Trailer', 'icon' => 'Frame 93.png', 'slug' => 'exilecon-official-trailer'],
-                        ['name' => 'Echoes of the Terra', 'icon' => 'Frame 96.png', 'slug' => 'echoes-of-the-terra'],
-                        ['name' => 'Path of Exile 2 Currency', 'icon' => 'Frame 103.png', 'slug' => 'path-of-exile-2-currency'],
-                        ['name' => 'Epochs of Gaia', 'icon' => 'Frame 102.png', 'slug' => 'epochs-of-gaia'],
-                        ['name' => 'Throne and Liberty Lucent', 'icon' => 'Frame 105.png', 'slug' => 'throne-and-liberty-lucent'],
-                        ['name' => 'Titan Realms', 'icon' => 'Frame 98.png', 'slug' => 'titan-realms'],
-                        ['name' => 'Blade Ball Tokens', 'icon' => 'Frame 97.png', 'slug' => 'blade-ball-tokens'],
-                        ['name' => 'Kingdoms Across Skies', 'icon' => 'Frame 99.png', 'slug' => 'kingdoms-across-skies'],
-                        ['name' => 'EA Sports FC Coins', 'icon' => 'Frame1001.png', 'slug' => 'ea-sports-fc-coins'],
-                        ['name' => 'Realmwalker: New Dawn', 'icon' => 'Frame 111.png', 'slug' => 'realmwalker-new-dawn'],
-                    ],
-                    'all' => [
-                        'EA Sports FC Coins',
-                        'Albion Online Silver',
-                        'Animal Crossing: New Horizons Bells',
-                        'Black Desert Online Silver',
-                        'Blade & Soul NEO Divine Gems',
-                        'Blade Ball Tokens',
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Accounts',
-                'slug' => 'accounts',
-                'games' => [
-                    'popular' => [
-                        ['name' => 'New World Coins', 'icon' => 'Frame 100.png', 'slug' => 'new-world-coins'],
-                        ['name' => 'Worldforge Legends', 'icon' => 'Frame 94.png', 'slug' => 'worldforge-legends'],
-                        ['name' => 'Exilecon Official Trailer', 'icon' => 'Frame 93.png', 'slug' => 'exilecon-official-trailer'],
-                        ['name' => 'Echoes of the Terra', 'icon' => 'Frame 96.png', 'slug' => 'echoes-of-the-terra'],
-                        ['name' => 'Path of Exile 2 Currency', 'icon' => 'Frame 103.png', 'slug' => 'path-of-exile-2-currency'],
-                        ['name' => 'Epochs of Gaia', 'icon' => 'Frame 102.png', 'slug' => 'epochs-of-gaia'],
-                        ['name' => 'Throne and Liberty Lucent', 'icon' => 'Frame 105.png', 'slug' => 'throne-and-liberty-lucent'],
-                        ['name' => 'Titan Realms', 'icon' => 'Frame 98.png', 'slug' => 'titan-realms'],
-                        ['name' => 'Blade Ball Tokens', 'icon' => 'Frame 97.png', 'slug' => 'blade-ball-tokens'],
-                        ['name' => 'Kingdoms Across Skies', 'icon' => 'Frame 99.png', 'slug' => 'kingdoms-across-skies'],
-                        ['name' => 'EA Sports FC Coins', 'icon' => 'Frame1001.png', 'slug' => 'ea-sports-fc-coins'],
-                        ['name' => 'Realmwalker: New Dawn', 'icon' => 'Frame 111.png', 'slug' => 'realmwalker-new-dawn'],
-                    ],
-                    'all' => [
-                        'EA Sports FC Coins',
-                        'Albion Online Silver',
-                        'Animal Crossing: New Horizons Bells',
-                        'Black Desert Online Silver',
-                        'Blade & Soul NEO Divine Gems',
-                        'Blade Ball Tokens',
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Top Ups',
-                'slug' => 'top-ups',
-                'games' => [
-                    'popular' => [
-                        ['name' => 'New World Coins', 'icon' => 'Frame 100.png', 'slug' => 'new-world-coins'],
-                        ['name' => 'Worldforge Legends', 'icon' => 'Frame 94.png', 'slug' => 'worldforge-legends'],
-                        ['name' => 'Exilecon Official Trailer', 'icon' => 'Frame 93.png', 'slug' => 'exilecon-official-trailer'],
-                        ['name' => 'Echoes of the Terra', 'icon' => 'Frame 96.png', 'slug' => 'echoes-of-the-terra'],
-                        ['name' => 'Path of Exile 2 Currency', 'icon' => 'Frame 103.png', 'slug' => 'path-of-exile-2-currency'],
-                        ['name' => 'Epochs of Gaia', 'icon' => 'Frame 102.png', 'slug' => 'epochs-of-gaia'],
-                        ['name' => 'Throne and Liberty Lucent', 'icon' => 'Frame 105.png', 'slug' => 'throne-and-liberty-lucent'],
-                        ['name' => 'Titan Realms', 'icon' => 'Frame 98.png', 'slug' => 'titan-realms'],
-                        ['name' => 'Blade Ball Tokens', 'icon' => 'Frame 97.png', 'slug' => 'blade-ball-tokens'],
-                        ['name' => 'Kingdoms Across Skies', 'icon' => 'Frame 99.png', 'slug' => 'kingdoms-across-skies'],
-                        ['name' => 'EA Sports FC Coins', 'icon' => 'Frame1001.png', 'slug' => 'ea-sports-fc-coins'],
-                        ['name' => 'Realmwalker: New Dawn', 'icon' => 'Frame 111.png', 'slug' => 'realmwalker-new-dawn'],
-                    ],
-                    'all' => [
-                        'EA Sports FC Coins',
-                        'Albion Online Silver',
-                        'Animal Crossing: New Horizons Bells',
-                        'Black Desert Online Silver',
-                        'Blade & Soul NEO Divine Gems',
-                        'Blade Ball Tokens',
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Coaching',
-                'slug' => 'coaching',
-                'games' => [
-                    'popular' => [
-                        ['name' => 'New World Coins', 'icon' => 'Frame 100.png', 'slug' => 'new-world-coins'],
-                        ['name' => 'Worldforge Legends', 'icon' => 'Frame 94.png', 'slug' => 'worldforge-legends'],
-                        ['name' => 'Exilecon Official Trailer', 'icon' => 'Frame 93.png', 'slug' => 'exilecon-official-trailer'],
-                        ['name' => 'Echoes of the Terra', 'icon' => 'Frame 96.png', 'slug' => 'echoes-of-the-terra'],
-                        ['name' => 'Path of Exile 2 Currency', 'icon' => 'Frame 103.png', 'slug' => 'path-of-exile-2-currency'],
-                        ['name' => 'Epochs of Gaia', 'icon' => 'Frame 102.png', 'slug' => 'epochs-of-gaia'],
-                        ['name' => 'Throne and Liberty Lucent', 'icon' => 'Frame 105.png', 'slug' => 'throne-and-liberty-lucent'],
-                        ['name' => 'Titan Realms', 'icon' => 'Frame 98.png', 'slug' => 'titan-realms'],
-                        ['name' => 'Blade Ball Tokens', 'icon' => 'Frame 97.png', 'slug' => 'blade-ball-tokens'],
-                        ['name' => 'Kingdoms Across Skies', 'icon' => 'Frame 99.png', 'slug' => 'kingdoms-across-skies'],
-                        ['name' => 'EA Sports FC Coins', 'icon' => 'Frame1001.png', 'slug' => 'ea-sports-fc-coins'],
-                        ['name' => 'Realmwalker: New Dawn', 'icon' => 'Frame 111.png', 'slug' => 'realmwalker-new-dawn'],
-                    ],
-                    'all' => [
-                        'EA Sports FC Coins',
-                        'Albion Online Silver',
-                        'Animal Crossing: New Horizons Bells',
-                        'Black Desert Online Silver',
-                        'Blade & Soul NEO Divine Gems',
-                        'Blade Ball Tokens',
-                    ]
-                ]
-            ]
-        ];
+        $timezones = [];
+        $timezoneIdentifiers = DateTimeZone::listIdentifiers();
+
+        foreach ($timezoneIdentifiers as $timezoneIdentifier) {
+            $timezone = new DateTimeZone($timezoneIdentifier);
+            $offset = $timezone->getOffset(new DateTime());
+            $offsetPrefix = $offset < 0 ? '-' : '+';
+            $offsetFormatted = gmdate('H:i', abs($offset));
+
+            $timezones[] = [
+                'timezone' => $timezoneIdentifier,
+                'name' => "(UTC $offsetPrefix$offsetFormatted) $timezoneIdentifier",
+            ];
+        }
+
+        return $timezones;
     }
 }

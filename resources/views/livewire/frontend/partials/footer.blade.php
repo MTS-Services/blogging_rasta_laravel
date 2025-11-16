@@ -63,16 +63,16 @@
                     {{ __('Legal') }}
                 </h3>
                 <ul class="space-y-1">
-                    <li><a href="#"
+                    <li><a href="{{ route('PrivacyPolicy') }}"
                             class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Privacy Policy') }}</a>
                     </li>
-                    <li><a href="#"
+                    <li><a href="{{ route('TermsOfService') }}"
                             class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Terms of Service') }}</a>
                     </li>
-                    <li><a href="#"
+                    <li><a href="{{ route('affiliate') }}"
                             class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Affiliate Disclosure') }}</a>
                     </li>
-                    <li><a href="#"
+                    <li><a href="{{ route('support') }}"
                             class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Support') }}</a>
                     </li>
                 </ul>

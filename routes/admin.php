@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\Backend\Admin\ApplicationSettings\ApplicationSettingsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\Admin\Settings\LanguageController;
 use App\Http\Controllers\Backend\Admin\UserManagement\UserController;
@@ -44,6 +44,10 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
             Route::get('/edit/{id}', 'edit')->name('edit');
             Route::get('/view/{id}', 'view')->name('view');
             Route::get('/trash', 'trash')->name('trash');
+        });
+        Route::controller(ApplicationSettingsController::class)->prefix('application-settings')->group(function () {
+            Route::get('/general-settings', 'generalSettings')->name('general-settings');
+            Route::get('/database-settings','databaseSettings')->name('database-settings');
         });
     });
 

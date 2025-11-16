@@ -13,58 +13,35 @@
         <!-- Desktop Navigation -->
         <nav class="hidden md:flex items-center gap-8">
             <a href="{{ route('home') }}" wire:navigate
-                class="text-text-muted font-inter transition-colors {{ request()->routeIs('home') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500 hover:border-b-2 hover:border-second-500' }}">
+                class="text-text-muted font-inter transition-colors {{ request()->routeIs('home') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500! hover:border-b-2 hover:border-second-500' }}">
                 {{ __('Home') }}
             </a>
             <a href="{{ route('tiktok-mixed-feed') }}" wire:navigate
                 class="text-text-muted font-inter transition-colors {{ request()->routeIs('products') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500 hover:border-b-2 hover:border-second-500' }}">
                 {{ __('Tiktok') }}
             </a>
-            <a href="" wire:navigate
-                class="text-text-muted font-inter transition-colors {{ request()->routeIs('products') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500 hover:border-b-2 hover:border-second-500' }}">
+            <a href="{{ route('product') }}" wire:navigate
+                class="text-text-muted font-inter transition-colors {{ request()->routeIs('product') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500 hover:border-b-2 hover:border-second-500' }}">
                 {{ __('Products') }}
             </a>
-            <a href="#" wire:navigate
-                class="text-text-muted font-inter transition-colors {{ request()->routeIs('video-feed') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500 hover:border-b-2 hover:border-second-500' }}">
+            <a href="{{ route('video-feed') }}" wire:navigate
+                class="text-text-muted font-inter transition-colors {{ request()->routeIs('video-feed') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500! hover:border-b-2 hover:border-second-500' }}">
                 {{ __('Video Feed') }}
             </a>
-            <a href="#" wire:navigate
-                class="text-text-muted font-inter transition-colors {{ request()->routeIs('blog') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500 hover:border-b-2 hover:border-second-500' }}">
+            <a href="{{ route('blog') }}" wire:navigate
+                class="text-text-muted font-inter transition-colors {{ request()->routeIs('blog*') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500! hover:border-b-2 hover:border-second-500' }}">
                 {{ __('Blog') }}
             </a>
-            <a href="#" wire:navigate
-                class="text-text-muted font-inter transition-colors {{ request()->routeIs('about') ? 'text-second-500 border-b-2 border-second-500' : 'hover:text-second-500 hover:border-b-2 hover-border-second-500' }}">
+            <a href="{{ route('about') }}" wire:navigate
+                class="text-text-muted font-inter transition-colors {{ request()->routeIs('about') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500! hover:border-b-2 hover-border-second-500' }}">
                 {{ __('About') }}
             </a>
         </nav>
 
-        <!-- CTA Button -->
-        <div x-data="{ open: false }" class="relative hidden md:block">
-            <button @click="open = !open" wire:navigate
-                class="flex items-center gap-1 px-6 py-2.5 btn-gradient text-white font-semibold rounded-full hover:shadow-lg transition-all duration-300">
-                {{ __('English') }}
-
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mt-0.5 transition-transform  duration-200"
-                    :class="open ? 'rotate-180' : 'rotate-0'" fill="none" viewBox="0 0 24 24" stroke="white">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-            </button>
-            <div x-show="open" @click.outside="open = false" x-transition
-                class="absolute right-0  w-36 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
-                <ul class="py-2 text-gray-700">
-                    <li>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 transition">
-                            English
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 transition">
-                            Français
-                        </a>
-                    </li>
-                </ul>
-            </div>
+        <div class="hidden md:block">
+            <x-language />
         </div>
+
 
         <!-- Mobile Menu Button -->
         <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 text-text-muted"
@@ -82,49 +59,30 @@
         x-transition:leave-end="opacity-0 transform -translate-y-2" class="md:hidden border-t border-gray-200 bg-white">
         <nav class="container mx-auto px-6 py-4 flex flex-col gap-4">
             <a href="#" wire:navigate
-                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('home') ? 'text-second-500! underline ' : 'hover:text-second-500' }}">
+                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('home') ? 'text-second-500!! underline ' : 'hover:text-second-500!' }}">
                 {{ __('Home') }}
             </a>
-            <a href="#" wire:navigate
-                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('products') ? 'text-second-500! ' : 'hover:text-second-500!' }}">
+            <a href="{{ route('product') }}" wire:navigate
+                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('product') ? 'text-second-500!! ' : 'hover:text-second-500!!' }}">
                 {{ __('Products') }}
             </a>
-            <a href="#" wire:navigate
-                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('video-feed') ? 'text-second-500! ' : 'hover:text-second-500!' }}">
+            <a href="{{ route('video-feed') }}" wire:navigate
+                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('video-feed') ? 'text-second-500!! ' : 'hover:text-second-500!!' }}">
                 {{ __('Video Feed') }}
             </a>
-            <a href="#" wire:navigate
-                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('blog') ? 'text-second-500! ' : 'hover:text-second-500!' }}">
+            <a href="{{ route('blog') }}" wire:navigate
+                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('blog') ? 'text-second-500!! ' : 'hover:text-second-500!!' }}">
                 {{ __('Blog') }}
             </a>
-            <a href="#" wire:navigate
-                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('about') ? 'text-second-500! ' : 'hover:text-second-500!' }}">
+            <a href="{{ route('about') }}" wire:navigate
+                class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('about') ? 'text-second-500!! ' : 'hover:text-second-500!!' }}">
                 {{ __('About') }}
             </a>
-            <div x-data="{ openLang: false }" class="relative">
-                <button @click="openLang = !openLang"
-                    class="w-full mt-2 flex items-center justify-between px-5 py-2.5 bg-gray-100 rounded-full font-semibold text-gray-700">
-                    {{ __('English') }}
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 transition-transform duration-200"
-                        :class="openLang ? 'rotate-180' : 'rotate-0'" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </button>
-                <div x-show="openLang" x-transition
-                    class="absolute right-0 w-full bg-white border border-gray-200 rounded-xl shadow-lg mt-2 z-50">
-                    <ul class="py-2 text-gray-700">
-                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">English</a></li>
-                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Français</a></li>
-                    </ul>
-                </div>
-            </div>
-            <a href="#" wire:navigate
+            <x-language />
+            {{-- <a href="#" wire:navigate
                 class="mt-2 px-6 py-2.5 btn-gradient text-white font-semibold rounded-full text-center">
                 {{ __('Discover Glow') }}
-            </a>
-
-
+            </a> --}}
         </nav>
     </div>
 </header>

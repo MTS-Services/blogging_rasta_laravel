@@ -30,6 +30,8 @@
     --color-start: #FFFCF0;
     --color-end: #FFEBEE;
 
+    --color-blog: #EEF7FF;
+
     /* Primary: Purple */
      --color-primary-50:  #FFF3F4;
     --color-primary-100: #FFE4E7;
@@ -129,6 +131,11 @@
     --color-second-800: var(--color-secondary-800);
     --color-second-900: var(--color-secondary-900);
     --color-second-950: var(--color-secondary-950);
+    /* ------------------------------------------ */
+
+    /* --- base: base Colors Added Here --- */
+    --color-blog: var(--color-blog);
+
     /* ------------------------------------------ */
 
     /* linear color gradient  for bg*/
@@ -279,11 +286,12 @@
     h4,
     h5,
     h6 {
-        @apply font-open-sans;
+        @apply font-montserrat;
     }
 
-    p {
-        @apply font-lato;
+    p, 
+    li {
+        @apply font-inter;
     }
 
     .dark * {
