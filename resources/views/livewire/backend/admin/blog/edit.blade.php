@@ -85,7 +85,7 @@
                 </x-ui.button>
 
                 <x-ui.button type="submit" class="w-auto! py-2!">
-                    <span wire:loading.remove wire:target="save" class="text-white">{{ __('Update Admin') }}</span>
+                    <span wire:loading.remove wire:target="save" class="text-white">{{ __('Update ') }}</span>
                     <span wire:loading wire:target="save" class="text-white">{{ __('Updating...') }}</span>
                 </x-ui.button>
             </div>
