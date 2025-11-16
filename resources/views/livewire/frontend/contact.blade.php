@@ -34,36 +34,36 @@
 
                    <form class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-    <!-- Name -->
-    <div class="w-full">
-        <x-ui.label value="Your Name" class="mb-1" />
-        <x-ui.input type="text" placeholder="Your name" wire:model="form.name" />
-        <x-ui.input-error :messages="$errors->get('form.name')" />
-    </div>
+                <!-- Name -->
+                <div class="w-full">
+                    <x-ui.label value="Your Name" class="mb-1" />
+                    <x-ui.input type="text" placeholder="Your name" wire:model="form.name" />
+                    <x-ui.input-error :messages="$errors->get('form.name')" />
+                </div>
 
-    <!-- Email -->
-    <div class="w-full">
-        <x-ui.label value="Email" class="mb-1" />
-        <x-ui.input type="email" placeholder="Email" wire:model="form.email" />
-        <x-ui.input-error :messages="$errors->get('form.email')" />
-    </div>
+                <!-- Email -->
+                <div class="w-full">
+                    <x-ui.label value="Email" class="mb-1" />
+                    <x-ui.input type="email" placeholder="Email" wire:model="form.email" />
+                    <x-ui.input-error :messages="$errors->get('form.email')" />
+                </div>
 
-    <!-- Message -->
-    <div class="w-full col-span-1 sm:col-span-2">
-        <x-ui.label value="Message" class="mb-1" />
-        <x-ui.input type="text" placeholder="Message" wire:model="form.message"
-            class="h-32" />
-        <x-ui.input-error :messages="$errors->get('form.message')" />
-    </div>
+                <!-- Message -->
+                <div class="w-full col-span-1 sm:col-span-2">
+                    <x-ui.label value="Message" class="mb-1" />
+                    <x-ui.input type="text" placeholder="Message" wire:model="form.message"
+                        class="h-32" />
+                    <x-ui.input-error :messages="$errors->get('form.message')" />
+                </div>
 
-    <!-- Button -->
-    <x-ui.button
-        class="font-medium col-span-1 sm:col-span-2 inline-flex items-center justify-center gap-2 rounded-lg mt-2">
-        <span class="text-text-white">{{ __('Send Message') }}</span>
-        <flux:icon name="arrow-right" class="w-4 h-4 text-white !fill-white !stroke-white" />
-    </x-ui.button>
+                <!-- Button -->
+                <x-ui.button
+                    class="font-medium col-span-1 sm:col-span-2 inline-flex items-center justify-center gap-2 rounded-lg mt-2">
+                    <span class="text-text-white">{{ __('Send Message') }}</span>
+                    <flux:icon name="arrow-right" class="w-4 h-4 text-white !fill-white !stroke-white" />
+                </x-ui.button>
 
-</form>
+            </form>
 
 
                     <div class="mt-6 text-sm text-slate-500">
