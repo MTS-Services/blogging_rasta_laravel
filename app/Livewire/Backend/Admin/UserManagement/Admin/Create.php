@@ -39,7 +39,7 @@ class Create extends Component
             $this->service->createData($validated);
 
             $this->dispatch('AdminCreated');
-            $this->success('Admin created successfully');
+            $this->success('Data created successfully');
             return $this->redirect(route('admin.um.admin.index'), navigate: true);
         } catch (\Exception $e) {
             Log::error('Failed to create user: ' . $e->getMessage());
