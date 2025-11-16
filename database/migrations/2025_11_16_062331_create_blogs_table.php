@@ -1,12 +1,14 @@
 <?php
 
 use App\Enums\BlogStatus;
+use App\Traits\AuditColumnsTrait;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+     use AuditColumnsTrait;
     /**
      * Run the migrations.
      */
@@ -24,7 +26,9 @@ return new class extends Migration
             $table->string('meta_title')->nullable();
             $table->longText('meta_description')->nullable();
             $table->json('meta_keywords')->nullable();
-            $table->timestamps();
+            $table->timestamps(); 
+             $table->softDeletes();
+            $this->addAdminAuditColumns($table);
         });
     }
 

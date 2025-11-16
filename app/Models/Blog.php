@@ -19,6 +19,12 @@ class Blog extends BaseModel implements Auditable
         'meta_title',
         'meta_description',
         'meta_keywords',
+
+        'restored_at',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'restored_by',
     ];
 
     protected $casts = [
