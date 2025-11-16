@@ -8,6 +8,7 @@ use Illuminate\Http\UploadedFile;
 use Livewire\Attributes\Locked;
 use Livewire\Form;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
+use Illuminate\Support\Str;
 
 class BlogForm extends Form
 {
@@ -21,7 +22,7 @@ class BlogForm extends Form
     public string $slug = '';
     public string $status = BlogStatus::UNPUBLISHED->value;
 
-    public ?string $file = null;
+    public ?UploadedFile $file = null;
 
     public string $description = '';
 
@@ -34,14 +35,15 @@ class BlogForm extends Form
     // ---------------------------
     public function rules(): array
     {
+        $slug = Str::slug((string) $this->slug);
         return [
             'title'             => 'required|string|max:255',
             'slug'              => 'required|string|max:255|unique:blogs,slug,' . $this->id,
-          'status' => 'required|string|in:' . implode(',', array_column(BlogStatus::cases(), 'value')),
+            'status' => 'required|string|in:' . implode(',', array_column(BlogStatus::cases(), 'value')),
 
             'file'              => $this->isUpdating()
-                                    ? 'nullable|file|mimes:jpg,jpeg,png,webp,mp4,mov,avi|max:10240'
-                                    : 'nullable|file|mimes:jpg,jpeg,png,webp,mp4,mov,avi|max:10240',
+                ? 'nullable|file|mimes:jpg,jpeg,png,webp,mp4,mov,avi|max:10240'
+                : 'nullable|file|mimes:jpg,jpeg,png,webp,mp4,mov,avi|max:10240',
 
             'description'       => 'nullable|string',
             'meta_title'        => 'nullable|string|max:255',
@@ -89,7 +91,7 @@ class BlogForm extends Form
         $this->resetValidation();
     }
 
-  
+
 
     protected function isUpdating(): bool
     {
