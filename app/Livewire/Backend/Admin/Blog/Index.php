@@ -210,15 +210,15 @@ class Index extends Component
         ];
     }
 
-    protected function getSelectableIds(): array
+   protected function getSelectableIds(): array
     {
-        $ids =  $this->service->getPaginatedData(
+        $data = $this->service->getPaginatedData(
             perPage: $this->perPage,
             filters: $this->getFilters()
-        )->pluck('id')->toArray();
-        return $ids;
-    }
+        );
 
+        return array_column($data->items(), 'id');
+    }
     public function updatedStatusFilter(): void
     {
         $this->resetPage();

@@ -4,8 +4,9 @@ namespace App\Livewire\Backend\Admin\Blog;
 
 use Livewire\Component;
 use App\Enums\AdminStatus;
+use App\Enums\BlogStatus;
 use Illuminate\Support\Facades\Log;
-use App\Services\AdminService;
+use App\Services\BlogService;
 use App\Traits\Livewire\WithDataTable;
 use App\Traits\Livewire\WithNotification;
 
@@ -21,11 +22,10 @@ class Trash extends Component
     public $showBulkActionModal = false;
     public $data;
 
-    protected $listeners = ['adminCreated' => '$refresh', 'adminUpdated' => '$refresh'];
 
-    protected AdminService $service;
+    protected BlogService $service;
 
-    public function boot(AdminService $service)
+    public function boot(BlogService $service)
     {
         $this->service = $service;
     }
@@ -35,8 +35,7 @@ class Trash extends Component
         $datas = $this->service->getTrashedPaginatedData(
             perPage: $this->perPage,
             filters: $this->getFilters()
-        );
-        $datas->load(['deleter_admin']);
+        )->load(['deleter_admin']);
 
         $columns = [
             [
@@ -107,9 +106,9 @@ class Trash extends Component
             ['value' => 'bulkForceDelete', 'label' => 'Permanently Delete'],
         ];
 
-        return view('livewire.backend.admin.user-management.admin.trash', [
+        return view('livewire.backend.admin.blog.trash', [
             'datas' => $datas,
-            'statuses' => AdminStatus::options(),
+            'statuses' => BlogStatus::options(),
             'columns' => $columns,
             'actions' => $actions,
             'bulkActions' => $bulkActions
@@ -130,8 +129,8 @@ class Trash extends Component
 
             $this->success('Data deleted successfully');
         } catch (\Throwable $e) {
-            Log::error('Failed to delete admin: ' . $e->getMessage());
-            $this->error('Failed to delete admin.');
+            Log::error('Failed to delete data: ' . $e->getMessage());
+            $this->error('Failed to delete data.');
         }
     }
     public function restore($encryptedId): void
@@ -140,8 +139,8 @@ class Trash extends Component
             $this->service->restoreData(decrypt($encryptedId), admin()->id);
             $this->success('Data restored successfully');
         } catch (\Throwable $e) {
-            Log::error('Failed to restore admin: ' . $e->getMessage());
-            $this->error('Failed to restore admin.');
+            Log::error('Failed to restore data: ' . $e->getMessage());
+            $this->error('Failed to restore data.');
         }
     }
     public function resetFilters(): void
@@ -202,11 +201,13 @@ class Trash extends Component
         ];
     }
 
-    protected function getSelectableIds(): array
+      protected function getSelectableIds(): array
     {
-        return $this->service->getTrashedPaginatedData(
+        $data = $this->service->getTrashedPaginatedData(
             perPage: $this->perPage,
             filters: $this->getFilters()
-        )->pluck('id')->toArray();
+        );
+
+        return array_column($data->items(), 'id');
     }
 }
