@@ -8,10 +8,10 @@ use Livewire\Component;
 
 class View extends Component
 {
-    public Blog $model;
-    public function mount(Blog $model): void
+    public Blog $data;
+    public function mount(Blog $data): void
     {
-        $this->model = $model;
+        $this->data = $data;
     }
     public function render()
     {

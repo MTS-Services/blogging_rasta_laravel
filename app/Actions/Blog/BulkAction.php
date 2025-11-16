@@ -17,17 +17,12 @@ class BulkAction
             switch ($action) {
                 case 'delete':
                     return $this->interface->bulkDelete($ids, $actionerId);
-                    break;
                 case 'forceDelete':
                     return $this->interface->bulkForceDelete($ids);
-                    break;
                 case 'restore':
                     return $this->interface->bulkRestore($ids, $actionerId);
-                    break;
                 case 'status':
-
                     return $this->interface->bulkUpdateStatus($ids, $status, $actionerId);
-                    break;
             }
         });
     }

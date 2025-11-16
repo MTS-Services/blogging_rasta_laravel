@@ -16,15 +16,14 @@ class CreateAction
     {
         return DB::transaction(function () use ($data) {
 
-            // Handle avatar upload
             if ($data['file']) {
-                $data['file'] = Storage::disk('public')->putFile('blogs', $data['file']);
+                $prefix = uniqid('IMX') . '-' . time() . '-' . uniqid();
+                $fileName = $prefix . '-' . $data['file']->getClientOriginalName();
+                $data['file'] = Storage::disk('public')->putFileAs('blogs',  $data['file'], $fileName);
             }
-
 
             // Create user
             $model = $this->interface->create($data);
-
 
             return $model->fresh();
         });

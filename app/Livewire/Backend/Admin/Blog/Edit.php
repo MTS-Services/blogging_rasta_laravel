@@ -17,7 +17,9 @@ class Edit extends Component
     use WithFileUploads, WithNotification;
 
     public BlogForm $form;
-    public Blog $model;
+    public Blog $data;
+     public $existingFile;
+    public $existingFiles;
 
     protected BlogService $service;
 
@@ -26,10 +28,11 @@ class Edit extends Component
         $this->service = $service;
     }
 
-    public function mount(Blog $model): void
+    public function mount(Blog $data): void
     {
-        $this->model = $model;
-        $this->form->setData($model);
+        $this->data = $data;
+        $this->form->setData($data);
+          $this->existingFile = $data->file;
     }
 
     public function render()
@@ -44,13 +47,13 @@ class Edit extends Component
         $validated = $this->form->validate();
         try {
             $validated['updated_by'] = admin()->id;
-            $this->model = $this->service->updateData($this->model->id, $validated);
+            $this->data = $this->service->updateData($this->data->id, $validated);
 
             $this->success('Data updated successfully');
-            return $this->redirect(route('admin.um.admin.index'), navigate: true);
+            return $this->redirect(route('admin.blog.index'), navigate: true);
         } catch (\Throwable $e) {
-            Log::error('Failed to update Admin', [
-                'admin_id' => $this->model->id,
+            Log::error('Failed to update data', [
+                'admin_id' => $this->data->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
@@ -61,6 +64,6 @@ class Edit extends Component
     public function resetForm(): void
     {
         $this->form->reset();
-        $this->form->setData($this->model);
+        $this->form->setData($this->data);
     }
 }

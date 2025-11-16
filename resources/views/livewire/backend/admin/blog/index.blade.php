@@ -23,13 +23,13 @@
     {{-- Table Component --}}
     <x-ui.table :data="$datas" :columns="$columns" :actions="$actions" :bulkActions="$bulkActions" :bulkAction="$bulkAction"
         :statuses="$statuses" :selectedIds="$selectedIds" :mobileVisibleColumns="2" searchProperty="search" perPageProperty="perPage"
-        :showBulkActions="true" emptyMessage="No languages found. Create your first language to get started." />
+        :showBulkActions="true" emptyMessage="No datas found. Create your first data to get started." />
 
     {{-- Delete Confirmation Modal --}}
-    <x-ui.confirmation-modal :show="'showDeleteModal'" :title="'Delete this language?'" :message="'Are you absolutely sure you want to remove this language? All associated data will be permanently deleted.'" :method="'delete'"
-        :button-text="'Delete Language'" />
+    <x-ui.confirmation-modal :show="'showDeleteModal'" :title="'Delete this data?'" :message="'Are you absolutely sure you want to remove this data? All associated data will be permanently deleted.'" :method="'delete'"
+        :button-text="'Delete data'" />
 
     {{-- Bulk Action Confirmation Modal --}}
-    <x-ui.confirmation-modal :show="'showBulkActionModal'" :title="'Confirm Bulk Action'" :message="'Are you sure you want to perform this action on ' . count($selectedIds) . ' selected admin(s)?'" :method="'executeBulkAction'"
+    <x-ui.confirmation-modal :show="'showBulkActionModal'" :title="'Confirm Bulk Action'" :message="'Are you sure you want to perform this action on ' . count($selectedIds) . ' selected data(s)?'" :method="'executeBulkAction'"
         :button-text="'Confirm Action'" />
 </section>

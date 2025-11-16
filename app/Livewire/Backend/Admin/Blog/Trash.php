@@ -38,23 +38,14 @@ class Trash extends Component
         )->load(['deleter_admin']);
 
         $columns = [
-            [
-                'key' => 'avatar',
-                'label' => 'Avatar',
-                'format' => function ($data) {
-                    return $data->avatar_url
-                        ? '<img src="' . $data->avatar_url . '" alt="' . $data->name . '" class="w-10 h-10 rounded-full object-cover shadow-sm">'
-                        : '<div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 font-semibold">' . strtoupper(substr($data->name, 0, 2)) . '</div>';
-                }
-            ],
-            [
-                'key' => 'name',
-                'label' => 'Name',
+           [
+                'key' => 'title',
+                'label' => 'Title',
                 'sortable' => true
             ],
             [
-                'key' => 'email',
-                'label' => 'Email',
+                'key' => 'slug',
+                'label' => 'Slug',
                 'sortable' => true
             ],
             [
@@ -123,7 +114,7 @@ class Trash extends Component
     public function forceDelete(): void
     {
         try {
-            $this->service->deleteData($this->deleteDataId);
+            $this->service->forceDeleteData($this->deleteDataId);
             $this->showDeleteModal = false;
             $this->resetPage();
 
