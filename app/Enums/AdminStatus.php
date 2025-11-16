@@ -6,16 +6,12 @@ enum AdminStatus: string
 {
     case ACTIVE = 'active';
     case INACTIVE = 'inactive';
-    case SUSPENDED = 'suspended';
-    case PENDING = 'pending';
 
     public function label(): string
     {
         return match ($this) {
             self::ACTIVE => 'Active',
             self::INACTIVE => 'Inactive',
-            self::SUSPENDED => 'Suspended',
-            self::PENDING => 'Pending',
         };
     }
 
@@ -23,9 +19,7 @@ enum AdminStatus: string
     {
         return match ($this) {
             self::ACTIVE => 'badge-success',
-            self::INACTIVE => 'badge-secondary',
-            self::SUSPENDED => 'badge-error',
-            self::PENDING => 'badge-warning',
+            self::INACTIVE => 'badge-warning',
         };
     }
 
