@@ -64,7 +64,7 @@ class UserService
 
     public function getDataCount(array $filters = []): int
     {
-        return $this->interface->count(filters:$filters);
+        return $this->interface->count(filters: $filters);
     }
 
 
@@ -138,4 +138,14 @@ class UserService
     /* ================== ================== ==================
     *                   Accessors (optionals)
     * ================== ================== ================== */
+
+    public function getActiveData($sortField = 'created_at', $order = 'desc'): Collection
+    {
+        return $this->interface->getActive($sortField, $order);
+    }
+
+    public function getInactiveData($sortField = 'created_at', $order = 'desc'): Collection
+    {
+        return $this->interface->getInactive($sortField, $order);
+    }
 }

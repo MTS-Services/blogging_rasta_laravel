@@ -15,7 +15,9 @@ class UserForm extends Form
     #[Locked]
     public ?int $id = null;
 
+    public string $username = '';
     public string $name = '';
+    public ?string $date_of_birth = null;
     public string $email = '';
     public string $password = '';
     public ?string $password_confirmation = '';
@@ -25,10 +27,14 @@ class UserForm extends Form
     public function rules(): array
     {
 
+        $username = $this->isUpdating() ? 'required|string|max:255|unique:users,username,' . $this->id : 'required|string|max:255|unique:users,username';
         $email = $this->isUpdating() ? 'sometimes|required|email|max:255|unique:users,email,' . $this->id : 'sometimes|required|email|max:255|unique:users,email';
         $password = $this->isUpdating() ? 'nullable|string|min:8' : 'sometimes|required|string|min:8|confirmed';
         return [
+
+            'username' => 'required|string|max:255|unique:users,username,' . $this->id,
             'name' => 'sometimes|required|string|max:50',
+            'date_of_birth' => 'nullable|date',
             'email' => $email,
             'password' => $password,
             'password_confirmation' => 'sometimes|nullable|string|min:8|same:password',
@@ -40,7 +46,9 @@ class UserForm extends Form
     public function setData($admin): void
     {
         $this->id = $admin->id;
+        $this->username = $admin->username;
         $this->name = $admin->name;
+        $this->date_of_birth = $admin->date_of_birth;
         $this->email = $admin->email;
         $this->status = $admin->status->value;
         $this->avatar = null;
@@ -49,7 +57,9 @@ class UserForm extends Form
     public function reset(...$properties): void
     {
         $this->id = null;
+        $this->username = '';
         $this->name = '';
+        $this->date_of_birth = null;
         $this->email = '';
         $this->password = '';
         $this->password_confirmation = '';

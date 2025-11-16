@@ -112,8 +112,6 @@ class Index extends Component
             ['value' => 'delete', 'label' => 'Delete'],
             ['value' => 'activate', 'label' => 'Activate'],
             ['value' => 'inactive', 'label' => 'Inactive'],
-            ['value' => 'suspend', 'label' => 'Suspend'],
-            ['value' => 'pending', 'label' => 'Pending'],
         ];
 
         return view('livewire.backend.admin.user-management.admin.index', [
@@ -148,7 +146,7 @@ class Index extends Component
             $this->showDeleteModal = false;
             $this->deleteDataId = null;
 
-            $this->success('Admin deleted successfully');
+            $this->success('Data deleted successfully');
         } catch (\Throwable $e) {
             Log::error('Failed to delete Admin', [
                 'admin_id' => $this->deleteDataId,
@@ -168,8 +166,8 @@ class Index extends Component
     public function confirmBulkAction(): void
     {
         if (empty($this->selectedIds) || empty($this->bulkAction)) {
-            $this->warning('Please select Admins and an action');
-            Log::info('No Admins selected or no bulk action selected');
+            $this->warning('Please select Datas and an action');
+            Log::info('No datas selected or no bulk action selected');
             return;
         }
 
@@ -185,8 +183,6 @@ class Index extends Component
                 'delete' => $this->bulkDelete(),
                 'activate' => $this->bulkUpdateStatus(AdminStatus::ACTIVE),
                 'inactive' => $this->bulkUpdateStatus(AdminStatus::INACTIVE),
-                'suspend' => $this->bulkUpdateStatus(AdminStatus::SUSPENDED),
-                'pending' => $this->bulkUpdateStatus(AdminStatus::PENDING),
                 default => null,
             };
 
@@ -202,13 +198,13 @@ class Index extends Component
     {
         $count = $this->service->bulkDeleteData($this->selectedIds, admin()->id);
 
-        $this->success("{$count} Admins deleted successfully");
+        $this->success("{$count} Datas deleted successfully");
     }
 
     protected function bulkUpdateStatus(AdminStatus $status): void
     {
         $count = $this->service->bulkUpdateStatus($this->selectedIds, $status);
-        $this->success("{$count} Admins updated successfully");
+        $this->success("{$count} Datas updated successfully");
     }
 
     protected function getFilters(): array

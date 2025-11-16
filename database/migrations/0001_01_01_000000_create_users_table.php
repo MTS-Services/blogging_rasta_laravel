@@ -19,12 +19,14 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedBigInteger('sort_order')->index()->default(0);
+            $table->string('username')->unique();
             $table->string('name');
+            $table->string('avatar')->nullable();
+            $table->date('date_of_birth')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('status')->index()->default(UserStatus::ACTIVE->value);
-            $table->string('avatar')->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->string('last_login_ip')->nullable();
 

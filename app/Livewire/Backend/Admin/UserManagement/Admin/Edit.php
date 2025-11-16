@@ -46,7 +46,7 @@ class Edit extends Component
             $this->model = $this->service->updateData($this->model->id, $validated);
 
             $this->dispatch('AdminUpdated');
-            $this->success('Admin updated successfully');
+            $this->success('Data updated successfully');
             return $this->redirect(route('admin.um.admin.index'), navigate: true);
         } catch (\Throwable $e) {
             Log::error('Failed to update Admin', [

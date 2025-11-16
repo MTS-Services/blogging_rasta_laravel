@@ -7,9 +7,9 @@ use Livewire\Component;
 
 class View extends Component
 {
-    public User $data;
-    public function mount(User $data): void
+    public User $model;
+    public function mount(User $model): void
     {
-        $this->data = $data;
+        $this->model = $model;
     }
 }

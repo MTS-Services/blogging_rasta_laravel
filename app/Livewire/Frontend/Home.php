@@ -3,6 +3,8 @@
 namespace App\Livewire\Frontend;
 
 use Livewire\Component;
+use App\Services\TikTokMultiUserService;
+use Illuminate\Support\Facades\Log;
 
 class Home extends Component
 {
@@ -16,30 +18,69 @@ class Home extends Component
     public $select2Single;
     public $select2Multiple;
 
-    public $featuredVideos;
+    public $featuredVideos = [];
     public $hashtags;
+    public $loading = true;
+    public $error = null;
+
+    protected $service;
+
+    public function boot(TikTokMultiUserService $service)
+    {
+        $this->service = $service;
+    }
+
     public function mount()
     {
         $this->loadData();
     }
 
-
     public function loadData()
     {
-        $this->featuredVideos = [
-            ['thumb' => 'Image(video thumbnail).png', 'avatar' => 'Image (user avatar).png'],
-            ['thumb' => 'Featured 2.png', 'avatar' => 'Featured 2.1.png'],
-            ['thumb' => 'Featured3.png', 'avatar' => 'Featured3.1.png'],
-            ['thumb' => 'Featured4.png', 'avatar' => '1 (4).png'],
-            ['thumb' => 'Featured4.png', 'avatar' => 'xcc.png'],
-            ['thumb' => 'Featured5.png', 'avatar' => '1 (2).png'],
-            ['thumb' => 'Featured6.png', 'avatar' => '1 (3).png'],
-            ['thumb' => 'Featured7.png', 'avatar' => '1 (4).png'],
-            ['thumb' => 'Featured8.png', 'avatar' => '1 (5).png'],
-            ['thumb' => 'Featured9.png', 'avatar' => '1 (6).png'],
-            ['thumb' => 'Featured10.png', 'avatar' => '1 (7).png'],
-            ['thumb' => 'Featured11.png', 'avatar' => '1 (8).png'],
-        ];
+        $this->loading = true;
+        $this->error = null;
+
+        try {
+            // Get featured users from config
+            $featuredUsers = config('tiktok.featured_users', []);
+            $usernames = array_column($featuredUsers, 'username');
+
+            if (empty($usernames)) {
+                throw new \Exception('No featured users configured');
+            }
+
+            // Load videos from TikTok API (limit to 12 videos for home page)
+            $this->featuredVideos = $this->service->getMultipleUsersVideos($usernames, 4);
+
+            // Limit to 12 videos for home page display
+            $this->featuredVideos = array_slice($this->featuredVideos, 0, 12);
+
+            // Debug: Log first video structure to understand data format
+            if (!empty($this->featuredVideos)) {
+                Log::info('Home page - First video structure', [
+                    'video_keys' => array_keys($this->featuredVideos[0]),
+                    'has_statistics' => isset($this->featuredVideos[0]['statistics']),
+                    'has_stats' => isset($this->featuredVideos[0]['stats']),
+                    'statistics_data' => $this->featuredVideos[0]['statistics'] ?? null,
+                    'stats_data' => $this->featuredVideos[0]['stats'] ?? null,
+                ]);
+            }
+
+            Log::info('Home page TikTok videos loaded', [
+                'count' => count($this->featuredVideos)
+            ]);
+
+        } catch (\Exception $e) {
+            $this->error = 'Failed to load videos: ' . $e->getMessage();
+            Log::error('Home page TikTok loading failed', [
+                'error' => $e->getMessage()
+            ]);
+            
+            // Set empty array if failed
+            $this->featuredVideos = [];
+        }
+
+        // Load hashtags (keep static for now)
         $this->hashtags = [
             ['tag' => '#GlowSkin', 'videos' => '48'],
             ['tag' => '#DiodioTips', 'videos' => '32'],
@@ -48,6 +89,22 @@ class Home extends Component
             ['tag' => '#BeautyHaul', 'videos' => '72'],
             ['tag' => '#SkincareTips', 'videos' => '156'],
         ];
+
+        $this->loading = false;
+    }
+
+    public function formatNumber($number)
+    {
+        if (!is_numeric($number)) {
+            return '0';
+        }
+
+        if ($number >= 1000000) {
+            return round($number / 1000000, 1) . 'M';
+        } else if ($number >= 1000) {
+            return round($number / 1000, 1) . 'K';
+        }
+        return number_format($number);
     }
 
     public $content = '<p>This is the initial content of the editor.</p>';
@@ -56,6 +113,7 @@ class Home extends Component
     {
         dd($this->content);
     }
+
     public function saveContent2()
     {
         dd($this->content);
