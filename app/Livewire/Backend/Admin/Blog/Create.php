@@ -38,7 +38,7 @@ class Create extends Component
             $this->service->createData($validated);
 
             $this->success('Data created successfully');
-            return $this->redirect(route('admin.um.admin.index'), navigate: true);
+            return $this->redirect(route('admin.blog.index'), navigate: true);
         } catch (\Exception $e) {
             Log::error('Failed to create data: ' . $e->getMessage());
 
