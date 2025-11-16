@@ -30,17 +30,18 @@ class User extends AuthBaseModel implements Auditable
      * @var list<string>
      */
     protected $fillable = [
+        'sort_order',
+        'username',
         'name',
-        'email',
-        'password',
-
-        'phone',
-        'status',
         'avatar',
-
+        'date_of_birth',
+        'email',
         'email_verified_at',
+        'password',
+        'status',
         'last_login_at',
         'last_login_ip',
+
 
         'restored_at',
         'creater_id',
@@ -101,32 +102,11 @@ class User extends AuthBaseModel implements Auditable
         return $this->morphMany(Audit::class, 'user');
     }
 
-    /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
-    |          Scout Search Configuration                         |
-    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
+    /* =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
+                End of RELATIONSHIPS
+     =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#= */
 
-    #[SearchUsingPrefix(['name', 'email', 'phone', 'status'])]
-    public function toSearchableArray(): array
-    {
-        return [
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'status' => $this->status,
-        ];
-    }
 
-    /**
-     * Include only non-deleted data in search index.
-     */
-    public function shouldBeSearchable(): bool
-    {
-        return is_null($this->deleted_at);
-    }
-
-    /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
-    |        End  Scout Search Configuration                                    |
-    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
 
 
     /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
@@ -157,9 +137,53 @@ class User extends AuthBaseModel implements Auditable
     |          End of Query Scopes                                   |
     =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
 
+
+
+
+
+    /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
+    |          Scout Search Configuration                         |
+    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
+
+    #[SearchUsingPrefix(['name', 'email', 'phone', 'status'])]
+    public function toSearchableArray(): array
+    {
+        return [
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'status' => $this->status,
+        ];
+    }
+
+    /**
+     * Include only non-deleted data in search index.
+     */
+    public function shouldBeSearchable(): bool
+    {
+        return is_null($this->deleted_at);
+    }
+
+    /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
+    |        End  Scout Search Configuration                                    |
+    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
+
+
+
+
     /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
     |        Attribute Accessors                                    |
     =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
+
+    public function getStatusLabelAttribute(): string
+    {
+        return $this->status->label();
+    }
+
+    public function getStatusColorAttribute(): string
+    {
+        return $this->status->color();
+    }
 
     public function __construct(array $attributes = [])
     {
@@ -175,5 +199,24 @@ class User extends AuthBaseModel implements Auditable
         return $this->avatar
             ? asset('storage/' . $this->avatar)
             : 'https://ui-avatars.com/api/?name=' . urlencode($this->name);
+    }
+
+
+    /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
+    |       Methods                                   |
+    =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
+    public function isActive(): bool
+    {
+        return $this->status === UserStatus::ACTIVE;
+    }
+
+    public function activate(): void
+    {
+        $this->update(['status' => UserStatus::ACTIVE]);
+    }
+
+    public function deactivate(): void
+    {
+        $this->update(['status' => UserStatus::INACTIVE]);
     }
 }

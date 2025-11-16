@@ -129,7 +129,7 @@ class Trash extends Component
             $this->showDeleteModal = false;
             $this->resetPage();
 
-            $this->success('User deleted successfully');
+            $this->success('Data deleted successfully');
         } catch (\Throwable $e) {
             Log::error('Failed to delete User: ' . $e->getMessage());
             $this->error('Failed to delete User.');
@@ -142,7 +142,7 @@ class Trash extends Component
                 'id' => admin()->id,
                 'type' => Admin::class,
             ]);
-            $this->success('User restored successfully');
+            $this->success('Data restored successfully');
         } catch (\Throwable $e) {
             Log::error('Failed to restore User: ' . $e->getMessage());
             $this->error('Failed to restore User.');
@@ -157,8 +157,8 @@ class Trash extends Component
     public function confirmBulkAction(): void
     {
         if (empty($this->selectedIds) || empty($this->bulkAction)) {
-            $this->warning('Please select Users and an action');
-            Log::info('No Users selected or no bulk action selected');
+            $this->warning('Please select Datas and an action');
+            Log::info('No Datas selected or no bulk action selected');
             return;
         }
 
@@ -191,12 +191,12 @@ class Trash extends Component
             'id' => admin()->id,
             'type' => Admin::class,
         ]);
-        $this->success("{$count} Users restored successfully");
+        $this->success("{$count} Datas restored successfully");
     }
     protected function bulkForceDeleteDatas(): void
     {
         $count = $this->service->bulkForceDeleteData(ids: $this->selectedIds);
-        $this->success("{$count} Users permanently deleted successfully");
+        $this->success("{$count} Datas permanently deleted successfully");
     }
 
     protected function getFilters(): array

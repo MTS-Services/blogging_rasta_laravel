@@ -27,6 +27,6 @@ class AdminSeeder extends Seeder
             'password' => Hash::make('admin@dev.com'),
         ]);
 
-        Admin::factory(100)->create();
+        Admin::factory(20)->create();
     }
 }

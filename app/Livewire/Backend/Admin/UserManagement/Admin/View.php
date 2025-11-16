@@ -13,8 +13,8 @@ class View extends Component
     {
         $this->model = $model;
     }
-    public function render()
-    {
-        return view('livewire.backend.admin.user-management.admin.view');
-    }
+    // public function render()
+    // {
+    //     return view('livewire.backend.admin.user-management.admin.view');
+    // }
 }

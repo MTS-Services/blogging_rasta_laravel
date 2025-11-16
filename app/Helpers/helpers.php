@@ -290,4 +290,11 @@ if (!function_exists('availableTimezones')) {
 
         return $timezones;
     }
+
+    if (!function_exists('getAuditorName')) {
+        function getAuditorName($model)
+        {
+            return $model && $model->name ? $model->name : 'N/A';
+        }
+    }
 }
