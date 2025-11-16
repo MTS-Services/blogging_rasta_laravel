@@ -54,7 +54,7 @@
         </div>
     </section>
 
-    <section class="bg-bg-tertiary/40 py-12 lg:py-24 mb-12 sm:mb-0">
+    {{-- <section class="bg-bg-tertiary/40 py-12 lg:py-24 mb-12 sm:mb-0">
         <div class="container">
             <h2 class="text-5xl font-bold font-montserrat pb-6 text-text-primary text-center">
                 {{ __('Connect with Diodio Glow') }}</h2>
@@ -62,7 +62,7 @@
                 {{ __('Join the conversation with beauty lovers worldwide') }}</p>
 
 
-            {{-- Social Media --}}
+
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-16 max-w-5xl mx-auto">
                 <div class="w-full bg-white py-6 px-6 border border-second-500/30 rounded-lg text-center">
                     <flux:icon name="instagram" class="w-10 h-10 stroke-zinc-500 mx-auto" />
@@ -91,7 +91,6 @@
                 </div>
             </div>
 
-            {{-- Collaboration Text --}}
             <p class="text-center text-sm font-inter text-text-primary pt-6">
                 {{ __('Collaboration inquiries?') }}
                 <a href="mailto:contact@diodioglow.com"
@@ -99,7 +98,7 @@
             </p>
 
         </div>
-    </section>
+    </section> --}}
     <section class="bg-bg-tertiary mb-12 sm:mb-0">
         <div class="container py-12">
             <h2 class="text-5xl font-bold font-montserrat pb-6 text-text-primary ">{{ __('Our Mission') }}</h2>

@@ -44,9 +44,10 @@ class AdminController extends Controller
     /**
      * Display the specified resource.
      */
-    public function view(string $id)
+    public function view(string $encryptedId)
     {
-        $data = $this->service->findData($id);
+        $data = $this->service->findData(decrypt($encryptedId));
+        // dd($data);
         if (!$data) {
             abort(404);
         }
