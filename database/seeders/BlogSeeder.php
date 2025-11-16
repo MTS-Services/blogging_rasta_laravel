@@ -24,7 +24,7 @@ class BlogSeeder extends Seeder
             [
                 'title'             => 'Top Features You Should Know',
                 'slug'              => Str::slug('Top Features You Should Know'),
-                'status'            => 'unpublished',
+                'status'            => 'published',
                 'file'              => 'uploads/blogs/sample2.jpg',
                 'description'       => 'Brief explanation of the top features.',
                 'meta_title'        => 'Platform Features Overview',
