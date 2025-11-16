@@ -18,7 +18,7 @@ class BlogForm extends Form
     public int $sort_order = 0;
     public ?string $title = '';
     public ?string $slug = '';
-    public ?string $status = BlogStatus::UNPUBLISHED->value;
+    public string $status = BlogStatus::UNPUBLISHED->value;
 
     public ?UploadedFile $file = null;
 
@@ -57,7 +57,7 @@ class BlogForm extends Form
         $this->id                = $data->id;
         $this->title             = $data->title;
         $this->slug              = $data->slug;
-        $this->status            = $data->status;
+        $this->status            = $data->status->value;
         $this->description       = $data->description ?? '';
 
         $this->meta_title        = $data->meta_title ?? '';

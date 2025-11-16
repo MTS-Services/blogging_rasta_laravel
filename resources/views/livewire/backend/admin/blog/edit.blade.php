@@ -19,7 +19,7 @@
 
             <div class="w-full col-span-2">
                 <x-ui.file-input wire:model="form.file" label="{{ __('File') }}" :error="$errors->first('form.file')"
-                    hint="Upload a file (Max: 2MB)" />
+                    hint="Upload a file (Max: 2MB)" :existingFiles="$existingFile" />
 
             </div>
 
