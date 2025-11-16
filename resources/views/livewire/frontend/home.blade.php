@@ -20,15 +20,13 @@
 
                     <h2
                         class="font-semibold font-montserrat text-second-800 mb-6 wrap-break-word
-                        @if (session('locale') === 'fr')
-                            text-4xl 
+                        @if (session('locale') === 'fr') text-4xl 
                             md:text-6xl 
                             lg:text-7xl
                         @else
                             text-5xl 
                             md:text-7xl 
-                            lg:text-8xl 
-                            @endif
+                            lg:text-8xl @endif
                         ">
                         {{ __('Naturally') }}
                     </h2>
@@ -81,6 +79,12 @@
             </div>
         </div>
     </section>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+
     <section class="bg-bg-primary">
         {{-- Featured TikTok Clips Section --}}
         <div class="container py-20 lg:py-24">
@@ -94,38 +98,245 @@
                 </p>
             </div>
 
-            {{-- Video Grid --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 mt-12 px-4">
-                @foreach ($featuredVideos as $video)
-                    <div class="group w-full">
-                        {{-- Thumbnail --}}
-                        <div class="relative w-full aspect-[1/1.1] overflow-hidden rounded-2xl">
-                            <img src="{{ asset('assets/images/home_page/' . $video['thumb']) }}" alt="TikTok thumbnail"
-                                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                            {{-- Play button overlay --}}
-                            <div
-                                class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/40 rounded-2xl">
-                                <flux:icon name="play" class="w-12 h-12 stroke-white" />
+            {{-- Loading State --}}
+            @if ($loading)
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 mt-12 px-4">
+                    @for ($i = 0; $i < 12; $i++)
+                        <div class="animate-pulse">
+                            <div class="bg-gray-300 aspect-[1/1.1] rounded-2xl"></div>
+                            <div class="flex items-center gap-3 mt-3">
+                                <div class="w-10 h-10 bg-gray-300 rounded-full"></div>
+                                <div class="flex-1">
+                                    <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+                                    <div class="h-3 bg-gray-300 rounded w-1/2"></div>
+                                </div>
                             </div>
                         </div>
+                    @endfor
+                </div>
+            @endif
 
-                        {{-- Creator Info --}}
-                        <div class="flex items-center gap-3 mt-3">
-                            <div class="w-10 h-10">
-                                <img src="{{ asset('assets/images/home_page/' . $video['avatar']) }}" alt="User avatar"
-                                    class="w-full h-full rounded-full object-cover">
+            {{-- Error State --}}
+            @if ($error && !$loading)
+                <div class="bg-red-50 border-l-4 border-red-400 rounded-lg p-6 mt-12 max-w-2xl mx-auto">
+                    <div class="flex items-start">
+                        <svg class="w-6 h-6 text-red-400 mr-3 flex-shrink-0 mt-0.5" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <p class="text-red-700 font-medium">{{ $error }}</p>
+                    </div>
+                </div>
+            @endif
+
+            {{-- Video Grid --}}
+            @if (!$loading && count($featuredVideos) > 0)
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 mt-12 px-4">
+                    @foreach ($featuredVideos as $video)
+                        @php
+                            // Extract video data from API response
+                            $videoId = $video['aweme_id'] ?? ($video['video_id'] ?? '');
+                            $desc = $video['desc'] ?? ($video['title'] ?? 'TikTok Video');
+                            $createTime = $video['create_time'] ?? time();
+
+                            // Video cover/thumbnail
+                            $cover =
+                                $video['video']['cover'] ??
+                                ($video['video']['origin_cover'] ??
+                                    ($video['video']['dynamic_cover'] ?? ($video['cover'] ?? '')));
+
+                            // Statistics
+                            $stats = $video['statistics'] ?? ($video['stats'] ?? []);
+                            $playCount = $video['play_count'] ?? 
+                                     $video['statistics']['play_count'] ?? 
+                                     $video['stats']['play_count'] ?? 
+                                     $video['statistics']['playCount'] ?? 
+                                     $video['stats']['playCount'] ?? 
+                                     0;
+                            $diggCount = $stats['digg_count'] ?? ($stats['diggCount'] ?? 0);
+                            $commentCount = $stats['comment_count'] ?? ($stats['commentCount'] ?? 0);
+
+                            // Author/User info
+                            $author = $video['author'] ?? [];
+                            $username = $video['_username'] ?? ($author['unique_id'] ?? 'unknown');
+                            $authorName = $author['nickname'] ?? ($author['nick_name'] ?? $username);
+                            $authorAvatar =
+                                $author['avatar_larger'] ??
+                                ($author['avatar_medium'] ?? ($author['avatar_thumb'] ?? ($author['avatar'] ?? '')));
+
+                            // Fallback avatar if none exists
+                            if (empty($authorAvatar)) {
+                                $authorAvatar =
+                                    'https://ui-avatars.com/api/?name=' .
+                                    urlencode($authorName) .
+                                    '&size=200&background=667eea&color=fff';
+                            }
+                        @endphp
+
+                        @php
+                            // Get play URL
+                            $playUrl =
+                                $video['video']['play_addr']['url_list'][0] ??
+                                ($video['video']['play'] ?? ($video['video']['play_addr'] ?? ($video['play'] ?? '')));
+                        @endphp
+
+                        <div x-data="{
+                            playing: false,
+                            playVideo() {
+                                this.playing = true;
+                                this.$nextTick(() => {
+                                    const video = this.$refs.video;
+                                    if (video) {
+                                        document.querySelectorAll('video').forEach(v => {
+                                            if (v !== video && !v.paused) {
+                                                v.pause();
+                                            }
+                                        });
+                                        video.play().catch(err => {
+                                            console.error('Play error:', err);
+                                            alert('Unable to play video.');
+                                            this.playing = false;
+                                        });
+                                    }
+                                });
+                            },
+                            stopVideo() {
+                                this.playing = false;
+                                if (this.$refs.video) {
+                                    this.$refs.video.pause();
+                                    this.$refs.video.currentTime = 0;
+                                }
+                            }
+                        }" class="group w-full">
+                            {{-- Video Container --}}
+                            <div class="relative w-full aspect-[1/1.1] overflow-hidden rounded-2xl">
+                                @if ($playUrl)
+                                    {{-- Video Element (hidden until playing) --}}
+                                    <video x-ref="video" x-show="playing" x-on:ended="stopVideo()"
+                                        x-on:error="playing = false; alert('Video error');"
+                                        class="w-full h-full object-cover" poster="{{ $cover }}" controls
+                                        playsinline preload="metadata" controlsList="nodownload" style="display: none;"
+                                        x-cloak>
+                                        <source src="{{ $playUrl }}" type="video/mp4">
+                                    </video>
+
+                                    {{-- Thumbnail (visible until video plays) --}}
+                                    <div x-show="!playing" x-on:click="playVideo()"
+                                        class="absolute inset-0 cursor-pointer">
+                                        @if ($cover)
+                                            <img src="{{ $cover }}" alt="{{ $desc }}"
+                                                class="w-full h-full object-cover" loading="lazy"
+                                                onerror="this.src='https://via.placeholder.com/400x500/667eea/ffffff?text=TikTok+Video'">
+                                        @else
+                                            <div
+                                                class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
+                                                <svg class="w-16 h-16 text-white" fill="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+                                                </svg>
+                                            </div>
+                                        @endif
+
+                                        {{-- Play button overlay --}}
+                                        <div
+                                            class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center transition-all duration-300 hover:bg-opacity-50">
+                                            <div class="transform hover:scale-110 transition-transform duration-300">
+                                                <div
+                                                    class="w-16 h-16 rounded-full bg-white bg-opacity-90 flex items-center justify-center shadow-2xl">
+                                                    <svg class="w-8 h-8 text-pink-600 ml-1" fill="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path d="M8 5v14l11-7z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @else
+                                    {{-- No video available --}}
+                                    <div
+                                        class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
+                                        @if ($cover)
+                                            <img src="{{ $cover }}" alt="{{ $desc }}"
+                                                class="w-full h-full object-cover" loading="lazy">
+                                        @else
+                                            <div class="flex flex-col items-center justify-center text-white">
+                                                <svg class="w-16 h-16 mb-2" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+                                                </svg>
+                                                <p class="text-sm">Video unavailable</p>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endif
+                                {{-- View count badge
+                               
+                                    <div
+                                        class="absolute top-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 z-20">
+                                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                            <path fill-rule="evenodd"
+                                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        {{ $this->formatNumber($playCount ?? 0) }}
+                                    </div> --}}
                             </div>
-                            <div>
-                                <h6 class="text-text-primary font-semibold font-inter">{{ __('Getty') }}</h6>
-                                <p class="text-sm font-normal text-text-primary font-outfit">
-                                    {{ __('Creator name') }}
-                                </p>
-                                <span class="text-xs text-text-muted">{{ __('2.3M views') }}</span>
+
+                            {{-- Creator Info --}}
+                            <div class="flex items-center gap-3 mt-3">
+                                <div class="w-10 h-10 flex-shrink-0">
+                                    <img src="{{ $authorAvatar }}" alt="{{ $authorName }}"
+                                        class="w-full h-full rounded-full object-cover border-2 border-purple-500"
+                                        onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($authorName) }}&size=200&background=667eea&color=fff'">
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h6 class="text-text-primary font-semibold font-inter truncate"
+                                        title="{{ $authorName }}">
+                                        {{ $authorName }}
+                                    </h6>
+                                    <p class="text-sm font-normal text-text-primary font-outfit truncate"
+                                        title="{{ '@' . $username }}">
+                                        {{ '@' . $username }}
+                                    </p>
+                                    <div class="flex items-center gap-3 text-xs text-text-muted mt-0.5">
+                                        @if ($playCount >= 0)
+                                            <span>{{ $this->formatNumber($playCount ?? 0) }} {{ __('views') }}</span>
+                                        @endif
+                                        @if ($diggCount > 0)
+                                            <span class="flex items-center gap-1">
+                                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd"
+                                                        d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                                {{ $this->formatNumber($diggCount) }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                @endforeach
-            </div>
+                    @endforeach
+                </div>
+            @endif
+
+            {{-- Empty State --}}
+            @if (!$loading && count($featuredVideos) == 0 && !$error)
+                <div class="text-center py-16">
+                    <svg class="w-24 h-24 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-2">{{ __('No videos available') }}</h3>
+                    <p class="text-gray-600">{{ __('Check back soon for new content') }}</p>
+                </div>
+            @endif
         </div>
     </section>
 
