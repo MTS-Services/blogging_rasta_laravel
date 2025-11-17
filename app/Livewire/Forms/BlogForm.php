@@ -21,6 +21,7 @@ class BlogForm extends Form
     public string $status = BlogStatus::UNPUBLISHED->value;
 
     public ?UploadedFile $file = null;
+    public bool $remove_file = false;
 
     public string $description = '';
 
@@ -39,6 +40,7 @@ class BlogForm extends Form
             'status' => 'required|string|in:' . implode(',', array_column(BlogStatus::cases(), 'value')),
 
             'file'              => 'nullable|max:1024',
+            'remove_file'      => 'boolean',
 
             'description'       => 'nullable|string',
             'meta_title'        => 'nullable|string',

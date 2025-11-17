@@ -53,7 +53,7 @@ class Edit extends Component
             return $this->redirect(route('admin.blog.index'), navigate: true);
         } catch (\Throwable $e) {
             Log::error('Failed to update data', [
-                'admin_id' => $this->data->id,
+                'blog_id' => $this->data->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
