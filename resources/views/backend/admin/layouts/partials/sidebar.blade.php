@@ -72,6 +72,8 @@
 
                 <x-backend.navlink type="single" icon="youtube" name="Banner Videos" :route="route('admin.banner-video')"
                 active="banner-video" :page_slug="$active" />
+                <x-backend.navlink type="single" icon="key-round" name="Keyword" :route="route('admin.keyword.index')"
+                active="keyword" :page_slug="$active" />
 
             {{-- <x-backend.navlink type="dropdown" icon="user-group" name="Audit Log Management" :page_slug="$active"
                 :items="[

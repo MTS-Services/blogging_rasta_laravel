@@ -8,8 +8,10 @@ use App\Http\Controllers\Backend\Admin\UserManagement\AdminController;
 use App\Http\Controllers\Backend\Admin\AuditingController;
 use App\Http\Controllers\Backend\Admin\BlogController;
 use App\Http\Controllers\Backend\Admin\BannerVideo\BannerVideoController;
+use App\Http\Controllers\Backend\Admin\KeywordController;
 use App\Http\Controllers\Backend\Admin\TikTokManagement\TikTokMixedFeedController;
 use App\Livewire\Frontend\Blog;
+use Firebase\JWT\Key;
 
 Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
@@ -25,7 +27,7 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
             Route::get('/view/{id}', 'view')->name('view');
             Route::get('/trash', 'trash')->name('trash');
         });
-       
+
         Route::controller(UserController::class)->name('user.')->prefix('user')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
@@ -40,20 +42,20 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
         });
     });
 
-     Route::controller(BlogController::class)->name('blog.')->prefix('blog')->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/create', 'create')->name('create');
-            Route::get('/edit/{id}', 'edit')->name('edit');
-            Route::get('/view/{id}', 'view')->name('view');
-            Route::get('/trash', 'trash')->name('trash');
-        });
+    Route::controller(BlogController::class)->name('blog.')->prefix('blog')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::get('/edit/{id}', 'edit')->name('edit');
+        Route::get('/view/{id}', 'view')->name('view');
+        Route::get('/trash', 'trash')->name('trash');
+    });
 
-   
+
     Route::group(['prefix' => 'application-settings', 'as' => 'as.'], function () {
-        
+
         Route::controller(ApplicationSettingsController::class)->prefix('application-settings')->group(function () {
             Route::get('/general-settings', 'generalSettings')->name('general-settings');
-            Route::get('/database-settings','databaseSettings')->name('database-settings');
+            Route::get('/database-settings', 'databaseSettings')->name('database-settings');
         });
     });
 
@@ -68,7 +70,15 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
     });
 
     Route::get('banner-video', [BannerVideoController::class, 'index'])->name('banner-video');
-});
- Route::controller(TikTokMixedFeedController::class)->prefix('tiktok-mixed-feed')->group(function () {
-        Route::get('/', 'index')->name('tiktok-mixed-feed');
+
+    Route::controller(KeywordController::class)->name('keyword.')->prefix('keyword')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::get('/edit/{id}', 'edit')->name('edit');
+        Route::get('/view/{id}', 'view')->name('view');
+        Route::get('/trash', 'trash')->name('trash');
     });
+});
+Route::controller(TikTokMixedFeedController::class)->prefix('tiktok-mixed-feed')->group(function () {
+    Route::get('/', 'index')->name('tiktok-mixed-feed');
+});
