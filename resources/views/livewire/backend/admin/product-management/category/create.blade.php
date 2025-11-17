@@ -21,7 +21,7 @@
                 <div>
                     <x-ui.label for="title" :value="__('Title')" />
                     <x-ui.input id="title" type="text" class="mt-1 block w-full" wire:model="form.title"
-                        placeholder="US Dollar, Euro, British Pound, Bangladeshi Taka" />
+                        placeholder="Enter Category Name" />
                     <x-ui.input-error :messages="$errors->get('form.title')" class="mt-2" />
                 </div>
 
