@@ -20,8 +20,8 @@
                     </div>
 
                     <div class="lg:w-1/2 mt-8 lg:mt-0">
-                        <div class="w-auto sm:w-[450px] h-auto sm:h-[600px] mx-auto">
-                            <x-blog-media :file="$blog->file" />
+                        <div class="w-auto sm:w-[450px] h-auto sm:h-[600px] mx-auto ">
+                            <x-blog-media :file="$blog->file" class="object-cover!" />
                         </div>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                 <div class="block lg:flex gap-12 items-center justify-between mt-20">
                     <div class="lg:w-1/2">
                         <div class="w-auto sm:w-[450px] h-auto sm:h-[600px] mx-auto">
-                            <x-blog-media :file="$blog->file" />
+                            <x-blog-media :file="$blog->file" class="object-cover!" />
                         </div>
                     </div>
 
