@@ -18,13 +18,13 @@ class Home extends Component
     // Pagination properties
     public $currentPage = 1;
     public $videosPerPage = 12;
-    public $videosPerUser = 4; // Load 4 videos per user per page
+    public $videosPerUser = 4;
     
     // Video limits per user
     public $userVideoLimits = [];
     
     // Store complete page state for each page number
-    public $pageStates = []; // [page_number => ['cursors' => [], 'video_counts' => [], 'has_more' => [], 'videos' => []]]
+    public $pageStates = [];
     
     // Track loaded video IDs globally to prevent duplicates across all pages
     public $loadedVideoIds = [];
@@ -52,7 +52,7 @@ class Home extends Component
             'cursors' => array_fill_keys($usernames, 0),
             'video_counts' => array_fill_keys($usernames, 0),
             'has_more' => array_fill_keys($usernames, true),
-            'videos' => [], // Will be filled when loading
+            'videos' => [],
         ];
         
         $this->loadBanner();
@@ -119,13 +119,13 @@ class Home extends Component
             // Keep loading until we have exactly videosPerPage videos
             $allVideos = [];
             $attempts = 0;
-            $maxAttempts = 10; // Increased to handle more iterations
+            $maxAttempts = 10;
             $loadedVideos = 0;
             
             while (count($allVideos) < $this->videosPerPage && $attempts < $maxAttempts) {
                 // Calculate how many more videos we need
                 $remaining = $this->videosPerPage - count($allVideos);
-                $videosToRequest = max(4, ceil($remaining / count($usernames))); // Request more videos per user
+                $videosToRequest = max(4, ceil($remaining / count($usernames)));
                 
                 // Load videos
                 $result = $this->tiktokService->getMultipleUsersVideos(
@@ -145,7 +145,6 @@ class Home extends Component
                 $loadedVideos += count($newVideos);
                 
                 if (empty($newVideos)) {
-                    // No more videos available from any user
                     Log::info('No more videos available', [
                         'page' => $this->currentPage,
                         'attempt' => $attempts,
@@ -156,21 +155,17 @@ class Home extends Component
                 
                 $skippedCount = 0;
                 foreach ($newVideos as $video) {
-                    // Skip if we have enough videos
                     if (count($allVideos) >= $this->videosPerPage) {
                         break;
                     }
                     
-                    // Get unique video ID
                     $videoId = $video['aweme_id'] ?? $video['video_id'] ?? null;
                     
-                    // Skip duplicate videos
                     if ($videoId && in_array($videoId, $this->loadedVideoIds)) {
                         $skippedCount++;
                         continue;
                     }
                     
-                    // Add video and track its ID
                     $allVideos[] = $video;
                     if ($videoId) {
                         $this->loadedVideoIds[] = $videoId;
@@ -199,7 +194,6 @@ class Home extends Component
                     }
                 }
                 
-                // If no more videos available from any source, stop
                 if (!$hasMoreVideos) {
                     Log::info('All users exhausted', [
                         'page' => $this->currentPage,
@@ -217,17 +211,22 @@ class Home extends Component
             $currentState['videos'] = $allVideos;
             $this->pageStates[$this->currentPage] = $currentState;
             
-            // Check if any user has more videos for next page
-            $hasMoreVideos = false;
-            foreach ($currentState['has_more'] as $hasMore) {
-                if ($hasMore) {
-                    $hasMoreVideos = true;
-                    break;
+            // Check if we have enough videos for a next page
+            // Only create next page state if:
+            // 1. We loaded at least videosPerPage videos on this page
+            // 2. At least one user has more videos
+            $canHaveNextPage = false;
+            if (count($allVideos) >= $this->videosPerPage) {
+                foreach ($currentState['has_more'] as $username => $hasMore) {
+                    if ($hasMore) {
+                        $canHaveNextPage = true;
+                        break;
+                    }
                 }
             }
             
-            // Prepare next page state (without videos, they'll be loaded when needed)
-            if ($hasMoreVideos && !isset($this->pageStates[$this->currentPage + 1])) {
+            // Prepare next page state only if there can be more videos
+            if ($canHaveNextPage && !isset($this->pageStates[$this->currentPage + 1])) {
                 $this->pageStates[$this->currentPage + 1] = [
                     'cursors' => $currentState['cursors'],
                     'video_counts' => $currentState['video_counts'],
@@ -241,7 +240,7 @@ class Home extends Component
                 'videos_count' => count($this->featuredVideos),
                 'attempts' => $attempts,
                 'loaded_videos' => $loadedVideos,
-                'has_next_page' => $hasMoreVideos,
+                'can_have_next_page' => $canHaveNextPage,
                 'total_unique_videos' => count($this->loadedVideoIds),
                 'video_counts' => $currentState['video_counts'],
             ]);
@@ -273,7 +272,6 @@ class Home extends Component
      */
     public function shouldShowPagination()
     {
-        // Show pagination if we're past page 1 OR if there's a next page available
         return $this->currentPage > 1 || $this->hasNextPage();
     }
 
@@ -286,15 +284,14 @@ class Home extends Component
             return;
         }
 
-        // Don't allow going to pages we haven't calculated yet
-        if ($page > $this->currentPage + 1 && !isset($this->pageStates[$page])) {
+        // Don't allow going to pages that don't exist
+        if (!isset($this->pageStates[$page])) {
             return;
         }
 
         $this->currentPage = $page;
         $this->loadData();
         
-        // Scroll to video section
         $this->dispatch('scroll-to-videos');
     }
 
@@ -327,18 +324,8 @@ class Home extends Component
      */
     public function hasNextPage()
     {
-        // Check if next page state exists and has more videos
-        $nextPageState = $this->pageStates[$this->currentPage + 1] ?? null;
-        
-        if ($nextPageState) {
-            foreach ($nextPageState['has_more'] as $hasMore) {
-                if ($hasMore) {
-                    return true;
-                }
-            }
-        }
-        
-        return false;
+        // Check if next page state exists
+        return isset($this->pageStates[$this->currentPage + 1]);
     }
 
     /**

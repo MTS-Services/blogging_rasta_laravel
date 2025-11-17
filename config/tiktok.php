@@ -9,14 +9,14 @@ return [
             'display_name' => 'Wasif Ahmed',
             'description' => 'Tech Creator',
             'color' => 'blue',
-            'max_videos' => 9, 
+            'max_videos' => 26, 
         ],
         [
             'username' => 'wasifahmed996',
             'display_name' => 'Wasif Ahmed',
             'description' => 'Gaming',
             'color' => 'red',
-            'max_videos' => 2, 
+            'max_videos' => 12, 
         ],
         [
             'username' => 'aksumonn',
