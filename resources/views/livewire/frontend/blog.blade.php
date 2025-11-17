@@ -11,9 +11,12 @@
                     <div class="bg-second-500/15 p-6 lg:w-1/2">
                         <h3 class="text-3xl font-semibold text-text-primary">{{ $blog->title }}:</h3>
 
-                        <p class="text-base mt-4 text-text-primary">
-                            {!! \Illuminate\Support\Str::limit(($blog->description), 745, '...') !!}
-                        </p>
+
+                        <a href="{{ route('blog.details', ['encryptedId' => encrypt($blog->id)]) }}" wire:navigate>
+                            <p >
+                                {!! \Illuminate\Support\Str::limit($blog->description, 745, '...') !!}
+                            </p>
+                        </a>
                     </div>
 
                     <div class="lg:w-1/2 mt-8 lg:mt-0">
@@ -37,7 +40,11 @@
 
                     <div class="bg-blog p-6 lg:w-1/2 mt-8 lg:mt-0">
                         <h3 class="text-3xl font-semibold text-text-primary">{{ $blog->title }}:</h3>
-                         {!! \Illuminate\Support\Str::limit(($blog->description), 745, '...') !!}
+                        <a href="{{ route('blog.details', ['encryptedId' => encrypt($blog->id)]) }}" wire:navigate>
+                            <p>
+                                {!! \Illuminate\Support\Str::limit($blog->description, 745, '...') !!}
+                            </p>
+                        </a>
                     </div>
                 </div>
             @endif
@@ -48,7 +55,7 @@
                 <div class="block lg:flex gap-12 items-center justify-between mt-20">
                     <div class="bg-blog p-6 lg:w-1/2">
                         <h3 class="text-3xl font-semibold text-text-primary">{{ $blog->title }}</h3>
-                         {!! \Illuminate\Support\Str::limit(($blog->description), 745, '...') !!}
+                        {!! \Illuminate\Support\Str::limit($blog->description, 745, '...') !!}
                     </div>
 
                     <div class="lg:w-1/2 mt-8 lg:mt-0">

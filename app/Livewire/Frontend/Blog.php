@@ -20,7 +20,7 @@ class Blog extends Component
         $blogs = $this->blogService->getPaginatedData(
             filters: $this->getFilters()
         );
-        return view('livewire.frontend.blog', compact('blogs'));
+        return view('livewire.frontend.blog', ['blogs'=> $blogs]);
     }
 
     protected function getFilters()
