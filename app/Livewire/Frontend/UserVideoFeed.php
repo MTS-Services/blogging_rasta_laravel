@@ -4,99 +4,78 @@ namespace App\Livewire\Frontend;
 
 use Livewire\Component;
 use App\Services\TikTokMultiUserService;
-use App\Services\BannerVideoService;
 use Illuminate\Support\Facades\Log;
 
-class Home extends Component
+class UserVideoFeed extends Component
 {
-    public $featuredVideos = [];
-    public $hashtags = [];
+    public $username;
+    public $displayName;
+    public $videos = [];
     public $loading = true;
     public $error = null;
-    public $banner = null;
 
     // Pagination properties
     public $currentPage = 1;
     public $videosPerPage = 12;
-    public $videosPerUser = 4;
+    public $maxVideos = '';
     
-    // Video limits per user
-    public $userVideoLimits = [];
-    
-    // Store complete page state for each page number
+    // Store page states
     public $pageStates = [];
     
-    // Track loaded video IDs globally to prevent duplicates across all pages
+    // Track loaded video IDs to prevent duplicates
     public $loadedVideoIds = [];
 
     protected $tiktokService;
-    protected $bannerService;
 
-    public function boot(TikTokMultiUserService $tiktokService, BannerVideoService $bannerService)
+    public function boot(TikTokMultiUserService $tiktokService)
     {
         $this->tiktokService = $tiktokService;
-        $this->bannerService = $bannerService;
     }
 
-    public function mount()
+    public function mount($username)
     {
-        // Set video limits per user from config
+        $this->username = $username;
+        
+        // Get display name from config
         $featuredUsers = config('tiktok.featured_users', []);
-        foreach ($featuredUsers as $user) {
-            $this->userVideoLimits[$user['username']] = $user['max_videos'] ?? 20;
+        $user = collect($featuredUsers)->firstWhere('username', $username);
+        
+        if (!$user) {
+            $this->error = 'User not found';
+            $this->loading = false;
+            return;
         }
         
+        $this->displayName = $user['display_name'] ?? $username;
+        $this->maxVideos = $user['max_videos'] ?? 50;
+        
         // Initialize page 1 state
-        $usernames = array_column($featuredUsers, 'username');
         $this->pageStates[1] = [
-            'cursors' => array_fill_keys($usernames, 0),
-            'video_counts' => array_fill_keys($usernames, 0),
-            'has_more' => array_fill_keys($usernames, true),
+            'cursors' => [$username => 0],
+            'video_counts' => [$username => 0],
+            'has_more' => [$username => true],
             'videos' => [],
         ];
         
-        $this->loadBanner();
-        $this->loadData();
+        $this->loadVideos();
     }
 
-    public function loadBanner()
-    {
-        try {
-            $this->banner = $this->bannerService->getFirstData();
-            
-            Log::info('Banner video loaded', [
-                'has_banner' => $this->banner !== null,
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Banner loading failed', [
-                'error' => $e->getMessage()
-            ]);
-            $this->banner = null;
-        }
-    }
-
-    public function loadData()
+    public function loadVideos()
     {
         $this->loading = true;
         $this->error = null;
 
         try {
-            $featuredUsers = config('tiktok.featured_users', []);
-            $usernames = array_column($featuredUsers, 'username');
-
-            if (empty($usernames)) {
-                throw new \Exception('No featured users configured');
-            }
-
             // Check if this page already has cached videos
             if (isset($this->pageStates[$this->currentPage]['videos']) && 
                 !empty($this->pageStates[$this->currentPage]['videos'])) {
                 // Use cached videos for this page
-                $this->featuredVideos = $this->pageStates[$this->currentPage]['videos'];
+                $this->videos = $this->pageStates[$this->currentPage]['videos'];
                 
-                Log::info('Using cached videos', [
+                Log::info('UserVideoFeed - Using cached videos', [
+                    'username' => $this->username,
                     'page' => $this->currentPage,
-                    'videos_count' => count($this->featuredVideos),
+                    'videos_count' => count($this->videos),
                 ]);
                 
                 $this->loading = false;
@@ -109,30 +88,39 @@ class Home extends Component
             if (!$currentState) {
                 // Initialize state for this page if it doesn't exist
                 $currentState = [
-                    'cursors' => array_fill_keys($usernames, 0),
-                    'video_counts' => array_fill_keys($usernames, 0),
-                    'has_more' => array_fill_keys($usernames, true),
+                    'cursors' => [$this->username => 0],
+                    'video_counts' => [$this->username => 0],
+                    'has_more' => [$this->username => true],
                     'videos' => [],
                 ];
             }
 
-            // Keep loading until we have exactly videosPerPage videos
             $allVideos = [];
             $attempts = 0;
             $maxAttempts = 10;
-            $loadedVideos = 0;
             
+            // Keep loading until we have enough videos
             while (count($allVideos) < $this->videosPerPage && $attempts < $maxAttempts) {
+                // Check if this user still has more videos
+                if (!$currentState['has_more'][$this->username]) {
+                    Log::info('UserVideoFeed - User exhausted', [
+                        'username' => $this->username,
+                        'page' => $this->currentPage,
+                        'collected' => count($allVideos)
+                    ]);
+                    break;
+                }
+                
                 // Calculate how many more videos we need
                 $remaining = $this->videosPerPage - count($allVideos);
-                $videosToRequest = max(4, ceil($remaining / count($usernames)));
+                $videosToRequest = max(15, $remaining);
                 
-                // Load videos
+                // Use the existing service method but for single user
                 $result = $this->tiktokService->getMultipleUsersVideos(
-                    $usernames, 
+                    [$this->username], 
                     $videosToRequest,
                     $currentState['cursors'],
-                    $this->userVideoLimits,
+                    [$this->username => $this->maxVideos],
                     $currentState['video_counts']
                 );
 
@@ -140,12 +128,11 @@ class Home extends Component
                     throw new \Exception($result['error'] ?? 'Failed to load videos');
                 }
 
-                // Add new videos to our collection (skip duplicates)
                 $newVideos = $result['videos'];
-                $loadedVideos += count($newVideos);
                 
                 if (empty($newVideos)) {
-                    Log::info('No more videos available', [
+                    Log::info('UserVideoFeed - No more videos available', [
+                        'username' => $this->username,
                         'page' => $this->currentPage,
                         'attempt' => $attempts,
                         'collected' => count($allVideos)
@@ -153,6 +140,7 @@ class Home extends Component
                     break;
                 }
                 
+                // Filter out duplicates
                 $skippedCount = 0;
                 foreach ($newVideos as $video) {
                     if (count($allVideos) >= $this->videosPerPage) {
@@ -173,7 +161,8 @@ class Home extends Component
                 }
                 
                 if ($skippedCount > 0) {
-                    Log::info('Skipped duplicate videos', [
+                    Log::info('UserVideoFeed - Skipped duplicate videos', [
+                        'username' => $this->username,
                         'page' => $this->currentPage,
                         'skipped' => $skippedCount,
                         'attempt' => $attempts
@@ -185,44 +174,19 @@ class Home extends Component
                 $currentState['video_counts'] = $result['video_counts'];
                 $currentState['has_more'] = $result['has_more'];
                 
-                // Check if any user has more videos
-                $hasMoreVideos = false;
-                foreach ($result['has_more'] as $hasMore) {
-                    if ($hasMore) {
-                        $hasMoreVideos = true;
-                        break;
-                    }
-                }
-                
-                if (!$hasMoreVideos) {
-                    Log::info('All users exhausted', [
-                        'page' => $this->currentPage,
-                        'collected' => count($allVideos)
-                    ]);
-                    break;
-                }
-                
                 $attempts++;
             }
             
-            $this->featuredVideos = $allVideos;
+            $this->videos = $allVideos;
             
             // Store videos in page state for caching
             $currentState['videos'] = $allVideos;
             $this->pageStates[$this->currentPage] = $currentState;
             
-            // Check if we have enough videos for a next page
-            // Only create next page state if:
-            // 1. We loaded at least videosPerPage videos on this page
-            // 2. At least one user has more videos
+            // Check if we can have a next page
             $canHaveNextPage = false;
-            if (count($allVideos) >= $this->videosPerPage) {
-                foreach ($currentState['has_more'] as $username => $hasMore) {
-                    if ($hasMore) {
-                        $canHaveNextPage = true;
-                        break;
-                    }
-                }
+            if (count($allVideos) >= $this->videosPerPage && $currentState['has_more'][$this->username]) {
+                $canHaveNextPage = true;
             }
             
             // Prepare next page state only if there can be more videos
@@ -235,11 +199,11 @@ class Home extends Component
                 ];
             }
 
-            Log::info('Videos loaded', [
+            Log::info('UserVideoFeed - Videos loaded', [
+                'username' => $this->username,
                 'page' => $this->currentPage,
-                'videos_count' => count($this->featuredVideos),
+                'videos_count' => count($this->videos),
                 'attempts' => $attempts,
-                'loaded_videos' => $loadedVideos,
                 'can_have_next_page' => $canHaveNextPage,
                 'total_unique_videos' => count($this->loadedVideoIds),
                 'video_counts' => $currentState['video_counts'],
@@ -247,22 +211,13 @@ class Home extends Component
 
         } catch (\Exception $e) {
             $this->error = 'Failed to load videos: ' . $e->getMessage();
-            Log::error('Video loading failed', [
+            Log::error('UserVideoFeed - Video loading failed', [
+                'username' => $this->username,
                 'error' => $e->getMessage(),
                 'page' => $this->currentPage,
             ]);
-            $this->featuredVideos = [];
+            $this->videos = [];
         }
-
-        // Load hashtags
-        $this->hashtags = [
-            ['tag' => '#GlowSkin', 'videos' => '48'],
-            ['tag' => '#DiodioTips', 'videos' => '32'],
-            ['tag' => '#NaturalBeauty', 'videos' => '125'],
-            ['tag' => '#SkincareRoutine', 'videos' => '95'],
-            ['tag' => '#BeautyHaul', 'videos' => '72'],
-            ['tag' => '#SkincareTips', 'videos' => '156'],
-        ];
 
         $this->loading = false;
     }
@@ -290,9 +245,9 @@ class Home extends Component
         }
 
         $this->currentPage = $page;
-        $this->loadData();
+        $this->loadVideos();
         
-        $this->dispatch('scroll-to-videos');
+        $this->dispatch('scroll-to-user-videos');
     }
 
     /**
@@ -302,8 +257,8 @@ class Home extends Component
     {
         if ($this->hasNextPage()) {
             $this->currentPage++;
-            $this->loadData();
-            $this->dispatch('scroll-to-videos');
+            $this->loadVideos();
+            $this->dispatch('scroll-to-user-videos');
         }
     }
 
@@ -314,8 +269,8 @@ class Home extends Component
     {
         if ($this->hasPreviousPage()) {
             $this->currentPage--;
-            $this->loadData();
-            $this->dispatch('scroll-to-videos');
+            $this->loadVideos();
+            $this->dispatch('scroll-to-user-videos');
         }
     }
 
@@ -324,7 +279,6 @@ class Home extends Component
      */
     public function hasNextPage()
     {
-        // Check if next page state exists
         return isset($this->pageStates[$this->currentPage + 1]);
     }
 
@@ -351,6 +305,6 @@ class Home extends Component
 
     public function render()
     {
-        return view('livewire.frontend.home');
+        return view('livewire.frontend.user-video-feed');
     }
 }
