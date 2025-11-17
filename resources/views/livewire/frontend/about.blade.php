@@ -53,53 +53,66 @@
             </div>
         </div>
     </section>
-
-    {{-- <section class="bg-bg-tertiary/40 py-12 lg:py-24 mb-12 sm:mb-0">
+    <section class="bg-bg-tertiary/40 py-12 lg:py-24 mb-12 sm:mb-0">
         <div class="container">
             <h2 class="text-5xl font-bold font-montserrat pb-6 text-text-primary text-center">
                 {{ __('Connect with Diodio Glow') }}</h2>
-            <p class="text-base font-medium font-inter text-muted text-center">
-                {{ __('Join the conversation with beauty lovers worldwide') }}</p>
-
-
 
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-16 max-w-5xl mx-auto">
-                <div class="w-full bg-white py-6 px-6 border border-second-500/30 rounded-lg text-center">
-                    <flux:icon name="instagram" class="w-10 h-10 stroke-zinc-500 mx-auto" />
-                    <h2 class="text-2xl font-bold font-montserrat text-text-primary py-2">{{ __('Instagram') }}</h2>
-                    <p class="text-sm font-normal font-inter text-muted">{{ __('@diodio.glow') }}</p>
-                </div>
 
-                <div class="w-full bg-white py-6 px-6 border border-second-500/30 rounded-lg text-center">
-                    <img src="{{ asset('assets/images/home_page/Vector (1).png') }}" alt=""
-                        class="w-10 h-10 mx-auto">
-                    <h2 class="text-2xl font-bold font-montserrat text-text-primary py-2">{{ __('TikTok') }}</h2>
-                    <p class="text-sm font-normal font-inter text-muted">{{ __('@diodio.glow') }}</p>
-                </div>
+                <!-- Blog -->
+                <a href="{{ route('blog') }}" wire:navigate
+                    class="w-full bg-white py-6 px-6 border border-second-500/30 rounded-lg text-center block">
+                    <!-- Hero Icon: Book Open -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto text-zinc-500" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 20h9M3 20h9M4 4h16M4 8h16M4 12h16M4 16h16" />
+                    </svg>
+                    <h2 class="text-2xl font-bold font-montserrat text-text-primary py-2">Blog</h2>
+                </a>
 
-                <div class="w-full bg-white py-6 px-6 border border-second-500/30 rounded-lg text-center">
-                    <flux:icon name="youtube" class="w-10 h-10 stroke-zinc-500 mx-auto" />
-                    <h2 class="text-2xl font-bold font-montserrat text-text-primary py-2">{{ __('YouTube') }}</h2>
-                    <p class="text-sm font-normal font-inter text-muted">{{ __('@diodio.glow') }}</p>
-                </div>
+                <!-- Video Feed -->
+                <a href="{{ route('video-feed') }}" wire:navigate
+                    class="w-full bg-white py-6 px-6 border border-second-500/30 rounded-lg text-center block">
+                    <!-- Hero Icon: Video Camera -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto text-zinc-500" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14m0-4v4m0-4L9 10v4l6-2z" />
+                    </svg>
+                    <h2 class="text-2xl font-bold font-montserrat text-text-primary py-2">Video Feed</h2>
+                </a>
 
-                <div
-                    class="w-full bg-white py-6 px-6 border border-second-500/30 rounded-lg text-center md:col-span-3 lg:col-span-1 md:max-w-xs md:mx-auto lg:max-w-full">
-                    <flux:icon name="mail" class="w-10 h-10 stroke-zinc-500 mx-auto" />
-                    <h2 class="text-2xl font-bold font-montserrat text-text-primary py-2">{{ __('Email') }}</h2>
-                    <p class="text-sm font-normal font-inter text-muted">{{ __('@diodio.glow') }}</p>
-                </div>
+                <!-- Products -->
+                <a href="{{ route('product') }}" wire:navigate
+                    class="w-full bg-white py-6 px-6 border border-second-500/30 rounded-lg text-center block">
+                    <!-- Hero Icon: Shopping Bag -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto text-zinc-500" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 11V5a4 4 0 00-8 0v6M5 11h14l1 10H4L5 11z" />
+                    </svg>
+                    <h2 class="text-2xl font-bold font-montserrat text-text-primary py-2">Products</h2>
+                </a>
+
+                <!-- Contact -->
+                <a href="mailto:contact@diodioglow.com" wire:navigate
+                    class="w-full bg-white py-6 px-6 border border-second-500/30 rounded-lg text-center md:col-span-3 lg:col-span-1 md:max-w-xs md:mx-auto lg:max-w-full block">
+                    <!-- Hero Icon: Mail -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto text-zinc-500" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-18 0v8a2 2 0 002 2h14a2 2 0 002-2V8m-18 0l9 6 9-6" />
+                    </svg>
+                    <h2 class="text-2xl font-bold font-montserrat text-text-primary py-2">Contact</h2>
+                </a>
+
             </div>
-
-            <p class="text-center text-sm font-inter text-text-primary pt-6">
-                {{ __('Collaboration inquiries?') }}
-                <a href="mailto:contact@diodioglow.com"
-                    class="text-muted">{{ __('Email us for partnership opportunities.') }}</a>
-            </p>
-
         </div>
-    </section> --}}
-    
+    </section>
+
+
     <section class="bg-bg-tertiary mb-12 sm:mb-0">
         <div class="container py-12">
             <h2 class="text-5xl font-bold font-montserrat pb-6 text-text-primary ">{{ __('Our Mission') }}</h2>
