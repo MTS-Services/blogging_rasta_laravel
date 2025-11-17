@@ -12,7 +12,9 @@
                         </h3>
                         <a href="{{ route('blog.details', $blog->slug) }}" wire:navigate
                             class="inline-block mt-4 text-text-secondary">
-                            {{ Str::limit(html_entity_decode($blog->description), 800, '...') }}
+                            <div>
+                                {!! Str::limit(html_entity_decode($blog->description), 800, '...') !!}
+                            </div>
                         </a>
                     </div>
                     <div class="flex-1 lg:flex-1/2 mt-8 lg:mt-0 flex justify-center">
@@ -31,7 +33,9 @@
                         </h3>
                         <a href="{{ route('blog.details', $blog->slug) }}" wire:navigate
                             class="inline-block mt-4 text-text-secondary">
-                            {{ Str::limit(html_entity_decode($blog->description), 800, '...') }}
+                            <div>
+                                {!! Str::limit(html_entity_decode($blog->description), 800, '...') !!}
+                            </div>
                         </a>
                     </div>
                 </div>
