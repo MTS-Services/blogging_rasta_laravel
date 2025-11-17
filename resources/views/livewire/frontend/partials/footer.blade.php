@@ -37,7 +37,7 @@
             </div>
 
             <!-- Connect Section -->
-            <div class="col-span-1">
+            {{-- <div class="col-span-1">
                 <h3 class="text-text-primary font-playfair font-semibold text-base sm:text-lg mb-3 sm:mb-4">
                     {{ __('Connect') }}
                 </h3>
@@ -55,7 +55,7 @@
                             class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Contact') }}</a>
                     </li>
                 </ul>
-            </div>
+            </div> --}}
 
             <!-- Legal Section -->
             <div class="col-span-1">
