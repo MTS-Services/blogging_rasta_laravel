@@ -68,9 +68,15 @@ class VideoFeed extends Component
                 !empty($this->pageStates[$this->currentPage]['videos'])) {
                 $this->videos = $this->pageStates[$this->currentPage]['videos'];
                 
+                // Filter by active user if not 'All'
+                if ($this->activeUser !== 'All') {
+                    $this->videos = $this->filterVideosByUser($this->videos);
+                }
+                
                 Log::info('VideoFeed - Using cached videos', [
                     'page' => $this->currentPage,
                     'videos_count' => count($this->videos),
+                    'active_user' => $this->activeUser,
                 ]);
                 
                 $this->loading = false;
@@ -171,9 +177,16 @@ class VideoFeed extends Component
             $attempts++;
         }
         
-        $this->videos = $allVideos;
+        // Store all videos in cache
         $currentState['videos'] = $allVideos;
         $this->pageStates[$this->currentPage] = $currentState;
+        
+        // Filter by active user if not 'All'
+        if ($this->activeUser !== 'All') {
+            $this->videos = $this->filterVideosByUser($allVideos);
+        } else {
+            $this->videos = $allVideos;
+        }
         
         $canHaveNextPage = false;
         if (count($allVideos) >= $this->videosPerPage) {
@@ -197,35 +210,48 @@ class VideoFeed extends Component
         Log::info('VideoFeed - Multi user videos loaded', [
             'page' => $this->currentPage,
             'videos_count' => count($this->videos),
+            'active_user' => $this->activeUser,
         ]);
+    }
+
+    private function filterVideosByUser($videos)
+    {
+        // Find the actual username from display name
+        $featuredUsers = config('tiktok.featured_users', []);
+        $user = collect($featuredUsers)->firstWhere('display_name', $this->activeUser);
+        
+        if (!$user) {
+            return $videos;
+        }
+        
+        $targetUsername = $user['username'];
+        
+        // Filter videos by username
+        return array_values(array_filter($videos, function($video) use ($targetUsername) {
+            $videoUsername = $video['_username'] ?? 
+                            ($video['author']['unique_id'] ?? 
+                            ($video['author']['username'] ?? null));
+            
+            return $videoUsername === $targetUsername;
+        }));
     }
 
     public function setUser($username)
     {
-        if ($username === 'All') {
-            // Show all users - reset to default view
-            $this->showSingleUser = false;
-            $this->selectedUsername = null;
-            $this->activeUser = 'All';
-        } else {
-            // Find the actual username from display name
-            $featuredUsers = config('tiktok.featured_users', []);
-            $user = collect($featuredUsers)->firstWhere('display_name', $username);
-            
-            if ($user) {
-                // Switch to single user view
-                $this->showSingleUser = true;
-                $this->selectedUsername = $user['username'];
-                $this->activeUser = $username;
-            }
-        }
-    }
-
-    public function backToAll()
-    {
-        $this->showSingleUser = false;
-        $this->selectedUsername = null;
-        $this->activeUser = 'All';
+        // Update active user
+        $this->activeUser = $username;
+        
+        // Reset to page 1 when changing filter
+        $this->currentPage = 1;
+        
+        // Clear loaded video IDs for fresh filtering
+        $this->loadedVideoIds = [];
+        
+        // Reload videos with the new filter
+        $this->loadVideos();
+        
+        // Scroll to video section
+        $this->dispatch('scroll-to-videos');
     }
 
     public function shouldShowPagination()
