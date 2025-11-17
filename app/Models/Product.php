@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\CategoryStatus;
+use App\Enums\ProductStatus;
 use Laravel\Scout\Searchable;
 use App\Traits\AuditableTrait;
 use Illuminate\Database\Eloquent\Model;
@@ -10,16 +10,24 @@ use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Scout\Attributes\SearchUsingPrefix;
 
-
-class Category extends BaseModel implements Auditable
+class Product extends BaseModel implements Auditable
 {
     use Searchable, AuditableTrait;
 
     protected $fillable = [
-        'sort_oder',
+        'sort_order',
+        'category_id',
         'title',
         'slug',
+        'description',
+        'price',
+        'sale_price',
+        'product_types',
+        'image',
+        'affiliate_link',
+        'affiliate_source',
         'status',
+
 
 
         'restored_at',
@@ -36,23 +44,21 @@ class Category extends BaseModel implements Auditable
     ];
 
     protected $casts = [
-        'status' => CategoryStatus::class,
+        'status' => ProductStatus::class,
         'restored_at' => 'datetime',
         // 'exchange_rate' => 'decimal:15,2',
         // 'decimal_places' => 'integer',
     ];
 
 
-
     /* =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
                 Start of RELATIONSHIPS
      =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#= */
 
-     public function products()
-     {
-         return $this->hasMany(Product::class, 'category_id', 'id');
-     }
-
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
 
     /* =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
                 End of RELATIONSHIPS
@@ -64,26 +70,31 @@ class Category extends BaseModel implements Auditable
 
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where('status', CategoryStatus::ACTIVE);
+        return $query->where('status', ProductStatus::ACTIVE);
     }
 
     public function scopeInactive(Builder $query): Builder
     {
-        return $query->where('status', CategoryStatus::INACTIVE);
+        return $query->where('status', ProductStatus::INACTIVE);
     }
 
     public function scopeFilter(Builder $query, array $filters): Builder
     {
         return $query
             ->when(
-                $filters['status'] ?? null,
-                fn($q, $status) =>
-                $q->where('status', $status)
-            )
-            ->when(
                 $filters['title'] ?? null,
                 fn($q, $title) =>
                 $q->where('title', 'like', "%{$title}%")
+            )
+            ->when(
+                $filters['category_id'] ?? null,
+                fn($q, $category_id) =>
+                $q->where('category_id', $category_id)
+            )
+            ->when(
+                $filters['price'] ?? null,
+                fn($q, $price) =>
+                $q->where('price', $price)
             )
             ->when(
                 $filters['status'] ?? null,
@@ -100,11 +111,19 @@ class Category extends BaseModel implements Auditable
      |  Scout Search Configuration
      ================================================================ */
 
-    #[SearchUsingPrefix(['id', 'title', 'status'])]
+    #[SearchUsingPrefix(['id', 'title', 'status', 'category_id', 'slug', 'description', 'price', 'sale_price', 'product_types', 'affiliate_link', 'affiliate_source'])]
     public function toSearchableArray(): array
     {
         return [
             'title' => $this->title,
+            'category_id' => $this->category_id,
+            'slug' => $this->slug,
+            'description' => $this->description,
+            'price' => $this->price,
+            'sale_price' => $this->sale_price,
+            'product_types' => $this->product_types,
+            'affiliate_link' => $this->affiliate_link,
+            'affiliate_source' => $this->affiliate_source,
             'status' => $this->status,
         ];
     }
