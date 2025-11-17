@@ -12,7 +12,7 @@
                         <h3 class="text-3xl font-semibold text-text-primary">{{ \Illuminate\Support\Str::limit($blog->title, 18, '..') }}</h3>
 
 
-                        <a href="{{ route('blog.details', ['encryptedId' => encrypt($blog->id)]) }}" wire:navigate>
+                        <a href="{{ route('blog.details', [$blog->slug]) }}" wire:navigate>
                             <p >
                                 {!! \Illuminate\Support\Str::limit($blog->description, 745, '...') !!}
                             </p>
@@ -40,7 +40,7 @@
 
                     <div class="bg-blog p-6 lg:w-1/2 mt-8 lg:mt-0">
                         <h3 class="text-3xl font-semibold text-text-primary">{{ \Illuminate\Support\Str::limit($blog->title, 18, '..') }}</h3>
-                        <a href="{{ route('blog.details', ['encryptedId' => encrypt($blog->id)]) }}" wire:navigate>
+                        <a href="{{ route('blog.details', [$blog->slug]) }}" wire:navigate>
                             <p>
                                 {!! \Illuminate\Support\Str::limit($blog->description, 745, '...') !!}
                             </p>
