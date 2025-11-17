@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             ApplicationSettingSeeder::class,
             BlogSeeder::class,
             CategorySeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }

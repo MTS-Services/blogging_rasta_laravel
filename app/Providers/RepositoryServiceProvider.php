@@ -8,6 +8,7 @@ use App\Repositories\Eloquent\UserRepository;
 use App\Repositories\Eloquent\AdminRepository;
 use App\Repositories\Eloquent\AuditRepository;
 use App\Repositories\Eloquent\KeywordRepository;
+use App\Repositories\Eloquent\ProductRepository;
 use App\Repositories\Eloquent\CategoryRepository;
 use App\Repositories\Eloquent\LanguageRepository;
 use App\Repositories\Eloquent\BannerVideoRepository;
@@ -16,6 +17,7 @@ use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Contracts\AdminRepositoryInterface;
 use App\Repositories\Contracts\AuditRepositoryInterface;
 use App\Repositories\Contracts\KeywordRepositoryInterface;
+use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Repositories\Contracts\CategoryRepositoryInterface;
 use App\Repositories\Contracts\LanguageRepositoryInterface;
 use App\Repositories\Contracts\ApplicationSettingsIntarface;
@@ -66,6 +68,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             CategoryRepositoryInterface::class,
             CategoryRepository::class
+        );
+
+        $this->app->bind(
+            ProductRepositoryInterface::class,
+            ProductRepository::class
         );
     }
 

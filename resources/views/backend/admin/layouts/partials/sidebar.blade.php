@@ -78,10 +78,10 @@
                         'active' => 'category',
                     ],
                     [
-                        'name' => 'Users',
-                        'route' => route('admin.um.user.index'),
+                        'name' => 'Products',
+                        'route' => route('admin.pm.product.index'),
                         'icon' => 'user',
-                        'active' => 'admin-users',
+                        'active' => 'product',
                     ],
 
                     // [
