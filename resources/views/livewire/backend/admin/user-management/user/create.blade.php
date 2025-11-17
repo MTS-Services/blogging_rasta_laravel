@@ -20,10 +20,20 @@
 
             <!-- Add other form fields here -->
             <div class="mt-6 space-y-4 grid grid-cols-2 gap-5">
-                <div class="w-full col-span-2">
+                <div class="w-full">
+                    <x-ui.label value="{{ __('Username') }}" class="mb-1" />
+                    <x-ui.input type="text" placeholder="{{ __('Username') }}" wire:model="form.username" />
+                    <x-ui.input-error :messages="$errors->get('form.username')" />
+                </div>
+                <div class="w-full">
                     <x-ui.label value="{{ __('Name') }}" class="mb-1" />
                     <x-ui.input type="text" placeholder="{{ __('Full Name') }}" wire:model="form.name" />
                     <x-ui.input-error :messages="$errors->get('form.name')" />
+                </div>
+                <div class="w-full">
+                    <x-ui.label value="{{ __('Date of Birth') }}" class="mb-1" />
+                    <x-ui.input type="date" wire:model="form.date_of_birth" />
+                    <x-ui.input-error :messages="$errors->get('form.date_of_birth')" />
                 </div>
                 <div class="w-full">
                     <x-ui.label value="{{ __('Email') }}" class="mb-1" />

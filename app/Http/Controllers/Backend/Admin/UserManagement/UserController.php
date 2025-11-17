@@ -45,9 +45,9 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function view(string $id)
+    public function view(string $encryptedId)
     {
-        $data = $this->service->findData($id);
+        $data = $this->service->findData(decrypt($encryptedId));
         if (!$data) {
             abort(404);
         }

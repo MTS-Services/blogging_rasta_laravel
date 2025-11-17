@@ -113,8 +113,6 @@ class Index extends Component
             ['value' => 'delete', 'label' => 'Delete'],
             ['value' => 'activate', 'label' => 'Activate'],
             ['value' => 'inactive', 'label' => 'Inactive'],
-            ['value' => 'suspend', 'label' => 'Suspend'],
-            ['value' => 'pending', 'label' => 'Pending'],
         ];
 
         return view('livewire.backend.admin.user-management.user.index', [
@@ -147,7 +145,7 @@ class Index extends Component
             $this->showDeleteModal = false;
             $this->deleteId = null;
 
-            $this->success('User deleted successfully');
+            $this->success('Data deleted successfully');
         } catch (\Throwable $e) {
             Log::error('Failed to delete user', [
                 'user_id' => $this->deleteId,
@@ -167,8 +165,8 @@ class Index extends Component
     public function confirmBulkAction(): void
     {
         if (empty($this->selectedIds) || empty($this->bulkAction)) {
-            $this->warning('Please select Users and an action');
-            Log::info('No Users selected or no bulk action selected');
+            $this->warning('Please select Datas and an action');
+            Log::info('No Datas selected or no bulk action selected');
             return;
         }
 
@@ -184,8 +182,6 @@ class Index extends Component
                 'delete' => $this->bulkDelete(),
                 'activate' => $this->bulkUpdateStatus(UserStatus::ACTIVE),
                 'inactive' => $this->bulkUpdateStatus(UserStatus::INACTIVE),
-                'suspend' => $this->bulkUpdateStatus(UserStatus::SUSPENDED),
-                'pending' => $this->bulkUpdateStatus(UserStatus::PENDING),
                 default => null,
             };
 
@@ -204,7 +200,7 @@ class Index extends Component
             'type' => Admin::class,
         ]);
 
-        $this->success("{$count} Users deleted successfully");
+        $this->success("{$count} Datas deleted successfully");
     }
 
     protected function bulkUpdateStatus(UserStatus $status): void
@@ -213,7 +209,7 @@ class Index extends Component
             'id' => admin()->id,
             'type' => Admin::class,
         ]);
-        $this->success("{$count} Users updated successfully");
+        $this->success("{$count} Datas updated successfully");
     }
 
     protected function getFilters(): array
