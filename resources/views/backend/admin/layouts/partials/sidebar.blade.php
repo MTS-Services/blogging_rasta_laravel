@@ -69,6 +69,34 @@
                     //     'active' => 'admin-users-banned',
                     // ],
                 ]" />
+            <x-backend.navlink type="dropdown" icon="user-circle" name="Product Management" :page_slug="$active"
+                :items="[
+                    [
+                        'name' => 'Categories',
+                        'route' => route('admin.pm.category.index'),
+                        'icon' => 'user-circle',
+                        'active' => 'category',
+                    ],
+                    [
+                        'name' => 'Users',
+                        'route' => route('admin.um.user.index'),
+                        'icon' => 'user',
+                        'active' => 'admin-users',
+                    ],
+
+                    // [
+                    //     'name' => 'Pending Users',
+                    //     'route' => '#',
+                    //     'icon' => 'user-plus',
+                    //     'active' => 'admin-users-pending',
+                    // ],
+                    // [
+                    //     'name' => 'Banned Users',
+                    //     'route' => '#',
+                    //     'icon' => 'user-round-x',
+                    //     'active' => 'admin-users-banned',
+                    // ],
+                ]" />
 
                 <x-backend.navlink type="single" icon="youtube" name="Banner Videos" :route="route('admin.banner-video')"
                 active="banner-video" :page_slug="$active" />
