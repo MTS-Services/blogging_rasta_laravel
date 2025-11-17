@@ -55,11 +55,43 @@
                     </div>
                 </div>
 
-                {{-- Image Section --}}
-                <div class="w-full lg:w-1/2 flex justify-center">
+                <!-- Banner Video Section -->
+                <div class="w-full lg:w-1/2 flex justify-center relative">
+                    @if ($banner && $banner->file)
+                        <!-- Video Container -->
+                        <div class="relative w-full max-w-[500px] lg:max-w-none">
+                            <!-- Video Element with Controls (Fixed Height for Matching Thumbnail) -->
+                            <video id="bannerVideo" controls poster="{{ asset('storage/' . $banner->thumbnail) }}"
+                                class="w-full h-[500px] lg:h-[600px] rounded-lg object-cover block">
+                                <source src="{{ asset('storage/' . $banner->file) }}" type="video/mp4">
+                                {{ __('Your browser video support is not enough.') }}
+                            </video>
+
+                            <!-- Custom Play Button Overlay -->
+                            <div id="playButton"
+                                class="absolute inset-0 flex items-center justify-center cursor-pointer pointer-events-none">
+                                <!-- Play Button Box (White Background) -->
+                                <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-xl pointer-events-auto"
+                                    onclick="document.getElementById('bannerVideo').play();">
+                                    <!-- Play Icon (Color: #D09003) -->
+                                    <svg class="w-10 h-10 ml-1" fill="#D09003" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    @else
+                        <!-- Fallback Image (যদি banner video না থাকে) -->
+                        <img src="{{ asset('assets/images/home_page/image 2.png') }}" alt="Banner image"
+                            class="w-full max-w-[500px] lg:max-w-none h-auto rounded-lg object-cover block">
+                    @endif
+                </div>
+                {{-- <div class="w-full lg:w-1/2 flex justify-center">
                     <img src="{{ asset('assets/images/home_page/image 2.png') }}" alt="Banner image"
                         class="w-full max-w-[500px] lg:max-w-none h-auto rounded-lg object-cover block">
-                </div>
+                </div> --}}
             </div>
 
             {{-- Stats Section --}}
@@ -222,7 +254,7 @@
                                                 $refs.video.pause();
                                             }
                                         "
-                                                                            x-on:play="
+                                        x-on:play="
                                             window.dispatchEvent(new CustomEvent('video-playing', { detail: $refs.video }));
                                         ">
                                         <source src="{{ $playUrl }}" type="video/mp4">
@@ -249,9 +281,9 @@
                                         <div
                                             class="absolute inset-0 flex items-center justify-center transition-all duration-300 hover:bg-opacity-50">
                                             <div class="transform hover:scale-110 transition-transform duration-300">
-                                                <div
-                                                    class="w-20 h-20 flex items-center justify-center ">
-                                                   <flux:icon name="play" class="w-full h-full stroke-white/60 fill-white/50 " />
+                                                <div class="w-20 h-20 flex items-center justify-center ">
+                                                    <flux:icon name="play"
+                                                        class="w-full h-full stroke-white/60 fill-white/50 " />
                                                 </div>
                                             </div>
                                         </div>
@@ -285,7 +317,7 @@
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <h6 class="text-text-primary font-semibold font-inter truncate"
-                                        title="{{ $videoTitle}}">
+                                        title="{{ $videoTitle }}">
                                         {{ $videoTitle ?? 'TikTok Video' }}
                                     </h6>
                                     <p class="text-sm font-normal text-text-primary font-outfit truncate"
@@ -383,4 +415,29 @@
         </div>
     </section>
 
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const video = document.getElementById('bannerVideo');
+                const playButton = document.getElementById('playButton');
+
+                // Video play হলে custom button hide করবে
+                video.addEventListener('play', function() {
+                    playButton.style.display = 'none';
+                });
+
+                // Video pause হলে custom button আবার show করবে
+                video.addEventListener('pause', function() {
+                    if (video.currentTime > 0 && !video.ended) {
+                        playButton.style.display = 'flex';
+                    }
+                });
+
+                // Video শেষ হলে custom button আবার show করবে
+                video.addEventListener('ended', function() {
+                    playButton.style.display = 'flex';
+                });
+            });
+        </script>
+    @endpush
 </div>

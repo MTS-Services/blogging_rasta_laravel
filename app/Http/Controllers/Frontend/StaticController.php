@@ -26,4 +26,9 @@ class StaticController extends Controller
     {
         return view($this->masterView);
     }
+
+    public  function contact()
+    {
+        return view($this->masterView);
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Livewire\Frontend;
 
 use Livewire\Component;
 use App\Services\TikTokMultiUserService;
+use App\Services\BannerVideoService;
 use Illuminate\Support\Facades\Log;
 
 class Home extends Component
@@ -22,17 +23,42 @@ class Home extends Component
     public $hashtags;
     public $loading = true;
     public $error = null;
+    
 
-    protected $service;
+    public $banner = null;
 
-    public function boot(TikTokMultiUserService $service)
+    protected $tiktokService;
+    protected $bannerService;
+
+    public function boot(TikTokMultiUserService $tiktokService, BannerVideoService $bannerService)
     {
-        $this->service = $service;
+        $this->tiktokService = $tiktokService;
+        $this->bannerService = $bannerService;
     }
 
     public function mount()
     {
+        $this->loadBanner();
         $this->loadData();
+    }
+
+    public function loadBanner()
+    {
+        try {
+            $this->banner = $this->bannerService->getFirstData();
+            
+            Log::info('Banner video loaded successfully', [
+                'has_banner' => $this->banner !== null,
+                'has_file' => $this->banner?->file !== null,
+                'has_thumbnail' => $this->banner?->thumbnail !== null,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Banner video loading failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            $this->banner = null;
+        }
     }
 
     public function loadData()
@@ -50,7 +76,7 @@ class Home extends Component
             }
 
             // Load videos from TikTok API (limit to 12 videos for home page)
-            $this->featuredVideos = $this->service->getMultipleUsersVideos($usernames, 8);
+            $this->featuredVideos = $this->tiktokService->getMultipleUsersVideos($usernames, 8);
 
             // Limit to 12 videos for home page display
             $this->featuredVideos = array_slice($this->featuredVideos, 0, 12);
@@ -69,13 +95,12 @@ class Home extends Component
             Log::info('Home page TikTok videos loaded', [
                 'count' => count($this->featuredVideos)
             ]);
-
         } catch (\Exception $e) {
             $this->error = 'Failed to load videos: ' . $e->getMessage();
             Log::error('Home page TikTok loading failed', [
                 'error' => $e->getMessage()
             ]);
-            
+
             // Set empty array if failed
             $this->featuredVideos = [];
         }

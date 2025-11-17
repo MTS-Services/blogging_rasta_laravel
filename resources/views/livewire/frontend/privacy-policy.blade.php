@@ -3,7 +3,7 @@
     <section class="bg-second-500/15  py-24">
         <div class="container">
             <h2 class="text-4xl md:text-5xl font-bold font-montserrat text-text-primary text-center mb-6">
-                {{ __('Privacy Policy ') }}</h2>
+                {{ __('Privacy Policy') }}</h2>
 
             <p class="text-base font-normal font-montserrat text-text-primary">
                 {{ __('At DiodioGlow, we value your privacy and are committed to protecting your personal information. This policy explains what data we collect, how we use it, and your rights.') }}

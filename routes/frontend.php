@@ -19,3 +19,4 @@ Route::get('/PrivacyPolicy', [StaticController::class, 'PrivacyPolicy'])->name('
 Route::get('/TermsOfService', [StaticController::class, 'TermsOfService'])->name('TermsOfService');
 Route::get('/affiliate', [StaticController::class, 'affiliate'])->name('affiliate');
 Route::get('/support', [StaticController::class, 'support'])->name('support');
+Route::get('/contact', [StaticController::class, 'contact'])->name('contact');

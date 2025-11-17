@@ -36,6 +36,11 @@
                 class="text-text-muted font-inter transition-colors {{ request()->routeIs('about') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500! hover:border-b-2 hover-border-second-500' }}">
                 {{ __('About') }}
             </a>
+
+            <a href="{{ route('contact') }}" wire:navigate
+                class="text-text-muted font-inter transition-colors {{ request()->routeIs('contact') ? 'text-second-500! border-b-2 border-second-500' : 'hover:text-second-500! hover:border-b-2 hover-border-second-500' }}">
+                {{ __('Contact') }}
+            </a>
         </nav>
 
         <div class="hidden md:block">
