@@ -255,15 +255,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- <div
-                                            class="absolute inset-0 flex items-center justify-center transition-all duration-300 hover:bg-opacity-50">
-                                            <div class="transform hover:scale-110 transition-transform duration-300">
-                                                <div
-                                                    class="w-20 h-20 flex items-center justify-center ">
-                                                   <flux:icon name="pause" class="w-full h-full stroke-white/60 fill-white/50 " />
-                                                </div>
-                                            </div>
-                                        </div> --}}
                                     </div>
                                 @else
                                     {{-- No video available --}}
@@ -283,18 +274,6 @@
                                         @endif
                                     </div>
                                 @endif
-                                {{-- View count badge
-                               
-                                    <div
-                                        class="absolute top-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 z-20">
-                                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            <path fill-rule="evenodd"
-                                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        {{ $this->formatNumber($playCount ?? 0) }}
-                                    </div> --}}
                             </div>
 
                             {{-- Creator Info --}}
