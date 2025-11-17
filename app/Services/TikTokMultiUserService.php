@@ -22,285 +22,227 @@ class TikTokMultiUserService
         $this->apiKey = config('tiktok.rapidapi_key');
     }
 
-    public function getUserProfile($username)
-    {
-        // Check if API key exists
-        if (empty($this->apiKey)) {
-            Log::error("TikTok API key not configured");
-            return [
-                'success' => false,
-                'error' => 'API key not configured',
-                'data' => null,
-            ];
-        }
-
-        $cacheKey = "tiktok_profile_{$username}";
-        
-        return Cache::remember($cacheKey, 3600, function() use ($username) {
-            try {
-                $response = $this->client->get($this->baseUrl . 'user/info', [
-                    'headers' => [
-                        'x-rapidapi-host' => 'tiktok-scraper7.p.rapidapi.com',
-                        'x-rapidapi-key' => $this->apiKey,
-                    ],
-                    'query' => ['unique_id' => $username],
-                ]);
-
-                $statusCode = $response->getStatusCode();
-                $body = $response->getBody()->getContents();
-
-                Log::info("TikTok Profile API Response", [
-                    'username' => $username,
-                    'status' => $statusCode,
-                    'body_length' => strlen($body)
-                ]);
-
-                if ($statusCode === 403) {
-                    return [
-                        'success' => false,
-                        'error' => 'API subscription required. Subscribe at: https://rapidapi.com/DataFanatic/api/tiktok-scraper7',
-                        'data' => null,
-                    ];
-                }
-
-                if ($statusCode !== 200) {
-                    return [
-                        'success' => false,
-                        'error' => "API returned status code: {$statusCode}",
-                        'data' => null,
-                    ];
-                }
-
-                $data = json_decode($body, true);
-                
-                if (json_last_error() !== JSON_ERROR_NONE) {
-                    return [
-                        'success' => false,
-                        'error' => 'Invalid JSON response from API',
-                        'data' => null,
-                    ];
-                }
-
-                $userData = $data['data'] ?? $data;
-                
-                return [
-                    'success' => true,
-                    'data' => $userData,
-                ];
-            } catch (\Exception $e) {
-                Log::error("TikTok Profile Error ({$username}): " . $e->getMessage());
-                
-                return [
-                    'success' => false,
-                    'error' => $e->getMessage(),
-                    'data' => null,
-                ];
-            }
-        });
-    }
-
-    public function getUserVideos($username, $count = 12)
+    /**
+     * Get user videos with pagination support
+     * 
+     * @param string $username TikTok username
+     * @param int $count Number of videos per page (default: 12)
+     * @param string|int $cursor Pagination cursor (default: 0)
+     * @return array
+     */
+    public function getUserVideos($username, $count = 12, $cursor = 0)
     {
         if (empty($this->apiKey)) {
             Log::error("TikTok API key not configured");
-            return [
-                'success' => false,
-                'error' => 'API key not configured',
-                'videos' => [],
-                'user' => null,
-            ];
+            return $this->errorResponse('API key not configured');
         }
 
-        $cacheKey = "tiktok_videos_{$username}_{$count}";
+        $cacheKey = "tiktok_videos_{$username}_{$count}_{$cursor}";
         
-        return Cache::remember($cacheKey, 1800, function() use ($username, $count) {
+        return Cache::remember($cacheKey, 1800, function() use ($username, $count, $cursor) {
             try {
-                // First get profile to extract user ID
-                $profileResponse = $this->getUserProfile($username);
-                
-                if (!$profileResponse['success']) {
-                    return [
-                        'success' => false,
-                        'error' => $profileResponse['error'] ?? 'Failed to get user profile',
-                        'videos' => [],
-                        'user' => null,
-                    ];
-                }
-
-                $userId = $profileResponse['data']['user']['id'] ?? null;
-                
-                if (!$userId) {
-                    return [
-                        'success' => false,
-                        'error' => 'User ID not found in profile response',
-                        'videos' => [],
-                        'user' => null,
-                    ];
-                }
-
-                // Fetch videos using user ID
                 $response = $this->client->get($this->baseUrl . 'user/posts', [
                     'headers' => [
                         'x-rapidapi-host' => 'tiktok-scraper7.p.rapidapi.com',
                         'x-rapidapi-key' => $this->apiKey,
                     ],
                     'query' => [
-                        'user_id' => $userId,
+                        'unique_id' => $username,
                         'count' => $count,
+                        'cursor' => $cursor,
                     ],
                 ]);
 
                 $statusCode = $response->getStatusCode();
                 $body = $response->getBody()->getContents();
-                
-                Log::info("TikTok Videos API Response", [
+
+                Log::info("TikTok API Response", [
                     'username' => $username,
-                    'user_id' => $userId,
                     'status' => $statusCode,
+                    'cursor' => $cursor,
                     'body_length' => strlen($body)
                 ]);
 
                 if ($statusCode === 403) {
-                    return [
-                        'success' => false,
-                        'error' => 'API subscription required. Subscribe at: https://rapidapi.com/DataFanatic/api/tiktok-scraper7',
-                        'videos' => [],
-                        'user' => $profileResponse['data']['user'] ?? null,
-                    ];
+                    return $this->errorResponse('API subscription required. Subscribe at: https://rapidapi.com/DataFanatic/api/tiktok-scraper7');
                 }
 
                 if ($statusCode !== 200) {
-                    return [
-                        'success' => false,
-                        'error' => "API returned status code: {$statusCode}",
-                        'videos' => [],
-                        'user' => $profileResponse['data']['user'] ?? null,
-                    ];
+                    return $this->errorResponse("API returned status code: {$statusCode}");
                 }
 
                 $data = json_decode($body, true);
                 
                 if (json_last_error() !== JSON_ERROR_NONE) {
-                    return [
-                        'success' => false,
-                        'error' => 'Invalid JSON response from API',
-                        'videos' => [],
-                        'user' => $profileResponse['data']['user'] ?? null,
-                    ];
+                    return $this->errorResponse('Invalid JSON response from API');
                 }
-                
-                // Extract videos from various possible response structures
-                $videos = [];
-                
-                if (isset($data['data']['videos'])) {
-                    $videos = $data['data']['videos'];
-                } elseif (isset($data['videos'])) {
-                    $videos = $data['videos'];
-                } elseif (isset($data['data']['aweme_list'])) {
-                    $videos = $data['data']['aweme_list'];
-                } elseif (isset($data['aweme_list'])) {
-                    $videos = $data['aweme_list'];
-                } elseif (isset($data['data']) && is_array($data['data']) && isset($data['data'][0])) {
-                    $videos = $data['data'];
+
+                // Check API response code
+                if (isset($data['code']) && $data['code'] !== 0) {
+                    return $this->errorResponse($data['msg'] ?? 'API request failed');
                 }
+
+                // Extract data from response
+                $responseData = $data['data'] ?? [];
+                $videos = $responseData['videos'] ?? [];
+                $hasMore = $responseData['hasMore'] ?? false;
+                $nextCursor = $responseData['cursor'] ?? 0;
                 
-                Log::info("Videos extracted", [
-                    'username' => $username,
-                    'count' => count($videos)
-                ]);
-                
-                // Add username to each video
+                // Add username to each video for identification
                 foreach ($videos as &$video) {
                     $video['_username'] = $username;
                 }
                 
-                // Limit to requested count
-                $videos = array_slice($videos, 0, $count);
-                
-                if (empty($videos)) {
-                    Log::warning("No videos found for user: {$username}");
+                // Extract user info from first video's author
+                $user = null;
+                if (!empty($videos) && isset($videos[0]['author'])) {
+                    $user = $videos[0]['author'];
                 }
+
+                Log::info("Videos loaded successfully", [
+                    'username' => $username,
+                    'count' => count($videos),
+                    'has_more' => $hasMore,
+                    'next_cursor' => $nextCursor
+                ]);
                 
                 return [
                     'success' => true,
                     'videos' => $videos,
-                    'user' => $data['data']['user'] ?? $data['user'] ?? $profileResponse['data']['user'] ?? null,
+                    'user' => $user,
+                    'has_more' => $hasMore,
+                    'cursor' => $nextCursor,
+                    'total_loaded' => count($videos),
                 ];
+
             } catch (\Exception $e) {
                 Log::error("TikTok Videos Error ({$username}): " . $e->getMessage());
-                
-                return [
-                    'success' => false,
-                    'error' => $e->getMessage(),
-                    'videos' => [],
-                    'user' => null,
-                ];
+                return $this->errorResponse($e->getMessage());
             }
         });
     }
 
-    public function getMultipleProfiles(array $usernames)
-    {
-        $profiles = [];
-        
-        foreach ($usernames as $username) {
-            $profile = $this->getUserProfile($username);
-            if ($profile['success'] && $profile['data']) {
-                $profiles[$username] = $profile['data'];
-            }
-        }
-        
-        return $profiles;
-    }
-
-    public function getMultipleUsersVideos(array $usernames, $videosPerUser = 12)
-    {
+    /**
+     * Get paginated videos from multiple users
+     * 
+     * @param array $usernames Array of TikTok usernames
+     * @param int $videosPerUser Videos per user per page
+     * @param array $cursors Array of cursors for each user [username => cursor]
+     * @param array $userVideoLimits Array of max videos per user [username => limit]
+     * @param array $userVideoCounts Array tracking loaded videos [username => count]
+     * @return array
+     */
+    public function getMultipleUsersVideos(
+        array $usernames, 
+        $videosPerUser = 12, 
+        array $cursors = [],
+        array $userVideoLimits = [],
+        array $userVideoCounts = []
+    ) {
         $allVideos = [];
+        $usersCursors = [];
+        $usersHasMore = [];
+        $updatedCounts = $userVideoCounts;
         
         foreach ($usernames as $username) {
-            $result = $this->getUserVideos($username, $videosPerUser);
+            // Check if user has reached their limit
+            $maxLimit = $userVideoLimits[$username] ?? null;
+            $currentCount = $userVideoCounts[$username] ?? 0;
+            
+            if ($maxLimit !== null && $currentCount >= $maxLimit) {
+                // User has reached their limit, skip
+                $usersHasMore[$username] = false;
+                $usersCursors[$username] = $cursors[$username] ?? 0;
+                continue;
+            }
+            
+            $cursor = $cursors[$username] ?? 0;
+            $result = $this->getUserVideos($username, $videosPerUser, $cursor);
             
             if ($result['success'] && !empty($result['videos'])) {
-                foreach ($result['videos'] as $video) {
-                    $video['_username'] = $username;
+                $videosToAdd = $result['videos'];
+                
+                // If user has a limit, enforce it
+                if ($maxLimit !== null) {
+                    $remaining = $maxLimit - $currentCount;
+                    if ($remaining < count($videosToAdd)) {
+                        $videosToAdd = array_slice($videosToAdd, 0, $remaining);
+                        $usersHasMore[$username] = false; // Reached limit
+                    } else {
+                        $usersHasMore[$username] = $result['has_more'];
+                    }
+                    
+                    // Update count
+                    $updatedCounts[$username] = $currentCount + count($videosToAdd);
+                } else {
+                    $usersHasMore[$username] = $result['has_more'];
+                }
+                
+                foreach ($videosToAdd as $video) {
                     $allVideos[] = $video;
                 }
+                
+                // Store pagination info for each user
+                $usersCursors[$username] = $result['cursor'];
             }
         }
         
         // Sort by creation time (newest first)
         usort($allVideos, function ($a, $b) {
-            $timeA = $a['create_time'] ?? $a['createTime'] ?? 0;
-            $timeB = $b['create_time'] ?? $b['createTime'] ?? 0;
+            $timeA = $a['create_time'] ?? 0;
+            $timeB = $b['create_time'] ?? 0;
             return $timeB - $timeA;
         });
         
-        return $allVideos;
+        return [
+            'success' => true,
+            'videos' => $allVideos,
+            'cursors' => $usersCursors,
+            'has_more' => $usersHasMore,
+            'total_videos' => count($allVideos),
+            'video_counts' => $updatedCounts,
+        ];
     }
 
+    /**
+     * Clear cache for specific user
+     */
     public function clearUserCache($username)
     {
-        Cache::forget("tiktok_profile_{$username}");
-        
-        // Clear video caches for various counts
-        for ($i = 1; $i <= 50; $i++) {
-            Cache::forget("tiktok_videos_{$username}_{$i}");
+        // Clear all cursor-based caches for this user
+        for ($count = 1; $count <= 50; $count++) {
+            for ($cursor = 0; $cursor <= 10; $cursor++) {
+                Cache::forget("tiktok_videos_{$username}_{$count}_{$cursor}");
+            }
         }
+        
+        Log::info("Cache cleared for user: {$username}");
     }
 
+    /**
+     * Clear all cached data
+     */
     public function clearAllCache()
     {
-        $users = config('tiktok.featured_users');
+        $users = config('tiktok.featured_users', []);
         foreach ($users as $user) {
             $this->clearUserCache($user['username']);
         }
+        
+        Log::info("All TikTok cache cleared");
     }
 
+    /**
+     * Get featured users from config
+     */
     public function getFeaturedUsers()
     {
         return config('tiktok.featured_users', []);
     }
     
+    /**
+     * Test API connection
+     */
     public function testConnection()
     {
         if (empty($this->apiKey)) {
@@ -312,15 +254,19 @@ class TikTokMultiUserService
         }
 
         try {
-            $response = $this->client->get($this->baseUrl . 'user/info', [
+            $response = $this->client->get($this->baseUrl . 'user/posts', [
                 'headers' => [
                     'x-rapidapi-host' => 'tiktok-scraper7.p.rapidapi.com',
                     'x-rapidapi-key' => $this->apiKey,
                 ],
-                'query' => ['unique_id' => 'tiktok'],
+                'query' => [
+                    'unique_id' => 'tiktok',
+                    'count' => 1,
+                ],
             ]);
 
             $statusCode = $response->getStatusCode();
+            $body = json_decode($response->getBody()->getContents(), true);
 
             if ($statusCode === 403) {
                 return [
@@ -331,7 +277,7 @@ class TikTokMultiUserService
                 ];
             }
 
-            if ($statusCode === 200) {
+            if ($statusCode === 200 && isset($body['code']) && $body['code'] === 0) {
                 return [
                     'success' => true,
                     'status' => 200,
@@ -342,8 +288,9 @@ class TikTokMultiUserService
             return [
                 'success' => false,
                 'status' => $statusCode,
-                'error' => "Unexpected status code: {$statusCode}",
+                'error' => "Unexpected response: " . ($body['msg'] ?? 'Unknown error'),
             ];
+
         } catch (\Exception $e) {
             return [
                 'success' => false,
@@ -352,6 +299,9 @@ class TikTokMultiUserService
         }
     }
 
+    /**
+     * Format large numbers for display
+     */
     public function formatNumber($number)
     {
         if (!is_numeric($number)) {
@@ -365,5 +315,21 @@ class TikTokMultiUserService
         }
         
         return number_format($number);
+    }
+
+    /**
+     * Return standardized error response
+     */
+    private function errorResponse($message)
+    {
+        return [
+            'success' => false,
+            'error' => $message,
+            'videos' => [],
+            'user' => null,
+            'has_more' => false,
+            'cursor' => 0,
+            'total_loaded' => 0,
+        ];
     }
 }
