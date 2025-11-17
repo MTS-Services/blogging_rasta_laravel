@@ -81,7 +81,6 @@
                             </div>
                         </div>
                     @else
-                        <!-- Fallback Image (যদি banner video না থাকে) -->
                         <img src="{{ asset('assets/images/home_page/image 2.png') }}" alt="Banner image"
                             class="w-full max-w-[500px] lg:max-w-none h-auto rounded-lg object-cover block">
                     @endif

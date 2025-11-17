@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-bg-primary py-8 sm:py-12 px-4">
     <div class="container mx-auto">
-        <div class="">
+        <div id="video-section">
             {{-- Header --}}
             <div class="mb-3 sm:mb-5 lg:mb-8 mx-auto max-w-xl">
                 <h1 class="text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-bold text-text-primary mb-1.5 sm:mb-3">
@@ -27,7 +27,7 @@
             {{-- Loading State --}}
             @if ($loading)
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @for ($i = 0; $i < 9; $i++)
+                    @for ($i = 0; $i < 12; $i++)
                         <div class="animate-pulse bg-bg-primary p-4 rounded-2xl shadow-md border border-second-500/40">
                             <div class="bg-gray-300 w-full h-80 rounded-lg mb-2"></div>
                             <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
@@ -56,7 +56,7 @@
                     </div>
                 </div>
             @endif
-
+{{-- @dd($filteredVideos[2]); --}}
             {{-- Video Cards Grid --}}
             @if (!$loading && count($filteredVideos) > 0)
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -64,6 +64,7 @@
                         @php
                             // Extract video data from API response
                             $videoId = $video['aweme_id'] ?? ($video['video_id'] ?? '');
+                            $videoTitle = $video['title'] ?? 'TikTok Video'; 
                             $desc = $video['desc'] ?? ($video['title'] ?? 'TikTok Video');
                             $createTime = $video['create_time'] ?? time();
 
@@ -80,13 +81,12 @@
                                 ($video['statistics']['play_count'] ??
                                     ($video['stats']['play_count'] ??
                                         ($video['statistics']['playCount'] ?? ($video['stats']['playCount'] ?? 0))));
-                            $diggCount = $stats['digg_count'] ?? ($stats['diggCount'] ?? 0);
-                            $commentCount = $stats['comment_count'] ?? ($stats['commentCount'] ?? 0);
+                            $diggCount = $video['digg_count'] ?? ($video['diggCount'] ?? 0);
+                            $commentCount = $video['comment_count'] ?? ($video['commentCount'] ?? 0);
 
                             // Author/User info
                             $author = $video['author'] ?? [];
                             $username = $video['_username'] ?? ($author['unique_id'] ?? 'unknown');
-                            $videoTitle = $video['title'] ?? 'TikTok Video';
                             $authorName = $author['nickname'] ?? ($author['nick_name'] ?? $username);
                             $authorAvatar =
                                 $author['avatar_larger'] ??
@@ -132,7 +132,6 @@
                                         });
                                         video.play().catch(err => {
                                             console.error('Play error:', err);
-                                            alert('Unable to play video.');
                                             this.playing = false;
                                         });
                                     }
@@ -153,7 +152,7 @@
                                 @if ($playUrl)
                                     {{-- Video Element (hidden until playing) --}}
                                     <video x-ref="video" x-show="playing" x-on:ended="stopVideo()"
-                                        x-on:error="playing = false; alert('Video error');"
+                                        x-on:error="playing = false"
                                         class="w-full h-full object-cover" poster="{{ $cover }}" playsinline
                                         preload="metadata" controls controlsList="nodownload" x-cloak>
                                         <source src="{{ $playUrl }}" type="video/mp4">
@@ -208,9 +207,15 @@
 
                             {{-- Video Info --}}
                             <div>
-                                <p class="font-bold text-text-primary mb-1 line-clamp-2" title="{{ $videoTitle }}">
+                               @if($videoTitle)
+                                <p class="font-bold text-text-primary mb-1 line-clamp-1" title="{{ $videoTitle }}">
                                     {{ $videoTitle }}
                                 </p>
+                                @else
+                                <p class="font-bold text-text-primary mb-1 line-clamp-1" >
+                                    {{ __('TikTok Video') }}
+                                </p>
+                                @endif
                                 <p class="text-xs text-text-secondary mb-4">{{ $authorName }}</p>
                                 
                                 {{-- Stats --}}
@@ -246,6 +251,106 @@
                         </div>
                     @endforeach
                 </div>
+
+                {{-- Pagination - Show if needed --}}
+                @if ($this->shouldShowPagination())
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-12 px-4">
+                        {{-- Page Info --}}
+                        <div class="text-sm text-text-muted font-inter">
+                            {{ __('Page') }} <span
+                                class="font-semibold text-text-primary">{{ $currentPage }}</span>
+                            @if ($this->getTotalPages() > $currentPage)
+                                {{ __('of') }} <span
+                                    class="font-semibold text-text-primary">{{ $this->getTotalPages() }}</span>
+                            @endif
+                        </div>
+
+                        {{-- Pagination Controls --}}
+                        <div class="flex items-center gap-2">
+                            {{-- Previous Button --}}
+                            <button wire:click="previousPage" wire:loading.attr="disabled"
+                                @if (!$this->hasPreviousPage()) disabled @endif
+                                class="px-4 py-2 rounded-lg border border-second-500/30 bg-white hover:bg-second-50 text-text-primary font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 19l-7-7 7-7" />
+                                </svg>
+                                <span class="hidden sm:inline">{{ __('Previous') }}</span>
+                            </button>
+
+                            {{-- Page Numbers (for desktop) --}}
+                            <div class="hidden md:flex items-center gap-2">
+                                @php
+                                    $totalPages = $this->getTotalPages();
+                                    $start = max(1, $currentPage - 2);
+                                    $end = min($totalPages, $currentPage + 2);
+                                @endphp
+
+                                @if ($start > 1)
+                                    <button wire:click="goToPage(1)"
+                                        class="px-3 py-2 rounded-lg border border-second-500/30 bg-white hover:bg-second-50 text-text-primary font-medium transition-all duration-300">
+                                        1
+                                    </button>
+                                    @if ($start > 2)
+                                        <span class="px-2 text-text-muted">...</span>
+                                    @endif
+                                @endif
+
+                                @for ($i = $start; $i <= $end; $i++)
+                                    <button wire:click="goToPage({{ $i }})"
+                                        wire:loading.attr="disabled"
+                                        class="px-3 py-2 rounded-lg border transition-all duration-300 font-medium
+                                {{ $i === $currentPage
+                                    ? 'bg-gradient-to-r from-second-500 to-zinc-500 text-white border-transparent'
+                                    : 'border-second-500/30 bg-white hover:bg-second-50 text-text-primary' }}">
+                                        {{ $i }}
+                                    </button>
+                                @endfor
+
+                                @if ($end < $totalPages)
+                                    @if ($end < $totalPages - 1)
+                                        <span class="px-2 text-text-muted">...</span>
+                                    @endif
+                                    <button wire:click="goToPage({{ $totalPages }})"
+                                        class="px-3 py-2 rounded-lg border border-second-500/30 bg-white hover:bg-second-50 text-text-primary font-medium transition-all duration-300">
+                                        {{ $totalPages }}
+                                    </button>
+                                @endif
+                            </div>
+
+                            {{-- Current Page (for mobile) --}}
+                            <div
+                                class="md:hidden px-4 py-2 rounded-lg bg-gradient-to-r from-second-500 to-zinc-500 text-white font-semibold">
+                                {{ $currentPage }}
+                            </div>
+
+                            {{-- Next Button --}}
+                            <button wire:click="nextPage" wire:loading.attr="disabled"
+                                @if (!$this->hasNextPage()) disabled @endif
+                                class="px-4 py-2 rounded-lg border border-second-500/30 bg-white hover:bg-second-50 text-text-primary font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white flex items-center gap-2">
+                                <span class="hidden sm:inline">{{ __('Next') }}</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        {{-- Loading Indicator --}}
+                        <div wire:loading wire:target="nextPage,previousPage,goToPage"
+                            class="flex items-center gap-2 text-sm text-text-muted">
+                            <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10"
+                                    stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                            <span>{{ __('Loading...') }}</span>
+                        </div>
+                    </div>
+                @endif
             @endif
 
             {{-- Empty State --}}
@@ -269,6 +374,23 @@
             @endif
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            // Scroll to video section when page changes
+            document.addEventListener('livewire:initialized', () => {
+                Livewire.on('scroll-to-videos', () => {
+                    const section = document.getElementById('video-section');
+                    if (section) {
+                        section.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        </script>
+    @endpush
 
     <style>
         [x-cloak] {
