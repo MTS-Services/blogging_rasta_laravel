@@ -6,10 +6,10 @@
             <div class="glass-card rounded-2xl p-4 lg:p-6 mb-6">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <h2 class="text-xl lg:text-2xl font-bold text-text-black dark:text-text-white">
-                        {{ __('Keyword Details') }}
+                        {{ __('Category Details') }}
                     </h2>
                     <div class="flex items-center gap-2 w-full sm:w-auto">
-                        <x-ui.button href="{{ route('admin.keyword.index') }}" class="w-auto py-2!">
+                        <x-ui.button href="{{ route('admin.pm.category.index') }}" class="w-auto py-2!">
                             <flux:icon name="arrow-left"
                                 class="w-4 h-4 stroke-text-btn-primary group-hover:stroke-text-btn-secondary" />
                             {{ __('Back') }}
@@ -27,9 +27,19 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
                                 <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
-                                    <p class="text-text-white text-xs font-semibold mb-2 uppercase">{{ __('Name') }}
+                                    <p class="text-text-white text-xs font-semibold mb-2 uppercase">{{ __('Title') }}
                                     </p>
-                                    <p class="text-slate-400 text-lg font-bold">{{ $data->name }}</p>
+                                    <p class="text-slate-400 text-lg font-bold">{{ $data->title }}</p>
+                                </div>
+                                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                    <p class="text-text-white text-xs font-semibold mb-2 uppercase">{{ __('Slug') }}
+                                    </p>
+                                    <p class="text-slate-400 text-lg font-bold">{{ $data->slug }}</p>
+                                </div>
+                                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                    <p class="text-text-white text-xs font-semibold mb-2 uppercase">{{ __('Status') }}
+                                    </p>
+                                    <p class="text-slate-400 text-lg font-bold">{{ $data->status }}</p>
                                 </div>
                                 <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">
