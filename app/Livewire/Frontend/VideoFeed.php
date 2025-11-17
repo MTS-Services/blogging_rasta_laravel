@@ -321,7 +321,7 @@ class VideoFeed extends Component
         $users = ['All'];
         
         foreach ($featuredUsers as $user) {
-            $users[] = $user['username'];
+            $users[] = $user['display_name'] ?? $user['username'] ;
         }
         
         return $users;
