@@ -2,7 +2,7 @@
     <section class="bg-bg-primary">
         <div class="container pb-10">
             <div class="w-full pt-8 lg:pt-0 pb-5">
-                <div class="w-full h-full mx-auto">
+                <div class="w-full h-auto mx-auto">
                     <x-blog-media :file="$data->file" />
                 </div>
             </div>
