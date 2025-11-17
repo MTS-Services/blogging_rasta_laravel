@@ -8,11 +8,12 @@
             @if ($layout === 0)
                 <div class="block lg:flex gap-12 items-center justify-between mt-12">
                     <div class="bg-second-500/15 p-6 lg:w-1/2">
-                        <h3 class="text-3xl font-semibold text-text-primary">{{ Str::limit($blog->title, 18, '..') }}
+                        <h3 class="text-3xl font-semibold text-text-primary">
+                            {{ Str::words($blog->title, 4, '..') }}
                         </h3>
                         <a href="{{ route('blog.details', [$blog->slug]) }}" wire:navigate
                             class="block mt-4 text-text-secondary">
-                            {!! Str::limit($blog->description, 745, '...') !!}
+                            {!! Str::words($blog->description, 50, '...') !!}
                         </a>
                     </div>
                     <div class="lg:w-1/2 mt-8 lg:mt-0 flex justify-center">
@@ -29,11 +30,12 @@
                             class="!object-cover w-full h-full sm:max-w-[450px] sm:max-h-[600px]" />
                     </div>
                     <div class="bg-blog p-6 lg:w-1/2 mt-8 lg:mt-0">
-                        <h3 class="text-3xl font-semibold text-text-primary">{{ Str::limit($blog->title, 18, '..') }}
+                        <h3 class="text-3xl font-semibold text-text-primary">
+                            {{ Str::words($blog->title, 4, '..') }}
                         </h3>
                         <a href="{{ route('blog.details', [$blog->slug]) }}" wire:navigate
                             class="block mt-4 text-text-secondary">
-                            {!! Str::limit($blog->description, 745, '...') !!}
+                            {!! Str::words($blog->description, 50, '...') !!}
                         </a>
                     </div>
                 </div>
