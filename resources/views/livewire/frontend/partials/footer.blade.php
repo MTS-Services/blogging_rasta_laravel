@@ -6,8 +6,7 @@
                 <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-2 sm:gap-3">
                     <div
                         class="w-8 h-8 xxs:w-10 xxs:h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16 rounded-full btn-gradient flex items-center justify-center">
-                        <span
-                            class="text-white font-bold text-xl lg:text-2xl xl:text-3xl">{{ __('DG') }}</span>
+                        <span class="text-white font-bold text-xl lg:text-2xl xl:text-3xl">{{ __('DG') }}</span>
                     </div>
                     <span
                         class="text-xl lg:text-2xl xl:text-3xl font-bold font-playfair text-text-primary">{{ __('DiodioGlow') }}</span>
@@ -24,38 +23,37 @@
                     {{ __('Explore') }}
                 </h3>
                 <ul class="space-y-1">
-                    <li><a href="#"
+                    <li><a href="{{ route('home') }}" wire:navigate
                             class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Home') }}</a>
                     </li>
-                    <li><a href="#"
+                    <li><a href="{{ route('video-feed') }}" wire:navigate
                             class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Videos') }}</a>
                     </li>
-                    <li><a href="#"
+                    <li><a href="{{ route('product') }}" wire:navigate
                             class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Products') }}</a>
                     </li>
                 </ul>
             </div>
 
-            <!-- Connect Section -->
-            {{-- <div class="col-span-1">
+            <div class="col-span-1">
                 <h3 class="text-text-primary font-playfair font-semibold text-base sm:text-lg mb-3 sm:mb-4">
-                    {{ __('Connect') }}
+                    {{ __('Help & Support') }}
                 </h3>
                 <ul class="space-y-1">
-                    <li><a href="https://tiktok.com" target="_blank" rel="noopener noreferrer"
-                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('TikTok') }}</a>
+                    <li><a href="/faq"
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('FAQs') }}</a>
                     </li>
-                    <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
-                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Instagram') }}</a>
+                    <li><a href="/shipping-returns"
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Shipping & Returns') }}</a>
                     </li>
-                    <li><a href="https://youtube.com" target="_blank" rel="noopener noreferrer"
-                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('YouTube') }}</a>
+                    <li><a href="/size-guide"
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Size Guide') }}</a>
                     </li>
-                    <li><a href="#"
-                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Contact') }}</a>
+                    <li><a href="/contact"
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Contact Us') }}</a>
                     </li>
                 </ul>
-            </div> --}}
+            </div>
 
             <!-- Legal Section -->
             <div class="col-span-1">
