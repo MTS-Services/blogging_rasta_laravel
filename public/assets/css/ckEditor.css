@@ -1,25 +1,30 @@
 :root {
-    /* Full Opacity HEX Colors */
-    --clr-purple-light: #b5a0ff;        /* 181, 160, 255 */
-    --clr-purple-mid: #9b87e8;          /* 155, 135, 232 */
-    --clr-purple-dark: #8b78d8;         /* 139, 120, 216 */
-    --clr-purple-lightest: #c5b4ff;     /* 197, 180, 255 */
-    --clr-white: #ffffff;               /* 255, 255, 255 */
+    /* Full Opacity HEX Colors (Mapped from your primary palette) */
+    --clr-purple-light:    #ffccd9;   /* primary-200 */
+    --clr-purple-mid:      #ff99b3;   /* primary-300 */
+    --clr-purple-dark:     #ff6690;   /* primary-500 */
+    --clr-purple-lightest: #FFE4E7;   /* primary-100 */
+    --clr-white:           #ffffff;
 
-    /* RGB Components for Transparent/Variable Colors (Base Colors) */
-    --rgb-purple-light: 181, 160, 255;
-    --rgb-purple-mid: 155, 135, 232;
-    --rgb-purple-dark: 139, 120, 216;
-    --rgb-purple-lightest: 197, 180, 255;
-    --rgb-white: 255, 255, 255;
-    --rgb-purple-deep: 107, 87, 180;    /* For border/bg opacity: rgba(107, 87, 180, ...) */
-    --rgb-header-start: 204, 194, 245;  /* For header gradient: rgba(204, 194, 245, ...) */
-    --rgb-header-end: 174, 161, 235;    /* For header gradient: rgba(174, 161, 235, ...) */
-    --rgb-border-glow: 206, 193, 247;   /* For header border glow: rgba(206, 193, 247, ...) */
-    --rgb-statusbar-start: 170, 155, 228; /* For statusbar gradient: rgba(170, 155, 228, ...) */
-    --rgb-statusbar-end: 166, 153, 221;   /* For statusbar gradient: rgba(166, 153, 221, ...) */
-    --rgb-btn-bg-base: 158, 136, 240;   /* For button background: rgba(158, 136, 240, 0.25) */
+    /* RGB Components for Transparent/Variable Colors */
+    --rgb-purple-light:    255, 204, 217;  /* primary-200 */
+    --rgb-purple-mid:      255, 153, 179;  /* primary-300 */
+    --rgb-purple-dark:     255, 102, 144;  /* primary-500 */
+    --rgb-purple-lightest: 255, 228, 231;  /* primary-100 */
+    --rgb-white:           255, 255, 255;
+
+    /* Extra tones from your palette */
+    --rgb-purple-deep:     191, 82, 118;   /* primary-800 */
+    --rgb-header-start:    238, 170, 204;  /* primary-400 */
+    --rgb-header-end:      255, 153, 179;  /* primary-300 */
+    --rgb-border-glow:     217, 122, 154;  /* primary-700 */
+
+    --rgb-statusbar-start: 230, 149, 179;  /* primary-600 */
+    --rgb-statusbar-end:   217, 122, 154;  /* primary-700 */
+
+    --rgb-btn-bg-base:     255, 102, 144;  /* primary-500 */
 }
+
 
 /* Main Container */
 .tox-tinymce {

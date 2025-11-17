@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Backend\Admin\UserManagement;
+namespace App\Http\Controllers\Backend\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin;
-use App\Services\AdminService;
+use App\Services\BlogService;
 
-class AdminController extends Controller
+class BlogController extends Controller
 
 {
-    protected $masterView = 'backend.admin.pages.user-management.admin';
-    public function __construct(protected AdminService $service) {}
+    protected $masterView = 'backend.admin.pages.blog';
+    public function __construct(protected BlogService $service) {}
 
     /**
      * Show the list of resources.
@@ -65,3 +64,4 @@ class AdminController extends Controller
         return view($this->masterView);
     }
 }
+

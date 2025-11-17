@@ -55,6 +55,7 @@
                         'icon' => 'user',
                         'active' => 'admin-users',
                     ],
+
                     // [
                     //     'name' => 'Pending Users',
                     //     'route' => '#',
@@ -69,6 +70,9 @@
                     // ],
                 ]" />
 
+                <x-backend.navlink type="single" icon="youtube" name="Banner Videos" :route="route('admin.banner-video')"
+                active="banner-video" :page_slug="$active" />
+
             {{-- <x-backend.navlink type="dropdown" icon="user-group" name="Audit Log Management" :page_slug="$active"
                 :items="[
                     [
@@ -78,7 +82,8 @@
                         'active' => 'audit-log-management',
                     ],
                 ]" /> --}}
-
+            <x-backend.navlink type="single" icon="folder" name="Blog" :route="route('admin.blog.index')"
+                active="blog" :page_slug="$active" />
             <div class="pt-4 pb-2">
                 <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 uppercase"
                     x-show="(desktop && sidebar_expanded) || (!desktop && mobile_menu_open)">
@@ -100,12 +105,12 @@
                     //     'icon' => 'palette',
                     //     'active' => 'settings-appearance',
                     // ],
-                    [
-                        'name' => 'Security',
-                        'route' => '#',
-                        'icon' => 'shield',
-                        'active' => 'two-factor',
-                    ],
+                    // [
+                    //     'name' => 'Security',
+                    //     'route' => '#',
+                    //     'icon' => 'shield',
+                    //     'active' => 'two-factor',
+                    // ],
                     // [
                     //     'name' => 'Languages',
                     //     'route' => route('admin.as.language.index'),
