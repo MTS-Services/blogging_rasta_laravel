@@ -12,6 +12,13 @@
             <x-slot name="pageSlug">{{ __('affiliate_disclosure') }}</x-slot>
             <livewire:frontend.affiliate />
         @break
+
+        @case('contact')
+            <x-slot name="title">{{ __('Contact Us ') }}</x-slot>
+            <x-slot name="pageSlug">{{ __('Contact_Us') }}</x-slot>
+            <livewire:frontend.contact />
+        @break
+
         @case('support')
             <x-slot name="title">{{ __('Support') }}</x-slot>
             <x-slot name="pageSlug">{{ __('support') }}</x-slot>

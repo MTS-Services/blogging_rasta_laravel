@@ -25,7 +25,7 @@
                 <P class="text-base font-normal font-inter text-text-primary mt-2">{{ __('Why it’s trending:') }}
                 </P>
                 <P class="text-base font-normal font-inter text-text-primary">
-                    {{ __(' It delivers that natural, dewy glow everyone’s chasing—no filters needed.') }}</P>
+                    {{ __('It delivers that natural, dewy glow everyone’s chasing—no filters needed.') }}</P>
             </div>
             <div class="mt-6">
                 <h6 class="text-base font-semibold font-inter text-text-primary">
@@ -179,12 +179,12 @@
                         class="text-base font-normal font-inter text-text-primary">{{ __('Gently cleanses without stripping your skin’s natural moisture barrier.') }}</span>
                 </p>
                 <p class="text-base font-semibold font-inter text-text-primary mt-2">
-                    {{ __('Our review: ') }}
+                    {{ __('Our review:') }}
                     <span
                         class="text-base font-normal font-inter text-text-primary">{{ __('With ceramides and hyaluronic acid, this cleanser feels silky and leaves the skin soft and balanced. Perfect for daily use.') }}</span>
                 </p>
                 <div class="flex gap-1 items-center mt-2">
-                    <p class="text-base font-semibold font-inter text-text-primary">{{ __('Rating: ') }}</p>
+                    <p class="text-base font-semibold font-inter text-text-primary">{{ __('Rating:') }}</p>
                     <div class="flex items-center">
                         <flux:icon name="star" class="w-6 h-6 stroke-second-500" />
                         <flux:icon name="star" class="w-6 h-6 stroke-second-500" />
@@ -215,7 +215,7 @@
                         class="text-base font-normal font-inter text-text-primary">{{ __('Smooth texture and light fragrance make it a pleasant experience. It gives an instant glow, though sensitive skin types may want to patch-test first.') }}</span>
                 </p>
                 <div class="flex gap-1 items-center mt-2">
-                    <p class="text-base font-semibold font-inter text-text-primary">{{ __('Rating: ') }}</p>
+                    <p class="text-base font-semibold font-inter text-text-primary">{{ __('Rating:') }}</p>
                     <div class="flex items-center">
                         <flux:icon name="star" class="w-6 h-6 stroke-second-500" />
                         <flux:icon name="star" class="w-6 h-6 stroke-second-500" />
@@ -231,12 +231,12 @@
                     {{ __('4. La Roche-Posay Anthelios UVmune 400 SPF 50+') }}</h6>
 
                 <p class="text-base font-semibold font-inter text-text-primary mt-2">
-                    {{ __('Best For: ') }}
+                    {{ __('Best For:') }}
                     <span
                         class="text-base font-normal font-inter text-text-primary">{{ __('All skin types, especially sensitive skin') }}</span>
                 </p>
                 <p class="text-base font-semibold font-inter text-text-primary mt-2">
-                    {{ __('What it does: ') }}
+                    {{ __('What it does:') }}
                     <span
                         class="text-base font-normal font-inter text-text-primary">{{ __('High-protection sunscreen with a lightweight, invisible finish.') }}</span>
                 </p>
@@ -259,20 +259,20 @@
             </div>
             <div class="mt-6">
                 <h6 class="text-base font-semibold font-inter text-text-primary">
-                    {{ __('5. Local Highlight: Mamendiaye Savon Natural Soap') }}</h6>
+                    {{ __('5.Local Highlight: Mamendiaye Savon Natural Soap') }}</h6>
 
                 <p class="text-base font-semibold font-inter text-text-primary mt-2">
-                    {{ __('Best For: ') }}
+                    {{ __('Best For:') }}
                     <span
                         class="text-base font-normal font-inter text-text-primary">{{ __('Uneven skin tone and dullness') }}</span>
                 </p>
                 <p class="text-base font-semibold font-inter text-text-primary mt-2">
-                    {{ __('What it does: ') }}
+                    {{ __('What it does:') }}
                     <span
                         class="text-base font-normal font-inter text-text-primary">{{ __('A Senegalese favorite made with natural plant oils and gentle exfoliants.') }}</span>
                 </p>
                 <p class="text-base font-semibold font-inter text-text-primary mt-2">
-                    {{ __('Our review: ') }}
+                    {{ __('Our review:') }}
                     <span
                         class="text-base font-normal font-inter text-text-primary">{{ __('Users love its natural scent and cleansing power. It helps improve texture with consistent use while keeping skin soft and hydrated.') }}</span>
                 </p>
