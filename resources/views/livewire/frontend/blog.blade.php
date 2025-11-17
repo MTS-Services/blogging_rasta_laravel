@@ -5,67 +5,39 @@
         @foreach ($blogs as $index => $blog)
             @php $layout = $index % 2; @endphp
 
-            {{-- LAYOUT: 0 --}}
             @if ($layout === 0)
                 <div class="block lg:flex gap-12 items-center justify-between mt-12">
                     <div class="bg-second-500/15 p-6 lg:w-1/2">
-                        <h3 class="text-3xl font-semibold text-text-primary">{{ \Illuminate\Support\Str::limit($blog->title, 18, '..') }}</h3>
-
-
-                        <a href="{{ route('blog.details', [$blog->slug]) }}" wire:navigate>
-                            <p >
-                                {!! \Illuminate\Support\Str::limit($blog->description, 745, '...') !!}
-                            </p>
+                        <h3 class="text-3xl font-semibold text-text-primary">{{ Str::limit($blog->title, 18, '..') }}
+                        </h3>
+                        <a href="{{ route('blog.details', [$blog->slug]) }}" wire:navigate
+                            class="block mt-4 text-text-secondary">
+                            {!! Str::limit($blog->description, 745, '...') !!}
                         </a>
                     </div>
-
-                    <div class="lg:w-1/2 mt-8 lg:mt-0">
-                        <div class="w-auto sm:w-[450px] h-auto sm:h-[600px] mx-auto ">
-                            <x-blog-media :file="$blog->file" class="object-cover!" />
-                        </div>
+                    <div class="lg:w-1/2 mt-8 lg:mt-0 flex justify-center">
+                        <x-blog-media :file="$blog->file"
+                            class="!object-cover w-full h-full sm:max-w-[450px] sm:max-h-[600px]" />
                     </div>
                 </div>
             @endif
 
-
-
-            {{-- LAYOUT: 1 --}}
             @if ($layout === 1)
-                <div class="block lg:flex gap-12 items-center justify-between mt-20">
-                    <div class="lg:w-1/2">
-                        <div class="w-auto sm:w-[450px] h-auto sm:h-[600px] mx-auto">
-                            <x-blog-media :file="$blog->file" class="object-cover!" />
-                        </div>
+                <div class="block lg:flex gap-12 items-center justify-between mt-12 lg:mt-20">
+                    <div class="lg:w-1/2 flex justify-center">
+                        <x-blog-media :file="$blog->file"
+                            class="!object-cover w-full h-full sm:max-w-[450px] sm:max-h-[600px]" />
                     </div>
-
                     <div class="bg-blog p-6 lg:w-1/2 mt-8 lg:mt-0">
-                        <h3 class="text-3xl font-semibold text-text-primary">{{ \Illuminate\Support\Str::limit($blog->title, 18, '..') }}</h3>
-                        <a href="{{ route('blog.details', [$blog->slug]) }}" wire:navigate>
-                            <p>
-                                {!! \Illuminate\Support\Str::limit($blog->description, 745, '...') !!}
-                            </p>
+                        <h3 class="text-3xl font-semibold text-text-primary">{{ Str::limit($blog->title, 18, '..') }}
+                        </h3>
+                        <a href="{{ route('blog.details', [$blog->slug]) }}" wire:navigate
+                            class="block mt-4 text-text-secondary">
+                            {!! Str::limit($blog->description, 745, '...') !!}
                         </a>
-                    </div>
-                </div>
-            @endif
-
-
-            {{-- LAYOUT: 2 --}}
-            @if ($layout === 2)
-                <div class="block lg:flex gap-12 items-center justify-between mt-20">
-                    <div class="bg-blog p-6 lg:w-1/2">
-                        <h3 class="text-3xl font-semibold text-text-primary">{{ $blog->title }}</h3>
-                        {!! \Illuminate\Support\Str::limit($blog->description, 745, '...') !!}
-                    </div>
-
-                    <div class="lg:w-1/2 mt-8 lg:mt-0">
-                        <div class="w-auto sm:w-[450px] h-auto sm:h-[600px] mx-auto">
-                            <x-blog-media :file="$blog->file" />
-                        </div>
                     </div>
                 </div>
             @endif
         @endforeach
-
     </div>
 </div>
