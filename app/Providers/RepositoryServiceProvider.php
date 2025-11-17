@@ -3,19 +3,21 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\Eloquent\BlogRepository;
 use App\Repositories\Eloquent\UserRepository;
 use App\Repositories\Eloquent\AdminRepository;
 use App\Repositories\Eloquent\AuditRepository;
+use App\Repositories\Eloquent\KeywordRepository;
 use App\Repositories\Eloquent\LanguageRepository;
 use App\Repositories\Eloquent\BannerVideoRepository;
+use App\Repositories\Contracts\BlogRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Contracts\AdminRepositoryInterface;
 use App\Repositories\Contracts\AuditRepositoryInterface;
-use App\Repositories\Contracts\BlogRepositoryInterface;
+use App\Repositories\Contracts\KeywordRepositoryInterface;
 use App\Repositories\Contracts\LanguageRepositoryInterface;
 use App\Repositories\Contracts\ApplicationSettingsIntarface;
 use App\Repositories\Eloquent\ApplicationSettingsRepository;
-use App\Repositories\Eloquent\BlogRepository;
 use App\Repositories\Contracts\BannerVideoRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -52,6 +54,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             BannerVideoRepositoryInterface::class,
            BannerVideoRepository::class
+        );
+
+        $this->app->bind(
+            KeywordRepositoryInterface::class,
+            KeywordRepository::class
         );
     }
 
