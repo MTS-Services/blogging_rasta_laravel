@@ -10,9 +10,9 @@
                     <div class="bg-second-500/15 p-6 flex-1 lg:flex-1/2">
                         <h3 class="text-3xl font-semibold text-text-primary">{{ Str::limit($blog->title, 18, '..') }}
                         </h3>
-                        <a href="{{ route('blog.details', [$blog->slug]) }}" wire:navigate
+                        <a href="{{ route('blog.details', $blog->slug) }}" wire:navigate
                             class="inline-block mt-4 text-text-secondary">
-                            {!! Str::limit(html_entity_decode($blog->description), 800, '...') !!}
+                            {{ Str::limit(html_entity_decode($blog->description), 800, '...') }}
                         </a>
                     </div>
                     <div class="flex-1 lg:flex-1/2 mt-8 lg:mt-0 flex justify-center">
@@ -29,9 +29,9 @@
                     <div class="bg-blog p-6 flex-1 lg:flex-1/2 mt-8 lg:mt-0">
                         <h3 class="text-3xl font-semibold text-text-primary">{{ Str::limit($blog->title, 18, '..') }}
                         </h3>
-                        <a href="{{ route('blog.details', [$blog->slug]) }}" wire:navigate
+                        <a href="{{ route('blog.details', $blog->slug) }}" wire:navigate
                             class="inline-block mt-4 text-text-secondary">
-                            {!! Str::limit(html_entity_decode($blog->description), 800, '...') !!}
+                            {{ Str::limit(html_entity_decode($blog->description), 800, '...') }}
                         </a>
                     </div>
                 </div>
