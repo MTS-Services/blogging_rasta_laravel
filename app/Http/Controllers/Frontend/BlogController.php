@@ -17,9 +17,10 @@ class BlogController extends Controller
         return view($this->masterView);
     }
 
-    public function details(string $encryptedId)
+    public function details(string $slug)
     {
-        $data = $this->service->findData(decrypt($encryptedId));
+        $data = $this->service->findSlugData($slug);
+        // dd($data);
         if (!$data) {
             abort(404);
         }
