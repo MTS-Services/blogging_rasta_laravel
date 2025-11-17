@@ -3,98 +3,111 @@
 namespace App\Livewire\Frontend;
 
 use Livewire\Component;
+use App\Services\TikTokMultiUserService;
+use Illuminate\Support\Facades\Log;
 
 class VideoFeed extends Component
 {
-    public $activeCategory = 'All';
+    public $activeUser = 'All';
+    public $videos = [];
+    public $loading = true;
+    public $error = null;
 
-    public $categories = [
-        'All',
-        'Morning',
-        'Evening',
-        'Haul',
-        'Tips',
-        'Problem-Solving',
-        'Makeup'
-    ];
+    protected $tiktokService;
 
-    public $videos = [
-        [
-            'title' => '10-Step Korean Skincare Routine',
-            'author' => 'Diodio Glow',
-            'likes' => '2.8K',
-            'comments' => '1.4K',
-            'category' => 'Morning',
-            'tags' => ['#GlowSkin', '#KoreanSkincare', '#DiodioTips'],
-            'image' => 'assets/images/video/video (1).png',
-        ],
-        [
-            'title' => 'Budget Skincare Haul (Under $50)',
-            'author' => 'Diodio Glow',
-            'likes' => '18K',
-            'comments' => '2.8K',
-            'category' => 'Haul',
-            'tags' => ['#GlowSkin', '#Haul', '#DiodioTips'],
-            'image' => 'assets/images/video/video (2).png',
-        ],
-        [
-            'title' => 'How to Fix Dehydrated Skin Fast',
-            'author' => 'Diodio Glow',
-            'likes' => '18K',
-            'comments' => '2.8K',
-            'category' => 'Problem-Solving',
-            'tags' => ['#GlowSkin', '#Hydration', '#DiodioTips'],
-            'image' => 'assets/images/video/video (3).png',
-        ],
-        [
-            'title' => 'Acne-Prone Skin Routine That Actually Works',
-            'author' => 'Diodio Glow',
-            'likes' => '18K',
-            'comments' => '2.8K',
-            'category' => 'Tips',
-            'tags' => ['#GlowSkin', '#KoreanSkincare', '#DiodioTips'],
-            'image' => 'assets/images/video/video (4).png',
-        ],
-
-        [
-            'title' => 'Evening Glow Routine for All Skin Types',
-            'author' => 'Diodio Glow',
-            'likes' => '18K',
-            'comments' => '2.8K',
-            'category' => 'Evening',
-            'tags' => ['#GlowSkin', '#KoreanSkincare', '#DiodioTips'],
-            'image' => 'assets/images/video/video (5).png',
-        ],
-
-        [
-            'title' => 'Glow-Getter Makeup Remover Alternative',
-            'author' => 'Diodio Glow',
-            'likes' => '18K',
-            'comments' => '2.8K',
-            'category' => 'Makeup',
-            'tags' => ['#GlowSkin', '#KoreanSkincare', '#DiodioTips'],
-            'image' => 'assets/images/video/video (6).png',
-        ],
-    ];
-
-    public function setCategory($category)
+    public function boot(TikTokMultiUserService $tiktokService)
     {
-        $this->activeCategory = $category;
+        $this->tiktokService = $tiktokService;
+    }
+
+    public function mount()
+    {
+        $this->loadVideos();
+    }
+
+    public function loadVideos()
+    {
+        $this->loading = true;
+        $this->error = null;
+
+        try {
+            // Get featured users from config
+            $featuredUsers = config('tiktok.featured_users', []);
+            $usernames = array_column($featuredUsers, 'username');
+
+            if (empty($usernames)) {
+                throw new \Exception('No featured users configured');
+            }
+
+            // Load videos from TikTok API (increased limit for video feed page)
+            $this->videos = $this->tiktokService->getMultipleUsersVideos($usernames, 15);
+
+            Log::info('VideoFeed page - TikTok videos loaded', [
+                'count' => count($this->videos),
+                'users' => $usernames
+            ]);
+        } catch (\Exception $e) {
+            $this->error = 'Failed to load videos: ' . $e->getMessage();
+            Log::error('VideoFeed page - TikTok loading failed', [
+                'error' => $e->getMessage()
+            ]);
+            $this->videos = [];
+        }
+
+        $this->loading = false;
+    }
+
+    public function setUser($username)
+    {
+        $this->activeUser = $username;
+    }
+
+    public function getUsersProperty()
+    {
+        $featuredUsers = config('tiktok.featured_users', []);
+        $users = ['All'];
+        
+        foreach ($featuredUsers as $user) {
+            $users[] = $user['username'];
+        }
+        
+        return $users;
     }
 
     public function getFilteredVideosProperty()
     {
-        if ($this->activeCategory === 'All') {
+        if ($this->activeUser === 'All') {
             return $this->videos;
         }
 
-        return collect($this->videos)->where('category', $this->activeCategory)->toArray();
+        return collect($this->videos)
+            ->filter(function ($video) {
+                $username = $video['_username'] ?? ($video['author']['unique_id'] ?? '');
+                return $username === $this->activeUser;
+            })
+            ->values()
+            ->toArray();
+    }
+
+    public function formatNumber($number)
+    {
+        if (!is_numeric($number)) {
+            return '0';
+        }
+
+        if ($number >= 1000000) {
+            return round($number / 1000000, 1) . 'M';
+        } else if ($number >= 1000) {
+            return round($number / 1000, 1) . 'K';
+        }
+        return number_format($number);
     }
 
     public function render()
     {
         return view('livewire.frontend.video-feed', [
             'filteredVideos' => $this->filtered_videos,
+            'users' => $this->users,
         ]);
     }
 }
