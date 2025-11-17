@@ -24,9 +24,9 @@
 
                     {{-- Left Column --}}
                     <div class="flex flex-col h-auto p-4   ">
-                        <h2 class="text-xl text-text-primary font-semibold mb-6">{{ __('Profile Image') }}</h2>
+                        <h2 class="text-xl text-text-primary font-semibold mb-6">{{ __('Product Image') }}</h2>
                         <div class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-pink-100 overflow-hidden">
-                            <img src="{{ storage_url($data->image) }}" alt="Profile Image"
+                            <img src="{{ storage_url($data->image) }}" alt="Product Image"
                                 class="w-full h-full object-cover">
                         </div>
 

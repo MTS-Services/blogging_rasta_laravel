@@ -8,6 +8,7 @@ use App\Enums\ProductStatus;
 use App\Models\Product;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Validate;
+use Illuminate\Http\UploadedFile;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class ProductForm extends Form
@@ -25,7 +26,8 @@ class ProductForm extends Form
     public ?float $price = null;
     public ?float $sale_price = null;
     public ?array $product_types = null;
-    public $image = null;
+    public ?UploadedFile $image = null;
+    public bool $remove_image = false;
     public ?string $affiliate_link = null;
     public ?string $affiliate_source = null;
     public string $status = ProductStatus::ACTIVE->value;
@@ -41,9 +43,7 @@ class ProductForm extends Form
             ? 'sometimes|required|string|max:255|unique:products,slug,' . $this->id
             : 'required|string|max:255|unique:products,slug';
         
-        $imageRule = $this->isUpdating()
-            ? 'nullable|image|max:2048'
-            : 'nullable|image|max:2048';
+       
 
         return [
             'category_id' => 'nullable|integer|exists:categories,id',
@@ -53,7 +53,8 @@ class ProductForm extends Form
             'price' => 'required|numeric|min:0|regex:/^\d+(\.\d{1,2})?$/',
             'sale_price' => 'nullable|numeric|min:0|regex:/^\d+(\.\d{1,2})?$/|lt:price',
             'product_types' => 'nullable|array',
-            'image' => $imageRule,
+            'image'              => 'nullable|max:1024',
+            'remove_image'      => 'boolean',
             'affiliate_link' => 'required|url:http,https|max:255',
             'affiliate_source' => 'nullable|string|max:255',
             'status' => 'required|string|in:' . implode(',', array_column(ProductStatus::cases(), 'value')),
@@ -94,7 +95,7 @@ class ProductForm extends Form
         $this->price = null;
         $this->sale_price = null;
         $this->product_types = null;
-        $this->image = null;
+       $this->image = null;
         $this->affiliate_link = null;
         $this->affiliate_source = null;
         $this->status = ProductStatus::ACTIVE->value;

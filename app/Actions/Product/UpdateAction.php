@@ -19,8 +19,6 @@ class UpdateAction
         public ProductRepositoryInterface $interface
     ) {}
 
-
-
     public function execute(int $id,  array $data): Product
     {
         return DB::transaction(function () use ($id, $data) {
@@ -36,6 +34,7 @@ class UpdateAction
 
             $oldAvatarPath = Arr::get($oldData, 'image');
             $uploadedAvatar = Arr::get($data, 'image');
+            $newSingleAvatarPath = null;
 
             if ($uploadedAvatar instanceof UploadedFile) {
                 // Delete old file permanently (File deletion is non-reversible)
@@ -55,6 +54,11 @@ class UpdateAction
                 }
                 $newData['image'] = null;
             }
+
+            if (!$newData['remove_image'] && !$newSingleAvatarPath) {
+                $newData['image'] = $oldAvatarPath ?? null;
+            }
+
             unset($newData['remove_image']);
 
 
@@ -62,11 +66,11 @@ class UpdateAction
             $updated = $this->interface->update($id, $newData);
 
             if (!$updated) {
-                Log::error('Failed to update Data in repository', ['product_id' => $id]);
-                throw new \Exception('Failed to update Product');
+                Log::error('Failed to update Data in repository', ['blog_id' => $id]);
+                throw new \Exception('Failed to update Blog');
             }
 
-            // Refresh the Product model
+            // Refresh the Blog model
             $model = $model->fresh();
 
             return $model;
