@@ -16,6 +16,7 @@ class Create extends Component
     use WithNotification, WithFileUploads;
 
     public ProductForm $form;
+    public string $productTypeInput = '';
 
     protected ProductService $service;
     protected CategoryService $categoryService;
@@ -35,7 +36,59 @@ class Create extends Component
     public function mount(): void
     {
         $this->form->status = ProductStatus::ACTIVE->value;
+         $this->form->product_types = [];
     }
+
+
+
+
+     /**
+     * Add a product type when Enter is pressed
+     */
+    public function addProductType(): void
+    {
+        $value = trim($this->productTypeInput);
+        
+        // Check if input is not empty
+        if (empty($value)) {
+            return;
+        }
+
+        // Initialize array if null
+        if ($this->form->product_types === null) {
+            $this->form->product_types = [];
+        }
+
+        // Check if already exists (case-insensitive)
+        $exists = collect($this->form->product_types)
+            ->map(fn($type) => strtolower($type))
+            ->contains(strtolower($value));
+
+        if ($exists) {
+            $this->addError('productTypeInput', 'this product type already exists');
+            return;
+        }
+
+        // Add to array
+        $this->form->product_types[] = $value;
+        
+        // Clear input
+        $this->productTypeInput = '';
+        $this->resetErrorBag('productTypeInput');
+    }
+
+    /**
+     * Remove a specific product type
+     */
+    public function removeProductType(int $index): void
+    {
+        if (isset($this->form->product_types[$index])) {
+            unset($this->form->product_types[$index]);
+            // Re-index array
+            $this->form->product_types = array_values($this->form->product_types);
+        }
+    }
+
 
     /**
      * Render the component view.

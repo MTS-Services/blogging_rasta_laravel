@@ -65,11 +65,31 @@
                                     </p>
                                     <p class="text-slate-400 text-lg font-bold">{{ $data->sale_price }}</p>
                                 </div>
-                                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                {{-- <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">
                                         {{ __('Product Type') }}
                                     </p>
                                     <p class="text-slate-400 text-lg font-bold">{{ $data->product_type ?? 'N/A' }}</p>
+                                </div> --}}
+                                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                    <p class="text-text-white text-xs font-semibold mb-2 uppercase">
+                                        {{ __('Product Type') }}
+                                    </p>
+                                    {{-- <p class="text-slate-400 text-lg font-bold">{{ $data->product_type ?? 'N/A' }}</p> --}}
+
+
+                                    @if (!empty($data->product_types))
+                                        <div class="flex flex-wrap gap-1">
+                                            @foreach ($data->product_types as $type)
+                                                <span
+                                                    class="inline-flex items-center px-2 py-1 rounded-full text-base bg-zinc-100 text-second-500">
+                                                    {{ $type }}
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <span class="text-gray-400 text-sm">No types</span>
+                                    @endif
                                 </div>
                                 <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">
