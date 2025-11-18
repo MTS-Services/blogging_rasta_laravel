@@ -2,12 +2,11 @@
 
 namespace App\Services;
 
-use App\Actions\User\BulkAction;
-use App\Actions\User\DeleteAction;
-use App\Actions\User\RestoreAction;
+use App\Actions\Contact\BulkAction;
+use App\Actions\Contact\DeleteAction;
+use App\Actions\Contact\RestoreAction;
 
-use App\Enums\UserStatus;
-use App\Models\User;
+use App\Models\Contact;
 use App\Repositories\Contracts\ContactRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -25,13 +24,13 @@ class ContactService
     *                          Find Methods 
     * ================== ================== ================== */
 
-    public function getAllDatas($sortfield = 'created_at', $order = 'desc'): Collection
+   public function getAllDatas($sortfield = 'created_at', $order = 'desc'): Collection
     {
         return $this->interface->all(sortField: $sortfield, order: $order);
     }
 
 
-    public function findData($column_value, string $column_name = 'id'): ?User
+    public function findData($column_value, string $column_name = 'id'): ?Contact
     {
         return $this->interface->find(column_value: $column_value, column_name: $column_name);
     }
@@ -63,48 +62,64 @@ class ContactService
         return $this->interface->count(filters: $filters);
     }
 
-
     /* ================== ================== ==================
     *                   Action Executions
     * ================== ================== ================== */
 
 
-    public function deleteData(int $id, array $actioner): bool
+
+    public function deleteData(int $id, ?int $actionerId = null): bool
     {
-        return $this->deleteAction->execute(id: $id, actioner: $actioner, forceDelete: false);
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
+        }
+        return $this->deleteAction->execute(id: $id, forceDelete: false, actionerId: $actionerId);
     }
 
-    public function restoreData(int $id, array $actioner): bool
+    public function restoreData(int $id, ?int $actionerId = null): bool
     {
-        return $this->restoreAction->execute(id: $id, actioner: $actioner);
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
+        }
+
+        return $this->restoreAction->execute(id: $id, actionerId: $actionerId);
     }
 
-    public function forceDeleteData(int $id): bool
+    public function forceDeleteData(int $id, ?int $actionerId = null): bool
     {
-        $actioner = [
-            'id' => null,
-            'type' => null
-        ];
-        return $this->deleteAction->execute(id: $id, actioner: $actioner, forceDelete: true);
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
+        }
+        return $this->deleteAction->execute(id: $id, forceDelete: true, actionerId: $actionerId);
     }
 
-    public function bulkRestoreData(array $ids, array $actioner): int
+
+    public function bulkRestoreData(array $ids, ?int $actionerId = null): int
     {
-        return $this->bulkAction->execute(ids: $ids, action: 'restore', actioner: $actioner, status: null);
+
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
+        }
+
+        return $this->bulkAction->execute(ids: $ids,  action: 'restore', status: null, actionerId: $actionerId);
     }
 
-    public function bulkForceDeleteData(array $ids): int
+    public function bulkForceDeleteData(array $ids, ?int $actionerId = null): int
     {
-        $actioner = [
-            'id' => null,
-            'type' => null
-        ];
-        return $this->bulkAction->execute(ids: $ids, action: 'forceDelete', actioner: $actioner, status: null);
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
+        }
+
+        return $this->bulkAction->execute(ids: $ids, action: 'forceDelete', status: null, actionerId: $actionerId);
     }
 
-    public function bulkDeleteData(array $ids, array $actioner): int
+    public function bulkDeleteData(array $ids, ?int $actionerId = null): int
     {
-        return $this->bulkAction->execute(ids: $ids, action: 'delete', actioner: $actioner, status: null);
+        if ($actionerId == null) {
+            $actionerId = admin()->id;
+        }
+
+        return $this->bulkAction->execute(ids: $ids, action: 'delete', status: null, actionerId: $actionerId);
     }
 
 }

@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
             BlogSeeder::class,
             CategorySeeder::class,
             ProductSeeder::class,
-            KeywordSeeder::class
+            KeywordSeeder::class,
+            ContactSeeder::class,
         ]);
     }
 }

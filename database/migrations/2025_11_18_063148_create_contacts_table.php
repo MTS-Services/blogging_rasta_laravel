@@ -22,7 +22,7 @@ return new class extends Migration
             
             $table->timestamps();
             $table->softDeletes();
-            $this->addMorphedAuditColumns($table);
+            $this->addAdminAuditColumns($table);
         });
     }
 

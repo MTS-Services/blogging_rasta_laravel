@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Builder;
 
-class Contact extends Model
+class Contact extends BaseModel
 {
     protected $fillable = [
         'sort_order',
@@ -12,15 +13,21 @@ class Contact extends Model
         'email',
         'message',
 
-
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'restored_by',
         'restored_at',
-        'creater_id',
-        'creater_type',
-        'updater_id',
-        'updater_type',
-        'deleter_id',
-        'deleter_type',
-        'restorer_id',
-        'restorer_type',
     ];
-}
+
+
+    public function scopeFilter(Builder $query, array $filters): Builder
+    {
+        return $query
+            ->when(
+                $filters['name'] ?? null,
+                fn($q, $name) =>
+                $q->where('name', $name)
+            );
+    }
+};
