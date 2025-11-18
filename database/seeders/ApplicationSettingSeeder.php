@@ -13,7 +13,6 @@ class ApplicationSettingSeeder extends Seeder
      */
     public function run(): void
     {
-
         // General Settings
         ApplicationSetting::create([
             'key' => 'app_name',
@@ -81,7 +80,7 @@ class ApplicationSettingSeeder extends Seeder
             'env_key' => 'DEBUGBAR',
         ]);
 
-        // Database Setting
+        // Database Settings
         ApplicationSetting::create([
             'key' => 'database_driver',
             'value' => '1',
@@ -113,7 +112,7 @@ class ApplicationSettingSeeder extends Seeder
             'env_key' => 'DB_PASSWORD',
         ]);
 
-        // SMTP Setting
+        // SMTP Settings
         ApplicationSetting::create([
             'key' => 'smtp_driver',
             'value' => 'smtp',
@@ -153,6 +152,49 @@ class ApplicationSettingSeeder extends Seeder
             'key' => 'smtp_from_name',
             'value' => 'Super Admin',
             'env_key' => 'MAIL_FROM_NAME',
+        ]);
+
+        // TikTok Settings
+        ApplicationSetting::create([
+            'key' => 'rapidapi_key',
+            'value' => '5f732cda56msh4cedf700adcaba8p1392e7jsn5a56bf9bd11b',
+            'env_key' => 'RAPIDAPI_KEY',
+        ]);
+        ApplicationSetting::create([
+            'key' => 'featured_users',
+            'value' => json_encode([
+                [
+                    'username' => 'diodioglowskin',
+                    'display_name' => 'Diodio Glow Skin',
+                    'max_videos' => 20,
+                ],
+                [
+                    'username' => 'mamendiayesavon111',
+                    'display_name' => 'Mamendiayesavon',
+                    'max_videos' => 20,
+                ]
+            ]),
+            'env_key' => null,
+        ]);
+        ApplicationSetting::create([
+            'key' => 'default_max_videos_per_user',
+            'value' => '20',
+            'env_key' => null,
+        ]);
+        ApplicationSetting::create([
+            'key' => 'videos_per_page',
+            'value' => '12',
+            'env_key' => null,
+        ]);
+        ApplicationSetting::create([
+            'key' => 'videos_per_user_per_page',
+            'value' => '4',
+            'env_key' => null,
+        ]);
+        ApplicationSetting::create([
+            'key' => 'cache_duration',
+            'value' => '3600',
+            'env_key' => null,
         ]);
     }
 }
