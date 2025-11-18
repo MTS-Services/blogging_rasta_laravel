@@ -21,21 +21,19 @@
                         <h4 class="text-xl font-lato font-medium text-text-primary">{{ $product->title }}
                         </h4>
                         <div class="flex items-center justify-between">
-                            <div class="mt-2">
-                                {{-- <h3 class="text-2xl font-playfair text-primary-950/60">{{ '$' . $product->price }}
-                                </h3> --}}
+                            <div class="">
                                 <div>
                                     @if ($product->sale_price)
-                                        {{-- যদি sale price থাকে --}}
-                                        <h3 class="text-2xl font-playfair text-primary-950/60 line-through">
+                                       
+                                        <h3 class="text-sm font-playfair text-primary-950/60 line-through mt-0">
                                             {{ '$' . $product->price }}
                                         </h3>
                                         <h3 class="text-2xl font-playfair text-zinc-500 font-bold">
                                             {{ '$' . $product->sale_price }}
                                         </h3>
                                     @else
-                                        {{-- যদি sale price না থাকে --}}
-                                        <h3 class="text-2xl font-playfair text-primary-950/60">
+                                        
+                                        <h3 class="text-2xl font-playfair text-primary-950/60 mt-2">
                                             {{ '$' . $product->price }}
                                         </h3>
                                     @endif

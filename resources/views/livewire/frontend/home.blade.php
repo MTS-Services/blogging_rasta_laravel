@@ -454,13 +454,28 @@
 
             {{-- Hashtag Cards --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach ($hashtags as $hash)
+
+                @foreach ($keywords as $keyword)
                     <div
                         class="bg-white border border-second-500/30 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
                         <h3 class="text-2xl font-medium font-montserrat text-text-primary mb-1">
-                            {{ __($hash['tag']) }}
+                            #{{ $keyword->name }}
                         </h3>
-                        <span class="text-sm text-text-muted">{{ __($hash['videos'] . ' videos') }}</span>
+                        {{-- @foreach ($hashtags as $hash)
+                            <span class="text-sm text-text-muted">{{ __($hash['videos'] . ' videos') }}</span>
+                        @endforeach --}}
+
+                        @php
+                            $index = $loop->index;
+                        @endphp
+
+                        @if (isset($hashtags[$index]))
+                            <span class="text-sm text-text-muted">
+                                {{ $hashtags[$index]['videos'] }} videos
+                            </span>
+                        @else
+                            <span class="text-sm text-text-muted">0 videos</span>
+                        @endif
                     </div>
                 @endforeach
             </div>
