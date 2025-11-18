@@ -5,6 +5,62 @@
         <h6 class="text-base text-muted font-semibold font-inter mt-4">
             {{ __('All products handpicked by Diodio Glow • Shop from trusted affiliate stores') }}</h6>
 
+
+        {{-- <div class="flex flex-wrap gap-1 sm:gap-2 xl:ps-20 mb-5 xl:mb-10 max-w-2xl mx-auto">
+            @foreach ($this->users as $user)
+                @if ($user === 'All')
+                    <button wire:click="setUser('{{ $user }}')"
+                        class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
+                            {{ $activeUser === $user
+                                ? 'bg-second-500 text-white'
+                                : 'bg-second-800/10 text-second-500 hover:bg-second-400/40' }}">
+                        {{ $user }}
+                    </button>
+                @else
+                    @php
+                        // Find actual username for this display name
+                        $featuredUsers = config('tiktok.featured_users', []);
+                        $userData = collect($featuredUsers)->firstWhere('display_name', $user);
+                        $actualUsername = $userData['username'] ?? strtolower(str_replace(' ', '', $user));
+                    @endphp
+                    <a href="{{ route('user-video-feed', ['username' => $actualUsername]) }}" wire:navigate
+                        class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
+                             {{ $activeUser === $user
+                                 ? 'bg-second-500 text-white'
+                                 : 'bg-second-800/10 text-second-500 hover:bg-second-400/40' }}">
+                        {{ $user }}
+                    </a>
+                @endif
+            @endforeach
+        </div> --}}
+        <div class="flex flex-wrap gap-1 sm:gap-2 xl:ps-20 mb-5 xl:mb-10 max-w-2xl mx-auto">
+            
+                @if ($user === 'All')
+                    <button wire:click="setUser('{{ $user }}')"
+                        class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
+                            {{ $activeUser === $user
+                                ? 'bg-second-500 text-white'
+                                : 'bg-second-800/10 text-second-500 hover:bg-second-400/40' }}">
+                        {{ $user }}
+                    </button>
+                @else
+                    @php
+                        // Find actual username for this display name
+                        $featuredUsers = config('tiktok.featured_users', []);
+                        $userData = collect($featuredUsers)->firstWhere('display_name', $user);
+                        $actualUsername = $userData['username'] ?? strtolower(str_replace(' ', '', $user));
+                    @endphp
+                    <a href="{{ route('user-video-feed', ['username' => $actualUsername]) }}" wire:navigate
+                        class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
+                             {{ $activeUser === $user
+                                 ? 'bg-second-500 text-white'
+                                 : 'bg-second-800/10 text-second-500 hover:bg-second-400/40' }}">
+                        {{ $user }}
+                    </a>
+                @endif
+            @endforeach
+        </div>
+
         {{-- Product Cards --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 px-4">
             @foreach ($products as $product)
