@@ -4,10 +4,10 @@ namespace App\Livewire\Backend\Admin\Contact;
 
 use Livewire\Component;
 
-class ContactComponent extends Component
+class Index extends Component
 {
     public function render()
     {
-        return view('livewire.backend.admin.contact.contact-component');
+        return view('livewire.backend.admin.contact.index');
     }
 }
