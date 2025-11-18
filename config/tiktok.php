@@ -12,19 +12,12 @@ return [
             'max_videos' => 20, 
         ],
         [
-            'username' => 'opfootbal',
-            'display_name' => 'OP Football',
+            'username' => 'mamendiayesavon111',
+            'display_name' => 'mamendiayesavon',
             'description' => 'Gaming',
             'color' => 'red',
             'max_videos' => 20, 
-        ],
-        [
-            'username' => 'mamandiodioglowskin',
-            'display_name' => 'mamandiodioglow',
-            'description' => 'Gaming',
-            'color' => 'green',
-            'max_videos' => 20, 
-        ],
+        ]
     ],
 
     'default_max_videos_per_user' => 20,
