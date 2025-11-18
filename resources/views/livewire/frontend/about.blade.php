@@ -154,5 +154,29 @@
             </p>
         </div>
     </section>
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const video = document.getElementById('bannerVideo');
+                const playButton = document.getElementById('playButton');
 
+                // Video play হলে custom button hide করবে
+                video.addEventListener('play', function() {
+                    playButton.style.display = 'none';
+                });
+
+                // Video pause হলে custom button আবার show করবে
+                video.addEventListener('pause', function() {
+                    if (video.currentTime > 0 && !video.ended) {
+                        playButton.style.display = 'flex';
+                    }
+                });
+
+                // Video শেষ হলে custom button আবার show করবে
+                video.addEventListener('ended', function() {
+                    playButton.style.display = 'flex';
+                });
+            });
+        </script>
+    @endpush
 </div>
