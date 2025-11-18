@@ -53,64 +53,69 @@
             </div>
         </div>
     </section>
-    <section class="bg-bg-tertiary/40 py-12 lg:py-24 mb-12 sm:mb-0">
-        <div class="container">
-            <h2 class="text-5xl font-bold font-montserrat pb-6 text-text-primary text-center">
-                {{ __('Connect with Diodio Glow') }}</h2>
+    <section class="bg-[#fcf8f6] py-16 lg:py-28">
+        <div class="container mx-auto text-center">
+            <h2 class="text-5xl font-bold font-montserrat text-text-primary pb-8">
+                {{ __('Connect with Diodio Glow') }}
+            </h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-16 max-w-5xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
 
-                <!-- Blog -->
-                <a href="{{ route('blog') }}" wire:navigate
-                    class="w-full bg-white py-6 px-6 border border-second-500/30 rounded-lg text-center block">
-                    <!-- Hero Icon: Book Open -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto text-zinc-500" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 20h9M3 20h9M4 4h16M4 8h16M4 12h16M4 16h16" />
+                @php
+                    $cardClasses =
+                        'w-full bg-white py-8 px-6 rounded-2xl shadow-lg border border-[#fce8d7] transition-all duration-300 transform hover:shadow-xl hover:translate-y-[-4px] hover:border-[#ffe4e4]';
+                    $titleClasses = 'text-2xl font-bold font-montserrat text-text-primary pt-3 pb-1';
+                    $iconClasses = 'w-12 h-12 mx-auto';
+                @endphp
+
+
+                <a href="{{ route('blog') }}" wire:navigate class="{{ $cardClasses }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="{{ $iconClasses }}" viewBox="0 0 24 24"
+                        fill="none" stroke="#ff86a2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                        <path d="M12 14v7"></path>
+                        <path d="M3 21h18"></path>
                     </svg>
-                    <h2 class="text-2xl font-bold font-montserrat text-text-primary py-2">Blog</h2>
+                    <h3 class="{{ $titleClasses }}">Blog</h3>
+                    <p class="text-sm text-gray-500">Read the latest tips</p>
                 </a>
 
-                <!-- Video Feed -->
-                <a href="{{ route('video-feed') }}" wire:navigate
-                    class="w-full bg-white py-6 px-6 border border-second-500/30 rounded-lg text-center block">
-                    <!-- Hero Icon: Video Camera -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto text-zinc-500" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14m0-4v4m0-4L9 10v4l6-2z" />
+                <a href="{{ route('video-feed') }}" wire:navigate class="{{ $cardClasses }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="{{ $iconClasses }}" viewBox="0 0 24 24"
+                        fill="none" stroke="#ff6a8f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1"></path>
+                        <path d="M10 12l8 5 0-10-8 5z"></path>
                     </svg>
-                    <h2 class="text-2xl font-bold font-montserrat text-text-primary py-2">Video Feed</h2>
+                    <h3 class="{{ $titleClasses }}">Video Feed</h3>
+                    <p class="text-sm text-gray-500">Watch our tutorials</p>
                 </a>
 
-                <!-- Products -->
-                <a href="{{ route('product') }}" wire:navigate
-                    class="w-full bg-white py-6 px-6 border border-second-500/30 rounded-lg text-center block">
-                    <!-- Hero Icon: Shopping Bag -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto text-zinc-500" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M16 11V5a4 4 0 00-8 0v6M5 11h14l1 10H4L5 11z" />
+                <a href="{{ route('product') }}" wire:navigate class="{{ $cardClasses }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="{{ $iconClasses }}" viewBox="0 0 24 24"
+                        fill="none" stroke="#ff7c9c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
                     </svg>
-                    <h2 class="text-2xl font-bold font-montserrat text-text-primary py-2">Products</h2>
+                    <h3 class="{{ $titleClasses }}">Products</h3>
+                    <p class="text-sm text-gray-500">Shop our collection</p>
                 </a>
 
-                <!-- Contact -->
-                <a href="mailto:contact@diodioglow.com" wire:navigate
-                    class="w-full bg-white py-6 px-6 border border-second-500/30 rounded-lg text-center md:col-span-3 lg:col-span-1 md:max-w-xs md:mx-auto lg:max-w-full block">
-                    <!-- Hero Icon: Mail -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto text-zinc-500" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-18 0v8a2 2 0 002 2h14a2 2 0 002-2V8m-18 0l9 6 9-6" />
+                <a href="mailto:contact@diodioglow.com" wire:navigate class="{{ $cardClasses }} lg:max-w-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="{{ $iconClasses }}" viewBox="0 0 24 24"
+                        fill="none" stroke="#ff98b1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
                     </svg>
-                    <h2 class="text-2xl font-bold font-montserrat text-text-primary py-2">Contact</h2>
+                    <h3 class="{{ $titleClasses }}">Contact</h3>
+                    <p class="text-sm text-gray-500">Send us an email</p>
                 </a>
 
             </div>
         </div>
     </section>
+
 
 
     <section class="bg-bg-tertiary mb-12 sm:mb-0">
