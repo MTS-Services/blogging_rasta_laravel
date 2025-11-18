@@ -17,12 +17,73 @@ class Create extends Component
 
     public BlogForm $form;
 
+    public string $metaKeywordInput = '';
+
     protected BlogService $service;
 
     public function boot(BlogService $service)
     {
         $this->service = $service;
     }
+
+
+    /**
+     * Initialize default form values.
+     */
+    public function mount(): void
+    {
+        $this->form->meta_keywords = [];
+    }
+
+    /**
+     * Add a product type when Enter is pressed
+     */
+    public function addMetaKeyword(): void
+    {
+        $value = trim($this->metaKeywordInput);
+        
+        // Check if input is not empty
+        if (empty($value)) {
+            return;
+        }
+
+        // Initialize array if null
+        if ($this->form->meta_keywords === null) {
+            $this->form->meta_keywords = [];
+        }
+
+        // Check if already exists (case-insensitive)
+        $exists = collect($this->form->meta_keywords)
+            ->map(fn($keyword) => strtolower($keyword))
+            ->contains(strtolower($value));
+
+        if ($exists) {
+            $this->addError('metaKeywordInput', 'this meta keyword already exists');
+            return;
+        }
+
+        // Add to array
+        $this->form->meta_keywords[] = $value;
+        
+        // Clear input
+        $this->metaKeywordInput = '';
+        $this->resetErrorBag('metaKeywordInput');
+    }
+
+    /**
+     * Remove a specific product type
+     */
+    public function removeMetaKeyword(int $index): void
+    {
+        if (isset($this->form->meta_keywords[$index])) {
+            unset($this->form->meta_keywords[$index]);
+            // Re-index array
+            $this->form->meta_keywords = array_values($this->form->meta_keywords);
+        }
+    }
+
+
+
 
     public function render()
     {

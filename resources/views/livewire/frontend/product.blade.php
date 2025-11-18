@@ -21,21 +21,19 @@
                         <h4 class="text-xl font-lato font-medium text-text-primary">{{ $product->title }}
                         </h4>
                         <div class="flex items-center justify-between">
-                            <div class="">
-                                <div>
-                                    @if ($product->sale_price)
-                                        <h3 class="text-sm font-playfair text-primary-950/60 line-through mt-0">
-                                            {{ '$' . $product->price }}
-                                        </h3>
-                                        <h3 class="text-2xl font-playfair text-zinc-500 font-bold">
-                                            {{ '$' . $product->sale_price }}
-                                        </h3>
-                                    @else
-                                        <h3 class="text-2xl font-playfair text-primary-950/60 mt-2">
-                                            {{ '$' . $product->price }}
-                                        </h3>
-                                    @endif
-                                </div>
+                            <div class="flex items-center gap-2">
+                                @if ($product->sale_price)
+                                    <h3 class="text-2xl font-playfair text-primary-950/60 font-bold">
+                                        {{ '$' . $product->sale_price }}
+                                    </h3>
+                                    <h3 class="text-base font-playfair text-gray-400 line-through mt-0">
+                                        {{ '$' . $product->price }}
+                                    </h3>
+                                @else
+                                    <h3 class="text-2xl font-playfair text-primary-950/60 mt-2">
+                                        {{ '$' . $product->price }}
+                                    </h3>
+                                @endif
                             </div>
                             {{-- <div class="flex items-center">
                                 <flux:icon name="star" class="w-3 h-3 stroke-second-500" />
@@ -47,7 +45,7 @@
                             </div> --}}
                         </div>
                         <div class="flex items-center gap-2 mt-2">
-                            @if (!empty($product->product_types))
+                            {{-- @if (!empty($product->product_types))
                                 <div class="flex flex-wrap gap-1">
                                     @foreach ($product->product_types as $type)
                                         <p
@@ -58,23 +56,6 @@
                                 </div>
                             @else
                                 <span class="text-gray-400 text-sm"></span>
-                            @endif
-                            {{-- @php
-                                $types = json_decode($product->product_types, true);
-                            @endphp
-
-                            @if ($types && is_array($types))
-                                @foreach ($types as $type)
-                                    <p
-                                        class="text-base font-normal font-inter text-second-500 py-1 px-2.5 bg-second-500/10">
-                                        {{ $type }}
-                                    </p>
-                                @endforeach
-                            @else
-                                <p
-                                    class="text-base font-normal font-inter text-second-500 py-1 px-2.5 bg-second-500/10">
-                                    {{ __('N/A') }}
-                                </p>
                             @endif --}}
                         </div>
                         <div class="w-full! mt-2">
