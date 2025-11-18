@@ -37,20 +37,20 @@
 
             <div class="col-span-1">
                 <h3 class="text-text-primary font-playfair font-semibold text-base sm:text-lg mb-3 sm:mb-4">
-                    {{ __('Help & Support') }}
+                    {{ __('Connect') }}
                 </h3>
                 <ul class="space-y-1">
-                    <li><a href="/faq"
-                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('FAQs') }}</a>
+                    <li><a href="{{ route('home') }}" wire:navigate rel="noopener noreferrer"
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('TikTok') }}</a>
                     </li>
-                    <li><a href="/shipping-returns"
-                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Shipping & Returns') }}</a>
+                    <li><a href="{{ route('home') }}" wire:navigate rel="noopener noreferrer"
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Instagram') }}</a>
                     </li>
-                    <li><a href="/size-guide"
-                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Size Guide') }}</a>
+                    <li><a href="{{ route('home') }}" wire:navigate rel="noopener noreferrer"
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('YouTube') }}</a>
                     </li>
-                    <li><a href="/contact"
-                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Contact Us') }}</a>
+                    <li><a href="{{ route('contact') }}" wire:navigate
+                            class="text-text-secondary hover:text-second-500 transition-colors text-sm sm:text-base">{{ __('Contact') }}</a>
                     </li>
                 </ul>
             </div>

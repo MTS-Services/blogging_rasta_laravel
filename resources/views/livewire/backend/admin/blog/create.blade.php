@@ -55,6 +55,39 @@
                 </div>
 
 
+
+
+                {{-- meta_keywords --}}
+                <div class="w-full">
+                    <x-ui.label value="Meta Keywords" class="mb-1" />
+
+                    <div
+                        class="border rounded-md p-2 min-h-[42px] flex flex-wrap gap-2 items-center border-zinc-300 focus-within:ring-zinc-300 focus-within:border-zinc-300">
+                        <!-- Display existing tags -->
+                        @if (!empty($form->meta_keywords))
+                            @foreach ($form->meta_keywords as $index => $type)
+                                <span
+                                    class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-zinc-100 text-second-500">
+                                    {{ $type }}
+                                    <button type="button" wire:click="removeMetaKeyword({{ $index }})"
+                                        class="ml-2 text-second-500 hover:text-second-700 font-bold">
+                                        ×
+                                    </button>
+                                </span>
+                            @endforeach
+                        @endif
+
+                        <!-- Input field (inline with tags) -->
+                        <input type="text" placeholder="Type and press Enter..." wire:model="metaKeywordInput"
+                            wire:keydown.enter.prevent="addMetaKeyword"
+                            class="border-0 focus:ring-0 outline-none flex-1 min-w-[150px] text-sm p-1 bg-transparent" />
+                    </div>
+
+                    <x-ui.input-error :messages="$errors->get('form.meta_keywords')" />
+                </div>
+
+
+
             </div>
 
             {{-- meta description --}}

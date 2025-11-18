@@ -10,13 +10,15 @@ use App\Services\ProductService;
 use App\Services\CategoryService;
 use App\Traits\Livewire\WithNotification;
 use App\Livewire\Forms\Product\ProductForm;
+use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class Edit extends Component
 {
 
-    use WithNotification;
+    use WithFileUploads, WithNotification;
 
     public ProductForm $form;
+    public string $productTypeInput = '';
 
     #[Locked]
     public Product $data;
@@ -43,6 +45,48 @@ class Edit extends Component
         $this->data = $data;
         $this->form->setData($data);
         $this->existingFile = $data->image;
+    }
+
+
+
+    /**
+     * Add a product type when Enter is pressed
+     */
+    public function addProductType(): void
+    {
+        $value = trim($this->productTypeInput);
+
+        if (empty($value)) {
+            return;
+        }
+
+        if ($this->form->product_types === null) {
+            $this->form->product_types = [];
+        }
+
+        $exists = collect($this->form->product_types)
+            ->map(fn($type) => strtolower($type))
+            ->contains(strtolower($value));
+
+        if ($exists) {
+            $this->addError('productTypeInput', 'this product type already exists');
+            return;
+        }
+
+        $this->form->product_types[] = $value;
+        $this->productTypeInput = '';
+        $this->resetErrorBag('productTypeInput');
+    }
+
+    /**
+     * Remove a specific product type
+     */
+    public function removeProductType(int $index): void
+    {
+        if (isset($this->form->product_types[$index])) {
+            unset($this->form->product_types[$index]);
+            $this->form->product_types = array_values($this->form->product_types);
+        }
     }
 
     /**
@@ -81,5 +125,6 @@ class Edit extends Component
     {
         $this->form->setData($this->currency);
         $this->form->resetValidation();
+        $this->productTypeInput = '';
     }
 }

@@ -38,18 +38,18 @@
                         <div class="mb-10">
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
-                                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                <div class="bg-zinc-50 dark:bg-gray-700 rounded-lg p-4 border border-zinc-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">{{ __('Title') }}
                                     </p>
-                                    <p class="text-slate-400 text-lg font-bold">{{ $data->title }}</p>
+                                    <p class="text-zinc-800 text-lg font-bold">{{ $data->title }}</p>
                                 </div>
 
-                                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                <div class="bg-zinc-50 dark:bg-gray-700 rounded-lg p-4 border border-zinc-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">{{ __('Slug') }}
                                     </p>
-                                    <p class="text-slate-400 text-lg font-bold">{{ $data->slug }}</p>
+                                    <p class="text-zinc-800 text-lg font-bold">{{ $data->slug }}</p>
                                 </div>
-                                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                <div class="bg-zinc-50 dark:bg-gray-700 rounded-lg p-4 border border-zinc-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">{{ __('Status') }}
                                     </p>
                                     <p
@@ -57,101 +57,101 @@
                                         {{ $data->status->label() }}
                                     </p>
                                 </div>
-                                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                <div class="bg-zinc-50 dark:bg-gray-700 rounded-lg p-4 border border-zinc-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">
                                         {{ __('Meta Title') }}
                                     </p>
-                                    <p class="text-slate-400 text-lg font-bold">{{ $data->meta_title }}</p>
+                                    <p class="text-zinc-800 text-lg font-bold">{{ $data->meta_title }}</p>
                                 </div>
                                 <div
-                                    class="bg-slate-50 col-span-4 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                    class="bg-zinc-50 col-span-4 dark:bg-gray-700 rounded-lg p-4 border border-zinc-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">
                                         {{ __('Meta Keywords') }}
                                     </p>
-                                    <p class="text-slate-400 text-lg font-bold">
+                                    <p class="text-zinc-800 text-lg font-bold">
                                         {{ is_array($data->meta_keywords) ? implode(', ', $data->meta_keywords) : $data->meta_keywords ?? 'N/A' }}
                                     </p>
 
                                 </div>
                                 <div
-                                    class="bg-slate-50 col-span-4 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                    class="bg-zinc-50 col-span-4 dark:bg-gray-700 rounded-lg p-4 border border-zinc-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">
                                         {{ __('Meta Description') }}
                                     </p>
-                                    <p class="text-slate-400 text-lg font-bold">{!! $data->meta_description !!}</p>
+                                    <p class="text-zinc-800 text-lg font-bold">{!! $data->meta_description !!}</p>
                                 </div>
                                 <div
-                                    class="bg-slate-50 col-span-4 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                    class="bg-zinc-50 col-span-4 dark:bg-gray-700 rounded-lg p-4 border border-zinc-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">
                                         {{ __('Description') }}
                                     </p>
-                                    <p class="text-slate-400 text-lg font-bold">{!! $data->description !!}</p>
+                                    <p class="text-zinc-800 text-lg font-bold">{!! $data->description !!}</p>
                                 </div>
 
-                                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                <div class="bg-zinc-50 dark:bg-gray-700 rounded-lg p-4 border border-zinc-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">
                                         {{ __('Created At') }}
                                     </p>
-                                    <p class="text-slate-400 text-lg font-bold">
+                                    <p class="text-zinc-800 text-lg font-bold">
                                         {{ $data->created_at_formatted ?? 'N/A' }}
                                     </p>
                                 </div>
 
-                                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                <div class="bg-zinc-50 dark:bg-gray-700 rounded-lg p-4 border border-zinc-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">
                                         {{ __('Updated At') }}
                                     </p>
-                                    <p class="text-slate-400 text-lg font-bold">
+                                    <p class="text-zinc-800 text-lg font-bold">
                                         {{ $data->updated_at_formatted ?? 'N/A' }}
                                     </p>
                                 </div>
 
-                                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                <div class="bg-zinc-50 dark:bg-gray-700 rounded-lg p-4 border border-zinc-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">
                                         {{ __('Deleted At') }}
                                     </p>
-                                    <p class="text-slate-400 text-lg font-bold">
+                                    <p class="text-zinc-800 text-lg font-bold">
                                         {{ $data->deleted_at_formatted ?? 'N/A' }}
                                     </p>
                                 </div>
 
-                                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                <div class="bg-zinc-50 dark:bg-gray-700 rounded-lg p-4 border border-zinc-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">
                                         {{ __('Restored At') }}
                                     </p>
-                                    <p class="text-slate-400 text-lg font-bold">
+                                    <p class="text-zinc-800 text-lg font-bold">
                                         {{ $data->restored_at_formatted ?? 'N/A' }}
                                     </p>
                                 </div>
 
-                                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                <div class="bg-zinc-50 dark:bg-gray-700 rounded-lg p-4 border border-zinc-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">
                                         {{ __('Created By') }}
                                     </p>
-                                    <p class="text-slate-400 text-lg font-bold">
+                                    <p class="text-zinc-800 text-lg font-bold">
                                         {{ $data->creater_admin->name ?? 'N/A' }}</p>
                                 </div>
 
-                                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                <div class="bg-zinc-50 dark:bg-gray-700 rounded-lg p-4 border border-zinc-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">
                                         {{ __('Updated By') }}
                                     </p>
-                                    <p class="text-slate-400 text-lg font-bold">
+                                    <p class="text-zinc-800 text-lg font-bold">
                                         {{ $data->updater_admin->name ?? 'N/A' }}</p>
                                 </div>
 
-                                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 border border-slate-200">
+                                <div class="bg-zinc-50 dark:bg-gray-700 rounded-lg p-4 border border-zinc-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">
                                         {{ __('Deleted By') }}
                                     </p>
-                                    <p class="text-slate-400 text-lg font-bold">
+                                    <p class="text-zinc-800 text-lg font-bold">
                                         {{ $data->deleter_admin->name ?? 'N/A' }}</p>
                                 </div>
-                                <div class="bg-slate-50 dark:bg-gray-700  rounded-lg p-4 border border-slate-200">
+                                <div class="bg-zinc-50 dark:bg-gray-700  rounded-lg p-4 border border-zinc-200">
                                     <p class="text-text-white text-xs font-semibold mb-2 uppercase">
                                         {{ __('Restored By') }}
                                     </p>
-                                    <p class="text-slate-400 text-lg font-bold">
+                                    <p class="text-zinc-800 text-lg font-bold">
                                         {{ $data->restorer_admin->name ?? 'N/A' }}</p>
                                 </div>
                             </div>

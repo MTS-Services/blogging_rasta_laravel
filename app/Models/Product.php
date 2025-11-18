@@ -44,6 +44,7 @@ class Product extends BaseModel implements Auditable
     ];
 
     protected $casts = [
+        'product_types' => 'json', 
         'status' => ProductStatus::class,
         'restored_at' => 'datetime',
         // 'exchange_rate' => 'decimal:15,2',

@@ -7,29 +7,18 @@ return [
         [
             'username' => 'diodioglowskin',
             'display_name' => ' Diodio Glow Skin',
-            'description' => 'Tech Creator',
-            'color' => 'blue',
             'max_videos' => 20, 
         ],
         [
-            'username' => 'opfootbal',
-            'display_name' => 'OP Football',
-            'description' => 'Gaming',
-            'color' => 'red',
+            'username' => 'mamendiayesavon111',
+            'display_name' => 'Mamendiayesavon',
             'max_videos' => 20, 
-        ],
-        [
-            'username' => 'mamandiodioglowskin',
-            'display_name' => 'mamandiodioglow',
-            'description' => 'Gaming',
-            'color' => 'green',
-            'max_videos' => 20, 
-        ],
+        ]
     ],
 
     'default_max_videos_per_user' => 20,
 
     'videos_per_page' => 12,
     'videos_per_user_per_page' => 4,
-    'cache_duration' => 3600, // 1 hour
+    'cache_duration' => 3600,
 ];
