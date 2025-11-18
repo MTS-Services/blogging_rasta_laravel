@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('sort_order')->default(0);
-            $table->string('your_name',);
+            $table->string('name',);
             $table->string('email',);
             $table->text('message');
             

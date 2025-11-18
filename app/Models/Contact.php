@@ -8,7 +8,7 @@ class Contact extends Model
 {
     protected $fillable = [
         'sort_order',
-        'your_name',
+        'name',
         'email',
         'message',
 
