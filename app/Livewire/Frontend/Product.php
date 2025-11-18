@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Frontend;
 
+use App\Enums\ProductStatus;
 use App\Services\CategoryService;
 use App\Services\ProductService;
 use Livewire\Component;
@@ -49,7 +50,8 @@ class Product extends Component
 
         // Filter products by category
         $filters = [
-            'category_id' => $this->selectedCategory
+            'category_id' => $this->selectedCategory,   
+             'status' => ProductStatus::ACTIVE->value,
         ];
 
         // Use the $this->perPage variable
@@ -103,4 +105,6 @@ class Product extends Component
             'currentPage' => $this->getCurrentPage(),
         ]);
     }
+
+   
 }
