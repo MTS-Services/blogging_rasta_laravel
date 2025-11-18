@@ -24,7 +24,6 @@ class ContactController extends Controller
     public function view(string $encryptedId)
     {
         $data = $this->service->findData(decrypt($encryptedId));
-        // dd($data);
         if (!$data) {
             abort(404);
         }

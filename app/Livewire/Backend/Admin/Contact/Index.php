@@ -58,6 +58,12 @@ class Index extends Component
         ];
 
         $actions = [
+              [
+                'key' => 'id',
+                'label' => 'View',
+                'route' => 'admin.contact.view',
+                'encrypt' => true
+            ],
             [
                 'key' => 'id',
                 'label' => 'Delete',
