@@ -258,7 +258,7 @@
                         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 rounded-2xl">
 
                             {{-- Page Info - Left Side (Always Visible) --}}
-                            <div class="text-sm font-inter">
+                        <div class="hidden sm:flex text-sm font-inter">
                                 <span class="text-gray-600">{{ __('Page') }}</span>
                                 <span
                                     class="mx-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-second-500 to-zinc-500 text-white font-bold text-base shadow-md">

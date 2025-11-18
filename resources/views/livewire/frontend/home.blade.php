@@ -304,103 +304,122 @@
                             </div>
                         @endforeach
                     </div>
-
-                    {{-- Pagination - Show if needed --}}
                     @if ($this->shouldShowPagination())
-                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-12 px-4">
-                            {{-- Page Info --}}
-                            <div class="text-sm text-text-muted font-inter">
-                                {{ __('Page') }} <span
-                                    class="font-semibold text-text-primary">{{ $currentPage }}</span>
-                                @if ($this->getTotalPages() > $currentPage)
-                                    {{ __('of') }} <span
-                                        class="font-semibold text-text-primary">{{ $this->getTotalPages() }}</span>
-                                @endif
-                            </div>
+                        <div class="mt-8 sm:mt-12 px-2 sm:px-4">
+                            <div
+                                class="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-3 sm:gap-4 p-3 sm:p-6 rounded-xl sm:rounded-2xl">
 
-                            {{-- Pagination Controls --}}
-                            <div class="flex items-center gap-2">
-                                {{-- Previous Button --}}
-                                <button wire:click="previousPage" wire:loading.attr="disabled"
-                                    @if (!$this->hasPreviousPage()) disabled @endif
-                                    class="px-4 py-2 rounded-lg border border-second-500/30 bg-white hover:bg-second-50 text-text-primary font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white flex items-center gap-2">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 19l-7-7 7-7" />
-                                    </svg>
-                                    <span class="hidden sm:inline">{{ __('Previous') }}</span>
-                                </button>
-
-                                {{-- Page Numbers (for desktop) --}}
-                                <div class="hidden md:flex items-center gap-2">
-                                    @php
-                                        $totalPages = $this->getTotalPages();
-                                        $start = max(1, $currentPage - 2);
-                                        $end = min($totalPages, $currentPage + 2);
-                                    @endphp
-
-                                    @if ($start > 1)
-                                        <button wire:click="goToPage(1)"
-                                            class="px-3 py-2 rounded-lg border border-second-500/30 bg-white hover:bg-second-50 text-text-primary font-medium transition-all duration-300">
-                                            1
-                                        </button>
-                                        @if ($start > 2)
-                                            <span class="px-2 text-text-muted">...</span>
-                                        @endif
-                                    @endif
-
-                                    @for ($i = $start; $i <= $end; $i++)
-                                        <button wire:click="goToPage({{ $i }})"
-                                            wire:loading.attr="disabled"
-                                            class="px-3 py-2 rounded-lg border transition-all duration-300 font-medium
-                                    {{ $i === $currentPage
-                                        ? 'bg-gradient-to-r from-second-500 to-zinc-500 text-white border-transparent'
-                                        : 'border-second-500/30 bg-white hover:bg-second-50 text-text-primary' }}">
-                                            {{ $i }}
-                                        </button>
-                                    @endfor
-
-                                    @if ($end < $totalPages)
-                                        @if ($end < $totalPages - 1)
-                                            <span class="px-2 text-text-muted">...</span>
-                                        @endif
-                                        <button wire:click="goToPage({{ $totalPages }})"
-                                            class="px-3 py-2 rounded-lg border border-second-500/30 bg-white hover:bg-second-50 text-text-primary font-medium transition-all duration-300">
-                                            {{ $totalPages }}
-                                        </button>
+                                {{-- Page Info - Left Side (Hidden on Mobile) --}}
+                                <div class="hidden sm:flex text-sm font-inter">
+                                    <span class="text-gray-600">{{ __('Page') }}</span>
+                                    <span
+                                        class="mx-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-second-500 to-zinc-500 text-white font-bold text-base shadow-md">
+                                        {{ $currentPage }}
+                                    </span>
+                                    @if ($this->getTotalPages() > $currentPage)
+                                        <span class="text-gray-600">{{ __('of') }}</span>
+                                        <span
+                                            class="ml-1 font-semibold text-gray-800">{{ $this->getTotalPages() }}</span>
                                     @endif
                                 </div>
 
-                                {{-- Current Page (for mobile) --}}
-                                <div
-                                    class="md:hidden px-4 py-2 rounded-lg bg-gradient-to-r from-second-500 to-zinc-500 text-white font-semibold">
-                                    {{ $currentPage }}
+                                {{-- Right Side Controls --}}
+                                <div class="flex items-center gap-2 sm:gap-3">
+                                    {{-- Pagination Controls - Hidden During Loading --}}
+                                    <div wire:loading.remove wire:target="nextPage,previousPage,goToPage"
+                                        class="flex items-center gap-2 sm:gap-3">
+
+                                        {{-- Previous Button --}}
+                                        <button wire:click="previousPage" wire:loading.attr="disabled"
+                                            @if (!$this->hasPreviousPage()) disabled @endif
+                                            class="group relative px-3 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl border-2 border-second-500/40 bg-white hover:bg-gradient-to-r hover:from-second-500 hover:to-second-600 text-gray-700 hover:text-white font-semibold transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-700 flex items-center gap-1 sm:gap-2 shadow-sm sm:shadow-md hover:shadow-lg sm:hover:shadow-xl hover:scale-105 disabled:hover:scale-100">
+                                            <svg class="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:-translate-x-1"
+                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                                            </svg>
+                                            <span class="hidden sm:inline">{{ __('Previous') }}</span>
+                                        </button>
+
+                                        {{-- Page Numbers (for desktop) --}}
+                                        <div class="hidden md:flex items-center gap-1.5 sm:gap-2">
+                                            @php
+                                                $totalPages = $this->getTotalPages();
+                                                $start = max(1, $currentPage - 2);
+                                                $end = min($totalPages, $currentPage + 2);
+                                            @endphp
+
+                                            @if ($start > 1)
+                                                <button wire:click="goToPage(1)"
+                                                    class="px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl border-2 border-second-500/40 bg-white hover:bg-second-50 text-gray-700 font-semibold transition-all duration-300 shadow-sm sm:shadow-md hover:shadow-lg hover:scale-105 text-sm sm:text-base">
+                                                    1
+                                                </button>
+                                                @if ($start > 2)
+                                                    <span
+                                                        class="px-1 sm:px-2 text-gray-400 font-bold text-sm sm:text-base">...</span>
+                                                @endif
+                                            @endif
+
+                                            @for ($i = $start; $i <= $end; $i++)
+                                                <button wire:click="goToPage({{ $i }})"
+                                                    wire:loading.attr="disabled"
+                                                    class="px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl border-2 transition-all duration-300 font-semibold shadow-sm sm:shadow-md hover:shadow-lg hover:scale-105 text-sm sm:text-base
+                                {{ $i === $currentPage
+                                    ? 'bg-gradient-to-r from-second-500 to-zinc-500 text-white border-transparent ring-2 ring-second-300'
+                                    : 'border-second-500/40 bg-white hover:bg-second-50 text-gray-700' }}">
+                                                    {{ $i }}
+                                                </button>
+                                            @endfor
+
+                                            @if ($end < $totalPages)
+                                                @if ($end < $totalPages - 1)
+                                                    <span
+                                                        class="px-1 sm:px-2 text-gray-400 font-bold text-sm sm:text-base">...</span>
+                                                @endif
+                                                <button wire:click="goToPage({{ $totalPages }})"
+                                                    class="px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl border-2 border-second-500/40 bg-white hover:bg-second-50 text-gray-700 font-semibold transition-all duration-300 shadow-sm sm:shadow-md hover:shadow-lg hover:scale-105 text-sm sm:text-base">
+                                                    {{ $totalPages }}
+                                                </button>
+                                            @endif
+                                        </div>
+
+                                        {{-- Current Page (for mobile) --}}
+                                        <div
+                                            class="md:hidden px-3 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-second-500 to-zinc-500 text-white font-bold shadow-md sm:shadow-lg ring-2 ring-second-300 text-sm sm:text-base">
+                                            {{ $currentPage }}
+                                        </div>
+
+                                        {{-- Next Button --}}
+                                        <button wire:click="nextPage" wire:loading.attr="disabled"
+                                            @if (!$this->hasNextPage()) disabled @endif
+                                            class="group relative px-3 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl border-2 border-second-500/40 bg-white hover:bg-gradient-to-r hover:from-second-500 hover:to-second-600 text-gray-700 hover:text-white font-semibold transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-700 flex items-center gap-1 sm:gap-2 shadow-sm sm:shadow-md hover:shadow-lg sm:hover:shadow-xl hover:scale-105 disabled:hover:scale-100">
+                                            <span class="hidden sm:inline">{{ __('Next') }}</span>
+                                            <svg class="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1"
+                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    stroke-width="2.5" d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    {{-- Loading State - Only on Right Side --}}
+                                    <div wire:loading wire:target="nextPage,previousPage,goToPage"
+                                        class="flex items-center gap-2 sm:gap-3 px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-br from-white to-gray-50 rounded-lg sm:rounded-xl shadow-md sm:shadow-lg border border-gray-200/50">
+                                        <div class="relative">
+                                            {{-- Animated spinner rings --}}
+                                            <div
+                                                class="w-6 h-6 sm:w-10 sm:h-10 rounded-full border-2 sm:border-3 border-gray-200">
+                                            </div>
+                                            <div
+                                                class="absolute top-0 left-0 w-6 h-6 sm:w-10 sm:h-10 rounded-full border-2 sm:border-3 border-transparent border-t-second-500 border-r-second-500 animate-spin">
+                                            </div>
+                                            <div class="absolute top-0 left-0 w-6 h-6 sm:w-10 sm:h-10 rounded-full border-2 sm:border-3 border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
+                                                style="animation-direction: reverse; animation-duration: 1s;"></div>
+                                        </div>
+                                        <span
+                                            class="text-xs sm:text-sm font-semibold text-gray-700 animate-pulse">{{ __('Loading...') }}</span>
+                                    </div>
                                 </div>
-
-                                {{-- Next Button --}}
-                                <button wire:click="nextPage" wire:loading.attr="disabled"
-                                    @if (!$this->hasNextPage()) disabled @endif
-                                    class="px-4 py-2 rounded-lg border border-second-500/30 bg-white hover:bg-second-50 text-text-primary font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white flex items-center gap-2">
-                                    <span class="hidden sm:inline">{{ __('Next') }}</span>
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            {{-- Loading Indicator --}}
-                            <div wire:loading wire:target="nextPage,previousPage,goToPage"
-                                class="flex items-center gap-2 text-sm text-text-muted">
-                                <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10"
-                                        stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                    </path>
-                                </svg>
-                                <span>{{ __('Loading...') }}</span>
                             </div>
                         </div>
                     @endif
