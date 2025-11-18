@@ -11,6 +11,8 @@ use App\Repositories\Contracts\ContactRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
+use function Symfony\Component\Translation\t;
+
 class ContactService
 {
     public function __construct(

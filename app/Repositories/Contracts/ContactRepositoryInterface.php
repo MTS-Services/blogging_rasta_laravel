@@ -36,15 +36,15 @@ interface ContactRepositoryInterface
 
 
 
-    public function delete(int $id, array $actioner): bool;
+    public function delete(int $id, array $actionerId): bool;
 
     public function forceDelete(int $id): bool;
 
-    public function restore(int $id, array $actioner): bool;
+    public function restore(int $id, array $actionerId): bool;
 
-    public function bulkDelete(array $ids, array $actioner): int;
+    public function bulkDelete(array $ids, array $actionerId): int;
 
-    public function bulkRestore(array $ids, array $actioner): int;
+    public function bulkRestore(array $ids, array $actionerId): int;
 
     public function bulkForceDelete(array $ids): int;
 

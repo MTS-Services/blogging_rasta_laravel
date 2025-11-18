@@ -25,6 +25,7 @@ class ContactRepository implements ContactRepositoryInterface
 
     public function find($column_value, string $column_name = 'id', bool $trashed = false): ?Contact
     {
+
         $model = $this->model;
         if ($trashed) {
             $model = $model->withTrashed();
@@ -112,16 +113,14 @@ class ContactRepository implements ContactRepositoryInterface
 
 
 
-    public function delete(int $id, array $actioner): bool
+    public function delete(int $id, $actionerId): bool
     {
         $findData = $this->find($id);
 
         if (!$findData) {
             return false;
         }
-
-        $findData->update(['deleter_id' => $actioner['id'], 'deleter_type' => $actioner['type']]);
-
+        $findData->update(['deleted_by' => $actionerId]);
         return $findData->delete();
     }
 
@@ -166,6 +165,4 @@ class ContactRepository implements ContactRepositoryInterface
     {
         return $this->model->withTrashed()->whereIn('id', $ids)->forceDelete();
     }
-
-
 }

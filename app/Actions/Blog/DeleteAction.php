@@ -13,7 +13,6 @@ class DeleteAction
 
     public function execute(int $id, bool $forceDelete = false, $actionerId): bool
     {
-        
         return DB::transaction(function () use ($id, $forceDelete, $actionerId) {
             $model = null;
             if ($forceDelete) {

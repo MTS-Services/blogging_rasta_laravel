@@ -16,23 +16,19 @@ class DeleteAction
 
     public function execute(int $id, bool $forceDelete = false, int $actionerId): bool
     {
-        // dd($id , $forceDelete, $actionerId);
         return DB::transaction(function () use ($id, $forceDelete, $actionerId) {
-            $findData = null;
-
+            $model = null;
             if ($forceDelete) {
-                $findData = $this->interface->findTrashed($id);
+                $model = $this->interface->findTrashed(column_value: $id);
             } else {
-                $findData = $this->interface->find($id);
+                $model = $this->interface->find(column_value: $id);
             }
 
-            if (!$findData) {
+            if (!$model) {
                 throw new \Exception('Data not found');
             }
-            if ($forceDelete) {
-                return $this->interface->forceDelete($id);
-            }
-           return $this->interface->delete($id, [$actionerId]);
+
+           return $this->interface->delete($id, $actionerId);
         });
     }
 }
