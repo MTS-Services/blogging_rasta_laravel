@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Frontend;
 
+use App\Services\CategoryService;
 use App\Services\ProductService;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -11,11 +12,15 @@ class Product extends Component
     use WithPagination;
 
     protected ProductService $productservice;
+    protected CategoryService $categoryService;
+
+    public $selectedCategory = 'All';
 
 
-    public function boot(ProductService $productservice)
+    public function boot(ProductService $productservice, CategoryService $categoryService)
     {
        $this->productservice = $productservice;
+        $this->categoryService = $categoryService;
     }
 
     /**
@@ -52,8 +57,10 @@ class Product extends Component
     public function render()
     {
         $products = $this->productservice->getAllDatas();
+        $categories = $this->categoryService->getAllDatas();
         return view('livewire.frontend.product', [
-            'products' => $products
+            'products' => $products,
+            'categories' => $categories
         ]);
     }
 }
