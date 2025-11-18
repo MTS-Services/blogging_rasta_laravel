@@ -24,7 +24,6 @@
                             <div class="">
                                 <div>
                                     @if ($product->sale_price)
-                                       
                                         <h3 class="text-sm font-playfair text-primary-950/60 line-through mt-0">
                                             {{ '$' . $product->price }}
                                         </h3>
@@ -32,7 +31,6 @@
                                             {{ '$' . $product->sale_price }}
                                         </h3>
                                     @else
-                                        
                                         <h3 class="text-2xl font-playfair text-primary-950/60 mt-2">
                                             {{ '$' . $product->price }}
                                         </h3>
@@ -49,8 +47,19 @@
                             </div> --}}
                         </div>
                         <div class="flex items-center gap-2 mt-2">
-
-                            @php
+                            @if (!empty($product->product_types))
+                                <div class="flex flex-wrap gap-1">
+                                    @foreach ($product->product_types as $type)
+                                        <p
+                                        class="text-base font-normal font-inter text-second-500 py-1 px-2.5 bg-second-500/10">
+                                        {{ $type }}
+                                    </p>
+                                    @endforeach
+                                </div>
+                            @else
+                                <span class="text-gray-400 text-sm"></span>
+                            @endif
+                            {{-- @php
                                 $types = json_decode($product->product_types, true);
                             @endphp
 
@@ -66,7 +75,7 @@
                                     class="text-base font-normal font-inter text-second-500 py-1 px-2.5 bg-second-500/10">
                                     {{ __('N/A') }}
                                 </p>
-                            @endif
+                            @endif --}}
                         </div>
                         <div class="w-full! mt-2">
                             <x-ui.button href="#"
