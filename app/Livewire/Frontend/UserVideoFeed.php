@@ -310,17 +310,11 @@ class UserVideoFeed extends Component
         $this->loading = false;
     }
 
-    /**
-     * Check if pagination should be shown
-     */
     public function shouldShowPagination()
     {
         return $this->currentPage > 1 || $this->hasNextPage();
     }
 
-    /**
-     * Go to specific page
-     */
     public function goToPage($page)
     {
         if ($page < 1) {
@@ -338,9 +332,6 @@ class UserVideoFeed extends Component
         $this->dispatch('scroll-to-user-videos');
     }
 
-    /**
-     * Go to next page
-     */
     public function nextPage()
     {
         if ($this->hasNextPage()) {
@@ -350,9 +341,6 @@ class UserVideoFeed extends Component
         }
     }
 
-    /**
-     * Go to previous page
-     */
     public function previousPage()
     {
         if ($this->hasPreviousPage()) {
@@ -362,28 +350,31 @@ class UserVideoFeed extends Component
         }
     }
 
-    /**
-     * Check if can go to next page
-     */
     public function hasNextPage()
     {
         return isset($this->pageStates[$this->currentPage + 1]);
     }
 
-    /**
-     * Check if can go to previous page
-     */
     public function hasPreviousPage()
     {
         return $this->currentPage > 1;
     }
 
-    /**
-     * Get total available pages
-     */
     public function getTotalPages()
     {
         return max(array_keys($this->pageStates));
+    }
+
+    public function getUsersProperty()
+    {
+        $featuredUsers = config('tiktok.featured_users', []);
+        $users = ['All'];
+        
+        foreach ($featuredUsers as $user) {
+            $users[] = $user['display_name'] ?? $user['username'];
+        }
+        
+        return $users;
     }
 
     public function formatNumber($number)

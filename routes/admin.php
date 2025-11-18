@@ -14,6 +14,7 @@ use App\Http\Controllers\Backend\Admin\ProductManagement\ProductController;
 use App\Http\Controllers\Backend\Admin\ProductManagement\CategoryController;
 use App\Http\Controllers\Backend\Admin\TikTokManagement\TikTokMixedFeedController;
 use App\Http\Controllers\Backend\Admin\ApplicationSettings\ApplicationSettingsController;
+use App\Http\Controllers\Backend\Admin\ContactController;
 
 Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
@@ -44,6 +45,11 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
         });
     });
 
+    Route::controller(ContactController::class)->name('contact.')->prefix('contact')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/view/{id}', 'view')->name('view');
+        Route::get('/trash', 'trash')->name('trash');
+    });
     Route::controller(BlogController::class)->name('blog.')->prefix('blog')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
