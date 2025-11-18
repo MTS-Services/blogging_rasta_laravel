@@ -218,24 +218,33 @@ if (!function_exists('generate_otp')) {
 if (! function_exists('detectFileType')) {
     function detectFileType($filePath)
     {
+        // Check if the file exists
+        if (!file_exists($filePath)) {
+            return 'missing';
+        }
+
         // Get MIME type
         $mime = mime_content_type($filePath);
- 
+
         if (!$mime) {
             return 'unknown';
         }
- 
+
+        // Check for image
         if (str_starts_with($mime, 'image/')) {
             return 'image';
         }
- 
+
+        // Check for video
         if (str_starts_with($mime, 'video/')) {
             return 'video';
         }
- 
+
+        // If neither image nor video
         return 'unknown';
     }
 }
+
 
 if (!function_exists('format_otp_time')) {
     /**
