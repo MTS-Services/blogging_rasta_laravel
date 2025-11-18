@@ -27,7 +27,9 @@ class DeleteAction
             if (!$model) {
                 throw new \Exception('Data not found');
             }
-
+            if ($forceDelete) {
+                return $this->interface->forceDelete($id);
+            }
            return $this->interface->delete($id, $actionerId);
         });
     }
