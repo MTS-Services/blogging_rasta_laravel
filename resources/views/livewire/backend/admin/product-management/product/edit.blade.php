@@ -62,13 +62,34 @@
                         wire:model="form.sale_price" />
                     <x-ui.input-error :messages="$errors->get('form.sale_price')" />
                 </div>
-                {{-- sale_price --}}
-                {{-- <div class="w-full">
+                {{-- product_types --}}
+                <div class="w-full">
                     <x-ui.label value="Product Types" class="mb-1" />
-                    <x-ui.input type="text" placeholder="Eneter Product Types" id="product_types"  @readonly(true)
-                        wire:model="form.product_types" />
+
+                    <div
+                        class="border rounded-md p-2 min-h-[42px] flex flex-wrap gap-2 items-center border-zinc-300 focus-within:ring-zinc-300 focus-within:border-zinc-300">
+                        <!-- Display existing tags -->
+                        @if (!empty($form->product_types))
+                            @foreach ($form->product_types as $index => $type)
+                                <span
+                                    class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-zinc-100 text-second-500">
+                                    {{ $type }}
+                                    <button type="button" wire:click="removeProductType({{ $index }})"
+                                        class="ml-2 text-second-500 hover:text-second-700 font-bold">
+                                        ×
+                                    </button>
+                                </span>
+                            @endforeach
+                        @endif
+
+                        <!-- Input field (inline with tags) -->
+                        <input type="text" placeholder="Type and press Enter..." wire:model="productTypeInput"
+                            wire:keydown.enter.prevent="addProductType"
+                            class="border-0 focus:ring-0 outline-none flex-1 min-w-[150px] text-sm p-1 bg-transparent" />
+                    </div>
+
                     <x-ui.input-error :messages="$errors->get('form.product_types')" />
-                </div> --}}
+                </div>
 
                 {{-- affiliate_link --}}
                 <div class="w-full">
