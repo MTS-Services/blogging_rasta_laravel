@@ -63,12 +63,12 @@
                     <x-ui.input-error :messages="$errors->get('form.sale_price')" />
                 </div>
                 {{-- sale_price --}}
-                <div class="w-full">
+                {{-- <div class="w-full">
                     <x-ui.label value="Product Types" class="mb-1" />
                     <x-ui.input type="text" placeholder="Eneter Product Types" id="product_types"  @readonly(true)
                         wire:model="form.product_types" />
                     <x-ui.input-error :messages="$errors->get('form.product_types')" />
-                </div>
+                </div> --}}
 
                 {{-- affiliate_link --}}
                 <div class="w-full">
