@@ -15,52 +15,92 @@ class Product extends Component
     protected CategoryService $categoryService;
 
     public $selectedCategory = 'All';
+    public $perPage = 6;
 
+    public function updatedSelectedCategory()
+    {
+        $this->resetPage();
+    }
 
     public function boot(ProductService $productservice, CategoryService $categoryService)
     {
-       $this->productservice = $productservice;
+        $this->productservice = $productservice;
         $this->categoryService = $categoryService;
     }
 
     /**
-     * Get paginated products data.
+     * Select category filter
      */
-    
+    public function selectCategory($categoryId)
+    {
+        $this->selectedCategory = $categoryId;
+        $this->resetPage();
+    }
 
     /**
-     * All products data - centralized method
+     * Get filtered products based on selected category
      */
+    public function getFilteredProducts()
+    {
+        if ($this->selectedCategory === 'All') {
+            // Use the $this->perPage variable
+            return $this->productservice->getPaginatedData(perPage: $this->perPage, filters: []);
+        }
 
-    // public function loadData()
-    // {
-    //     $this->products = [
-    //         ['thumb' => 'product (1).png', 'name' => 'Hydrating Face Essence'],
-    //         ['thumb' => 'product (3).png', 'name' => 'Gentle Cleansing Oil'],
-    //         ['thumb' => 'product (4).png', 'name' => 'Brightening Serum'],
-    //         ['thumb' => 'product (5).png', 'name' => 'Moisturizing Night Cream'],
-    //         ['thumb' => 'product (6).png', 'name' => 'Acne Control Mask'],
-    //         ['thumb' => 'product (7).png', 'name' => 'SPF 50 Sunscreen'],
+        // Filter products by category
+        $filters = [
+            'category_id' => $this->selectedCategory
+        ];
 
-    //     ];
-    //     $this->products_names = [
-    //         [],
-    //         [],
-    //         [],
-    //         [],
-    //         [],
-    //         [],
+        // Use the $this->perPage variable
+        return $this->productservice->getPaginatedData(perPage: $this->perPage, filters: $filters);
+    }
 
-    //     ];
-    // }
+    /**
+     * Custom pagination methods
+     */
+    public function goToPage($page)
+    {
+        $this->setPage($page);
+    }
+
+    public function hasPreviousPage()
+    {
+        return $this->getPage() > 1;
+    }
+
+    public function hasNextPage()
+    {
+        $products = $this->getFilteredProducts();
+        return $products->hasMorePages();
+    }
+
+    public function getTotalPages()
+    {
+        $products = $this->getFilteredProducts();
+        return $products->lastPage();
+    }
+
+    public function shouldShowPagination()
+    {
+        $products = $this->getFilteredProducts();
+        return $products->hasPages();
+    }
+
+    public function getCurrentPage()
+    {
+        return $this->getPage();
+    }
 
     public function render()
     {
-        $products = $this->productservice->getAllDatas();
+        $products = $this->getFilteredProducts();
         $categories = $this->categoryService->getAllDatas();
+        
         return view('livewire.frontend.product', [
             'products' => $products,
-            'categories' => $categories
+            'categories' => $categories,
+            'currentPage' => $this->getCurrentPage(),
         ]);
     }
 }
