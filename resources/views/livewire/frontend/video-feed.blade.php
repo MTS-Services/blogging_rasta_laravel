@@ -14,13 +14,29 @@
             {{-- Filter Tabs (User-based) --}}
             <div class="flex flex-wrap gap-1 sm:gap-2 xl:ps-20 mb-5 xl:mb-10 max-w-2xl mx-auto">
                 @foreach ($this->users as $user)
-                    <button wire:click="setUser('{{ $user }}')"
-                        class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
-                        {{ $activeUser === $user
-                            ? 'bg-second-500 text-white'
-                            : 'bg-second-800/10 text-second-500 hover:bg-second-400/40' }}">
-                        {{ $user }}
-                    </button>
+                    @if ($user === 'All')
+                        <button wire:click="setUser('{{ $user }}')"
+                            class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
+                            {{ $activeUser === $user
+                                ? 'bg-second-500 text-white'
+                                : 'bg-second-800/10 text-second-500 hover:bg-second-400/40' }}">
+                            {{ $user }}
+                        </button>
+                    @else
+                        @php
+                            // Find actual username for this display name
+                            $featuredUsers = config('tiktok.featured_users', []);
+                            $userData = collect($featuredUsers)->firstWhere('display_name', $user);
+                            $actualUsername = $userData['username'] ?? strtolower(str_replace(' ', '', $user));
+                        @endphp
+                        <a href="{{ route('user-video-feed', ['username' => $actualUsername]) }}" wire:navigate
+                            class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
+                             {{ $activeUser === $user
+                                 ? 'bg-second-500 text-white'
+                                 : 'bg-second-800/10 text-second-500 hover:bg-second-400/40' }}">
+                            {{ $user }}
+                        </a>
+                    @endif
                 @endforeach
             </div>
 
@@ -63,26 +79,40 @@
                     @foreach ($videos as $video)
                         @php
                             $videoId = $video['aweme_id'] ?? ($video['video_id'] ?? '');
-                            $videoTitle = $video['title'] ?? 'TikTok Video'; 
+                            $videoTitle = $video['title'] ?? 'TikTok Video';
                             $desc = $video['desc'] ?? ($video['title'] ?? 'TikTok Video');
                             $createTime = $video['create_time'] ?? time();
 
-                            $cover = $video['video']['cover'] ?? ($video['video']['origin_cover'] ?? ($video['video']['dynamic_cover'] ?? ($video['cover'] ?? '')));
+                            $cover =
+                                $video['video']['cover'] ??
+                                ($video['video']['origin_cover'] ??
+                                    ($video['video']['dynamic_cover'] ?? ($video['cover'] ?? '')));
 
-                            $playCount = $video['play_count'] ?? ($video['statistics']['play_count'] ?? ($video['stats']['play_count'] ?? ($video['statistics']['playCount'] ?? ($video['stats']['playCount'] ?? 0))));
+                            $playCount =
+                                $video['play_count'] ??
+                                ($video['statistics']['play_count'] ??
+                                    ($video['stats']['play_count'] ??
+                                        ($video['statistics']['playCount'] ?? ($video['stats']['playCount'] ?? 0))));
                             $diggCount = $video['digg_count'] ?? ($video['diggCount'] ?? 0);
                             $commentCount = $video['comment_count'] ?? ($video['commentCount'] ?? 0);
 
                             $author = $video['author'] ?? [];
                             $username = $video['_username'] ?? ($author['unique_id'] ?? 'unknown');
                             $authorName = $author['nickname'] ?? ($author['nick_name'] ?? $username);
-                            $authorAvatar = $author['avatar_larger'] ?? ($author['avatar_medium'] ?? ($author['avatar_thumb'] ?? ($author['avatar'] ?? '')));
+                            $authorAvatar =
+                                $author['avatar_larger'] ??
+                                ($author['avatar_medium'] ?? ($author['avatar_thumb'] ?? ($author['avatar'] ?? '')));
 
                             if (empty($authorAvatar)) {
-                                $authorAvatar = 'https://ui-avatars.com/api/?name=' . urlencode($authorName) . '&size=200&background=667eea&color=fff';
+                                $authorAvatar =
+                                    'https://ui-avatars.com/api/?name=' .
+                                    urlencode($authorName) .
+                                    '&size=200&background=667eea&color=fff';
                             }
 
-                            $playUrl = $video['video']['play_addr']['url_list'][0] ?? ($video['video']['play'] ?? ($video['video']['play_addr'] ?? ($video['play'] ?? '')));
+                            $playUrl =
+                                $video['video']['play_addr']['url_list'][0] ??
+                                ($video['video']['play'] ?? ($video['video']['play_addr'] ?? ($video['play'] ?? '')));
 
                             $hashtags = [];
                             if (isset($video['text_extra']) && is_array($video['text_extra'])) {
@@ -123,43 +153,54 @@
                             }
                         }"
                             class="bg-bg-primary p-4 rounded-2xl shadow-md border border-second-500/40 overflow-hidden hover:shadow-xl transition-shadow">
-                            
+
                             {{-- Video Container --}}
                             <div class="relative w-full sm:h-80 lg:h-98 h-70 mb-2 rounded-lg overflow-hidden">
                                 @if ($playUrl)
-                                    <video x-ref="video" x-show="playing" x-on:ended="stopVideo()" x-on:error="playing = false"
-                                        class="w-full h-full object-cover" poster="{{ $cover }}" playsinline
-                                        preload="metadata" controls controlsList="nodownload" x-cloak>
+                                    <video x-ref="video" x-show="playing" x-on:ended="stopVideo()"
+                                        x-on:error="playing = false" class="w-full h-full object-cover"
+                                        poster="{{ $cover }}" playsinline preload="metadata" controls
+                                        controlsList="nodownload" x-cloak>
                                         <source src="{{ $playUrl }}" type="video/mp4">
                                     </video>
 
-                                    <div x-show="!playing" x-on:click="playVideo()" class="absolute inset-0 cursor-pointer">
+                                    <div x-show="!playing" x-on:click="playVideo()"
+                                        class="absolute inset-0 cursor-pointer">
                                         @if ($cover)
-                                            <img src="{{ $cover }}" alt="{{ $desc }}" class="w-full h-full object-cover" loading="lazy">
+                                            <img src="{{ $cover }}" alt="{{ $desc }}"
+                                                class="w-full h-full object-cover" loading="lazy">
                                         @else
-                                            <div class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
-                                                <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+                                            <div
+                                                class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
+                                                <svg class="w-16 h-16 text-white" fill="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
                                                 </svg>
                                             </div>
                                         @endif
 
-                                        <div class="absolute inset-0 flex items-center justify-center transition-all duration-300 hover:bg-opacity-50">
+                                        <div
+                                            class="absolute inset-0 flex items-center justify-center transition-all duration-300 hover:bg-opacity-50">
                                             <div class="transform hover:scale-110 transition-transform duration-300">
                                                 <div class="w-20 h-20 flex items-center justify-center">
-                                                    <flux:icon name="play" class="w-full h-full stroke-white/60 fill-white/50" />
+                                                    <flux:icon name="play"
+                                                        class="w-full h-full stroke-white/60 fill-white/50" />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 @else
-                                    <div class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
+                                    <div
+                                        class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
                                         @if ($cover)
-                                            <img src="{{ $cover }}" alt="{{ $desc }}" class="w-full h-full object-cover" loading="lazy">
+                                            <img src="{{ $cover }}" alt="{{ $desc }}"
+                                                class="w-full h-full object-cover" loading="lazy">
                                         @else
                                             <div class="flex flex-col items-center justify-center text-white">
                                                 <svg class="w-16 h-16 mb-2" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+                                                    <path
+                                                        d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
                                                 </svg>
                                                 <p class="text-sm">Video unavailable</p>
                                             </div>
@@ -170,8 +211,9 @@
 
                             {{-- Video Info --}}
                             <div>
-                                @if($videoTitle)
-                                    <p class="font-bold text-text-primary mb-1 line-clamp-1" title="{{ $videoTitle }}">
+                                @if ($videoTitle)
+                                    <p class="font-bold text-text-primary mb-1 line-clamp-1"
+                                        title="{{ $videoTitle }}">
                                         {{ $videoTitle }}
                                     </p>
                                 @else
@@ -180,28 +222,32 @@
                                     </p>
                                 @endif
                                 <p class="text-xs text-text-secondary mb-4">{{ $authorName }}</p>
-                                
+
                                 <div class="flex items-center justify-evenly w-full gap-4 py-2 border-t border-b">
                                     <button class="flex items-center gap-1 text-scond-800/20 transition-colors">
                                         <flux:icon name="heart" class="w-5 h-5 stroke-text-muted" />
-                                        <span class="text-base text-text-muted">{{ $this->formatNumber($diggCount) }}</span>
+                                        <span
+                                            class="text-base text-text-muted">{{ $this->formatNumber($diggCount) }}</span>
                                     </button>
 
                                     <button class="flex items-center gap-1 text-scond-800/20 transition-colors">
                                         <flux:icon name="chat-bubble-oval-left" class="w-5 h-5" />
-                                        <span class="text-base text-text-muted">{{ $this->formatNumber($commentCount) }}</span>
+                                        <span
+                                            class="text-base text-text-muted">{{ $this->formatNumber($commentCount) }}</span>
                                     </button>
 
                                     <button class="flex items-center gap-1 text-scond-800/20 transition-colors">
                                         <flux:icon name="eye" class="w-5 h-5" />
-                                        <span class="text-base text-text-muted">{{ $this->formatNumber($playCount) }}</span>
+                                        <span
+                                            class="text-base text-text-muted">{{ $this->formatNumber($playCount) }}</span>
                                     </button>
                                 </div>
 
                                 @if (!empty($hashtags))
                                     <div class="flex flex-wrap gap-2 sm:gap-3 mt-3">
                                         @foreach ($hashtags as $tag)
-                                            <span class="text-xs sm:text-sm text-second-500 font-medium">{{ $tag }}</span>
+                                            <span
+                                                class="text-xs sm:text-sm text-second-500 font-medium">{{ $tag }}</span>
                                         @endforeach
                                     </div>
                                 @endif
@@ -212,71 +258,116 @@
 
                 {{-- Pagination --}}
                 @if ($this->shouldShowPagination())
-                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-12 px-4">
-                        <div class="text-sm text-text-muted font-inter">
-                            {{ __('Page') }} <span class="font-semibold text-text-primary">{{ $currentPage }}</span>
-                            @if ($this->getTotalPages() > $currentPage)
-                                {{ __('of') }} <span class="font-semibold text-text-primary">{{ $this->getTotalPages() }}</span>
-                            @endif
-                        </div>
+                    <div class="mt-12 px-4">
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 rounded-2xl">
 
-                        <div class="flex items-center gap-2">
-                            <button wire:click="previousPage" wire:loading.attr="disabled"
-                                @if (!$this->hasPreviousPage()) disabled @endif
-                                class="px-4 py-2 rounded-lg border border-second-500/30 bg-white hover:bg-second-50 text-text-primary font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                                </svg>
-                                <span class="hidden sm:inline">{{ __('Previous') }}</span>
-                            </button>
-
-                            <div class="hidden md:flex items-center gap-2">
-                                @php
-                                    $totalPages = $this->getTotalPages();
-                                    $start = max(1, $currentPage - 2);
-                                    $end = min($totalPages, $currentPage + 2);
-                                @endphp
-
-                                @if ($start > 1)
-                                    <button wire:click="goToPage(1)" class="px-3 py-2 rounded-lg border border-second-500/30 bg-white hover:bg-second-50 text-text-primary font-medium transition-all duration-300">1</button>
-                                    @if ($start > 2)
-                                        <span class="px-2 text-text-muted">...</span>
-                                    @endif
-                                @endif
-
-                                @for ($i = $start; $i <= $end; $i++)
-                                    <button wire:click="goToPage({{ $i }})" wire:loading.attr="disabled"
-                                        class="px-3 py-2 rounded-lg border transition-all duration-300 font-medium {{ $i === $currentPage ? 'bg-gradient-to-r from-second-500 to-zinc-500 text-white border-transparent' : 'border-second-500/30 bg-white hover:bg-second-50 text-text-primary' }}">
-                                        {{ $i }}
-                                    </button>
-                                @endfor
-
-                                @if ($end < $totalPages)
-                                    @if ($end < $totalPages - 1)
-                                        <span class="px-2 text-text-muted">...</span>
-                                    @endif
-                                    <button wire:click="goToPage({{ $totalPages }})" class="px-3 py-2 rounded-lg border border-second-500/30 bg-white hover:bg-second-50 text-text-primary font-medium transition-all duration-300">{{ $totalPages }}</button>
+                            {{-- Page Info - Left Side --}}
+                           <div class="hidden sm:flex text-sm font-inter">
+                                <span class="text-gray-600">{{ __('Page') }}</span>
+                                <span
+                                    class="mx-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-second-500 to-zinc-500 text-white font-bold text-base shadow-md">
+                                    {{ $currentPage }}
+                                </span>
+                                @if ($this->getTotalPages() > $currentPage)
+                                    <span class="text-gray-600">{{ __('of') }}</span>
+                                    <span class="ml-1 font-semibold text-gray-800">{{ $this->getTotalPages() }}</span>
                                 @endif
                             </div>
 
-                            <div class="md:hidden px-4 py-2 rounded-lg bg-gradient-to-r from-second-500 to-zinc-500 text-white font-semibold">{{ $currentPage }}</div>
+                            {{-- Right Side Container --}}
+                            <div class="flex items-center gap-3">
+                                {{-- Pagination Controls - Hidden During Loading --}}
+                                <div wire:loading.remove wire:target="nextPage,previousPage,goToPage,setUser"
+                                    class="flex items-center gap-2">
 
-                            <button wire:click="nextPage" wire:loading.attr="disabled"
-                                @if (!$this->hasNextPage()) disabled @endif
-                                class="px-4 py-2 rounded-lg border border-second-500/30 bg-white hover:bg-second-50 text-text-primary font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white flex items-center gap-2">
-                                <span class="hidden sm:inline">{{ __('Next') }}</span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
-                        </div>
+                                    {{-- Previous Button --}}
+                                    <button wire:click="previousPage" wire:loading.attr="disabled"
+                                        @if (!$this->hasPreviousPage()) disabled @endif
+                                        class="group relative px-5 py-2.5 rounded-xl border-2 border-second-500/40 bg-white hover:bg-gradient-to-r hover:from-second-500 hover:to-second-600 text-gray-700 hover:text-white font-semibold transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-700 flex items-center gap-2 shadow-md hover:shadow-xl hover:scale-105 disabled:hover:scale-100">
+                                        <svg class="w-4 h-4 transition-transform group-hover:-translate-x-1"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                                d="M15 19l-7-7 7-7" />
+                                        </svg>
+                                        <span class="hidden sm:inline">{{ __('Previous') }}</span>
+                                    </button>
 
-                        <div wire:loading wire:target="nextPage,previousPage,goToPage,setUser" class="flex items-center gap-2 text-sm text-text-muted">
-                            <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            <span>{{ __('Loading...') }}</span>
+                                    {{-- Page Numbers (for desktop) --}}
+                                    <div class="hidden md:flex items-center gap-2">
+                                        @php
+                                            $totalPages = $this->getTotalPages();
+                                            $start = max(1, $currentPage - 2);
+                                            $end = min($totalPages, $currentPage + 2);
+                                        @endphp
+
+                                        @if ($start > 1)
+                                            <button wire:click="goToPage(1)"
+                                                class="px-4 py-2.5 rounded-xl border-2 border-second-500/40 bg-white hover:bg-second-50 text-gray-700 font-semibold transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105">
+                                                1
+                                            </button>
+                                            @if ($start > 2)
+                                                <span class="px-2 text-gray-400 font-bold">...</span>
+                                            @endif
+                                        @endif
+
+                                        @for ($i = $start; $i <= $end; $i++)
+                                            <button wire:click="goToPage({{ $i }})"
+                                                wire:loading.attr="disabled"
+                                                class="px-4 py-2.5 rounded-xl border-2 transition-all duration-300 font-semibold shadow-md hover:shadow-lg hover:scale-105
+                                {{ $i === $currentPage
+                                    ? 'bg-gradient-to-r from-second-500 to-zinc-500 text-white border-transparent ring-2 ring-second-300'
+                                    : 'border-second-500/40 bg-white hover:bg-second-50 text-gray-700' }}">
+                                                {{ $i }}
+                                            </button>
+                                        @endfor
+
+                                        @if ($end < $totalPages)
+                                            @if ($end < $totalPages - 1)
+                                                <span class="px-2 text-gray-400 font-bold">...</span>
+                                            @endif
+                                            <button wire:click="goToPage({{ $totalPages }})"
+                                                class="px-4 py-2.5 rounded-xl border-2 border-second-500/40 bg-white hover:bg-second-50 text-gray-700 font-semibold transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105">
+                                                {{ $totalPages }}
+                                            </button>
+                                        @endif
+                                    </div>
+
+                                    {{-- Current Page (for mobile) --}}
+                                    <div
+                                        class="md:hidden px-5 py-2.5 rounded-xl bg-gradient-to-r from-second-500 to-zinc-500 text-white font-bold shadow-lg ring-2 ring-second-300">
+                                        {{ $currentPage }}
+                                    </div>
+
+                                    {{-- Next Button --}}
+                                    <button wire:click="nextPage" wire:loading.attr="disabled"
+                                        @if (!$this->hasNextPage()) disabled @endif
+                                        class="group relative px-5 py-2.5 rounded-xl border-2 border-second-500/40 bg-white hover:bg-gradient-to-r hover:from-second-500 hover:to-second-600 text-gray-700 hover:text-white font-semibold transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-700 flex items-center gap-2 shadow-md hover:shadow-xl hover:scale-105 disabled:hover:scale-100">
+                                        <span class="hidden sm:inline">{{ __('Next') }}</span>
+                                        <svg class="w-4 h-4 transition-transform group-hover:translate-x-1"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                                d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                {{-- Loading State - Only on Right Side --}}
+                                <div wire:loading wire:target="nextPage,previousPage,goToPage,setUser"
+                                    class="flex items-center gap-3 px-6 py-3 bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-lg border border-gray-200/50">
+                                    <div class="relative">
+                                        {{-- Animated spinner rings --}}
+                                        <div class="w-10 h-10 rounded-full border-3 border-gray-200"></div>
+                                        <div
+                                            class="absolute top-0 left-0 w-10 h-10 rounded-full border-3 border-transparent border-t-second-500 border-r-second-500 animate-spin">
+                                        </div>
+                                        <div class="absolute top-0 left-0 w-10 h-10 rounded-full border-3 border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
+                                            style="animation-direction: reverse; animation-duration: 1s;"></div>
+                                    </div>
+                                    <span
+                                        class="text-sm font-semibold text-gray-700 animate-pulse">{{ __('Loading...') }}</span>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 @endif
@@ -285,12 +376,15 @@
             {{-- Empty State --}}
             @if (!$loading && count($videos) == 0 && !$error)
                 <div class="text-center py-16">
-                    <svg class="w-24 h-24 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    <svg class="w-24 h-24 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z">
+                        </path>
                     </svg>
                     <h3 class="text-2xl font-semibold text-gray-900 mb-2">{{ __('No videos available') }}</h3>
                     <p class="text-gray-600">
-                        @if($activeUser !== 'All')
+                        @if ($activeUser !== 'All')
                             {{ __('No videos found for') }} {{ $activeUser }}
                         @else
                             {{ __('Check back soon for new content') }}
@@ -307,7 +401,10 @@
                 Livewire.on('scroll-to-videos', () => {
                     const section = document.getElementById('video-section');
                     if (section) {
-                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        section.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
                     }
                 });
             });
@@ -315,6 +412,8 @@
     @endpush
 
     <style>
-        [x-cloak] { display: none !important; }
+        [x-cloak] {
+            display: none !important;
+        }
     </style>
 </div>
