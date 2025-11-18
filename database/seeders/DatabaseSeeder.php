@@ -20,6 +20,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ApplicationSettingSeeder::class,
             BlogSeeder::class,
+            CategorySeeder::class,
+            ProductSeeder::class,
+            KeywordSeeder::class
         ]);
     }
 }

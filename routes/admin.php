@@ -3,7 +3,6 @@
 use Firebase\JWT\Key;
 use App\Livewire\Frontend\Blog;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Frontend\ProductController;
 use App\Http\Controllers\Backend\Admin\BlogController;
 use App\Http\Controllers\Backend\Admin\KeywordController;
 use App\Http\Controllers\Backend\Admin\AuditingController;
@@ -11,9 +10,10 @@ use App\Http\Controllers\Backend\Admin\Settings\LanguageController;
 use App\Http\Controllers\Backend\Admin\UserManagement\UserController;
 use App\Http\Controllers\Backend\Admin\UserManagement\AdminController;
 use App\Http\Controllers\Backend\Admin\BannerVideo\BannerVideoController;
+use App\Http\Controllers\Backend\Admin\ProductManagement\ProductController;
+use App\Http\Controllers\Backend\Admin\ProductManagement\CategoryController;
 use App\Http\Controllers\Backend\Admin\TikTokManagement\TikTokMixedFeedController;
 use App\Http\Controllers\Backend\Admin\ApplicationSettings\ApplicationSettingsController;
-use App\Http\Controllers\Backend\Admin\ProductManagement\CategoryController;
 
 Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
@@ -92,6 +92,15 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
             Route::get('/view/{id}', 'view')->name('view');
             Route::get('/trash', 'trash')->name('trash');
         });
+
+        Route::controller(ProductController::class)->name('product.')->prefix('product')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::get('/view/{id}', 'view')->name('view');
+            Route::get('/trash', 'trash')->name('trash');
+        });
+
     });
 
 

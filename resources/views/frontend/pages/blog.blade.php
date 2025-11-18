@@ -4,7 +4,7 @@
         @case('blog.details')
             <x-slot name="title">{{ __('Blog Details') }}</x-slot>
             <x-slot name="pageSlug">{{ __('blog_details') }}</x-slot>
-            <livewire:frontend.blog-details />
+            <livewire:frontend.blog-details :data="$data" />
         @break
 
         @default

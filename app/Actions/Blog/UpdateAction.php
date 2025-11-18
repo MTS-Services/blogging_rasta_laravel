@@ -21,7 +21,7 @@ class UpdateAction
         return DB::transaction(function () use ($id, $data) {
 
             $model = $this->interface->find($id);
-            
+
             if (!$model) {
                 Log::error('Data not found', ['blog_id' => $id]);
                 throw new \Exception('Blog not found');
@@ -31,6 +31,7 @@ class UpdateAction
 
             $oldAvatarPath = Arr::get($oldData, 'file');
             $uploadedAvatar = Arr::get($data, 'file');
+            $newSingleAvatarPath = null;
 
             if ($uploadedAvatar instanceof UploadedFile) {
                 // Delete old file permanently (File deletion is non-reversible)
@@ -50,6 +51,11 @@ class UpdateAction
                 }
                 $newData['file'] = null;
             }
+
+            if (!$newData['remove_file'] && !$newSingleAvatarPath) {
+                $newData['file'] = $oldAvatarPath ?? null;
+            }
+
             unset($newData['remove_file']);
 
 

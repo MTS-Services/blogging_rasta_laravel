@@ -35,6 +35,10 @@ class BlogService
     }
 
 
+    public function findSlugData($column_value, string $column_name = 'slug'): ?Blog
+    {
+        return $this->interface->find(column_value: $column_value, column_name: $column_name);
+    }
     public function findData($column_value, string $column_name = 'id'): ?Blog
     {
         return $this->interface->find(column_value: $column_value, column_name: $column_name);

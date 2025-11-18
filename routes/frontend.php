@@ -11,9 +11,10 @@ use App\Http\Controllers\Frontend\VideoFeedController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/video-feed', [VideoFeedController::class,'index'])->name('video-feed');
+Route::get('/user-video-feed/{username}', [VideoFeedController::class, 'userVideoFeed'])->name('user-video-feed');
 Route::get('/product', [ProductController::class, 'product'])->name('product');
 Route::get('/blog', [BlogController::class, 'blog'])->name('blog');
-Route::get('/blog/details', [BlogController::class, 'details'])->name('blog.details');
+Route::get('/blog/details/{slug}', [BlogController::class, 'details'])->name('blog.details');
 Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/PrivacyPolicy', [StaticController::class, 'PrivacyPolicy'])->name('PrivacyPolicy');
 Route::get('/TermsOfService', [StaticController::class, 'TermsOfService'])->name('TermsOfService');
