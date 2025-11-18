@@ -41,21 +41,20 @@ class Product extends Component
     /**
      * Get filtered products based on selected category
      */
-    public function getFilteredProducts()
+   public function getFilteredProducts()
     {
-        if ($this->selectedCategory === 'All') {
-            // Use the $this->perPage variable
-            return $this->productservice->getPaginatedData(perPage: $this->perPage, filters: []);
-        }
-
-        // Filter products by category
         $filters = [
-            'category_id' => $this->selectedCategory,   
-             'status' => ProductStatus::ACTIVE->value,
+            'status' => ProductStatus::ACTIVE->value, // Always only active
         ];
 
-        // Use the $this->perPage variable
-        return $this->productservice->getPaginatedData(perPage: $this->perPage, filters: $filters);
+        if ($this->selectedCategory !== 'All') {
+            $filters['category_id'] = $this->selectedCategory;
+        }
+
+        return $this->productservice->getPaginatedData(
+            perPage: $this->perPage,
+            filters: $filters
+        );
     }
 
     /**
