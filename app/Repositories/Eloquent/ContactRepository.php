@@ -34,13 +34,12 @@ class ContactRepository implements ContactRepositoryInterface
     }
 
 
+
     public function findTrashed($column_value, string $column_name = 'id'): ?Contact
     {
         $model = $this->model->onlyTrashed();
-
         return $model->where($column_name, $column_value)->first();
     }
-
 
     public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator
     {
@@ -135,19 +134,21 @@ class ContactRepository implements ContactRepositoryInterface
         return $findData->forceDelete();
     }
 
-    public function restore(int $id, array $actioner): bool
+    public function restore(int $id, int $actionerId): bool
     {
-        $findData = $this->findTrashed(column_value: $id);
+        $findData = $this->findTrashed($id);
 
         if (!$findData) {
             return false;
         }
-        $findData->update(['restorer_id' => $actioner['id'], 'restorer_type' => $actioner['type'], 'restored_at' => now(), 'deleter_id' => null, 'deleter_type' => null]);
+        $findData->update(['restored_by' => $actionerId, 'restored_at' => now(), 'deleted_by' => null]);
+
         return $findData->restore();
     }
 
 
-   public function bulkRestore(array $ids, int $actionerId): int
+
+    public function bulkRestore(array $ids, int $actionerId): int
     {
 
         $this->model->onlyTrashed()->whereIn('id', $ids)->update(['restored_by' => $actionerId, 'restored_at' => now(), 'deleted_by' => null]);
@@ -166,5 +167,4 @@ class ContactRepository implements ContactRepositoryInterface
     {
         return $this->model->withTrashed()->whereIn('id', $ids)->forceDelete();
     }
-
 }

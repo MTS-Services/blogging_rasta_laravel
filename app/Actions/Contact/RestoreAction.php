@@ -15,10 +15,10 @@ class RestoreAction
     ) {}
 
 
-    public function execute(int $id, ?int $actionerId): bool
+    public function execute(int $id, ?int $actionerId)
     {
         return DB::transaction(function () use ($id, $actionerId) {
-            return $this->interface->restore($id, [$actionerId]);
+            return $this->interface->restore($id, $actionerId);
         });
     }
 }
