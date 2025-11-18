@@ -13,7 +13,7 @@ return [
         ],
         [
             'username' => 'mamendiayesavon111',
-            'display_name' => 'mamendiayesavon',
+            'display_name' => 'Mamendiayesavon',
             'description' => 'Gaming',
             'color' => 'red',
             'max_videos' => 20, 
