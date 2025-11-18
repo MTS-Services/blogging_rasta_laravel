@@ -10,11 +10,12 @@ use App\Services\ProductService;
 use App\Services\CategoryService;
 use App\Traits\Livewire\WithNotification;
 use App\Livewire\Forms\Product\ProductForm;
+use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class Edit extends Component
 {
 
-    use WithNotification;
+    use WithFileUploads, WithNotification;
 
     public ProductForm $form;
 

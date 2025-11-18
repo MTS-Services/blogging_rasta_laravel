@@ -5,6 +5,7 @@ namespace App\Livewire\Frontend;
 use Livewire\Component;
 use App\Services\TikTokMultiUserService;
 use App\Services\BannerVideoService;
+use App\Services\KeywordService;
 use Illuminate\Support\Facades\Log;
 
 class Home extends Component
@@ -31,11 +32,13 @@ class Home extends Component
 
     protected $tiktokService;
     protected $bannerService;
+    protected KeywordService $keywordService;
 
-    public function boot(TikTokMultiUserService $tiktokService, BannerVideoService $bannerService)
+    public function boot(TikTokMultiUserService $tiktokService, BannerVideoService $bannerService, KeywordService $keywordService)
     {
         $this->tiktokService = $tiktokService;
         $this->bannerService = $bannerService;
+        $this->keywordService = $keywordService;
     }
 
     public function mount()
@@ -256,12 +259,12 @@ class Home extends Component
 
         // Load hashtags
         $this->hashtags = [
-            ['tag' => '#GlowSkin', 'videos' => '48'],
-            ['tag' => '#DiodioTips', 'videos' => '32'],
-            ['tag' => '#NaturalBeauty', 'videos' => '125'],
-            ['tag' => '#SkincareRoutine', 'videos' => '95'],
-            ['tag' => '#BeautyHaul', 'videos' => '72'],
-            ['tag' => '#SkincareTips', 'videos' => '156'],
+            [ 'videos' => '48'],
+            [ 'videos' => '32'],
+            [ 'videos' => '125'],
+            [ 'videos' => '95'],
+            ['videos' => '72'],
+            [ 'videos' => '156'],
         ];
 
         $this->loading = false;
@@ -351,6 +354,9 @@ class Home extends Component
 
     public function render()
     {
-        return view('livewire.frontend.home');
+        $keywords = $this->keywordService->getAllDatas();
+        return view('livewire.frontend.home', [
+            'keywords' => $keywords
+        ]);
     }
 }
