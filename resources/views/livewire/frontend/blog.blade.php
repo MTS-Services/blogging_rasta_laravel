@@ -6,34 +6,36 @@
             @php $layout = $index % 2; @endphp
 
             @if ($layout === 0)
-                <div class="block lg:flex gap-12 items-center justify-between mt-12">
-                    <div class="bg-second-500/15 p-6 lg:w-1/2">
+                <div class="flex gap-12 items-center justify-between mt-12">
+                    <div class="bg-second-500/15 p-6 flex-1 lg:flex-1/2">
                         <h3 class="text-3xl font-semibold text-text-primary">{{ Str::limit($blog->title, 18, '..') }}
                         </h3>
-                        <a href="{{ route('blog.details', [$blog->slug]) }}" wire:navigate
-                            class="block mt-4 text-text-secondary">
-                            {!! Str::limit($blog->description, 745, '...') !!}
+                        <a href="{{ route('blog.details', $blog->slug) }}" wire:navigate
+                            class="inline-block mt-4 text-text-secondary">
+                            <div>
+                                {!! Str::limit(html_entity_decode($blog->description), 800, '...') !!}
+                            </div>
                         </a>
                     </div>
-                    <div class="lg:w-1/2 mt-8 lg:mt-0 flex justify-center">
-                        <x-blog-media :file="$blog->file"
-                            class="!object-cover w-full h-full sm:max-w-[450px] sm:max-h-[600px]" />
+                    <div class="flex-1 lg:flex-1/2 mt-8 lg:mt-0 flex justify-center">
+                        <x-blog-media :file="$blog->file" class="!object-cover" />
                     </div>
                 </div>
             @endif
 
             @if ($layout === 1)
-                <div class="block lg:flex gap-12 items-center justify-between mt-12 lg:mt-20">
-                    <div class="lg:w-1/2 flex justify-center">
-                        <x-blog-media :file="$blog->file"
-                            class="!object-cover w-full h-full sm:max-w-[450px] sm:max-h-[600px]" />
+                <div class="flex gap-12 items-center justify-between mt-12 lg:mt-20">
+                    <div class="flex-1 lg:flex-1/2 flex justify-center">
+                        <x-blog-media :file="$blog->file" class="!object-cover " />
                     </div>
-                    <div class="bg-blog p-6 lg:w-1/2 mt-8 lg:mt-0">
+                    <div class="bg-blog p-6 flex-1 lg:flex-1/2 mt-8 lg:mt-0">
                         <h3 class="text-3xl font-semibold text-text-primary">{{ Str::limit($blog->title, 18, '..') }}
                         </h3>
-                        <a href="{{ route('blog.details', [$blog->slug]) }}" wire:navigate
-                            class="block mt-4 text-text-secondary">
-                            {!! Str::limit($blog->description, 745, '...') !!}
+                        <a href="{{ route('blog.details', $blog->slug) }}" wire:navigate
+                            class="inline-block mt-4 text-text-secondary">
+                            <div>
+                                {!! Str::limit(html_entity_decode($blog->description), 800, '...') !!}
+                            </div>
                         </a>
                     </div>
                 </div>
