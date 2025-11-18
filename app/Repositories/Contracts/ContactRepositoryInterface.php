@@ -42,10 +42,9 @@ interface ContactRepositoryInterface
 
     public function restore(int $id, array $actionerId): bool;
 
-    public function bulkDelete(array $ids, array $actionerId): int;
+    public function bulkDelete(array $ids, int $actionerId): int;
 
-    public function bulkRestore(array $ids, array $actionerId): int;
+    public function bulkRestore(array $ids, int $actionerId): int;
 
     public function bulkForceDelete(array $ids): int;
-
 }

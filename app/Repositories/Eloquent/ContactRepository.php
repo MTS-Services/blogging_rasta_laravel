@@ -147,22 +147,24 @@ class ContactRepository implements ContactRepositoryInterface
     }
 
 
-    public function bulkRestore(array $ids, array $actioner): int
+   public function bulkRestore(array $ids, int $actionerId): int
     {
 
-        $this->model->onlyTrashed()->whereIn('id', $ids)->update(['restorer_id' => $actioner['id'], 'restorer_type' => $actioner['type'], 'restored_at' => now(), 'deleter_id' => null, 'deleter_type' => null]);
+        $this->model->onlyTrashed()->whereIn('id', $ids)->update(['restored_by' => $actionerId, 'restored_at' => now(), 'deleted_by' => null]);
+
         return $this->model->onlyTrashed()->whereIn('id', $ids)->restore();
     }
 
-    public function bulkDelete(array $ids, array $actioner): int
+    public function bulkDelete(array $ids, int $actionerId): int
     {
 
-        $this->model->whereIn('id', $ids)->update(['deleter_id' => $actioner['id'], 'deleter_type' => $actioner['type']]);
+        $this->model->whereIn('id', $ids)->update(['deleted_by' => $actionerId]);
 
         return $this->model->whereIn('id', $ids)->delete();
     }
-    public function bulkForceDelete(array $ids): int
+    public function bulkForceDelete(array $ids): int //
     {
         return $this->model->withTrashed()->whereIn('id', $ids)->forceDelete();
     }
+
 }

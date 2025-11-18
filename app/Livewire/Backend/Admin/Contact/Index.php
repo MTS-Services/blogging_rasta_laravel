@@ -125,32 +125,27 @@ class Index extends Component
         $this->showBulkActionModal = true;
     }
 
-    // public function executeBulkAction(): void
-    // {
-    //     $this->showBulkActionModal = false;
+      public function executeBulkAction(): void
+    {
+        $this->showBulkActionModal = false;
 
-    //     try {
-    //         match ($this->bulkAction) {
-    //             'delete' => $this->bulkDelete(),
-    //             'activate' => $this->bulkUpdateStatus(UserStatus::ACTIVE),
-    //             'inactive' => $this->bulkUpdateStatus(UserStatus::INACTIVE),
-    //             default => null,
-    //         };
+        try {
+            match ($this->bulkAction) {
+                'delete' => $this->bulkDelete(),
+                default => null,
+            };
 
-    //         $this->selectedIds = [];
-    //         $this->selectAll = false;
-    //         $this->bulkAction = '';
-    //     } catch (\Exception $e) {
-    //         $this->error('Bulk action failed: ' . $e->getMessage());
-    //     }
-    // }
+            $this->selectedIds = [];
+            $this->selectAll = false;
+            $this->bulkAction = '';
+        } catch (\Exception $e) {
+            $this->error('Bulk action failed: ' . $e->getMessage());
+        }
+    }
 
     protected function bulkDelete(): void
     {
-        $count = $this->service->bulkDeleteData(ids: $this->selectedIds, actioner: [
-            'id' => admin()->id,
-            'type' => Admin::class,
-        ]);
+        $count = $this->service->bulkDeleteData($this->selectedIds, admin()->id);
 
         $this->success("{$count} Datas deleted successfully");
     }

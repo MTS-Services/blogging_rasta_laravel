@@ -103,7 +103,8 @@ class ContactService
             $actionerId = admin()->id;
         }
 
-        return $this->bulkAction->execute(ids: $ids,  action: 'restore', status: null, actionerId: $actionerId);
+        return $this->bulkAction->execute(ids: $ids,  action: 'restore', actionerId: $actionerId);
+        
     }
 
     public function bulkForceDeleteData(array $ids, ?int $actionerId = null): int
@@ -112,7 +113,7 @@ class ContactService
             $actionerId = admin()->id;
         }
 
-        return $this->bulkAction->execute(ids: $ids, action: 'forceDelete', status: null, actionerId: $actionerId);
+        return $this->bulkAction->execute(ids: $ids, action: 'forceDelete',  actionerId: $actionerId);
     }
 
     public function bulkDeleteData(array $ids, ?int $actionerId = null): int
@@ -121,7 +122,7 @@ class ContactService
             $actionerId = admin()->id;
         }
 
-        return $this->bulkAction->execute(ids: $ids, action: 'delete', status: null, actionerId: $actionerId);
+        return $this->bulkAction->execute(ids: $ids, action: 'delete', actionerId: $actionerId);
     }
 
 }
