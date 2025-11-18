@@ -16,7 +16,7 @@ class UserVideoFeed extends Component
 
     // Pagination properties
     public $currentPage = 1;
-    public $videosPerPage = 12;
+    public $videosPerPage = 9;
     public $maxVideos = '';
     
     // Store page states
@@ -47,7 +47,8 @@ class UserVideoFeed extends Component
         }
         
         $this->displayName = $user['display_name'] ?? $username;
-        $this->maxVideos = $user['max_videos'] ?? 50;
+        // Increase max videos to allow multiple pages
+        $this->maxVideos = $user['max_videos'] ?? 100;
         
         // Initialize page 1 state
         $this->pageStates[1] = [
@@ -87,12 +88,23 @@ class UserVideoFeed extends Component
             
             if (!$currentState) {
                 // Initialize state for this page if it doesn't exist
-                $currentState = [
-                    'cursors' => [$this->username => 0],
-                    'video_counts' => [$this->username => 0],
-                    'has_more' => [$this->username => true],
-                    'videos' => [],
-                ];
+                $previousPage = $this->currentPage - 1;
+                if (isset($this->pageStates[$previousPage])) {
+                    // Copy state from previous page
+                    $currentState = [
+                        'cursors' => $this->pageStates[$previousPage]['cursors'],
+                        'video_counts' => $this->pageStates[$previousPage]['video_counts'],
+                        'has_more' => $this->pageStates[$previousPage]['has_more'],
+                        'videos' => [],
+                    ];
+                } else {
+                    $currentState = [
+                        'cursors' => [$this->username => 0],
+                        'video_counts' => [$this->username => 0],
+                        'has_more' => [$this->username => true],
+                        'videos' => [],
+                    ];
+                }
             }
 
             $allVideos = [];
@@ -106,14 +118,63 @@ class UserVideoFeed extends Component
                     Log::info('UserVideoFeed - User exhausted', [
                         'username' => $this->username,
                         'page' => $this->currentPage,
-                        'collected' => count($allVideos)
+                        'collected' => count($allVideos),
+                        'video_counts' => $currentState['video_counts'],
+                    ]);
+                    break;
+                }
+                
+                // Check if we've reached max videos limit
+                if ($currentState['video_counts'][$this->username] >= $this->maxVideos) {
+                    Log::info('UserVideoFeed - Max videos limit reached', [
+                        'username' => $this->username,
+                        'page' => $this->currentPage,
+                        'collected' => count($allVideos),
+                        'video_counts' => $currentState['video_counts'],
+                        'max_videos' => $this->maxVideos,
                     ]);
                     break;
                 }
                 
                 // Calculate how many more videos we need
                 $remaining = $this->videosPerPage - count($allVideos);
-                $videosToRequest = max(15, $remaining);
+                
+                // Calculate how many videos we can still load from API
+                $alreadyLoaded = $currentState['video_counts'][$this->username];
+                $canStillLoad = $this->maxVideos - $alreadyLoaded;
+                
+                // Don't request more than we can load
+                $videosToRequest = min(
+                    12, // Max per request
+                    $remaining + 3, // A bit more than needed for duplicates
+                    $canStillLoad // Don't exceed total limit
+                );
+                
+                // If we can't load enough videos, adjust expectations
+                if ($videosToRequest < 1) {
+                    Log::info('UserVideoFeed - Cannot request more videos', [
+                        'username' => $this->username,
+                        'page' => $this->currentPage,
+                        'already_loaded' => $alreadyLoaded,
+                        'max_videos' => $this->maxVideos,
+                    ]);
+                    break;
+                }
+                
+                Log::info('UserVideoFeed - Requesting videos', [
+                    'username' => $this->username,
+                    'page' => $this->currentPage,
+                    'attempt' => $attempts + 1,
+                    'requesting' => $videosToRequest,
+                    'current_cursor' => $currentState['cursors'][$this->username],
+                    'current_video_count' => $currentState['video_counts'][$this->username],
+                    'already_collected_on_page' => count($allVideos),
+                    'max_videos' => $this->maxVideos,
+                ]);
+                
+                // IMPORTANT: Pass a temporary video count for this request only
+                // We'll manually update the count based on what we actually use
+                $tempVideoCounts = $currentState['video_counts'];
                 
                 // Use the existing service method but for single user
                 $result = $this->tiktokService->getMultipleUsersVideos(
@@ -121,7 +182,7 @@ class UserVideoFeed extends Component
                     $videosToRequest,
                     $currentState['cursors'],
                     [$this->username => $this->maxVideos],
-                    $currentState['video_counts']
+                    $tempVideoCounts // Use temp counts
                 );
 
                 if (!$result['success']) {
@@ -135,13 +196,15 @@ class UserVideoFeed extends Component
                         'username' => $this->username,
                         'page' => $this->currentPage,
                         'attempt' => $attempts,
-                        'collected' => count($allVideos)
+                        'collected' => count($allVideos),
+                        'video_counts' => $result['video_counts'],
                     ]);
                     break;
                 }
                 
                 // Filter out duplicates
                 $skippedCount = 0;
+                $addedCount = 0;
                 foreach ($newVideos as $video) {
                     if (count($allVideos) >= $this->videosPerPage) {
                         break;
@@ -155,19 +218,21 @@ class UserVideoFeed extends Component
                     }
                     
                     $allVideos[] = $video;
+                    $addedCount++;
                     if ($videoId) {
                         $this->loadedVideoIds[] = $videoId;
                     }
                 }
                 
-                if ($skippedCount > 0) {
-                    Log::info('UserVideoFeed - Skipped duplicate videos', [
-                        'username' => $this->username,
-                        'page' => $this->currentPage,
-                        'skipped' => $skippedCount,
-                        'attempt' => $attempts
-                    ]);
-                }
+                Log::info('UserVideoFeed - Processed videos', [
+                    'username' => $this->username,
+                    'page' => $this->currentPage,
+                    'attempt' => $attempts + 1,
+                    'new_videos' => count($newVideos),
+                    'added' => $addedCount,
+                    'skipped' => $skippedCount,
+                    'total_collected' => count($allVideos),
+                ]);
                 
                 // Update state for next iteration
                 $currentState['cursors'] = $result['cursors'];
@@ -185,9 +250,30 @@ class UserVideoFeed extends Component
             
             // Check if we can have a next page
             $canHaveNextPage = false;
-            if (count($allVideos) >= $this->videosPerPage && $currentState['has_more'][$this->username]) {
+            
+            // Next page possible if:
+            // 1. We have full page of videos AND
+            // 2. User still has more videos AND  
+            // 3. We haven't reached the max limit yet
+            $remainingVideos = $this->maxVideos - $currentState['video_counts'][$this->username];
+            
+            if (count($allVideos) >= $this->videosPerPage && 
+                $currentState['has_more'][$this->username] &&
+                $remainingVideos > 0) {
                 $canHaveNextPage = true;
             }
+            
+            Log::info('UserVideoFeed - Pagination check', [
+                'username' => $this->username,
+                'page' => $this->currentPage,
+                'videos_on_page' => count($allVideos),
+                'videos_per_page' => $this->videosPerPage,
+                'has_more_from_api' => $currentState['has_more'][$this->username],
+                'total_loaded' => $currentState['video_counts'][$this->username],
+                'max_videos' => $this->maxVideos,
+                'remaining_videos' => $remainingVideos,
+                'can_have_next_page' => $canHaveNextPage,
+            ]);
             
             // Prepare next page state only if there can be more videos
             if ($canHaveNextPage && !isset($this->pageStates[$this->currentPage + 1])) {
@@ -207,6 +293,7 @@ class UserVideoFeed extends Component
                 'can_have_next_page' => $canHaveNextPage,
                 'total_unique_videos' => count($this->loadedVideoIds),
                 'video_counts' => $currentState['video_counts'],
+                'max_videos' => $this->maxVideos,
             ]);
 
         } catch (\Exception $e) {
@@ -214,6 +301,7 @@ class UserVideoFeed extends Component
             Log::error('UserVideoFeed - Video loading failed', [
                 'username' => $this->username,
                 'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
                 'page' => $this->currentPage,
             ]);
             $this->videos = [];
