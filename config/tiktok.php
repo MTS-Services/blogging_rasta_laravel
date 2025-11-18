@@ -7,15 +7,11 @@ return [
         [
             'username' => 'diodioglowskin',
             'display_name' => ' Diodio Glow Skin',
-            'description' => 'Tech Creator',
-            'color' => 'blue',
             'max_videos' => 20, 
         ],
         [
             'username' => 'mamendiayesavon111',
             'display_name' => 'Mamendiayesavon',
-            'description' => 'Gaming',
-            'color' => 'red',
             'max_videos' => 20, 
         ]
     ],
@@ -24,5 +20,5 @@ return [
 
     'videos_per_page' => 12,
     'videos_per_user_per_page' => 4,
-    'cache_duration' => 3600, // 1 hour
+    'cache_duration' => 3600,
 ];
