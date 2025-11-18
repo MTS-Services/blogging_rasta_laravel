@@ -16,9 +16,10 @@ class Edit extends Component
 {
     use WithFileUploads, WithNotification;
 
+    public $metaKeywordInput;
     public BlogForm $form;
     public Blog $data;
-     public $existingFile;
+    public $existingFile;
     public $existingFiles;
 
     protected BlogService $service;
@@ -32,7 +33,44 @@ class Edit extends Component
     {
         $this->data = $data;
         $this->form->setData($data);
-          $this->existingFile = $data->file;
+        $this->existingFile = $data->file;
+    }
+
+    public function addMetaKeyword(): void
+    {
+        $value = trim($this->metaKeywordInput);
+
+        if (empty($value)) {
+            return;
+        }
+
+        if ($this->form->meta_keywords === null) {
+            $this->form->meta_keywords = [];
+        }
+
+        $exists = collect($this->form->meta_keywords)
+            ->map(fn($type) => strtolower($type))
+            ->contains(strtolower($value));
+
+        if ($exists) {
+            $this->addError('metaKeywordInput', 'this meta keyword already exists');
+            return;
+        }
+
+        $this->form->meta_keywords[] = $value;
+        $this->metaKeywordInput = '';
+        $this->resetErrorBag('metaKeywordInput');
+    }
+
+    /**
+     * Remove a specific meta keyword
+     */
+    public function removeMetaKeyword(int $index): void
+    {
+        if (isset($this->form->meta_keywords[$index])) {
+            unset($this->form->meta_keywords[$index]);
+            $this->form->meta_keywords = array_values($this->form->meta_keywords);
+        }
     }
 
     public function render()
