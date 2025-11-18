@@ -1,23 +1,51 @@
 <div class="min-h-screen bg-bg-primary py-8 sm:py-12 px-4">
     <div class="container mx-auto">
         <div id="user-video-section">
-            {{-- Header --}}
-            <div class="mb-3 sm:mb-5 lg:mb-8 mx-auto max-w-xl">
-                {{-- Back Button --}}
-                <a href="{{ route('video-feed') }}" wire:navigate
+            {{-- Header with Back Button and User Info --}}
+            <div class="mb-5 xl:mb-8 mx-auto max-w-xl">
+                {{-- <a href="{{ route('video-feed') }}" wire:navigate 
                     class="inline-flex items-center gap-2 text-second-500 hover:text-second-600 mb-4 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
                     <span class="font-medium">{{ __('Back to All Videos') }}</span>
-                </a>
-
+                </a> --}}
+                
                 <h1 class="text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-bold text-text-primary mb-1.5 sm:mb-3">
                     {{ $displayName }}
                 </h1>
                 <p class="text-text-secondary text-base">
-                    {{ __('Videos from') }} {{ $displayName }}
+                    {{ __('Videos from @') }}{{ $username }}
                 </p>
+            </div>
+
+            {{-- Filter Tabs (User-based) --}}
+            <div class="flex flex-wrap gap-1 sm:gap-2 xl:ps-20 mb-5 xl:mb-10 max-w-2xl mx-auto">
+                @foreach ($this->users as $user)
+                    @if ($user === 'All')
+                        <a href="{{ route('video-feed') }}" wire:navigate
+                            class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
+                            {{ $displayName === $user
+                                ? 'bg-second-500 text-white'
+                                : 'bg-second-800/10 text-second-500 hover:bg-second-400/40' }}">
+                            {{ $user }}
+                        </a>
+                    @else
+                        @php
+                            // Find actual username for this display name
+                            $featuredUsers = config('tiktok.featured_users', []);
+                            $userData = collect($featuredUsers)->firstWhere('display_name', $user);
+                            $actualUsername = $userData['username'] ?? strtolower(str_replace(' ', '', $user));
+                        @endphp
+                        <a href="{{ route('user-video-feed', ['username' => $actualUsername]) }}" wire:navigate
+                            class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
+                             {{ $displayName === $user
+                                 ? 'bg-second-500 text-white'
+                                 : 'bg-second-800/10 text-second-500 hover:bg-second-400/40' }}">
+                            {{ $user }}
+                        </a>
+                    @endif
+                @endforeach
             </div>
 
             {{-- Loading State --}}

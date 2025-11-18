@@ -5,9 +5,34 @@
         <div class="container pt-20 pb-16 lg:pt-24">
             <div class="flex flex-col lg:flex-row items-center justify-between gap-14">
                 {{-- Image Section --}}
-                <div class="w-full lg:w-1/2 flex justify-center">
-                    <img src="{{ asset('assets/images/home_page/image 2.png') }}" alt="Banner image"
-                        class="w-full max-w-[500px] lg:max-w-none h-auto rounded-lg object-cover block">
+                <div class="w-full lg:w-1/2 flex justify-center relative">
+                    @if ($banner && $banner->file)
+                        <!-- Video Container -->
+                        <div class="relative w-full max-w-[500px] lg:max-w-none">
+                            <!-- Video Element with Controls (Fixed Height for Matching Thumbnail) -->
+                            <video id="bannerVideo" controls poster="{{ asset('storage/' . $banner->thumbnail) }}"
+                                class="w-full h-[500px] lg:h-[600px] rounded-lg object-cover block">
+                                <source src="{{ asset('storage/' . $banner->file) }}" type="video/mp4">
+                                {{ __('Your browser video support is not enough.') }}
+                            </video>
+
+                            <!-- Custom Play Button Overlay -->
+                            <div id="playButton"
+                                class="absolute inset-0 flex items-center justify-center cursor-pointer pointer-events-none">
+                                <!-- Play Button Box (White Background) -->
+                                <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-xl pointer-events-auto"
+                                    onclick="document.getElementById('bannerVideo').play();">
+                                    <!-- Play Icon (Color: #D09003) -->
+                                    <svg class="w-10 h-10 ml-1" fill="#D09003" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <img src="{{ asset('assets/images/home_page/image 2.png') }}" alt="Banner image"
+                            class="w-full max-w-[500px] lg:max-w-none h-auto rounded-lg object-cover block">
+                    @endif
                 </div>
 
                 {{-- Text Content --}}

@@ -15,13 +15,13 @@
             <div class="flex flex-wrap gap-1 sm:gap-2 xl:ps-20 mb-5 xl:mb-10 max-w-2xl mx-auto">
                 @foreach ($this->users as $user)
                     @if ($user === 'All')
-                        <button wire:click="setUser('{{ $user }}')"
+                        <a href="{{ route('video-feed') }}" wire:navigate
                             class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
                             {{ $activeUser === $user
                                 ? 'bg-second-500 text-white'
                                 : 'bg-second-800/10 text-second-500 hover:bg-second-400/40' }}">
                             {{ $user }}
-                        </button>
+                        </a>
                     @else
                         @php
                             // Find actual username for this display name
@@ -255,7 +255,8 @@
                         </div>
                     @endforeach
                 </div>
-                     {{-- Pagination --}}
+
+                {{-- Pagination --}}
                 @if ($this->shouldShowPagination())
                     <div class="mt-8 sm:mt-12 px-2 sm:px-4">
                         <div

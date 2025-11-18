@@ -38,13 +38,13 @@
 
                     {{-- Buttons --}}
                     <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mt-8">
-                        <x-ui.button href="#"
+                        <x-ui.button href="{{ 'product' }}"
                             class="py-4 px-8 bg-lradient-to-r from-second-500 to-zinc-500 hover:shadow-lg transition-all duration-300">
                             <span class="text-white">{{ __('Discover Your Glow') }}</span>
                             <flux:icon name="arrow-right" class="w-4 h-4 stroke-white" />
                         </x-ui.button>
 
-                        <x-ui.button href="#" variant="secondary"
+                        <x-ui.button href="{{ 'video-feed' }}" variant="secondary"
                             class="py-4 px-8 border border-second-500 group transition-all duration-300">
                             <flux:icon name="play"
                                 class="w-4 h-4 stroke-text-primary group-hover:stroke-white transition-colors" />
@@ -573,7 +573,7 @@
 
             {{-- CTA Button --}}
             <div class="w-fit mx-auto">
-                <x-ui.button href="#"
+                <x-ui.button href="{{ route('product') }}"
                     class="py-4 px-8 bg-gradient-to-r from-second-500 to-zinc-500 hover:shadow-lg transition-all duration-300">
                     <span class="text-white">{{ __('Discover Your Glow') }}</span>
                     <flux:icon name="arrow-right" class="w-4 h-4 stroke-white" />
