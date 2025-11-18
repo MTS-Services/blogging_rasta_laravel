@@ -16,7 +16,7 @@ class UserVideoFeed extends Component
 
     // Pagination properties
     public $currentPage = 1;
-    public $videosPerPage = 12;
+    public $videosPerPage = 9;
     public $maxVideos = '';
     
     // Store page states
