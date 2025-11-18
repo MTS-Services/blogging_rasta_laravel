@@ -304,6 +304,7 @@
                             </div>
                         @endforeach
                     </div>
+                         {{-- Pagination --}}
                     @if ($this->shouldShowPagination())
                         <div class="mt-8 sm:mt-12 px-2 sm:px-4">
                             <div
