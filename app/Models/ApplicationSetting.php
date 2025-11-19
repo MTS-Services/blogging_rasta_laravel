@@ -66,6 +66,7 @@ class ApplicationSetting extends Model
             self::DATATBASE_DRIVER_SQLSRV => 'SQL Server',
         ];
     }
+
     /**
      * Get a single setting value by key
      */
@@ -221,6 +222,28 @@ class ApplicationSetting extends Model
         return [
             self::TIME_FORMAT_12 => '12 Hour',
             self::TIME_FORMAT_24 => '24 Hour',
+        ];
+    }
+
+    /**
+     * Get TikTok configuration from database
+     */
+    public static function getTikTokConfig()
+    {
+        $rapidApiKey = self::get('rapidapi_key', '');
+        $featuredUsers = self::get('featured_users', '[]');
+        $defaultMaxVideos = self::get('default_max_videos_per_user', 20);
+        $videosPerPage = self::get('videos_per_page', 12);
+        $videosPerUserPerPage = self::get('videos_per_user_per_page', 4);
+        $cacheDuration = self::get('cache_duration', 3600);
+
+        return [
+            'rapidapi_key' => $rapidApiKey,
+            'featured_users' => json_decode($featuredUsers, true) ?: [],
+            'default_max_videos_per_user' => (int) $defaultMaxVideos,
+            'videos_per_page' => (int) $videosPerPage,
+            'videos_per_user_per_page' => (int) $videosPerUserPerPage,
+            'cache_duration' => (int) $cacheDuration,
         ];
     }
 }

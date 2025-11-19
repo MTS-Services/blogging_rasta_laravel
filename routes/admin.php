@@ -58,12 +58,12 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
         Route::get('/trash', 'trash')->name('trash');
     });
 
-
     Route::group(['prefix' => 'application-settings', 'as' => 'as.'], function () {
 
         Route::controller(ApplicationSettingsController::class)->prefix('application-settings')->group(function () {
             Route::get('/general-settings', 'generalSettings')->name('general-settings');
             Route::get('/database-settings', 'databaseSettings')->name('database-settings');
+            Route::get('/tik-tok-settings', 'tikTokSettings')->name('tik-tok-settings');
         });
     });
 
@@ -88,7 +88,6 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
     });
 
 
-
     Route::group(['prefix' => 'product-management', 'as' => 'pm.'], function () {
         Route::controller(CategoryController::class)->name('category.')->prefix('category')->group(function () {
             Route::get('/', 'index')->name('index');
@@ -109,9 +108,8 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
     });
 
 
-
-
     Route::controller(TikTokMixedFeedController::class)->prefix('tiktok-videos')->group(function () {
         Route::get('/', 'index')->name('tiktok-videos');
+        Route::get('/keyword{id}', 'videoKeyword')->name('video-keyword');
     });
 });

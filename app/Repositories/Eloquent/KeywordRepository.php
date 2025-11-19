@@ -16,13 +16,20 @@ class KeywordRepository implements KeywordRepositoryInterface
      */
     public function __construct(
         protected Keyword $model
-    )
-    {}
+    ) {}
 
 
     /* ================== ================== ==================
     *                      Find Methods
     * ================== ================== ================== */
+    // In KeywordRepository
+    public function allWithCount(string $sortField = 'created_at', $order = 'desc'): Collection
+    {
+        return $this->model->query()
+            ->withCount('videoKeywords')
+            ->orderBy($sortField, $order)
+            ->get();
+    }
 
     public function all(string $sortField = 'created_at', $order = 'desc'): Collection
     {

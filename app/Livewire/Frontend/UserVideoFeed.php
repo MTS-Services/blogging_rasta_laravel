@@ -29,23 +29,25 @@ class UserVideoFeed extends Component
     public function mount($username)
     {
         $this->username = $username;
-        
+
         // Get display name (author_nickname) from first video of this user
         $firstVideo = TikTokVideo::where('is_active', true)
             ->where('username', $username)
             ->whereNotNull('author_nickname')
             ->first();
-        
+
         if (!$firstVideo) {
             $this->error = 'User not found';
             $this->loading = false;
             return;
         }
-        
+
         $this->displayName = $firstVideo->author_nickname ?: $username;
-        
+
         $this->loadVideos();
     }
+
+    // Replace the loadVideos() method:
 
     public function loadVideos()
     {
@@ -53,8 +55,9 @@ class UserVideoFeed extends Component
         $this->error = null;
 
         try {
-            // Query videos from database for this specific user
-            $query = TikTokVideo::where('is_active', true)
+            // Query videos from database for this specific user with keywords relationship
+            $query = TikTokVideo::with(['videoKeywords.keyword'])
+                ->where('is_active', true)
                 ->where('username', $this->username)
                 ->orderBy('create_time', 'desc');
 
@@ -68,6 +71,11 @@ class UserVideoFeed extends Component
 
             // Format videos for display
             $this->videos = $videosCollection->map(function ($video) {
+                // Extract keywords from relationship
+                $keywords = $video->videoKeywords->map(function ($videoKeyword) {
+                    return $videoKeyword->keyword->name ?? null;
+                })->filter()->values()->toArray();
+
                 return [
                     'aweme_id' => $video->aweme_id,
                     'video_id' => $video->video_id,
@@ -96,7 +104,8 @@ class UserVideoFeed extends Component
                         'avatar_medium' => $video->author_avatar_medium,
                     ],
                     '_username' => $video->username,
-                    'text_extra' => $this->extractHashtagsAsTextExtra($video->hashtags),
+                    'keywords' => $keywords,
+                    'text_extra' => $this->formatKeywordsAsTextExtra($keywords),
                 ];
             })->toArray();
 
@@ -106,7 +115,6 @@ class UserVideoFeed extends Component
                 'videos_count' => count($this->videos),
                 'total_videos' => $totalVideos,
             ]);
-
         } catch (\Exception $e) {
             $this->error = 'Failed to load videos: ' . $e->getMessage();
             Log::error('UserVideoFeed - Video loading failed', [
@@ -120,24 +128,27 @@ class UserVideoFeed extends Component
         $this->loading = false;
     }
 
+// Replace the extractHashtagsAsTextExtra() method:
+
     /**
-     * Convert hashtags array to text_extra format
+     * Convert keywords array to text_extra format
      */
-    private function extractHashtagsAsTextExtra($hashtags)
+    private function formatKeywordsAsTextExtra($keywords)
     {
-        if (empty($hashtags)) {
+        if (empty($keywords)) {
             return [];
         }
 
         $textExtra = [];
-        foreach ($hashtags as $tag) {
+        foreach ($keywords as $keyword) {
             $textExtra[] = [
-                'hashtag_name' => $tag,
+                'hashtag_name' => $keyword,
             ];
         }
 
         return $textExtra;
     }
+
 
     /**
      * Get filtered query for this user
@@ -169,7 +180,7 @@ class UserVideoFeed extends Component
 
         $this->currentPage = $page;
         $this->loadVideos();
-        
+
         $this->dispatch('scroll-to-user-videos');
     }
 
@@ -212,7 +223,7 @@ class UserVideoFeed extends Component
     public function getUsersProperty()
     {
         $users = ['All'];
-        
+
         // Get distinct author nicknames from active videos
         $authors = TikTokVideo::where('is_active', true)
             ->whereNotNull('author_nickname')
@@ -222,7 +233,7 @@ class UserVideoFeed extends Component
             ->orderBy('author_nickname')
             ->pluck('author_nickname')
             ->toArray();
-        
+
         return array_merge($users, $authors);
     }
 
