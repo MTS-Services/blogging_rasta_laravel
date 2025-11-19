@@ -56,4 +56,76 @@ class TikTokVideo extends BaseModel
         'create_time' => 'datetime',
     ];
 
+     public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope to get only featured videos
+     */
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', true);
+    }
+
+    /**
+     * Scope to get videos by username
+     */
+    public function scopeByUsername($query, $username)
+    {
+        return $query->where('username', $username);
+    }
+
+    /**
+     * Scope to order by sort order
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('sort_order', 'desc')
+                     ->orderBy('create_time', 'desc');
+    }
+
+    /**
+     * Get formatted play count
+     */
+    public function getFormattedPlayCountAttribute()
+    {
+        return $this->formatNumber($this->play_count);
+    }
+
+    /**
+     * Get formatted digg count
+     */
+    public function getFormattedDiggCountAttribute()
+    {
+        return $this->formatNumber($this->digg_count);
+    }
+
+    /**
+     * Get formatted comment count
+     */
+    public function getFormattedCommentCountAttribute()
+    {
+        return $this->formatNumber($this->comment_count);
+    }
+
+    /**
+     * Format number helper
+     */
+    private function formatNumber($number)
+    {
+        if (!is_numeric($number)) {
+            return '0';
+        }
+
+        if ($number >= 1000000) {
+            return round($number / 1000000, 1) . 'M';
+        } elseif ($number >= 1000) {
+            return round($number / 1000, 1) . 'K';
+        }
+        
+        return number_format($number);
+    }
+
 }
