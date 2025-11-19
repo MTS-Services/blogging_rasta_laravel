@@ -30,17 +30,19 @@ class UserVideoFeed extends Component
     {
         $this->username = $username;
         
-        // Get display name from config
-        $featuredUsers = config('tiktok.featured_users', []);
-        $user = collect($featuredUsers)->firstWhere('username', $username);
+        // Get display name (author_nickname) from first video of this user
+        $firstVideo = TikTokVideo::where('is_active', true)
+            ->where('username', $username)
+            ->whereNotNull('author_nickname')
+            ->first();
         
-        if (!$user) {
+        if (!$firstVideo) {
             $this->error = 'User not found';
             $this->loading = false;
             return;
         }
         
-        $this->displayName = $user['display_name'] ?? $username;
+        $this->displayName = $firstVideo->author_nickname ?: $username;
         
         $this->loadVideos();
     }
@@ -137,12 +139,18 @@ class UserVideoFeed extends Component
         return $textExtra;
     }
 
+    /**
+     * Get filtered query for this user
+     */
+    private function getFilteredQuery()
+    {
+        return TikTokVideo::where('is_active', true)
+            ->where('username', $this->username);
+    }
+
     public function shouldShowPagination()
     {
-        $totalVideos = TikTokVideo::where('is_active', true)
-            ->where('username', $this->username)
-            ->count();
-        
+        $totalVideos = $this->getFilteredQuery()->count();
         return $totalVideos > $this->videosPerPage;
     }
 
@@ -152,10 +160,7 @@ class UserVideoFeed extends Component
             return;
         }
 
-        $totalVideos = TikTokVideo::where('is_active', true)
-            ->where('username', $this->username)
-            ->count();
-        
+        $totalVideos = $this->getFilteredQuery()->count();
         $totalPages = ceil($totalVideos / $this->videosPerPage);
 
         if ($page > $totalPages) {
@@ -188,12 +193,8 @@ class UserVideoFeed extends Component
 
     public function hasNextPage()
     {
-        $totalVideos = TikTokVideo::where('is_active', true)
-            ->where('username', $this->username)
-            ->count();
-        
+        $totalVideos = $this->getFilteredQuery()->count();
         $totalPages = ceil($totalVideos / $this->videosPerPage);
-        
         return $this->currentPage < $totalPages;
     }
 
@@ -204,23 +205,25 @@ class UserVideoFeed extends Component
 
     public function getTotalPages()
     {
-        $totalVideos = TikTokVideo::where('is_active', true)
-            ->where('username', $this->username)
-            ->count();
-        
+        $totalVideos = $this->getFilteredQuery()->count();
         return max(1, ceil($totalVideos / $this->videosPerPage));
     }
 
     public function getUsersProperty()
     {
-        $featuredUsers = config('tiktok.featured_users', []);
         $users = ['All'];
         
-        foreach ($featuredUsers as $user) {
-            $users[] = $user['display_name'] ?? $user['username'];
-        }
+        // Get distinct author nicknames from active videos
+        $authors = TikTokVideo::where('is_active', true)
+            ->whereNotNull('author_nickname')
+            ->where('author_nickname', '!=', '')
+            ->select('author_nickname')
+            ->distinct()
+            ->orderBy('author_nickname')
+            ->pluck('author_nickname')
+            ->toArray();
         
-        return $users;
+        return array_merge($users, $authors);
     }
 
     public function formatNumber($number)
