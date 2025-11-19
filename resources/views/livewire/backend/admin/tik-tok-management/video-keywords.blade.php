@@ -72,22 +72,23 @@
             @endif
 
             <!-- Save Button -->
-            <div class="mt-6">
-                <button 
-                    wire:click="save" 
-                    type="button"
-                    class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                >
-                    Save Keywords
-                </button>
-            </div>
+            <div class="flex items-center justify-end gap-4 mt-6">
+                <x-ui.button wire:click="resetForm" variant="tertiary" class="w-auto! py-2!">
+                    <flux:icon name="x-circle"
+                        class="w-4 h-4 stroke-text-btn-primary group-hover:stroke-text-btn-tertiary" />
+                    <span wire:loading.remove wire:target="resetForm"
+                        class="text-text-btn-primary group-hover:text-text-btn-secondary">{{ __('Reset') }}</span>
+                    <span wire:loading wire:target="resetForm"
+                        class="text-text-btn-primary group-hover:text-text-btn-secondary">{{ __('Reseting...') }}</span>
+                </x-ui.button>
 
-            <!-- Success Message -->
-            @if (session()->has('message'))
-                <div class="mt-4 p-4 bg-green-100 text-green-700 rounded">
-                    {{ session('message') }}
-                </div>
-            @endif
+                <x-ui.button class="w-auto! py-2!" type="submit">
+                    <span wire:loading.remove wire:target="save"
+                        class="text-text-btn-primary group-hover:text-text-btn-secondary">{{ __('Create ') }}</span>
+                    <span wire:loading wire:target="save"
+                        class="text-text-btn-primary group-hover:text-text-btn-secondary">{{ __('Creating...') }}</span>
+                </x-ui.button>
+            </div>
         </div>
     </div>
 
