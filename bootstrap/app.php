@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => AdminMiddleware::class,
             'adminVerify' => AdminVerifyMiddleware::class,
             'userVerify' => UserVerifyMiddleware::class,
+            
         ]);
         $middleware->web(MultiLangSet::class);
         $middleware->api(MultiLangSet::class);
