@@ -101,7 +101,7 @@ class TiktokSettings extends Component
             // Other errors
             $this->dispatch('notify', [
                 'type' => 'error',
-                'message' => __('Something went wrong! Please try again.')
+                'message' => __('Something went wrong! Please try again .')
             ]);
             
             session()->flash('error', __('Something went wrong! Please try again.'));
