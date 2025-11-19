@@ -23,6 +23,8 @@ use App\Repositories\Contracts\LanguageRepositoryInterface;
 use App\Repositories\Contracts\ApplicationSettingsIntarface;
 use App\Repositories\Eloquent\ApplicationSettingsRepository;
 use App\Repositories\Contracts\BannerVideoRepositoryInterface;
+use App\Repositories\Contracts\ContactRepositoryInterface;
+use App\Repositories\Eloquent\ContactRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -73,6 +75,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             ProductRepositoryInterface::class,
             ProductRepository::class
+        );
+        $this->app->bind(
+            ContactRepositoryInterface::class,
+            ContactRepository::class
         );
     }
 

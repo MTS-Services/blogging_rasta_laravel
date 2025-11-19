@@ -1,8 +1,8 @@
 :root {
     /* Full Opacity HEX Colors (Mapped from your primary palette) */
     --clr-purple-light:    #ffccd9;   /* primary-200 */
-    --clr-purple-mid:      #ff99b3;   /* primary-300 */
-    --clr-purple-dark:     #ff6690;   /* primary-500 */
+    --clr-purple-mid:      #f7abbea1;   /* primary-300 */
+    --clr-purple-dark:     #f19db4;   /* primary-500 */
     --clr-purple-lightest: #FFE4E7;   /* primary-100 */
     --clr-white:           #ffffff;
 

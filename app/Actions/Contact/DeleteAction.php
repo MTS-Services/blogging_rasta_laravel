@@ -1,17 +1,20 @@
 <?php
 
-namespace App\Actions\Blog;
+namespace App\Actions\Contact;
 
-use App\Events\Admin\AdminDeleted;
-use App\Repositories\Contracts\BlogRepositoryInterface;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use App\Repositories\Contracts\ContactRepositoryInterface;
 
 class DeleteAction
 {
-    public function __construct(public BlogRepositoryInterface $interface) {}
+    /**
+     * Create a new class instance.
+     */
+    public function __construct(
+        protected ContactRepositoryInterface $interface
+    ) {}
 
-    public function execute(int $id, bool $forceDelete = false, $actionerId): bool
+    public function execute(int $id, bool $forceDelete = false, int $actionerId): bool
     {
         return DB::transaction(function () use ($id, $forceDelete, $actionerId) {
             $model = null;
@@ -25,15 +28,9 @@ class DeleteAction
                 throw new \Exception('Data not found');
             }
             if ($forceDelete) {
-                // Delete file
-                if ($model->file) {
-                    Storage::disk('public')->delete($model->file);
-                }
-
                 return $this->interface->forceDelete($id);
             }
-
-            return $this->interface->delete($id, $actionerId);
+           return $this->interface->delete($id, $actionerId);
         });
     }
 }
