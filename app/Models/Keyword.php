@@ -35,10 +35,10 @@ class Keyword extends AuthBaseModel implements Auditable
                 Start of RELATIONSHIPS
      =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#= */
 
-  public function videoKeywords()
-{
-    return $this->hasMany(VideoKeyword::class, 'keyword_id','id');
-}
+    public function videoKeywords()
+    {
+        return $this->hasMany(VideoKeyword::class, 'keyword_id', 'id');
+    }
 
 
     /* =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
