@@ -7,18 +7,18 @@ use App\Models\ApplicationSetting;
 
 class TikTokSettings extends Form
 {
-    public $rapidapi_key;
+    public $rapidapi_key = '';
     public $featured_users = [];
-    public $default_max_videos_per_user;
-    public $videos_per_page;
-    public $videos_per_user_per_page;
-    public $cache_duration;
+    public $default_max_videos_per_user = 20;
+    public $videos_per_page = 12;
+    public $videos_per_user_per_page = 4;
+    public $cache_duration = 3600;
 
     public function rules(): array
     {
         return [
             'rapidapi_key' => 'required|string|max:255',
-            'featured_users' => 'nullable|array',
+            'featured_users' => 'required|array|min:1',
             'featured_users.*.username' => 'required|string|max:255',
             'featured_users.*.display_name' => 'required|string|max:255',
             'featured_users.*.max_videos' => 'required|integer|min:1|max:100',
@@ -26,6 +26,20 @@ class TikTokSettings extends Form
             'videos_per_page' => 'required|integer|min:1|max:50',
             'videos_per_user_per_page' => 'required|integer|min:1|max:20',
             'cache_duration' => 'required|integer|min:60|max:86400',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'rapidapi_key.required' => 'RapidAPI Key is required.',
+            'featured_users.required' => 'At least one featured user is required.',
+            'featured_users.min' => 'At least one featured user is required.',
+            'featured_users.*.username.required' => 'Username is required.',
+            'featured_users.*.display_name.required' => 'Display name is required.',
+            'featured_users.*.max_videos.required' => 'Max videos is required.',
+            'featured_users.*.max_videos.min' => 'Max videos must be at least 1.',
+            'featured_users.*.max_videos.max' => 'Max videos cannot exceed 100.',
         ];
     }
 
@@ -55,13 +69,20 @@ class TikTokSettings extends Form
         $this->featured_users[] = [
             'username' => '',
             'display_name' => '',
-            'max_videos' => 20,
+            'max_videos' => $this->default_max_videos_per_user ?? 20,
         ];
+        
+        // Force re-index to ensure Livewire detects the change
+        $this->featured_users = array_values($this->featured_users);
     }
 
     public function removeFeaturedUser($index)
     {
-        unset($this->featured_users[$index]);
-        $this->featured_users = array_values($this->featured_users);
+        // Only remove if more than one user exists
+        if (count($this->featured_users) > 1) {
+            unset($this->featured_users[$index]);
+            // Re-index array to prevent gaps
+            $this->featured_users = array_values($this->featured_users);
+        }
     }
 }
