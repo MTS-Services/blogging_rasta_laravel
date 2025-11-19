@@ -42,13 +42,8 @@ class VideoFeed extends Component
 
             // Filter by user if not 'All'
             if ($this->activeUser !== 'All') {
-                // Find actual username from display name
-                $featuredUsers = config('tiktok.featured_users', []);
-                $user = collect($featuredUsers)->firstWhere('display_name', $this->activeUser);
-                
-                if ($user) {
-                    $query->where('username', $user['username']);
-                }
+                // Filter by author_nickname
+                $query->where('author_nickname', $this->activeUser);
             }
 
             // Get total count for pagination
@@ -131,38 +126,31 @@ class VideoFeed extends Component
         return $textExtra;
     }
 
+    /**
+     * Get filtered query based on active user
+     */
+    private function getFilteredQuery()
+    {
+        $query = TikTokVideo::where('is_active', true);
+
+        if ($this->activeUser !== 'All') {
+            $query->where('author_nickname', $this->activeUser);
+        }
+
+        return $query;
+    }
+
     public function setUser($username)
     {
-        // Update active user
         $this->activeUser = $username;
-        
-        // Reset to page 1 when changing filter
         $this->currentPage = 1;
-        
-        // Reload videos with the new filter
         $this->loadVideos();
-        
-        // Scroll to video section
         $this->dispatch('scroll-to-videos');
     }
 
     public function shouldShowPagination()
     {
-        // Base query - only active videos
-        $query = TikTokVideo::where('is_active', true);
-
-        // Filter by user if not 'All'
-        if ($this->activeUser !== 'All') {
-            $featuredUsers = config('tiktok.featured_users', []);
-            $user = collect($featuredUsers)->firstWhere('display_name', $this->activeUser);
-            
-            if ($user) {
-                $query->where('username', $user['username']);
-            }
-        }
-
-        $totalVideos = $query->count();
-        
+        $totalVideos = $this->getFilteredQuery()->count();
         return $totalVideos > $this->videosPerPage;
     }
 
@@ -172,20 +160,7 @@ class VideoFeed extends Component
             return;
         }
 
-        // Base query - only active videos
-        $query = TikTokVideo::where('is_active', true);
-
-        // Filter by user if not 'All'
-        if ($this->activeUser !== 'All') {
-            $featuredUsers = config('tiktok.featured_users', []);
-            $user = collect($featuredUsers)->firstWhere('display_name', $this->activeUser);
-            
-            if ($user) {
-                $query->where('username', $user['username']);
-            }
-        }
-
-        $totalVideos = $query->count();
+        $totalVideos = $this->getFilteredQuery()->count();
         $totalPages = ceil($totalVideos / $this->videosPerPage);
 
         if ($page > $totalPages) {
@@ -194,7 +169,6 @@ class VideoFeed extends Component
 
         $this->currentPage = $page;
         $this->loadVideos();
-        
         $this->dispatch('scroll-to-videos');
     }
 
@@ -218,22 +192,8 @@ class VideoFeed extends Component
 
     public function hasNextPage()
     {
-        // Base query - only active videos
-        $query = TikTokVideo::where('is_active', true);
-
-        // Filter by user if not 'All'
-        if ($this->activeUser !== 'All') {
-            $featuredUsers = config('tiktok.featured_users', []);
-            $user = collect($featuredUsers)->firstWhere('display_name', $this->activeUser);
-            
-            if ($user) {
-                $query->where('username', $user['username']);
-            }
-        }
-
-        $totalVideos = $query->count();
+        $totalVideos = $this->getFilteredQuery()->count();
         $totalPages = ceil($totalVideos / $this->videosPerPage);
-        
         return $this->currentPage < $totalPages;
     }
 
@@ -244,34 +204,25 @@ class VideoFeed extends Component
 
     public function getTotalPages()
     {
-        // Base query - only active videos
-        $query = TikTokVideo::where('is_active', true);
-
-        // Filter by user if not 'All'
-        if ($this->activeUser !== 'All') {
-            $featuredUsers = config('tiktok.featured_users', []);
-            $user = collect($featuredUsers)->firstWhere('display_name', $this->activeUser);
-            
-            if ($user) {
-                $query->where('username', $user['username']);
-            }
-        }
-
-        $totalVideos = $query->count();
-        
+        $totalVideos = $this->getFilteredQuery()->count();
         return max(1, ceil($totalVideos / $this->videosPerPage));
     }
 
     public function getUsersProperty()
     {
-        $featuredUsers = config('tiktok.featured_users', []);
         $users = ['All'];
         
-        foreach ($featuredUsers as $user) {
-            $users[] = $user['display_name'] ?? $user['username'];
-        }
+        // Get distinct author nicknames from active videos
+        $authors = TikTokVideo::where('is_active', true)
+            ->whereNotNull('author_nickname')
+            ->where('author_nickname', '!=', '')
+            ->select('author_nickname')
+            ->distinct()
+            ->orderBy('author_nickname')
+            ->pluck('author_nickname')
+            ->toArray();
         
-        return $users;
+        return array_merge($users, $authors);
     }
 
     public function formatNumber($number)
