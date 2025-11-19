@@ -14,7 +14,7 @@ class TikTokVideos extends Component
     public $search = '';
     public $perPage = 15;
     public $statusFilter = '';
-    public $sortField = 'created_at';
+    public $sortField = 'create_time';
     public $sortDirection = 'desc';
     
     // Bulk actions
@@ -196,11 +196,6 @@ class TikTokVideos extends Component
                     TikTokVideo::whereIn('id', $this->selectedIds)->update(['is_featured' => false]);
                     session()->flash('success', count($this->selectedIds) . ' videos unfeatured');
                     break;
-
-                case 'delete':
-                    TikTokVideo::whereIn('id', $this->selectedIds)->delete();
-                    session()->flash('success', count($this->selectedIds) . ' videos deleted');
-                    break;
             }
 
             $this->selectedIds = [];
@@ -291,10 +286,10 @@ class TikTokVideos extends Component
                 ])->render(),
             ],
             [
-                'key' => 'created_at',
+                'key' => 'create_time',
                 'label' => 'Created',
                 'sortable' => true,
-                'format' => fn($video) => $video->created_at->format('M d, Y'),
+                'format' => fn($video) => $video->create_time->format('M d, Y'),
             ],
         ];
     }
