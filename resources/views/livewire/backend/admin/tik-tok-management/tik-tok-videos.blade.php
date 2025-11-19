@@ -8,7 +8,7 @@
 
         {{-- Sync Button --}}
         <div>
-            <x-ui.button wire:click="syncVideos" variant="primary" class="w-full sm:w-auto">
+            <x-ui.button wire:click="syncVideos" variant="primary" class="w-full py-2! sm:w-auto">
                 <span wire:loading.remove wire:target="syncVideos">
                     <flux:icon icon="arrow-path" class="w-4 h-4" />
                 </span>
