@@ -36,13 +36,13 @@ class VideoFeed extends Component
         $this->error = null;
 
         try {
-            // Base query - only active videos
-            $query = TikTokVideo::where('is_active', true)
+            // Base query - only active videos with keywords relationship
+            $query = TikTokVideo::with(['videoKeywords.keyword'])
+                ->where('is_active', true)
                 ->orderBy('create_time', 'desc');
 
             // Filter by user if not 'All'
             if ($this->activeUser !== 'All') {
-                // Filter by author_nickname
                 $query->where('author_nickname', $this->activeUser);
             }
 
@@ -56,6 +56,11 @@ class VideoFeed extends Component
 
             // Format videos for display
             $this->videos = $videosCollection->map(function ($video) {
+                // Extract keywords from relationship
+                $keywords = $video->videoKeywords->map(function ($videoKeyword) {
+                    return $videoKeyword->keyword->name ?? null;
+                })->filter()->values()->toArray();
+
                 return [
                     'aweme_id' => $video->aweme_id,
                     'video_id' => $video->video_id,
@@ -84,7 +89,8 @@ class VideoFeed extends Component
                         'avatar_medium' => $video->author_avatar_medium,
                     ],
                     '_username' => $video->username,
-                    'text_extra' => $this->extractHashtagsAsTextExtra($video->hashtags),
+                    'keywords' => $keywords,
+                    'text_extra' => $this->formatKeywordsAsTextExtra($keywords),
                 ];
             })->toArray();
 
@@ -108,18 +114,18 @@ class VideoFeed extends Component
     }
 
     /**
-     * Convert hashtags array to text_extra format
+     * Convert keywords array to text_extra format
      */
-    private function extractHashtagsAsTextExtra($hashtags)
+    private function formatKeywordsAsTextExtra($keywords)
     {
-        if (empty($hashtags)) {
+        if (empty($keywords)) {
             return [];
         }
 
         $textExtra = [];
-        foreach ($hashtags as $tag) {
+        foreach ($keywords as $keyword) {
             $textExtra[] = [
-                'hashtag_name' => $tag,
+                'hashtag_name' => $keyword,
             ];
         }
 
@@ -212,7 +218,6 @@ class VideoFeed extends Component
     {
         $users = ['All'];
         
-        // Get distinct author nicknames from active videos
         $authors = TikTokVideo::where('is_active', true)
             ->whereNotNull('author_nickname')
             ->where('author_nickname', '!=', '')

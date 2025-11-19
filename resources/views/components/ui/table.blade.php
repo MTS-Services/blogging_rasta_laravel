@@ -34,7 +34,7 @@
                 <div class="w-full sm:w-auto">
                     <select wire:model.live="{{ $perPageProperty }}" class="select w-full sm:w-auto min-w-[140px]">
                         @foreach ($perPageOptions as $option)
-                            <option value="{{ $option }}">{{ $option }} {{__('per page')}}</option>
+                            <option value="{{ $option }}">{{ $option }} {{ __('per page') }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -44,7 +44,7 @@
             @if (!empty($statuses))
                 <div class="w-full sm:w-auto">
                     <select wire:model.live="statusFilter" class="select w-full sm:w-auto min-w-[140px]">
-                        <option value="">{{__('All Statuses')}}</option>
+                        <option value="">{{ __('All Statuses') }}</option>
                         @foreach ($statuses as $status)
                             <option value="{{ $status['value'] }}">{{ $status['label'] }}</option>
                         @endforeach
@@ -87,7 +87,7 @@
 
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:flex-1">
                     <select wire:model.live="bulkAction" class="select w-full sm:w-auto min-w-[160px]">
-                        <option value="">{{__('Select Action')}}</option>
+                        <option value="">{{ __('Select Action') }}</option>
                         @foreach ($bulkActions as $action)
                             <option value="{{ $action['value'] }}">{{ $action['label'] }}</option>
                         @endforeach
@@ -210,51 +210,7 @@
                         @endforeach
 
                         {{-- Actions Dropdown --}}
-                        @if (count($actions) > 0)
-                            {{-- <td class="px-4 py-3 text-center">
-                                <div class="relative inline-block text-left" x-data="{ open: false }">
-                                    <button type="button" @click="open = !open"
-                                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-400 transition-all duration-200 group">
-                                        <flux:icon icon="cog-6-tooth"
-                                            class="w-5 h-5 text-gray-500 group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-200 group-hover:rotate-90 transition-all duration-300" />
-                                    </button>
-
-                                    <div x-show="open" x-cloak @click.outside="open = false"
-                                        x-transition:enter="transition ease-out duration-100"
-                                        x-transition:enter-start="transform opacity-0 scale-95"
-                                        x-transition:enter-end="transform opacity-100 scale-100"
-                                        x-transition:leave="transition ease-in duration-75"
-                                        x-transition:leave-start="transform opacity-100 scale-100"
-                                        x-transition:leave-end="transform opacity-0 scale-95"
-                                        class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-lg bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                        <div class="py-1">
-                                            @foreach ($actions as $action)
-                                                @php
-                                                    $param = $action['param'] ?? ($action['key'] ?? 'id');
-                                                    $actionValue = data_get($item, $param);
-                                                    $actionParam = is_numeric($actionValue)
-                                                        ? $actionValue
-                                                        : "'{$actionValue}'";
-                                                @endphp
-
-                                                @if (isset($action['route']))
-                                                    <a href="{{ route($action['route'], $actionValue) }}" wire:navigate
-                                                        class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-400 transition-colors">
-                                                        {{ $action['label'] }}
-                                                    </a>
-                                                @elseif (isset($action['method']))
-                                                    <button type="button"
-                                                        wire:click="{{ $action['method'] }}({{ $actionParam }})"
-                                                        @click="open = false"
-                                                        class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-400 transition-colors">
-                                                        {{ $action['label'] }}
-                                                    </button>
-                                                @endif
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                            </td> --}}
+                        @if (count($actions) > 0 || isset($item->dynamicActions))
                             <td class="p-3 text-center shrink-0">
                                 <div class="relative inline-block text-left">
                                     <div x-data="{ open: false }">
@@ -275,25 +231,23 @@
                                             @click.outside="open = false">
                                             <div class="rounded-md bg-bg-primary shadow-xs">
                                                 <div class="py-1">
-                                                    @foreach ($actions as $action)
+                                                    @php
+                                                        // Use dynamic actions if available, otherwise use static actions
+                                                        $itemActions = $item->dynamicActions ?? $actions;
+                                                    @endphp
+
+                                                    @foreach ($itemActions as $action)
                                                         @php
-                                                            // Determine which param key to use (e.g. 'id', 'slug', etc.)
                                                             $param =
                                                                 isset($action['param']) && $action['param']
                                                                     ? $action['param']
                                                                     : $action['key'] ?? '';
-
-                                                            // Get actual value from current item/row
                                                             $actionValue = data_get($item, $param);
-
-                                                            // Encrypt VALUE (not key) if requested
                                                             $isEncrypted =
                                                                 isset($action['encrypt']) && $action['encrypt'];
                                                             if ($isEncrypted && !is_null($actionValue)) {
                                                                 $actionValue = encrypt($actionValue);
                                                             }
-
-                                                            // Format parameter safely
                                                             $actionParam = is_numeric($actionValue)
                                                                 ? $actionValue
                                                                 : (is_null($actionValue)
@@ -301,14 +255,13 @@
                                                                     : "'{$actionValue}'");
                                                         @endphp
 
-                                                        {{-- 🔗 Case 1: Direct href --}}
+                                                        {{-- Direct href --}}
                                                         @if (!empty($action['href']) && $action['href'] !== '#')
                                                             @php
                                                                 $href = empty($actionValue)
                                                                     ? $action['href']
                                                                     : rtrim($action['href'], '/') . '/' . $actionValue;
                                                             @endphp
-
                                                             <a href="{{ $href }}"
                                                                 title="{{ $action['label'] }}"
                                                                 target="{{ $action['target'] ?? '_self' }}"
@@ -317,7 +270,7 @@
                                                                 {{ $action['label'] }}
                                                             </a>
 
-                                                            {{-- 🧭 Case 2: Named route --}}
+                                                            {{-- Named route --}}
                                                         @elseif (!empty($action['route']) && $action['route'] !== '#')
                                                             <a href="{{ route($action['route'], $actionValue) }}"
                                                                 title="{{ $action['label'] }}"
@@ -327,7 +280,7 @@
                                                                 {{ $action['label'] }}
                                                             </a>
 
-                                                            {{-- ⚡ Case 3: Livewire method --}}
+                                                            {{-- Livewire method --}}
                                                         @elseif (!empty($action['method']))
                                                             <button type="button"
                                                                 wire:click="{{ $action['method'] }}({{ $actionParam }})"
@@ -336,25 +289,21 @@
                                                                 {{ $action['label'] }}
                                                             </button>
 
-                                                            {{-- 🪄 Case 4: Alpine.js x-on:click --}}
+                                                            {{-- Alpine.js x-on:click --}}
                                                         @elseif (!empty($action['x_click']))
                                                             @php
-                                                                // Replace {param} or {value} placeholders in x_click string
                                                                 $xClick = str_replace(
                                                                     ['{param}', '{value}'],
                                                                     $actionValue,
                                                                     $action['x_click'],
                                                                 );
                                                             @endphp
-
                                                             <button type="button" x-on:click="{{ $xClick }}"
                                                                 class="block px-4 py-2 w-full text-left text-sm dark:text-zinc-100! dark:hover:text-zinc-900! hover:bg-zinc-300 hover:text-gray-900">
                                                                 {{ $action['label'] }}
                                                             </button>
                                                         @endif
                                                     @endforeach
-
-
                                                 </div>
                                             </div>
                                         </div>
@@ -409,7 +358,7 @@
                         </div>
 
                         {{-- Right: Actions Dropdown --}}
-                        @if (count($actions) > 0)
+                        @if (count($actions) > 0 || isset($item->dynamicActions))
                             <div class="relative" x-data="{ open: false }">
                                 <button type="button" @click="open = !open"
                                     class="inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-gray-200 dark:hover:bg-zinc-400 transition-all duration-200 group">
@@ -423,10 +372,19 @@
                                     x-transition:enter-end="transform opacity-100 scale-100"
                                     class="absolute right-0 z-20 mt-2 w-48 origin-top-right rounded-lg bg-bg-primary shadow-xl ring-1 ring-black ring-opacity-5">
                                     <div class="py-1">
-                                        @foreach ($actions as $action)
+                                        @php
+                                            // Use dynamic actions if available, otherwise use static actions
+                                            $itemActions = $item->dynamicActions ?? $actions;
+                                        @endphp
+
+                                        @foreach ($itemActions as $action)
                                             @php
                                                 $param = $action['param'] ?? ($action['key'] ?? 'id');
                                                 $actionValue = data_get($item, $param);
+                                                $isEncrypted = isset($action['encrypt']) && $action['encrypt'];
+                                                if ($isEncrypted && !is_null($actionValue)) {
+                                                    $actionValue = encrypt($actionValue);
+                                                }
                                                 $actionParam = is_numeric($actionValue)
                                                     ? $actionValue
                                                     : "'{$actionValue}'";
