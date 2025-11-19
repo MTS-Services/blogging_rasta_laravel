@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend\Admin\TikTokManagement;
 
 use App\Http\Controllers\Controller;
+use App\Models\TikTokVideo;
 use Illuminate\Http\Request;
 
 class TikTokMixedFeedController extends Controller
@@ -13,8 +14,15 @@ class TikTokMixedFeedController extends Controller
     {
         return view($this->masterView);
     }
-    public function tikTokVideos()
+    public function videoKeyword(string $encryptedId)
     {
-        return view($this->masterView);
+        $data = TikTokVideo::findOrFail(decrypt($encryptedId));
+        if (!$data) {
+            abort(404);
+        }
+        return view($this->masterView, [
+            'data' => $data
+        ]);
     }
+
 }
