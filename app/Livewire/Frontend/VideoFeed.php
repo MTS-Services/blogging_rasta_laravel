@@ -3,7 +3,8 @@
 namespace App\Livewire\Frontend;
 
 use Livewire\Component;
-use App\Services\TikTokMultiUserService;
+use App\Models\TikTokVideo;
+use App\Services\TikTokService;
 use Illuminate\Support\Facades\Log;
 
 class VideoFeed extends Component
@@ -12,48 +13,20 @@ class VideoFeed extends Component
     public $videos = [];
     public $loading = true;
     public $error = null;
-    
-    // For switching to single user view
-    public $showSingleUser = false;
-    public $selectedUsername = null;
 
     // Pagination properties
     public $currentPage = 1;
     public $videosPerPage = 9;
-    
-    // Video limits per user
-    public $userVideoLimits = [];
-    
-    // Store complete page state for each page number
-    public $pageStates = [];
-    
-    // Track loaded video IDs globally to prevent duplicates across all pages
-    public $loadedVideoIds = [];
 
     protected $tiktokService;
 
-    public function boot(TikTokMultiUserService $tiktokService)
+    public function boot(TikTokService $tiktokService)
     {
         $this->tiktokService = $tiktokService;
     }
 
     public function mount()
     {
-        // Multi-user mode
-        $featuredUsers = config('tiktok.featured_users', []);
-        foreach ($featuredUsers as $user) {
-            $this->userVideoLimits[$user['username']] = $user['max_videos'] ?? 20;
-        }
-        
-        // Initialize page 1 state
-        $usernames = array_column($featuredUsers, 'username');
-        $this->pageStates[1] = [
-            'cursors' => array_fill_keys($usernames, 0),
-            'video_counts' => array_fill_keys($usernames, 0),
-            'has_more' => array_fill_keys($usernames, true),
-            'videos' => [],
-        ];
-        
         $this->loadVideos();
     }
 
@@ -63,27 +36,69 @@ class VideoFeed extends Component
         $this->error = null;
 
         try {
-            // Check if this page already has cached videos
-            if (isset($this->pageStates[$this->currentPage]['videos']) && 
-                !empty($this->pageStates[$this->currentPage]['videos'])) {
-                $this->videos = $this->pageStates[$this->currentPage]['videos'];
+            // Base query - only active videos
+            $query = TikTokVideo::where('is_active', true)
+                ->orderBy('create_time', 'desc');
+
+            // Filter by user if not 'All'
+            if ($this->activeUser !== 'All') {
+                // Find actual username from display name
+                $featuredUsers = config('tiktok.featured_users', []);
+                $user = collect($featuredUsers)->firstWhere('display_name', $this->activeUser);
                 
-                // Filter by active user if not 'All'
-                if ($this->activeUser !== 'All') {
-                    $this->videos = $this->filterVideosByUser($this->videos);
+                if ($user) {
+                    $query->where('username', $user['username']);
                 }
-                
-                Log::info('VideoFeed - Using cached videos', [
-                    'page' => $this->currentPage,
-                    'videos_count' => count($this->videos),
-                    'active_user' => $this->activeUser,
-                ]);
-                
-                $this->loading = false;
-                return;
             }
 
-            $this->loadMultiUserVideos();
+            // Get total count for pagination
+            $totalVideos = $query->count();
+
+            // Get videos for current page
+            $videosCollection = $query->skip(($this->currentPage - 1) * $this->videosPerPage)
+                ->take($this->videosPerPage)
+                ->get();
+
+            // Format videos for display
+            $this->videos = $videosCollection->map(function ($video) {
+                return [
+                    'aweme_id' => $video->aweme_id,
+                    'video_id' => $video->video_id,
+                    'title' => $video->title ?: $video->desc ?: 'TikTok Video',
+                    'desc' => $video->desc,
+                    'cover' => $video->cover,
+                    'origin_cover' => $video->origin_cover,
+                    'dynamic_cover' => $video->dynamic_cover,
+                    'play' => $video->play_url,
+                    'create_time' => strtotime($video->create_time),
+                    'play_count' => $video->play_count,
+                    'digg_count' => $video->digg_count,
+                    'comment_count' => $video->comment_count,
+                    'share_count' => $video->share_count,
+                    'video' => [
+                        'cover' => $video->cover,
+                        'origin_cover' => $video->origin_cover,
+                        'dynamic_cover' => $video->dynamic_cover,
+                        'play' => $video->play_url,
+                    ],
+                    'author' => [
+                        'unique_id' => $video->username,
+                        'nickname' => $video->author_nickname ?: $video->username,
+                        'avatar' => $video->author_avatar,
+                        'avatar_larger' => $video->author_avatar_larger,
+                        'avatar_medium' => $video->author_avatar_medium,
+                    ],
+                    '_username' => $video->username,
+                    'text_extra' => $this->extractHashtagsAsTextExtra($video->hashtags),
+                ];
+            })->toArray();
+
+            Log::info('VideoFeed - Videos loaded from database', [
+                'page' => $this->currentPage,
+                'videos_count' => count($this->videos),
+                'total_videos' => $totalVideos,
+                'active_user' => $this->activeUser,
+            ]);
 
         } catch (\Exception $e) {
             $this->error = 'Failed to load videos: ' . $e->getMessage();
@@ -97,143 +112,23 @@ class VideoFeed extends Component
         $this->loading = false;
     }
 
-    private function loadMultiUserVideos()
+    /**
+     * Convert hashtags array to text_extra format
+     */
+    private function extractHashtagsAsTextExtra($hashtags)
     {
-        $featuredUsers = config('tiktok.featured_users', []);
-        $usernames = array_column($featuredUsers, 'username');
-
-        if (empty($usernames)) {
-            throw new \Exception('No featured users configured');
+        if (empty($hashtags)) {
+            return [];
         }
 
-        $currentState = $this->pageStates[$this->currentPage] ?? [
-            'cursors' => array_fill_keys($usernames, 0),
-            'video_counts' => array_fill_keys($usernames, 0),
-            'has_more' => array_fill_keys($usernames, true),
-            'videos' => [],
-        ];
-
-        $allVideos = [];
-        $attempts = 0;
-        $maxAttempts = 10;
-        
-        while (count($allVideos) < $this->videosPerPage && $attempts < $maxAttempts) {
-            $remaining = $this->videosPerPage - count($allVideos);
-            $videosToRequest = max(4, ceil($remaining / count($usernames)));
-            
-            $result = $this->tiktokService->getMultipleUsersVideos(
-                $usernames, 
-                $videosToRequest,
-                $currentState['cursors'],
-                $this->userVideoLimits,
-                $currentState['video_counts']
-            );
-
-            if (!$result['success']) {
-                throw new \Exception($result['error'] ?? 'Failed to load videos');
-            }
-
-            $newVideos = $result['videos'];
-            
-            if (empty($newVideos)) {
-                break;
-            }
-            
-            $skippedCount = 0;
-            foreach ($newVideos as $video) {
-                if (count($allVideos) >= $this->videosPerPage) {
-                    break;
-                }
-                
-                $videoId = $video['aweme_id'] ?? $video['video_id'] ?? null;
-                
-                if ($videoId && in_array($videoId, $this->loadedVideoIds)) {
-                    $skippedCount++;
-                    continue;
-                }
-                
-                $allVideos[] = $video;
-                if ($videoId) {
-                    $this->loadedVideoIds[] = $videoId;
-                }
-            }
-            
-            $currentState['cursors'] = $result['cursors'];
-            $currentState['video_counts'] = $result['video_counts'];
-            $currentState['has_more'] = $result['has_more'];
-            
-            $hasMoreVideos = false;
-            foreach ($result['has_more'] as $hasMore) {
-                if ($hasMore) {
-                    $hasMoreVideos = true;
-                    break;
-                }
-            }
-            
-            if (!$hasMoreVideos) {
-                break;
-            }
-            
-            $attempts++;
-        }
-        
-        // Store all videos in cache
-        $currentState['videos'] = $allVideos;
-        $this->pageStates[$this->currentPage] = $currentState;
-        
-        // Filter by active user if not 'All'
-        if ($this->activeUser !== 'All') {
-            $this->videos = $this->filterVideosByUser($allVideos);
-        } else {
-            $this->videos = $allVideos;
-        }
-        
-        $canHaveNextPage = false;
-        if (count($allVideos) >= $this->videosPerPage) {
-            foreach ($currentState['has_more'] as $username => $hasMore) {
-                if ($hasMore) {
-                    $canHaveNextPage = true;
-                    break;
-                }
-            }
-        }
-        
-        if ($canHaveNextPage && !isset($this->pageStates[$this->currentPage + 1])) {
-            $this->pageStates[$this->currentPage + 1] = [
-                'cursors' => $currentState['cursors'],
-                'video_counts' => $currentState['video_counts'],
-                'has_more' => $currentState['has_more'],
-                'videos' => [],
+        $textExtra = [];
+        foreach ($hashtags as $tag) {
+            $textExtra[] = [
+                'hashtag_name' => $tag,
             ];
         }
 
-        Log::info('VideoFeed - Multi user videos loaded', [
-            'page' => $this->currentPage,
-            'videos_count' => count($this->videos),
-            'active_user' => $this->activeUser,
-        ]);
-    }
-
-    private function filterVideosByUser($videos)
-    {
-        // Find the actual username from display name
-        $featuredUsers = config('tiktok.featured_users', []);
-        $user = collect($featuredUsers)->firstWhere('display_name', $this->activeUser);
-        
-        if (!$user) {
-            return $videos;
-        }
-        
-        $targetUsername = $user['username'];
-        
-        // Filter videos by username
-        return array_values(array_filter($videos, function($video) use ($targetUsername) {
-            $videoUsername = $video['_username'] ?? 
-                            ($video['author']['unique_id'] ?? 
-                            ($video['author']['username'] ?? null));
-            
-            return $videoUsername === $targetUsername;
-        }));
+        return $textExtra;
     }
 
     public function setUser($username)
@@ -244,9 +139,6 @@ class VideoFeed extends Component
         // Reset to page 1 when changing filter
         $this->currentPage = 1;
         
-        // Clear loaded video IDs for fresh filtering
-        $this->loadedVideoIds = [];
-        
         // Reload videos with the new filter
         $this->loadVideos();
         
@@ -256,12 +148,47 @@ class VideoFeed extends Component
 
     public function shouldShowPagination()
     {
-        return $this->currentPage > 1 || $this->hasNextPage();
+        // Base query - only active videos
+        $query = TikTokVideo::where('is_active', true);
+
+        // Filter by user if not 'All'
+        if ($this->activeUser !== 'All') {
+            $featuredUsers = config('tiktok.featured_users', []);
+            $user = collect($featuredUsers)->firstWhere('display_name', $this->activeUser);
+            
+            if ($user) {
+                $query->where('username', $user['username']);
+            }
+        }
+
+        $totalVideos = $query->count();
+        
+        return $totalVideos > $this->videosPerPage;
     }
 
     public function goToPage($page)
     {
-        if ($page < 1 || !isset($this->pageStates[$page])) {
+        if ($page < 1) {
+            return;
+        }
+
+        // Base query - only active videos
+        $query = TikTokVideo::where('is_active', true);
+
+        // Filter by user if not 'All'
+        if ($this->activeUser !== 'All') {
+            $featuredUsers = config('tiktok.featured_users', []);
+            $user = collect($featuredUsers)->firstWhere('display_name', $this->activeUser);
+            
+            if ($user) {
+                $query->where('username', $user['username']);
+            }
+        }
+
+        $totalVideos = $query->count();
+        $totalPages = ceil($totalVideos / $this->videosPerPage);
+
+        if ($page > $totalPages) {
             return;
         }
 
@@ -291,7 +218,23 @@ class VideoFeed extends Component
 
     public function hasNextPage()
     {
-        return isset($this->pageStates[$this->currentPage + 1]);
+        // Base query - only active videos
+        $query = TikTokVideo::where('is_active', true);
+
+        // Filter by user if not 'All'
+        if ($this->activeUser !== 'All') {
+            $featuredUsers = config('tiktok.featured_users', []);
+            $user = collect($featuredUsers)->firstWhere('display_name', $this->activeUser);
+            
+            if ($user) {
+                $query->where('username', $user['username']);
+            }
+        }
+
+        $totalVideos = $query->count();
+        $totalPages = ceil($totalVideos / $this->videosPerPage);
+        
+        return $this->currentPage < $totalPages;
     }
 
     public function hasPreviousPage()
@@ -301,7 +244,22 @@ class VideoFeed extends Component
 
     public function getTotalPages()
     {
-        return max(array_keys($this->pageStates));
+        // Base query - only active videos
+        $query = TikTokVideo::where('is_active', true);
+
+        // Filter by user if not 'All'
+        if ($this->activeUser !== 'All') {
+            $featuredUsers = config('tiktok.featured_users', []);
+            $user = collect($featuredUsers)->firstWhere('display_name', $this->activeUser);
+            
+            if ($user) {
+                $query->where('username', $user['username']);
+            }
+        }
+
+        $totalVideos = $query->count();
+        
+        return max(1, ceil($totalVideos / $this->videosPerPage));
     }
 
     public function getUsersProperty()
