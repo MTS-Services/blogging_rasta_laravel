@@ -40,20 +40,15 @@
 
                     <div>
                         <p class="text-xs font-normal text-muted font-inter pb-4 text-center lg:text-left">
-                            {{ __('About the Founder') }}</p>
+                            {{ __('About Diodio Glow') }}</p>
                         {{-- Heading --}}
                         <h2
-                            class="text-5xl font-bold font-montserrat text-second-800 pb-6 text-text-primary lg:text-left">
-                            {{ __('Meet Diodio Glow') }}</h2>
+                            class="text-3xl font-bold font-montserrat text-second-800 pb-6 text-text-primary lg:text-left">
+                            {{ __('Your Source for Viral Beauty Trends & Skincare Inspiration') }}</h2>
                         {{-- Description --}}
                         <p class="text-base text-text-primary font-normal font-inter lg:text-left">
-                            {{ __('Diodio Glow is one of Senegal\'s most popular skincare and beauty influencers, with a passionate community of 50K+ followers who trust her recommendations.') }}
-                        </p>
-                        <p class="text-base text-text-primary font-normal font-inter mt-8 lg:text-left">
-                            {{ __('From viral TikTok routines to honest product reviews, she\'s dedicated to helping women discover their natural glow. Her approach is authentic, affordable, and rooted in celebrating the beauty of diverse African skin.') }}
-                        </p>
-                        <p class="text-base text-text-primary font-normal font-inter mt-8 lg:text-left">
-                            {{ __('This platform brings together her favorite skincare finds, trending routines, and AI-powered personalized recommendations—everything you need to build a routine that works for YOUR skin.') }}
+                            {{ __('Diodio Glow is a digital platform dedicated to showcasing the latest beauty trends, skincare routines, and viral content from across Senegal and the global beauty community.
+                            We curate, highlight, and organize the products, routines, and videos that people are already talking about—so you can easily explore what’s trending.') }}
                         </p>
                     </div>
 
@@ -143,17 +138,66 @@
 
 
 
-    <section class="bg-bg-tertiary mb-12 sm:mb-0">
+    <section class="bg-gradient mb-12 sm:mb-0">
         <div class="container py-12">
-            <h2 class="text-5xl font-bold font-montserrat pb-6 text-text-primary ">{{ __('Our Mission') }}</h2>
-            <p class="text-base font-normal font-inter text-muted ">
-                {{ __('We believe skincare should be accessible, transparent, and celebrating. That\'s why DiodioGlow.com exists—to democratize beauty recommendations and empower everyone with personalized skincare guidance.') }}
+
+            <h2 class="text-5xl font-bold font-montserrat pb-6 text-text-primary">
+                {{ __('Our Mission') }}
+            </h2>
+
+            <p class="text-base font-normal font-inter text-muted">
+                {{ __('make beauty discovery easier, enjoyable, and accessible for everyone.') }}
             </p>
+
             <p class="text-base font-normal font-inter text-muted mt-6">
-                {{ __('Every product, every video, every recommendation is rooted in authenticity and the belief that beautiful skin starts with understanding YOUR unique needs.') }}
+                {{ __('Whether it’s a viral TikTok skincare hack, an African beauty routine, or a popular product review, Diodio Glow brings everything together in one place. We focus on spotlighting authentic routines, diverse skin needs, and the beauty content people love to watch.') }}
             </p>
+
+            <p class="text-base font-normal font-inter text-muted mt-6">
+                {{ __('This platform is powered by community-driven trends, curated recommendations, and quality-driven product selections designed to help you find what works for your skin.') }}
+            </p>
+
+            <hr class="my-10 border-gray-300" />
+
+            <!-- New content added from AI image text -->
+            <h3 class="text-3xl font-bold font-montserrat pb-4 text-text-primary">
+                {{ __('What You’ll Find on Diodio Glow') }}
+            </h3>
+
+            <ul class="list-disc pl-6 text-base font-inter text-muted space-y-2">
+                <li>{{ __('Curated viral beauty videos & routines from Senegal and beyond') }}</li>
+                <li>{{ __('Product discoveries and reviews organized for easy browsing') }}</li>
+                <li>{{ __('Beauty insights, trends, and articles focused on real results') }}</li>
+                <li>{{ __('A growing library of content shaped by what people are searching and sharing') }}</li>
+            </ul>
+
+            <p class="text-base font-normal font-inter text-muted mt-8">
+                {{ __('Our goal is to make Diodio Glow one of the leading online destinations for beauty inspiration—not an influencer, but a platform that brings together the best of beauty, culture, and skincare trends.') }}
+            </p>
+
+            <h3 class="text-3xl font-bold font-montserrat pb-4 mt-10 text-text-primary">
+                {{ __('Your Source for Viral Beauty Trends & Skincare Inspiration') }}
+            </h3>
+
+            <p class="text-base font-normal font-inter text-muted">
+                {{ __('Diodio Glow is a digital platform dedicated to showcasing the latest beauty trends, skincare routines, and viral content from across Senegal and the global beauty community. We curate, highlight, and organize the products, routines, and videos that people are already talking about—so you can easily explore what’s trending.') }}
+            </p>
+
+            <p class="text-base font-normal font-inter text-muted mt-6">
+                {{ __('Our mission is simple: make beauty discovery easier, enjoyable, and accessible for everyone.') }}
+            </p>
+
+            <p class="text-base font-normal font-inter text-muted mt-6">
+                {{ __('Whether it’s a viral TikTok skincare hack, an African beauty routine, or a popular product review, Diodio Glow brings everything together in one place. We focus on spotlighting authentic routines, diverse skin needs, and the beauty content people love to watch.') }}
+            </p>
+
+            <p class="text-base font-normal font-inter text-muted mt-6">
+                {{ __('This platform is powered by community-driven trends, curated recommendations, and quality-driven product selections designed to help you find what works for your skin.') }}
+            </p>
+
         </div>
     </section>
+
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
