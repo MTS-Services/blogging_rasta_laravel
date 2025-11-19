@@ -21,11 +21,11 @@ return new class extends Migration
 
             // Video Content
             $table->string('title')->nullable();
-            $table->text('desc')->nullable();
-            $table->text('play_url')->nullable();
-            $table->string('cover')->nullable();
-            $table->string('origin_cover')->nullable();
-            $table->string('dynamic_cover')->nullable();
+            $table->longText('desc')->nullable();
+            $table->longText('play_url')->nullable();
+            $table->longText('cover')->nullable();
+            $table->longText('origin_cover')->nullable();
+            $table->longText('dynamic_cover')->nullable();
 
             // Statistics
             $table->bigInteger('play_count')->default(0);
@@ -37,9 +37,9 @@ return new class extends Migration
             $table->string('username')->index();
             $table->string('author_name')->nullable();
             $table->string('author_nickname')->nullable();
-            $table->string('author_avatar')->nullable();
-            $table->string('author_avatar_medium')->nullable();
-            $table->string('author_avatar_larger')->nullable();
+            $table->longText('author_avatar')->nullable();
+            $table->longText('author_avatar_medium')->nullable();
+            $table->longText('author_avatar_larger')->nullable();
 
             // Hashtags (stored as JSON array)
             $table->json('hashtags')->nullable();
@@ -56,7 +56,7 @@ return new class extends Migration
             // Additional Fields
             $table->string('music_title')->nullable();
             $table->string('music_author')->nullable();
-            $table->text('video_description')->nullable();
+            $table->longText('video_description')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
