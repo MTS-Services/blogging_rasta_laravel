@@ -10,7 +10,7 @@
                     </svg>
                     <span class="font-medium">{{ __('Back to All Videos') }}</span>
                 </a> --}}
-                
+
                 <h1 class="text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-bold text-text-primary mb-1.5 sm:mb-3">
                     {{ $displayName }}
                 </h1>
@@ -267,11 +267,11 @@
                                 </div>
 
                                 {{-- Hashtags --}}
-                                @if (!empty($hashtags))
+                                @if (!empty($video['keywords']))
                                     <div class="flex flex-wrap gap-2 sm:gap-3 mt-3">
-                                        @foreach ($hashtags as $tag)
+                                        @foreach ($video['keywords'] as $keyword)
                                             <span
-                                                class="text-xs sm:text-sm text-second-500 font-medium">{{ $tag }}</span>
+                                                class="text-xs sm:text-sm text-second-500 lowercase font-medium">#{{ $keyword }}</span>
                                         @endforeach
                                     </div>
                                 @endif
