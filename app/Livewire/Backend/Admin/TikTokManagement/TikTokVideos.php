@@ -93,7 +93,10 @@ class TikTokVideos extends Component
         ];
     }
 
-    private function getActions()
+    /**
+     * Get dynamic actions based on video state
+     */
+    private function getActionsForVideo($video)
     {
         return [
             [
@@ -103,16 +106,15 @@ class TikTokVideos extends Component
                 'encrypt' => true
             ],
             [
-                'label' => 'Featured On/Off',
+                'label' => $video->is_featured ? 'Not featured' : 'Featured',
                 'method' => 'toggleFeatured',
                 'key' => 'id',
             ],
             [
-                'label' => 'Active On/Off',
+                'label' => $video->is_active ? 'Inactive' : 'Active',
                 'method' => 'toggleActive',
                 'key' => 'id',
             ],
-
         ];
     }
 
@@ -298,16 +300,21 @@ class TikTokVideos extends Component
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate($this->perPage);
 
+        // Prepare actions array - will be converted to dynamic actions in the view
+        $actionsTemplate = [];
+        foreach ($videos as $video) {
+            $actionsTemplate[$video->id] = $this->getActionsForVideo($video);
+        }
+
         return view('livewire.backend.admin.tik-tok-management.tik-tok-videos', [
             'videos' => $videos,
             'columns' => $this->getColumns(),
-            'actions' => $this->getActions(),
+            'actions' => [], // Pass empty, we'll use actionsMap instead
+            'actionsMap' => $actionsTemplate, // Pass dynamic actions map
             'statuses' => $this->getStatuses(),
             'bulkActions' => $this->getBulkActions(),
         ]);
     }
-
-
 
     private function getStatuses()
     {
@@ -321,10 +328,10 @@ class TikTokVideos extends Component
     private function getBulkActions()
     {
         return [
-            ['value' => 'activate', 'label' => 'Activate'],
-            ['value' => 'deactivate', 'label' => 'Deactivate'],
-            ['value' => 'feature', 'label' => 'Feature'],
-            ['value' => 'unfeature', 'label' => 'Unfeature'],
+            ['value' => 'activate', 'label' => 'Active'],
+            ['value' => 'deactivate', 'label' => 'Inactive'],
+            ['value' => 'feature', 'label' => 'Featured'],
+            ['value' => 'unfeature', 'label' => 'Not featured'],
         ];
     }
 }
