@@ -98,7 +98,7 @@ class TikTokVideos extends Component
         return [
             [
                 'key' => 'id',
-                'label' => 'Keyword',
+                'label' => 'Hashtags',
                 'route' => 'admin.video-keyword',
                 'encrypt' => true
             ],

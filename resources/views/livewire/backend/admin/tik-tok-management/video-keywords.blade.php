@@ -63,7 +63,7 @@
         <!-- Keywords Selection -->
         <div>
             <label for="keywords" class="block font-semibold text-lg mb-3">
-                Select Keywords
+                Select HashTags
             </label>
 
             <div wire:ignore>
@@ -119,8 +119,7 @@
 
     @push('scripts')
         <script>
-            document.addEventListener('livewire:navigated', () => {
-                // Initialize Select2
+            function select2Init() {
                 $('#keywords').select2({
                     placeholder: 'Select keywords...',
                     allowClear: true
@@ -147,6 +146,14 @@
                         allowClear: true
                     });
                 });
+            }
+            document.addEventListener('DOMContentLoaded', () => {
+                // Initialize Select2
+                select2Init();
+            });
+            document.addEventListener('livewire:navigated', () => {
+                // Initialize Select2
+                select2Init();
             });
         </script>
     @endpush
