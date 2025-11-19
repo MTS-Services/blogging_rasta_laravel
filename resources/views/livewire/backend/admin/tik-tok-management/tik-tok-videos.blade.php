@@ -20,28 +20,6 @@
         </div>
     </div>
 
-    {{-- Flash Messages --}}
-    @if (session()->has('success'))
-        <div class="mb-4 p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-            <div class="flex items-center gap-2">
-                <flux:icon icon="check-circle" class="w-5 h-5 text-green-600 dark:text-green-400" />
-                <span class="text-sm font-medium text-green-800 dark:text-green-200">
-                    {{ session('success') }}
-                </span>
-            </div>
-        </div>
-    @endif
-
-    @if (session()->has('error'))
-        <div class="mb-4 p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-            <div class="flex items-center gap-2">
-                <flux:icon icon="x-circle" class="w-5 h-5 text-red-600 dark:text-red-400" />
-                <span class="text-sm font-medium text-red-800 dark:text-red-200">
-                    {{ session('error') }}
-                </span>
-            </div>
-        </div>
-    @endif
 
     {{-- Data Table --}}
     <x-ui.table :columns="$columns" :data="$videos" :actions="$actions" :statuses="$statuses" :bulkActions="$bulkActions"

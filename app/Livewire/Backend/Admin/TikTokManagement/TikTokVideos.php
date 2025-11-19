@@ -4,19 +4,20 @@ namespace App\Livewire\Backend\Admin\TikTokManagement;
 
 use App\Models\TikTokVideo;
 use App\Services\TikTokService;
+use App\Traits\Livewire\WithNotification;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class TikTokVideos extends Component
 {
-    use WithPagination;
+    use WithPagination, WithNotification;
 
     public $search = '';
     public $perPage = 15;
     public $statusFilter = '';
     public $sortField = 'create_time';
     public $sortDirection = 'desc';
-    
+
     // Bulk actions
     public $selectedIds = [];
     public $selectAll = false;
@@ -29,18 +30,11 @@ class TikTokVideos extends Component
         $this->tiktokService = $tiktokService;
     }
 
-    public function mount()
-    {
-        //
-    }
-
     public function updatedSelectAll($value)
     {
-        if ($value) {
-            $this->selectedIds = TikTokVideo::pluck('id')->toArray();
-        } else {
-            $this->selectedIds = [];
-        }
+        $this->selectedIds = $value
+            ? TikTokVideo::pluck('id')->toArray()
+            : [];
     }
 
     public function updatedSelectedIds()
@@ -90,24 +84,23 @@ class TikTokVideos extends Component
     {
         try {
             $usernames = config('tiktok.featured_users', []);
-            
+
             if (empty($usernames)) {
-                session()->flash('error', 'No TikTok users configured');
+                $this->error('No TikTok users configured');
                 return;
             }
 
             $usernames = array_column($usernames, 'username');
-            
+
             $result = $this->tiktokService->syncVideos($usernames, 20);
 
             if ($result['success']) {
-                session()->flash('success', "Synced: {$result['synced']} new, {$result['updated']} updated");
+                $this->success("Synced: {$result['synced']} new, {$result['updated']} updated");
             } else {
-                session()->flash('error', $result['error'] ?? 'Sync failed');
+                $this->error($result['error'] ?? 'Sync failed');
             }
-
         } catch (\Exception $e) {
-            session()->flash('error', 'Sync error: ' . $e->getMessage());
+            $this->error('Sync error: ' . $e->getMessage());
         }
     }
 
@@ -120,13 +113,12 @@ class TikTokVideos extends Component
             $result = $this->tiktokService->toggleFeatured($videoId);
 
             if ($result['success']) {
-                session()->flash('success', $result['message']);
+                $this->success($result['message']);
             } else {
-                session()->flash('error', $result['error']);
+                $this->error($result['error']);
             }
-
         } catch (\Exception $e) {
-            session()->flash('error', 'Error: ' . $e->getMessage());
+            $this->error('Error: ' . $e->getMessage());
         }
     }
 
@@ -139,31 +131,28 @@ class TikTokVideos extends Component
             $result = $this->tiktokService->toggleActive($videoId);
 
             if ($result['success']) {
-                session()->flash('success', $result['message']);
+                $this->success($result['message']);
             } else {
-                session()->flash('error', $result['error']);
+                $this->error($result['error']);
             }
-
         } catch (\Exception $e) {
-            session()->flash('error', 'Error: ' . $e->getMessage());
+            $this->error('Error: ' . $e->getMessage());
         }
     }
 
     /**
-     * Delete video
+     * Delete single video
      */
-    // public function deleteVideo($videoId)
-    // {
-    //     try {
-    //         $video = TikTokVideo::findOrFail($videoId);
-    //         $video->delete();
-            
-    //         session()->flash('success', 'Video deleted successfully');
+    public function deleteVideo($videoId)
+    {
+        try {
+            TikTokVideo::findOrFail($videoId)->delete();
 
-    //     } catch (\Exception $e) {
-    //         session()->flash('error', 'Delete error: ' . $e->getMessage());
-    //     }
-    // }
+            $this->success('Video deleted successfully');
+        } catch (\Exception $e) {
+            $this->error('Delete error: ' . $e->getMessage());
+        }
+    }
 
     /**
      * Bulk actions
@@ -171,7 +160,7 @@ class TikTokVideos extends Component
     public function confirmBulkAction()
     {
         if (empty($this->bulkAction) || empty($this->selectedIds)) {
-            session()->flash('error', 'Please select action and items');
+            $this->error('Please select action and items');
             return;
         }
 
@@ -179,22 +168,22 @@ class TikTokVideos extends Component
             switch ($this->bulkAction) {
                 case 'activate':
                     TikTokVideo::whereIn('id', $this->selectedIds)->update(['is_active' => true]);
-                    session()->flash('success', count($this->selectedIds) . ' videos activated');
+                    $this->success(count($this->selectedIds) . ' videos activated');
                     break;
 
                 case 'deactivate':
                     TikTokVideo::whereIn('id', $this->selectedIds)->update(['is_active' => false]);
-                    session()->flash('success', count($this->selectedIds) . ' videos deactivated');
+                    $this->success(count($this->selectedIds) . ' videos deactivated');
                     break;
 
                 case 'feature':
                     TikTokVideo::whereIn('id', $this->selectedIds)->update(['is_featured' => true]);
-                    session()->flash('success', count($this->selectedIds) . ' videos featured');
+                    $this->success(count($this->selectedIds) . ' videos featured');
                     break;
 
                 case 'unfeature':
                     TikTokVideo::whereIn('id', $this->selectedIds)->update(['is_featured' => false]);
-                    session()->flash('success', count($this->selectedIds) . ' videos unfeatured');
+                    $this->success(count($this->selectedIds) . ' videos unfeatured');
                     break;
             }
 
@@ -203,7 +192,7 @@ class TikTokVideos extends Component
             $this->bulkAction = '';
 
         } catch (\Exception $e) {
-            session()->flash('error', 'Bulk action error: ' . $e->getMessage());
+            $this->error('Bulk action error: ' . $e->getMessage());
         }
     }
 
@@ -244,7 +233,9 @@ class TikTokVideos extends Component
             [
                 'key' => 'cover',
                 'label' => 'Thumbnail',
-                'format' => fn($video) => view('components.admin.video-thumbnail', ['video' => $video])->render(),
+                'format' => fn($video) => view('components.admin.video-thumbnail', [
+                    'video' => $video
+                ])->render(),
             ],
             [
                 'key' => 'title',
@@ -331,7 +322,6 @@ class TikTokVideos extends Component
             ['value' => 'deactivate', 'label' => 'Deactivate'],
             ['value' => 'feature', 'label' => 'Feature'],
             ['value' => 'unfeature', 'label' => 'Unfeature'],
-            ['value' => 'delete', 'label' => 'Delete'],
         ];
     }
 }
