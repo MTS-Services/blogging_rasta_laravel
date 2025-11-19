@@ -462,7 +462,7 @@
 
     @push('scripts')
         <script>
-            document.addEventListener('livewire:initialized', () => {
+            document.addEventListener('livewire:navigated', () => {
                 Livewire.on('scroll-to-videos', () => {
                     const section = document.getElementById('video-section');
                     if (section) {
