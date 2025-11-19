@@ -4,6 +4,7 @@ namespace App\Models;
 
 
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TikTokVideo extends BaseModel
 {
@@ -55,6 +56,11 @@ class TikTokVideo extends BaseModel
         'sync_at' => 'datetime',
         'create_time' => 'datetime',
     ];
+
+    public function videoKeywords(): HasMany
+    {
+        return $this->hasMany(VideoKeyword::class,'tik_tok_video_id','id');
+    }
 
      public function scopeActive($query)
     {
