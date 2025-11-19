@@ -230,7 +230,7 @@ class Home extends Component
 
     public function render()
     {
-        $keywords = $this->keywordService->getAllDatas();
+        $keywords = $this->keywordService->getAllDatas()->take(6);
         return view('livewire.frontend.home', [
             'keywords' => $keywords
         ]);
