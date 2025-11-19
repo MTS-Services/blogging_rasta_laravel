@@ -242,12 +242,11 @@
                                             class="text-base text-text-muted">{{ $this->formatNumber($playCount) }}</span>
                                     </button>
                                 </div>
-
-                                @if (!empty($hashtags))
+                                @if (!empty($video['keywords']))
                                     <div class="flex flex-wrap gap-2 sm:gap-3 mt-3">
-                                        @foreach ($hashtags as $tag)
+                                        @foreach ($video['keywords'] as $keyword)
                                             <span
-                                                class="text-xs sm:text-sm text-second-500 font-medium">{{ $tag }}</span>
+                                                class="text-xs sm:text-sm text-second-500 lowercase font-medium">#{{ $keyword }}</span>
                                         @endforeach
                                     </div>
                                 @endif
