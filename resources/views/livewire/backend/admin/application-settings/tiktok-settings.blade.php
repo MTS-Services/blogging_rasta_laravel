@@ -21,7 +21,7 @@
                 </div>
 
                 <!-- Featured Users Section -->
-                <div class="border-t border-gray-700 pt-5 mt-3">
+                <div class=" pt-5 mt-3">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-semibold text-text-white">{{ __('Featured TikTok Users') }}</h3>
                         <x-ui.button type="button" variant="secondary" wire:click="addFeaturedUser" class="w-auto! py-2!">
@@ -31,7 +31,7 @@
                     </div>
 
                     @foreach($form->featured_users as $index => $user)
-                        <div class="bg-gray-800/50 rounded-lg p-4 mb-4 border border-gray-700">
+                        <div class="">
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 
                                 <!-- Username -->
@@ -74,7 +74,7 @@
                 </div>
 
                 <!-- Video Settings -->
-                <div class="border-t border-gray-700 pt-5 mt-3">
+                <div class=" pt-5 mt-3">
                     <h3 class="text-lg font-semibold text-text-white mb-4">{{ __('Video Display Settings') }}</h3>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
