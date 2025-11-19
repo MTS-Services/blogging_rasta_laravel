@@ -96,7 +96,7 @@
                             </div>
                             
                             <div class="w-full mt-2">
-                                <x-ui.button href="{{ $product->affiliate_link ?? '#' }}" 
+                                <x-ui.button href="{{ $product->affiliate_link ?? '#' }}" :wire="false"
                                             target="_blank"
                                             class="py-2! px-8! bg-gradient-to-r from-second-500 to-zinc-500 hover:shadow-lg transition-all duration-300">
                                     <span class="text-white">{{ __('Discover Your Glow') }}</span>

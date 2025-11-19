@@ -1,12 +1,12 @@
 <div>
-    <div class=" font-sans text-slate-800">
-        <main class="min-h-screen flex items-center justify-center p-6">
+    <div class=" font-sans">
+        <main class="min-h-[90vh] flex items-center justify-center p-6">
             <section
                 class="w-full max-w-6xl bg-bg-tertiary rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
 
                 <div class="relative md:order-1 order-2">
                     <div id="slider" class="h-96 md:h-full">
-                        </div>
+                    </div>
 
                     <button id="prevBtn" aria-label="Previous"
                         class="absolute top-1/2 -translate-y-1/2 z-20 bg-white/70 rounded-xl backdrop-blur-sm p-2 ">
@@ -24,7 +24,7 @@
                     </p>
 
                     <div id="slideContent" class="space-y-6">
-                        </div>
+                    </div>
 
                     <form wire:submit.prevent="save" class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
 
@@ -53,20 +53,26 @@
 
                         <x-ui.button type="submit" wire:target="save" wire:loading.attr="disabled"
                             class="font-medium col-span-1 sm:col-span-2 inline-flex items-center justify-center gap-2 rounded-lg mt-2">
-                            
-                            <span wire:loading wire:target="save" class="animate-spin h-5 w-5 border-t-2 border-b-2 border-white rounded-full"></span>
-                            
-                            <span wire:loading.remove wire:target="save" class="text-text-white">{{ __('Send Message') }}</span>
-                            
-                            <flux:icon name="arrow-right" wire:loading.remove wire:target="save" class="w-4 h-4 text-white fill-white! stroke-white!" />
+
+                            <span wire:loading wire:target="save"
+                                class="animate-spin h-5 w-5 border-t-2 border-b-2 border-white rounded-full"></span>
+
+                            <span wire:loading.remove wire:target="save"
+                                class="text-text-white">{{ __('Send Message') }}</span>
+
+                            <flux:icon name="arrow-right" wire:loading.remove wire:target="save"
+                                class="w-4 h-4 text-white fill-white! stroke-white!" />
                         </x-ui.button>
 
                     </form>
 
 
                     <div class="mt-6 text-sm text-slate-500">
-                        <p><strong>{{ __('Phone:') }}</strong> +1 (555) 123-4567</p>
-                        <p><strong>{{ __('Email:') }}</strong> hello@example.com</p>
+                        {{-- <p><strong>{{ __('Phone:') }}</strong> +1 (555) 123-4567</p> --}}
+                        <p><strong>{{ __('Email:') }}</strong>
+                            <a href="mailto:info@diodioglowsn.com" class="hover:underline duration-300 hover:text-zinc-300">info@diodioglowsn.com</a>
+                        </p>
+
                     </div>
                 </div>
             </section>
