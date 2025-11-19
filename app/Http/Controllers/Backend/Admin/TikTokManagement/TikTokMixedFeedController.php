@@ -13,4 +13,8 @@ class TikTokMixedFeedController extends Controller
     {
         return view($this->masterView);
     }
+    public function tikTokVideos()
+    {
+        return view($this->masterView);
+    }
 }
