@@ -304,7 +304,7 @@
                             </div>
                         @endforeach
                     </div>
-                         {{-- Pagination --}}
+                    {{-- Pagination --}}
                     @if ($this->shouldShowPagination())
                         <div class="mt-8 sm:mt-12 px-2 sm:px-4">
                             <div
@@ -340,19 +340,19 @@
 
                                         <span wire:loading.remove wire:target="previousPage"
                                             class="hidden sm:inline">{{ __('Previous') }}</span>
-                                        <span wire:loading wire:target="previousPage"
-                                            class="hidden sm:inline"> <div class="relative">
-                                                        {{-- Animated spinner rings --}}
-                                                        <div
-                                                            class="w-6 h-6  rounded-full border border-gray-200">
-                                                        </div>
-                                                        <div
-                                                            class="absolute top-0 left-0 w-6 h-6  rounded-full border  border-transparent border-t-second-500 border-r-second-500 animate-spin">
-                                                        </div>
-                                                        <div class="absolute top-0 left-0 w-6 h-6  rounded-full border border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
-                                                            style="animation-direction: reverse; animation-duration: 1s;">
-                                                        </div>
-                                                    </div></span>
+                                        <span wire:loading wire:target="previousPage" class="hidden sm:inline">
+                                            <div class="relative">
+                                                {{-- Animated spinner rings --}}
+                                                <div class="w-6 h-6  rounded-full border border-gray-200">
+                                                </div>
+                                                <div
+                                                    class="absolute top-0 left-0 w-6 h-6  rounded-full border  border-transparent border-t-second-500 border-r-second-500 animate-spin">
+                                                </div>
+                                                <div class="absolute top-0 left-0 w-6 h-6  rounded-full border border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
+                                                    style="animation-direction: reverse; animation-duration: 1s;">
+                                                </div>
+                                            </div>
+                                        </span>
                                     </button>
 
                                     {{-- Page Numbers --}}
@@ -368,11 +368,10 @@
                                                 wire:target="goToPage(1)"
                                                 class="px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl border-2 border-second-500/40 bg-white hover:bg-second-50 text-gray-700 font-semibold transition-all duration-300 shadow-sm sm:shadow-md hover:shadow-lg hover:scale-105 text-sm sm:text-base">
                                                 <span wire:loading.remove wire:target="goToPage(1)">1</span>
-                                                <span wire:loading
-                                                    wire:target="goToPage(1)"> <div class="relative">
+                                                <span wire:loading wire:target="goToPage(1)">
+                                                    <div class="relative">
                                                         {{-- Animated spinner rings --}}
-                                                        <div
-                                                            class="w-6 h-6  rounded-full border border-gray-200">
+                                                        <div class="w-6 h-6  rounded-full border border-gray-200">
                                                         </div>
                                                         <div
                                                             class="absolute top-0 left-0 w-6 h-6  rounded-full border  border-transparent border-t-second-500 border-r-second-500 animate-spin">
@@ -380,7 +379,8 @@
                                                         <div class="absolute top-0 left-0 w-6 h-6  rounded-full border border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
                                                             style="animation-direction: reverse; animation-duration: 1s;">
                                                         </div>
-                                                    </div></span>
+                                                    </div>
+                                                </span>
                                             </button>
                                             @if ($start > 2)
                                                 <span
@@ -402,8 +402,7 @@
                                                 <span wire:loading wire:target="goToPage({{ $i }})">
                                                     <div class="relative">
                                                         {{-- Animated spinner rings --}}
-                                                        <div
-                                                            class="w-6 h-6  rounded-full border border-gray-200">
+                                                        <div class="w-6 h-6  rounded-full border border-gray-200">
                                                         </div>
                                                         <div
                                                             class="absolute top-0 left-0 w-6 h-6  rounded-full border  border-transparent border-t-second-500 border-r-second-500 animate-spin">
@@ -427,11 +426,10 @@
                                                 class="px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl border-2 border-second-500/40 bg-white hover:bg-second-50 text-gray-700 font-semibold transition-all duration-300 shadow-sm sm:shadow-md hover:shadow-lg hover:scale-105 text-sm sm:text-base">
                                                 <span wire:loading.remove
                                                     wire:target="goToPage({{ $totalPages }})">{{ $totalPages }}</span>
-                                                <span wire:loading
-                                                    wire:target="goToPage({{ $totalPages }})"> <div class="relative">
+                                                <span wire:loading wire:target="goToPage({{ $totalPages }})">
+                                                    <div class="relative">
                                                         {{-- Animated spinner rings --}}
-                                                        <div
-                                                            class="w-6 h-6  rounded-full border border-gray-200">
+                                                        <div class="w-6 h-6  rounded-full border border-gray-200">
                                                         </div>
                                                         <div
                                                             class="absolute top-0 left-0 w-6 h-6  rounded-full border  border-transparent border-t-second-500 border-r-second-500 animate-spin">
@@ -439,7 +437,8 @@
                                                         <div class="absolute top-0 left-0 w-6 h-6  rounded-full border border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
                                                             style="animation-direction: reverse; animation-duration: 1s;">
                                                         </div>
-                                                    </div></span>
+                                                    </div>
+                                                </span>
                                             </button>
                                         @endif
                                     </div>
@@ -457,19 +456,19 @@
 
                                         <span wire:loading.remove wire:target="nextPage"
                                             class="hidden sm:inline">{{ __('Next') }}</span>
-                                        <span wire:loading wire:target="nextPage"
-                                            class="hidden sm:inline"> <div class="relative">
-                                                        {{-- Animated spinner rings --}}
-                                                        <div
-                                                            class="w-6 h-6  rounded-full border border-gray-200">
-                                                        </div>
-                                                        <div
-                                                            class="absolute top-0 left-0 w-6 h-6  rounded-full border  border-transparent border-t-second-500 border-r-second-500 animate-spin">
-                                                        </div>
-                                                        <div class="absolute top-0 left-0 w-6 h-6  rounded-full border border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
-                                                            style="animation-direction: reverse; animation-duration: 1s;">
-                                                        </div>
-                                                    </div></span>
+                                        <span wire:loading wire:target="nextPage" class="hidden sm:inline">
+                                            <div class="relative">
+                                                {{-- Animated spinner rings --}}
+                                                <div class="w-6 h-6  rounded-full border border-gray-200">
+                                                </div>
+                                                <div
+                                                    class="absolute top-0 left-0 w-6 h-6  rounded-full border  border-transparent border-t-second-500 border-r-second-500 animate-spin">
+                                                </div>
+                                                <div class="absolute top-0 left-0 w-6 h-6  rounded-full border border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
+                                                    style="animation-direction: reverse; animation-duration: 1s;">
+                                                </div>
+                                            </div>
+                                        </span>
 
                                         <svg class="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1"
                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -518,7 +517,6 @@
             </script>
         @endpush
     </section>
-
     <section class="bg-bg-secondary">
         {{-- Trending Hashtags --}}
         <div class="container py-20 lg:py-24 px-6">
@@ -533,30 +531,21 @@
 
             {{-- Hashtag Cards --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
-                @foreach ($keywords as $keyword)
+                @forelse ($keywords as $keyword)
                     <div
                         class="bg-white border border-second-500/30 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
                         <h3 class="text-2xl font-medium font-montserrat text-text-primary mb-1">
                             #{{ $keyword->name }}
                         </h3>
-                        {{-- @foreach ($hashtags as $hash)
-                            <span class="text-sm text-text-muted">{{ __($hash['videos'] . ' videos') }}</span>
-                        @endforeach --}}
-
-                        @php
-                            $index = $loop->index;
-                        @endphp
-
-                        @if (isset($hashtags[$index]))
-                            <span class="text-sm text-text-muted">
-                                {{ $hashtags[$index]['videos'] }} videos
-                            </span>
-                        @else
-                            <span class="text-sm text-text-muted">0 videos</span>
-                        @endif
+                        <span class="text-sm text-text-muted">
+                            {{ $keyword->video_keywords_count ?? 0 }} {{ __('videos') }}
+                        </span>
                     </div>
-                @endforeach
+                @empty
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-text-muted">{{ __('No trending hashtags available') }}</p>
+                    </div>
+                @endforelse
             </div>
         </div>
     </section>

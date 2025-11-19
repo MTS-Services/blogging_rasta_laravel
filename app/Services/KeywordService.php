@@ -30,6 +30,10 @@ class KeywordService
     *                          Find Methods
     * ================== ================== ================== */
 
+    public function getAllDatasWithCount($sortField = 'created_at', $order = 'desc'): Collection
+{
+    return $this->interface->allWithCount($sortField, $order);
+}
     public function getAllDatas($sortField = 'created_at', $order = 'desc'): Collection
     {
         return $this->interface->all($sortField, $order);

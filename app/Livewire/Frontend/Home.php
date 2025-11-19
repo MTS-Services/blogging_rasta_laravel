@@ -42,7 +42,7 @@ class Home extends Component
     {
         try {
             $this->banner = $this->bannerService->getFirstData();
-            
+
             Log::info('Banner video loaded', [
                 'has_banner' => $this->banner !== null,
             ]);
@@ -105,7 +105,6 @@ class Home extends Component
                 'total_videos' => $totalVideos,
                 'total_pages' => $totalPages,
             ]);
-
         } catch (\Exception $e) {
             $this->error = 'Failed to load videos: ' . $e->getMessage();
             Log::error('Video loading failed', [
@@ -115,16 +114,7 @@ class Home extends Component
             $this->featuredVideos = [];
         }
 
-        // Load hashtags
-        $this->hashtags = [
-            ['videos' => '48'],
-            ['videos' => '32'],
-            ['videos' => '125'],
-            ['videos' => '95'],
-            ['videos' => '72'],
-            ['videos' => '156'],
-        ];
-
+       
         $this->loading = false;
     }
 
@@ -136,7 +126,7 @@ class Home extends Component
         $totalVideos = TikTokVideo::where('is_featured', true)
             ->where('is_active', true)
             ->count();
-        
+
         return $totalVideos > $this->videosPerPage;
     }
 
@@ -152,7 +142,7 @@ class Home extends Component
         $totalVideos = TikTokVideo::where('is_featured', true)
             ->where('is_active', true)
             ->count();
-        
+
         $totalPages = ceil($totalVideos / $this->videosPerPage);
 
         if ($page > $totalPages) {
@@ -161,7 +151,7 @@ class Home extends Component
 
         $this->currentPage = $page;
         $this->loadData();
-        
+
         $this->dispatch('scroll-to-videos');
     }
 
@@ -197,9 +187,9 @@ class Home extends Component
         $totalVideos = TikTokVideo::where('is_featured', true)
             ->where('is_active', true)
             ->count();
-        
+
         $totalPages = ceil($totalVideos / $this->videosPerPage);
-        
+
         return $this->currentPage < $totalPages;
     }
 
@@ -219,7 +209,7 @@ class Home extends Component
         $totalVideos = TikTokVideo::where('is_featured', true)
             ->where('is_active', true)
             ->count();
-        
+
         return max(1, ceil($totalVideos / $this->videosPerPage));
     }
 
@@ -230,7 +220,8 @@ class Home extends Component
 
     public function render()
     {
-        $keywords = $this->keywordService->getAllDatas()->take(6);
+        $keywords = $this->keywordService->getAllDatasWithCount()->take(6);
+
         return view('livewire.frontend.home', [
             'keywords' => $keywords
         ]);

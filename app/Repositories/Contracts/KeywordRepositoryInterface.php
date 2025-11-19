@@ -12,6 +12,7 @@ interface KeywordRepositoryInterface
     *                      Find Methods
     * ================== ================== ================== */
 
+    public function allWithCount(string $sortField = 'created_at', $order = 'desc'): Collection;
     public function all(string $sortField = 'created_at', $order = 'desc'): Collection;
 
     public function find($column_value, string $column_name = 'id', bool $trashed = false): ?Keyword;
