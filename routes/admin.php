@@ -109,6 +109,6 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
 
     Route::controller(TikTokMixedFeedController::class)->prefix('tiktok-videos')->group(function () {
         Route::get('/', 'index')->name('tiktok-videos');
-        Route::get('/keyword','videoKeyword')->name('video-keyword');
+        Route::get('/keyword{id}', 'videoKeyword')->name('video-keyword');
     });
 });

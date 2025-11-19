@@ -30,6 +30,92 @@ class TikTokVideos extends Component
         $this->tiktokService = $tiktokService;
     }
 
+    private function getColumns()
+    {
+        return [
+            [
+                'key' => 'id',
+                'label' => 'ID',
+                'sortable' => true,
+            ],
+            [
+                'key' => 'cover',
+                'label' => 'Thumbnail',
+                'format' => fn($video) => view('components.admin.video-thumbnail', [
+                    'video' => $video
+                ])->render(),
+            ],
+            [
+                'key' => 'title',
+                'label' => 'Title',
+                'sortable' => true,
+                'format' => fn($video) => '<div class="max-w-xs truncate">' . ($video->title ?: $video->desc) . '</div>',
+            ],
+            [
+                'key' => 'username',
+                'label' => 'Username',
+                'sortable' => true,
+            ],
+            [
+                'key' => 'play_count',
+                'label' => 'Views',
+                'sortable' => true,
+                'format' => fn($video) => $video->formatted_play_count,
+            ],
+            [
+                'key' => 'digg_count',
+                'label' => 'Likes',
+                'sortable' => true,
+                'format' => fn($video) => $video->formatted_digg_count,
+            ],
+            [
+                'key' => 'is_featured',
+                'label' => 'Featured',
+                'format' => fn($video) => view('components.admin.badge', [
+                    'label' => $video->is_featured ? 'Featured' : 'NoFeatured',
+                    'type' => $video->is_featured ? 'success' : 'gray'
+                ])->render(),
+            ],
+            [
+                'key' => 'is_active',
+                'label' => 'Status',
+                'format' => fn($video) => view('components.admin.badge', [
+                    'label' => $video->is_active ? 'Active' : 'Inactive',
+                    'type' => $video->is_active ? 'success' : 'danger'
+                ])->render(),
+            ],
+            [
+                'key' => 'create_time',
+                'label' => 'Created',
+                'sortable' => true,
+                'format' => fn($video) => $video->create_time->format('M d, Y'),
+            ],
+        ];
+    }
+
+    private function getActions()
+    {
+        return [
+            [
+                'key' => 'id',
+                'label' => 'Keyword',
+                'route' => 'admin.video-keyword',
+                'encrypt' => true
+            ],
+            [
+                'label' => 'Featured On/Off',
+                'method' => 'toggleFeatured',
+                'key' => 'id',
+            ],
+            [
+                'label' => 'Active On/Off',
+                'method' => 'toggleActive',
+                'key' => 'id',
+            ],
+
+        ];
+    }
+
     public function updatedSelectAll($value)
     {
         $this->selectedIds = $value
@@ -190,7 +276,6 @@ class TikTokVideos extends Component
             $this->selectedIds = [];
             $this->selectAll = false;
             $this->bulkAction = '';
-
         } catch (\Exception $e) {
             $this->error('Bulk action error: ' . $e->getMessage());
         }
@@ -202,9 +287,9 @@ class TikTokVideos extends Component
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->where('title', 'like', '%' . $this->search . '%')
-                      ->orWhere('desc', 'like', '%' . $this->search . '%')
-                      ->orWhere('username', 'like', '%' . $this->search . '%')
-                      ->orWhere('author_nickname', 'like', '%' . $this->search . '%');
+                        ->orWhere('desc', 'like', '%' . $this->search . '%')
+                        ->orWhere('username', 'like', '%' . $this->search . '%')
+                        ->orWhere('author_nickname', 'like', '%' . $this->search . '%');
                 });
             })
             ->when($this->statusFilter === 'active', fn($q) => $q->where('is_active', true))
@@ -222,89 +307,7 @@ class TikTokVideos extends Component
         ]);
     }
 
-    private function getColumns()
-    {
-        return [
-            [
-                'key' => 'id',
-                'label' => 'ID',
-                'sortable' => true,
-            ],
-            [
-                'key' => 'cover',
-                'label' => 'Thumbnail',
-                'format' => fn($video) => view('components.admin.video-thumbnail', [
-                    'video' => $video
-                ])->render(),
-            ],
-            [
-                'key' => 'title',
-                'label' => 'Title',
-                'sortable' => true,
-                'format' => fn($video) => '<div class="max-w-xs truncate">' . ($video->title ?: $video->desc) . '</div>',
-            ],
-            [
-                'key' => 'username',
-                'label' => 'Username',
-                'sortable' => true,
-            ],
-            [
-                'key' => 'play_count',
-                'label' => 'Views',
-                'sortable' => true,
-                'format' => fn($video) => $video->formatted_play_count,
-            ],
-            [
-                'key' => 'digg_count',
-                'label' => 'Likes',
-                'sortable' => true,
-                'format' => fn($video) => $video->formatted_digg_count,
-            ],
-            [
-                'key' => 'is_featured',
-                'label' => 'Featured',
-                'format' => fn($video) => view('components.admin.badge', [
-                    'label' => $video->is_featured ? 'Yes' : 'No',
-                    'type' => $video->is_featured ? 'success' : 'gray'
-                ])->render(),
-            ],
-            [
-                'key' => 'is_active',
-                'label' => 'Status',
-                'format' => fn($video) => view('components.admin.badge', [
-                    'label' => $video->is_active ? 'Active' : 'Inactive',
-                    'type' => $video->is_active ? 'success' : 'danger'
-                ])->render(),
-            ],
-            [
-                'key' => 'create_time',
-                'label' => 'Created',
-                'sortable' => true,
-                'format' => fn($video) => $video->create_time->format('M d, Y'),
-            ],
-        ];
-    }
 
-    private function getActions()
-    {
-        return [
-            [
-                'label' => 'Featured On/Off',
-                'method' => 'toggleFeatured',
-                'key' => 'id',
-            ],
-            [
-                'label' => 'Active On/Off',
-                'method' => 'toggleActive',
-                'key' => 'id',
-            ],
-            // [
-            //     'label' => 'Delete',
-            //     'method' => 'deleteVideo',
-            //     'key' => 'id',
-            // ],
-        ];
-    }
 
     private function getStatuses()
     {
