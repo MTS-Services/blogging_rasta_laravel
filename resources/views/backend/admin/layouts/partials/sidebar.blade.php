@@ -49,13 +49,13 @@
                         'icon' => 'user-circle',
                         'active' => 'admin',
                     ],
-                    [
-                        'name' => 'Users',
-                        'route' => route('admin.um.user.index'),
-                        'icon' => 'user',
-                        'active' => 'admin-users',
-                    ],
-
+                    // [
+                    //     'name' => 'Users',
+                    //     'route' => route('admin.um.user.index'),
+                    //     'icon' => 'user',
+                    //     'active' => 'admin-users',
+                    // ],
+                
                     // [
                     //     'name' => 'Pending Users',
                     //     'route' => '#',
@@ -83,7 +83,7 @@
                         'icon' => 'user',
                         'active' => 'product',
                     ],
-
+                
                     // [
                     //     'name' => 'Pending Users',
                     //     'route' => '#',
@@ -98,12 +98,12 @@
                     // ],
                 ]" />
 
-                <x-backend.navlink type="single" icon="youtube" name="Banner Videos" :route="route('admin.banner-video')"
+            <x-backend.navlink type="single" icon="youtube" name="Banner Videos" :route="route('admin.banner-video')"
                 active="banner-video" :page_slug="$active" />
-                <x-backend.navlink type="single" icon="youtube" name="Tiktok Videos" :route="route('admin.tiktok-videos')"
+            <x-backend.navlink type="single" icon="youtube" name="Tiktok Videos" :route="route('admin.tiktok-videos')"
                 active="tiktok-videos" :page_slug="$active" />
-                <x-backend.navlink type="single" icon="key-round" name="Keyword" :route="route('admin.keyword.index')"
-                active="keyword" :page_slug="$active" />
+            <x-backend.navlink type="single" icon="key-round" name="Keyword" :route="route('admin.keyword.index')" active="keyword"
+                :page_slug="$active" />
 
             {{-- <x-backend.navlink type="dropdown" icon="user-group" name="Audit Log Management" :page_slug="$active"
                 :items="[
@@ -114,10 +114,10 @@
                         'active' => 'audit-log-management',
                     ],
                 ]" /> --}}
-            <x-backend.navlink type="single" icon="folder" name="Blog" :route="route('admin.blog.index')"
-                active="blog" :page_slug="$active" />
-            <x-backend.navlink type="single" icon="phone" name="Contact" :route="route('admin.contact.index')"
-                active="contact" :page_slug="$active" />
+            <x-backend.navlink type="single" icon="folder" name="Blog" :route="route('admin.blog.index')" active="blog"
+                :page_slug="$active" />
+            <x-backend.navlink type="single" icon="phone" name="Contact" :route="route('admin.contact.index')" active="contact"
+                :page_slug="$active" />
             <div class="pt-4 pb-2">
                 <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 uppercase"
                     x-show="(desktop && sidebar_expanded) || (!desktop && mobile_menu_open)">
@@ -175,17 +175,17 @@
                     //     'icon' => 'bell',
                     //     'active' => 'settings-notifications',
                     // ],
-                    [
-                        'name' => 'Database',
-                        'route' => route('admin.as.database-settings'),
-                        'icon' => 'database',
-                        'active' => 'database_settings',
-                    ],
+                    // [
+                    //     'name' => 'Database',
+                    //     'route' => route('admin.as.database-settings'),
+                    //     'icon' => 'database',
+                    //     'active' => 'database_settings',
+                    // ],
                 ]" />
 
             <div class="space-y-2">
                 <flux:separator class="bg-accent!" />
-                <x-backend.navlink type="single" icon="user" name="Profile" active="profile" :page_slug="$active" />
+                {{-- <x-backend.navlink type="single" icon="user" name="Profile" active="profile" :page_slug="$active" /> --}}
                 <button wire:click="logout" class="w-full text-left">
                     <x-backend.navlink type="single" icon="power" name="Logout" />
                 </button>
