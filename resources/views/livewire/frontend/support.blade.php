@@ -28,8 +28,8 @@
                         <flux:icon name="mail" class="w-5 h-5 mr-2 text-second-500 flex-shrink-0" />
                         <div>
                             <h6 class="text-base font-semibold font-inter text-text-primary">{{ __('Contact Us') }}</h6>
-                            <a href="mailto:diodioglowsn@gmail.com" class="text-base font-normal font-inter text-muted mt-2 block">
-                                {{ __('Email: diodioglowsn@gmail.com') }}
+                            <a href="" class="text-base font-normal font-inter text-muted mt-2 block">
+                                {{ __('Email: support@diodioglow.com') }}
                             </a>
                             <p class="text-base font-normal font-inter text-muted mt-2">
                                 {{ __('Response time: 24–48 hours.') }}
@@ -38,35 +38,21 @@
                     </div>
 
                     <div class="flex gap-2 p-6 border border-zinc-200 rounded-lg">
-                        <flux:icon name="help-circle" class="w-5 h-5 mr-2 text-second-500 flex-shrink-0" />
+                        <flux:icon name="key-round" class="w-5 h-5 mr-2 text-second-500 flex-shrink-0" />
                         <div>
                             <h6 class="text-base font-semibold font-inter text-text-primary">
-                                {{ _('Support & Assistance') }}
+                                {{ __('Account Assistance') }}
                             </h6>
                             <div class="space-y-4 mt-4">
-                                <div class="border border-zinc-200 rounded-lg py-2 px-3">
-                                    <strong>{{ _('Contact Support') }}</strong>
-                                    <p class="text-sm text-text-secondary mt-1">
-                                        {{ _('Reach out to our support team for any inquiries or help you need.') }}
-                                    </p>
-                                </div>
-                                <div class="border border-zinc-200 rounded-lg py-2 px-3">
-                                    <strong>{{ _('Product Guides') }}</strong>
-                                    <p class="text-sm text-text-secondary mt-1">
-                                        {{ _('Learn how to make the most of our products with step-by-step guides.') }}
-                                    </p>
-                                </div>
-                                <div class="border border-zinc-200 rounded-lg py-2 px-3">
-                                    <strong>{{ _('Community Forums') }}</strong>
-                                    <p class="text-sm text-text-secondary mt-1">
-                                        {{ _('Join discussions with other users and share tips and solutions.') }}
-                                    </p>
-                                </div>
+                                <a href=""
+                                    class="border border-zinc-200 rounded-lg py-1 px-2 inline-block">{{ __('Reset password') }}</a>
+                                <a href=""
+                                    class="border border-zinc-200 rounded-lg py-1 px-2 inline-block">{{ __('Update email') }}</a>
+                                <a href=""
+                                    class="border border-zinc-200 rounded-lg py-1 px-2 inline-block">{{ __('Manage preferences') }}</a>
                             </div>
                         </div>
                     </div>
-
-
 
                     <div class="flex gap-2 p-6 border border-zinc-200 rounded-lg">
                         <flux:icon name="chart-no-axes-gantt" class="w-5 h-5 mr-2 text-second-500 flex-shrink-0" />
@@ -78,7 +64,7 @@
                                 {{ __('Share suggestions or report an issue so we can continue improving your experience.') }}
                             </p>
                             <div class="w-fit mt-2.5">
-                                <x-ui.button href="{{ 'contact' }}"
+                                <x-ui.button href="#"
                                     class="py-2! px-4! bg-gradient-to-r from-second-500 to-zinc-500 hover:shadow-lg transition-all duration-300">
                                     <flux:icon name="send" class="w-4 h-4 stroke-white" />
                                     <span class="text-white">{{ __('Send feedback') }}</span>
@@ -96,20 +82,13 @@
                             {{ __('Resources') }}
                         </h6>
                         <div class="space-y-4 mt-4">
-                            <a wire:navigate="{{ route('PrivacyPolicy') }}"
-                                class="border border-zinc-200 rounded-lg py-1 px-2 inline-block">
-                                {{ __('Privacy Policy') }}
-                            </a>
-                            <a wire:navigate="{{ route('TermsOfService') }}"
-                                class="border border-zinc-200 rounded-lg py-1 px-2 inline-block">
-                                {{ __('Terms of Service') }}
-                            </a>
-                            <a wire:navigate="{{ route('affiliate') }}"
-                                class="border border-zinc-200 rounded-lg py-1 px-2 inline-block">
-                                {{ __('Affiliate Disclosure') }}
-                            </a>
+                            <a href=""
+                                class="border border-zinc-200 rounded-lg py-1 px-2 inline-block">{{ __('Privacy Policy') }}</a>
+                            <a href=""
+                                class="border border-zinc-200 rounded-lg py-1 px-2 inline-block">{{ __('Terms of Service') }}</a>
+                            <a href=""
+                                class="border border-zinc-200 rounded-lg py-1 px-2 inline-block">{{ __('Affiliate Disclosure') }}</a>
                         </div>
-
                         <h6 class="text-base font-semibold font-inter text-text-primary mt-6">
                             {{ __('Community & Feedback') }}
                         </h6>
@@ -120,15 +99,11 @@
                             <x-ui.button href="#"
                                 class="py-2! px-4! bg-gradient-to-r from-second-500 to-zinc-500 hover:shadow-lg transition-all duration-300 w-full">
                                 <flux:icon name="mail" class="w-4 h-4 stroke-white" />
-                                <span class="text-white">
-                                    <a href="mailto:diodioglowsn@gmail.com"
-                                        class="hover:underline duration-300 hover:text-zinc-300">{{ __('Email Support') }}</a>
-                                </span>
+                                <span class="text-white">{{ __('Email Support') }}</span>
                             </x-ui.button>
                         </div>
                     </div>
                 </div>
-
             </div>
 
         </div>
