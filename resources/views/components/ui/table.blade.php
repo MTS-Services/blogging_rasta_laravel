@@ -2,6 +2,7 @@
     'columns' => [],
     'data' => [],
     'actions' => [],
+    'actionsMap' => [],
     'searchProperty' => 'search',
     'showSearch' => true,
     'perPageProperty' => 'perPage',
@@ -210,7 +211,7 @@
                         @endforeach
 
                         {{-- Actions Dropdown --}}
-                        @if (count($actions) > 0 || isset($item->dynamicActions))
+                        @if (count($actions) > 0 || !empty($actionsMap))
                             <td class="p-3 text-center shrink-0">
                                 <div class="relative inline-block text-left">
                                     <div x-data="{ open: false }">
@@ -232,22 +233,32 @@
                                             <div class="rounded-md bg-bg-primary shadow-xs">
                                                 <div class="py-1">
                                                     @php
-                                                        // Use dynamic actions if available, otherwise use static actions
-                                                        $itemActions = $item->dynamicActions ?? $actions;
+                                                        // Use actionsMap if available, otherwise use static actions
+                                                        $itemActions =
+                                                            isset($actionsMap) && isset($actionsMap[$item->id])
+                                                                ? $actionsMap[$item->id]
+                                                                : $actions;
                                                     @endphp
 
                                                     @foreach ($itemActions as $action)
                                                         @php
+                                                            // Determine which param key to use
                                                             $param =
                                                                 isset($action['param']) && $action['param']
                                                                     ? $action['param']
                                                                     : $action['key'] ?? '';
+
+                                                            // Get actual value from current item/row
                                                             $actionValue = data_get($item, $param);
+
+                                                            // Encrypt VALUE if requested
                                                             $isEncrypted =
                                                                 isset($action['encrypt']) && $action['encrypt'];
                                                             if ($isEncrypted && !is_null($actionValue)) {
                                                                 $actionValue = encrypt($actionValue);
                                                             }
+
+                                                            // Format parameter safely
                                                             $actionParam = is_numeric($actionValue)
                                                                 ? $actionValue
                                                                 : (is_null($actionValue)
@@ -255,13 +266,14 @@
                                                                     : "'{$actionValue}'");
                                                         @endphp
 
-                                                        {{-- Direct href --}}
+                                                        {{-- 🔗 Case 1: Direct href --}}
                                                         @if (!empty($action['href']) && $action['href'] !== '#')
                                                             @php
                                                                 $href = empty($actionValue)
                                                                     ? $action['href']
                                                                     : rtrim($action['href'], '/') . '/' . $actionValue;
                                                             @endphp
+
                                                             <a href="{{ $href }}"
                                                                 title="{{ $action['label'] }}"
                                                                 target="{{ $action['target'] ?? '_self' }}"
@@ -270,7 +282,7 @@
                                                                 {{ $action['label'] }}
                                                             </a>
 
-                                                            {{-- Named route --}}
+                                                            {{-- 🧭 Case 2: Named route --}}
                                                         @elseif (!empty($action['route']) && $action['route'] !== '#')
                                                             <a href="{{ route($action['route'], $actionValue) }}"
                                                                 title="{{ $action['label'] }}"
@@ -280,7 +292,7 @@
                                                                 {{ $action['label'] }}
                                                             </a>
 
-                                                            {{-- Livewire method --}}
+                                                            {{-- ⚡ Case 3: Livewire method --}}
                                                         @elseif (!empty($action['method']))
                                                             <button type="button"
                                                                 wire:click="{{ $action['method'] }}({{ $actionParam }})"
@@ -289,15 +301,17 @@
                                                                 {{ $action['label'] }}
                                                             </button>
 
-                                                            {{-- Alpine.js x-on:click --}}
+                                                            {{-- 🪄 Case 4: Alpine.js x-on:click --}}
                                                         @elseif (!empty($action['x_click']))
                                                             @php
+                                                                // Replace {param} or {value} placeholders
                                                                 $xClick = str_replace(
                                                                     ['{param}', '{value}'],
                                                                     $actionValue,
                                                                     $action['x_click'],
                                                                 );
                                                             @endphp
+
                                                             <button type="button" x-on:click="{{ $xClick }}"
                                                                 class="block px-4 py-2 w-full text-left text-sm dark:text-zinc-100! dark:hover:text-zinc-900! hover:bg-zinc-300 hover:text-gray-900">
                                                                 {{ $action['label'] }}
@@ -358,7 +372,7 @@
                         </div>
 
                         {{-- Right: Actions Dropdown --}}
-                        @if (count($actions) > 0 || isset($item->dynamicActions))
+                        @if (count($actions) > 0 || !empty($actionsMap))
                             <div class="relative" x-data="{ open: false }">
                                 <button type="button" @click="open = !open"
                                     class="inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-gray-200 dark:hover:bg-zinc-400 transition-all duration-200 group">
@@ -373,33 +387,82 @@
                                     class="absolute right-0 z-20 mt-2 w-48 origin-top-right rounded-lg bg-bg-primary shadow-xl ring-1 ring-black ring-opacity-5">
                                     <div class="py-1">
                                         @php
-                                            // Use dynamic actions if available, otherwise use static actions
-                                            $itemActions = $item->dynamicActions ?? $actions;
+                                            // Use actionsMap if available, otherwise use static actions
+                                            $itemActions =
+                                                isset($actionsMap) && isset($actionsMap[$item->id])
+                                                    ? $actionsMap[$item->id]
+                                                    : $actions;
                                         @endphp
 
                                         @foreach ($itemActions as $action)
                                             @php
+                                                // Determine which param key to use
                                                 $param = $action['param'] ?? ($action['key'] ?? 'id');
+
+                                                // Get actual value from current item/row
                                                 $actionValue = data_get($item, $param);
+
+                                                // Encrypt VALUE if requested
                                                 $isEncrypted = isset($action['encrypt']) && $action['encrypt'];
                                                 if ($isEncrypted && !is_null($actionValue)) {
                                                     $actionValue = encrypt($actionValue);
                                                 }
+
+                                                // Format parameter safely
                                                 $actionParam = is_numeric($actionValue)
                                                     ? $actionValue
-                                                    : "'{$actionValue}'";
+                                                    : (is_null($actionValue)
+                                                        ? null
+                                                        : "'{$actionValue}'");
                                             @endphp
 
-                                            @if (isset($action['route']))
-                                                <a href="{{ route($action['route'], $actionValue) }}" wire:navigate
-                                                    class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300  dark:hover:text-black hover:bg-zinc-300 dark:hover:bg-zinc-400">
+                                            {{-- 🔗 Case 1: Direct href --}}
+                                            @if (!empty($action['href']) && $action['href'] !== '#')
+                                                @php
+                                                    $href = empty($actionValue)
+                                                        ? $action['href']
+                                                        : rtrim($action['href'], '/') . '/' . $actionValue;
+                                                @endphp
+
+                                                <a href="{{ $href }}" title="{{ $action['label'] }}"
+                                                    target="{{ $action['target'] ?? '_self' }}"
+                                                    class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:hover:text-black hover:bg-zinc-300 dark:hover:bg-zinc-400"
+                                                    wire:navigate>
                                                     {{ $action['label'] }}
                                                 </a>
-                                            @elseif (isset($action['method']))
+
+                                                {{-- 🧭 Case 2: Named route --}}
+                                            @elseif (!empty($action['route']) && $action['route'] !== '#')
+                                                <a href="{{ route($action['route'], $actionValue) }}"
+                                                    title="{{ $action['label'] }}"
+                                                    target="{{ $action['target'] ?? '_self' }}"
+                                                    class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:hover:text-black hover:bg-zinc-300 dark:hover:bg-zinc-400"
+                                                    wire:navigate>
+                                                    {{ $action['label'] }}
+                                                </a>
+
+                                                {{-- ⚡ Case 3: Livewire method --}}
+                                            @elseif (!empty($action['method']))
                                                 <button type="button"
                                                     wire:click="{{ $action['method'] }}({{ $actionParam }})"
                                                     @click="open = false"
-                                                    class="block w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:hover:text-black  dark:text-gray-300 hover:bg-zinc-300 dark:hover:bg-zinc-400">
+                                                    class="block w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:hover:text-black dark:text-gray-300 hover:bg-zinc-300 dark:hover:bg-zinc-400">
+                                                    {{ $action['label'] }}
+                                                </button>
+
+                                                {{-- 🪄 Case 4: Alpine.js x-on:click --}}
+                                            @elseif (!empty($action['x_click']))
+                                                @php
+                                                    // Replace {param} or {value} placeholders
+                                                    $xClick = str_replace(
+                                                        ['{param}', '{value}'],
+                                                        $actionValue,
+                                                        $action['x_click'],
+                                                    );
+                                                @endphp
+
+                                                <button type="button" x-on:click="{{ $xClick }}"
+                                                    class="block w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:hover:text-black dark:text-gray-300 hover:bg-zinc-300 dark:hover:bg-zinc-400">
                                                     {{ $action['label'] }}
                                                 </button>
                                             @endif
