@@ -21,11 +21,11 @@ class TikTokSettings extends Form
             'featured_users' => 'required|array|min:1',
             'featured_users.*.username' => 'required|string|max:255',
             'featured_users.*.display_name' => 'required|string|max:255',
-            'featured_users.*.max_videos' => 'required|integer|min:1|max:100',
-            'default_max_videos_per_user' => 'required|integer|min:1|max:100',
-            'videos_per_page' => 'required|integer|min:1|max:50',
-            'videos_per_user_per_page' => 'required|integer|min:1|max:20',
-            'cache_duration' => 'required|integer|min:60|max:86400',
+            'featured_users.*.max_videos' => 'required|integer|min:1',
+            'default_max_videos_per_user' => 'required|integer|min:1',
+            'videos_per_page' => 'required|integer|min:1',
+            'videos_per_user_per_page' => 'required|integer|min:1',
+            'cache_duration' => 'required|integer|min:60',
         ];
     }
 

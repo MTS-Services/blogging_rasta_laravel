@@ -35,7 +35,8 @@ use WithDataTable, WithNotification;
         $datas = $this->service->getPaginatedData(
             perPage: $this->perPage,
             filters: $this->getFilters()
-        )->load('creater_admin');
+        );
+         $datas->load('creater_admin');
 
         $columns = [
             [

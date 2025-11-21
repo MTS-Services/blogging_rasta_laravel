@@ -76,7 +76,6 @@
                                             <x-ui.input 
                                                 type="number" 
                                                 min="1" 
-                                                max="100" 
                                                 wire:model.defer="form.featured_users.{{ $index }}.max_videos" 
                                             />
                                             <x-ui.input-error :messages="$errors->get('form.featured_users.' . $index . '.max_videos')" />

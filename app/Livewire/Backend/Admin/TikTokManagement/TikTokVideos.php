@@ -299,7 +299,6 @@ class TikTokVideos extends Component
             ->when($this->statusFilter === 'featured', fn($q) => $q->where('is_featured', true))
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate($this->perPage);
-
         // Prepare actions array - will be converted to dynamic actions in the view
         $actionsTemplate = [];
         foreach ($videos as $video) {

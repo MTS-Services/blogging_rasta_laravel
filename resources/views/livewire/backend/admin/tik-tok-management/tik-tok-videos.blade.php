@@ -25,5 +25,5 @@
         return $video;
     })" :actions="[]" :statuses="$statuses" :bulkActions="$bulkActions"
         searchProperty="search" perPageProperty="perPage" :showSearch="true" :showPerPage="true" :showBulkActions="true"
-        :perPageOptions="[10, 15, 20, 50, 100]" emptyMessage="No videos found. Click 'Sync Videos' to fetch from TikTok." :mobileVisibleColumns="3" />
+        emptyMessage="No videos found. Click 'Sync Videos' to fetch from TikTok." :mobileVisibleColumns="3" />
 </div>
