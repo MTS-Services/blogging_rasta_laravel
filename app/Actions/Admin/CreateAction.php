@@ -18,10 +18,14 @@ class CreateAction
         return DB::transaction(function () use ($data) {
 
             // Handle avatar upload
-            if ($data['avatar']) {
-                $data['avatar'] = Storage::disk('public')->putFile('admins', $data['avatar']);
+            // if ($data['avatar']) {
+            //     $data['avatar'] = Storage::disk('public')->putFile('admins', $data['avatar']);
+            // }
+               if ($data['avatar']) {
+                $prefix = uniqid('IMX') . '-' . time() . '-' . uniqid();
+                $fileName = $prefix . '-' . $data['avatar']->getClientOriginalName();
+                $data['avatar'] = Storage::disk('public')->putFileAs('admins',  $data['avatar'], $fileName);
             }
-
 
             // Create user
             $model = $this->interface->create($data);
