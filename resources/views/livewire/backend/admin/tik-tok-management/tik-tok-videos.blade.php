@@ -20,10 +20,7 @@
     </div>
 
     {{-- Data Table --}}
-    <x-ui.table :columns="$columns" :data="$videos->map(function ($video) use ($actionsMap) {
-        $video->dynamicActions = $actionsMap[$video->id] ?? [];
-        return $video;
-    })" :actions="[]" :statuses="$statuses" :bulkActions="$bulkActions"
-        searchProperty="search" perPageProperty="perPage" :showSearch="true" :showPerPage="true" :showBulkActions="true"
-        :perPageOptions="[10, 15, 20, 50, 100]" emptyMessage="No videos found. Click 'Sync Videos' to fetch from TikTok." :mobileVisibleColumns="3" />
+    <x-ui.table :columns="$columns" :data="$videos" :actions="[]" :actionsMap="$actionsMap" :statuses="$statuses"
+        :bulkActions="$bulkActions" searchProperty="search" perPageProperty="perPage" :showSearch="true" :showPerPage="true"
+        :showBulkActions="true" emptyMessage="No videos found. Click 'Sync Videos' to fetch from TikTok." :mobileVisibleColumns="3" />
 </div>

@@ -283,38 +283,38 @@ class TikTokVideos extends Component
         }
     }
 
-    public function render()
-    {
-        $videos = TikTokVideo::query()
-            ->when($this->search, function ($query) {
-                $query->where(function ($q) {
-                    $q->where('title', 'like', '%' . $this->search . '%')
-                        ->orWhere('desc', 'like', '%' . $this->search . '%')
-                        ->orWhere('username', 'like', '%' . $this->search . '%')
-                        ->orWhere('author_nickname', 'like', '%' . $this->search . '%');
-                });
-            })
-            ->when($this->statusFilter === 'active', fn($q) => $q->where('is_active', true))
-            ->when($this->statusFilter === 'inactive', fn($q) => $q->where('is_active', false))
-            ->when($this->statusFilter === 'featured', fn($q) => $q->where('is_featured', true))
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate($this->perPage);
-
-        // Prepare actions array - will be converted to dynamic actions in the view
-        $actionsTemplate = [];
-        foreach ($videos as $video) {
-            $actionsTemplate[$video->id] = $this->getActionsForVideo($video);
-        }
-
-        return view('livewire.backend.admin.tik-tok-management.tik-tok-videos', [
-            'videos' => $videos,
-            'columns' => $this->getColumns(),
-            'actions' => [], // Pass empty, we'll use actionsMap instead
-            'actionsMap' => $actionsTemplate, // Pass dynamic actions map
-            'statuses' => $this->getStatuses(),
-            'bulkActions' => $this->getBulkActions(),
-        ]);
+   public function render()
+{
+    $videos = TikTokVideo::query()
+        ->when($this->search, function ($query) {
+            $query->where(function ($q) {
+                $q->where('title', 'like', '%' . $this->search . '%')
+                    ->orWhere('desc', 'like', '%' . $this->search . '%')
+                    ->orWhere('username', 'like', '%' . $this->search . '%')
+                    ->orWhere('author_nickname', 'like', '%' . $this->search . '%');
+            });
+        })
+        ->when($this->statusFilter === 'active', fn($q) => $q->where('is_active', true))
+        ->when($this->statusFilter === 'inactive', fn($q) => $q->where('is_active', false))
+        ->when($this->statusFilter === 'featured', fn($q) => $q->where('is_featured', true))
+        ->orderBy($this->sortField, $this->sortDirection)
+        ->paginate($this->perPage);
+    
+    // Prepare actions map
+    $actionsMap = [];
+    foreach ($videos as $video) {
+        $actionsMap[$video->id] = $this->getActionsForVideo($video);
     }
+
+    return view('livewire.backend.admin.tik-tok-management.tik-tok-videos', [
+        'videos' => $videos,
+        'columns' => $this->getColumns(),
+        'actions' => [],
+        'actionsMap' => $actionsMap,
+        'statuses' => $this->getStatuses(),
+        'bulkActions' => $this->getBulkActions(),
+    ]);
+}
 
     private function getStatuses()
     {
