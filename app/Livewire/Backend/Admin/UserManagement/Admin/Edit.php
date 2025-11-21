@@ -17,6 +17,7 @@ class Edit extends Component
 
     public AdminForm $form;
     public Admin $model;
+    public $existingFile;
 
     protected AdminService $service;
 
@@ -29,6 +30,7 @@ class Edit extends Component
     {
         $this->model = $model;
         $this->form->setData($model);
+        $this->existingFile = $model->avatar;
     }
 
     public function render()

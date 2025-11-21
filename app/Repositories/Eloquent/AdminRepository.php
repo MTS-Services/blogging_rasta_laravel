@@ -117,12 +117,13 @@ class AdminRepository implements AdminRepositoryInterface
 
     public function update(int $id, array $data): bool
     {
+
         $findData = $this->find($id);
 
         if (!$findData) {
             return false;
         }
-
+        
         return $findData->update($data);
     }
 

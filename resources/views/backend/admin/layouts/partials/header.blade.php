@@ -13,11 +13,26 @@
                         class="w-5 h-5 group-hover:scale-110 transition-transform" />
                 </button>
 
+                @php
+                    $hour = now()->format('H');
+                    if ($hour < 12) {
+                        $greeting = 'Good morning';
+                        $subText = "Here's what's happening this morning";
+                    } elseif ($hour < 17) {
+                        $greeting = 'Good afternoon';
+                        $subText = "Here's what's happening this afternoon";
+                    } else {
+                        $greeting = 'Good evening';
+                        $subText = "Here's what's happening tonight";
+                    }
+                @endphp
+
                 <div class="hidden sm:block">
-                    <h1 class="text-xl lg:text-2xl font-bold text-text-primary">{{ __('Good morning,') }}
-                        {{-- Assuming 'Alex' should be dynamic or a placeholder --}}
-                        {{ __('Alex!') }}</h1>
-                    <p class="text-text-secondary text-sm">{{ __("Here's what's happening today") }}
+                    <h1 class="text-xl lg:text-2xl font-bold dark:text-text-white text-text-light-primary">
+                        {{ $greeting }}, {{ admin()->name }}!
+                    </h1>
+                    <p class="text-text-light-secondary dark:text-text-dark-primary text-sm">
+                        {{ $subText }}
                     </p>
                 </div>
             </div>
@@ -58,8 +73,8 @@
                     </button> --}}
 
                     <button @click="open = !open" class="avatar">
-                        <div class="w-8 rounded-xl">
-                            <img src="{{ auth_storage_url(admin()->avatar) }}" alt="{{ admin()->name }}"
+                        <div class="w-10 h-10 rounded-full">
+                            <img src="{{ storage_url(admin()->avatar) }}" alt="{{ admin()->name }}"
                                 class="object-cover w-full h-full">
                         </div>
                     </button>

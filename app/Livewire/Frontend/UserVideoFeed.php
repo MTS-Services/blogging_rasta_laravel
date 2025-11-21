@@ -106,6 +106,7 @@ class UserVideoFeed extends Component
                     '_username' => $video->username,
                     'keywords' => $keywords,
                     'text_extra' => $this->formatKeywordsAsTextExtra($keywords),
+                     'tiktok_url' => $this->getTikTokUrl($video->username, $video->video_id),
                 ];
             })->toArray();
 
@@ -126,6 +127,14 @@ class UserVideoFeed extends Component
         }
 
         $this->loading = false;
+    }
+
+    private function getTikTokUrl($username, $videoId)
+    {
+        $url = "https://www.tiktok.com/@{$username}/video/{$videoId}";
+
+
+        return $url;
     }
 
 // Replace the extractHashtagsAsTextExtra() method:

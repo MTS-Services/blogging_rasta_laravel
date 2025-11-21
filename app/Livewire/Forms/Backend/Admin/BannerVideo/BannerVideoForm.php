@@ -24,7 +24,7 @@ class BannerVideoForm extends Form
     public function rules(): array
     {
         return [
-            'thumbnail' => 'nullable|image|max:2048',
+            'thumbnail' => 'nullable',
             'file' => 'nullable',
             'removeThumbnail' => 'boolean',
             'removeFile' => 'boolean',

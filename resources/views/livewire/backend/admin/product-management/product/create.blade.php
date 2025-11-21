@@ -1,5 +1,5 @@
 <section>
-        @push('styles')
+     @push('styles')
         <link rel="stylesheet" href="{{ asset('assets/css/ckEditor.css') }}">
     @endpush
     <div class="glass-card rounded-2xl p-6 mb-6">

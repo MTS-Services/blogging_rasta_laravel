@@ -28,7 +28,8 @@
                         <flux:icon name="mail" class="w-5 h-5 mr-2 text-second-500 flex-shrink-0" />
                         <div>
                             <h6 class="text-base font-semibold font-inter text-text-primary">{{ __('Contact Us') }}</h6>
-                            <a href="mailto:diodioglowsn@gmail.com" class="text-base font-normal font-inter text-muted mt-2 block">
+                            <a href="mailto:diodioglowsn@gmail.com"
+                                class="text-base font-normal font-inter text-muted mt-2 block">
                                 {{ __('Email: diodioglowsn@gmail.com') }}
                             </a>
                             <p class="text-base font-normal font-inter text-muted mt-2">
@@ -36,30 +37,29 @@
                             </p>
                         </div>
                     </div>
-
                     <div class="flex gap-2 p-6 border border-zinc-200 rounded-lg">
-                      <flux:icon name="key-round" class="w-5 h-5 mr-2 text-second-500 flex-shrink-0" />
+                        <flux:icon name="key-round" class="w-5 h-5 mr-2 text-second-500 flex-shrink-0" />
                         <div>
                             <h6 class="text-base font-semibold font-inter text-text-primary">
-                                {{ _('Support & Assistance') }}
+                                {{ __('Support & Assistance') }}
                             </h6>
                             <div class="space-y-4 mt-4">
                                 <div class="border border-zinc-200 rounded-lg py-2 px-3">
-                                    <strong>{{ _('Contact Support') }}</strong>
+                                    <strong>{{ __('Contact Support') }}</strong>
                                     <p class="text-sm text-text-secondary mt-1">
-                                        {{ _('Reach out to our support team for any inquiries or help you need.') }}
+                                        {{ __('Reach out to our support team for any inquiries or help you need.') }}
                                     </p>
                                 </div>
                                 <div class="border border-zinc-200 rounded-lg py-2 px-3">
-                                    <strong>{{ _('Product Guides') }}</strong>
+                                    <strong>{{ __('Product Guides') }}</strong>
                                     <p class="text-sm text-text-secondary mt-1">
-                                        {{ _('Learn how to make the most of our products with step-by-step guides.') }}
+                                        {{ __('Learn how to make the most of our products with step-by-step guides.') }}
                                     </p>
                                 </div>
                                 <div class="border border-zinc-200 rounded-lg py-2 px-3">
-                                    <strong>{{ _('Community Forums') }}</strong>
+                                    <strong>{{ __('Community Forums') }}</strong>
                                     <p class="text-sm text-text-secondary mt-1">
-                                        {{ _('Join discussions with other users and share tips and solutions.') }}
+                                        {{ __('Join discussions with other users and share tips and solutions.') }}
                                     </p>
                                 </div>
                             </div>

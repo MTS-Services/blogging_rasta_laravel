@@ -52,7 +52,8 @@ class VideoFeed extends Component
             // Get videos for current page
             $videosCollection = $query->skip(($this->currentPage - 1) * $this->videosPerPage)
                 ->take($this->videosPerPage)
-                ->get();
+                ->get()
+                ->shuffle();
 
             // Format videos for display
             $this->videos = $videosCollection->map(function ($video) {
@@ -91,6 +92,7 @@ class VideoFeed extends Component
                     '_username' => $video->username,
                     'keywords' => $keywords,
                     'text_extra' => $this->formatKeywordsAsTextExtra($keywords),
+                    'tiktok_url' => $this->getTikTokUrl($video->username, $video->video_id),
                 ];
             })->toArray();
 
@@ -112,6 +114,20 @@ class VideoFeed extends Component
 
         $this->loading = false;
     }
+
+    /**
+     * Generate TikTok video URL
+     */
+  
+
+    private function getTikTokUrl($username, $videoId)
+    {
+        $url = "https://www.tiktok.com/@{$username}/video/{$videoId}";
+
+
+        return $url;
+    }
+
 
     /**
      * Convert keywords array to text_extra format

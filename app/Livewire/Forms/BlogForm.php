@@ -39,7 +39,7 @@ class BlogForm extends Form
             'slug'              => 'required|string|max:255|unique:blogs,slug,' . $this->id,
             'status' => 'required|string|in:' . implode(',', array_column(BlogStatus::cases(), 'value')),
 
-            'file'              => 'nullable|max:1024',
+            'file'              => 'nullable',
             'remove_file'      => 'boolean',
 
             'description'       => 'nullable|string',

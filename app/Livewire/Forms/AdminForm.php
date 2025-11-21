@@ -21,6 +21,7 @@ class AdminForm extends Form
     public ?string $password_confirmation = '';
     public string $status = AdminStatus::ACTIVE->value;
     public ?UploadedFile $avatar = null;
+    public bool $remove_file = false;
 
     public function rules(): array
     {
@@ -31,9 +32,10 @@ class AdminForm extends Form
             'name' => 'sometimes|required|string|max:50',
             'email' => $email,
             'password' => $password,
+            'remove_file'      => 'boolean',
             'password_confirmation' => 'sometimes|nullable|string|min:8|same:password',
             'status' => 'required|string|in:' . implode(',', array_column(AdminStatus::cases(), 'value')),
-            'avatar' => 'nullable|image|max:2048',
+            'avatar' => 'nullable|image',
         ];
     }
 
@@ -43,7 +45,6 @@ class AdminForm extends Form
         $this->name = $admin->name;
         $this->email = $admin->email;
         $this->status = $admin->status->value;
-        $this->avatar = null;
     }
 
     public function reset(...$properties): void

@@ -47,8 +47,7 @@
                             {{ __('Your Source for Viral Beauty Trends & Skincare Inspiration') }}</h2>
                         {{-- Description --}}
                         <p class="text-base text-text-primary font-normal font-inter lg:text-left">
-                            {{ __('Diodio Glow is a digital platform dedicated to showcasing the latest beauty trends, skincare routines, and viral content from across Senegal and the global beauty community.
-                            We curate, highlight, and organize the products, routines, and videos that people are already talking about—so you can easily explore what’s trending.') }}
+                            {{ __('Diodio Glow is a digital platform dedicated to showcasing the latest beauty trends, skincare routines, and viral content from across Senegal and the global beauty community. We curate, highlight, and organize the products, routines, and videos that people are already talking about—so you can easily explore what’s trending.') }}
                         </p>
                     </div>
 

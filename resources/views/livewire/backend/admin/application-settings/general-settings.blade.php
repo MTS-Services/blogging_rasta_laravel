@@ -11,7 +11,7 @@
             <!-- SINGLE MAIN GRID -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
-                      <!-- Row 1: Logo + Favicon -->
+                <!-- Row 1: Logo + Favicon -->
                 <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-5">
 
                     <!-- App Logo -->
@@ -19,14 +19,13 @@
                         <x-ui.file-input wire:model="form.app_logo" id="app_logo" label="{{ __('App Logo') }}"
                             hint="{{ __('Max: 400x400') }}" accept="image/jpeg,image/png,image/jpg,image/webp,image/svg"
                             :error="$errors->first('form.app_logo')" />
-                        
+
                         {{-- Current App Logo Preview --}}
-                        @if(!empty($general_settings['app_logo']) && !$form->app_logo)
+                        @if (!empty($general_settings['app_logo']) && !$form->app_logo)
                             <div class="mt-3">
                                 <p class="text-sm text-gray-400 mb-2">{{ __('Current Logo:') }}</p>
-                                <img src="{{ asset('storage/' . $general_settings['app_logo']) }}" 
-                                     alt="App Logo" 
-                                     class="w-32 h-32 object-contain border border-gray-600 rounded-lg p-2 bg-gray-800">
+                                <img src="{{ asset('storage/' . $general_settings['app_logo']) }}" alt="App Logo"
+                                    class="w-32 h-32 object-contain border border-gray-600 rounded-lg p-2 bg-gray-800">
                             </div>
                         @endif
                     </div>
@@ -36,14 +35,13 @@
                         <x-ui.file-input wire:model="form.favicon" id="favicon" label="{{ __('Favicon') }}"
                             hint="{{ __('16x16') }}" accept="image/jpeg,image/png,image/jpg,image/webp,image/svg"
                             :error="$errors->first('form.favicon')" />
-                        
+
                         {{-- Current Favicon Preview --}}
-                        @if(!empty($general_settings['favicon']) && !$form->favicon)
+                        @if (!empty($general_settings['favicon']) && !$form->favicon)
                             <div class="mt-3">
                                 <p class="text-sm text-gray-400 mb-2">{{ __('Current Favicon:') }}</p>
-                                <img src="{{ asset('storage/' . $general_settings['favicon']) }}" 
-                                     alt="Favicon" 
-                                     class="w-16 h-16 object-contain border border-gray-600 rounded-lg p-2 bg-gray-800">
+                                <img src="{{ asset('storage/' . $general_settings['favicon']) }}" alt="Favicon"
+                                    class="w-16 h-16 object-contain border border-gray-600 rounded-lg p-2 bg-gray-800">
                             </div>
                         @endif
                     </div>
@@ -70,6 +68,28 @@
 
                 <!-- Row 3: Timezone + Environment -->
                 <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+                    <!-- Date Format -->
+                    <div>
+                        <x-ui.label value="{{ __('Date Format') }}" />
+                        <x-ui.select wire:model="form.date_format" class="select">
+                            @foreach (App\Models\ApplicationSetting::getDateFormatInfos() as $key => $format)
+                                <option value="{{ $key }}">{{ $format }}</option>
+                            @endforeach
+                        </x-ui.select>
+                        <x-ui.input-error :messages="$errors->get('form.date_format')" />
+                    </div>
+
+                    <!-- Time Format -->
+                    <div>
+                        <x-ui.label value="{{ __('Time Format') }}" />
+                        <x-ui.select wire:model="form.time_format" class="select">
+                            @foreach (App\Models\ApplicationSetting::getTimeFormatInfos() as $key => $format)
+                                <option value="{{ $key }}">{{ $format }}</option>
+                            @endforeach
+                        </x-ui.select>
+                        <x-ui.input-error :messages="$errors->get('form.time_format')" />
+                    </div>
 
                     <!-- Timezone -->
                     <div>

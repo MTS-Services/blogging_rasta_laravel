@@ -16,8 +16,8 @@
     <div class="glass-card rounded-2xl p-6 mb-6">
         <form wire:submit="save">
             <div>
-                <x-ui.file-input wire:model="form.avatar" label="{{ __('Avatar') }}" accept="image/*" :error="$errors->first('form.avatar')"
-                    hint="Upload a profile picture (Max: 2MB, Formats: JPG, PNG, GIF, WebP)" />
+                <x-ui.file-input wire:model="form.avatar" label="Profile Picture" accept="image/*" :error="$errors->first('form.avatar')"
+                    hint="Upload a profile picture " :existingFiles="$existingFile" removeModel="form.remove_file" />
             </div>
 
             <!-- Add other form fields here -->
