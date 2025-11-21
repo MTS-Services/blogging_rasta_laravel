@@ -39,7 +39,6 @@ class TikTokSettings extends Form
             'featured_users.*.display_name.required' => 'Display name is required.',
             'featured_users.*.max_videos.required' => 'Max videos is required.',
             'featured_users.*.max_videos.min' => 'Max videos must be at least 1.',
-            'featured_users.*.max_videos.max' => 'Max videos cannot exceed 100.',
         ];
     }
 
@@ -71,7 +70,7 @@ class TikTokSettings extends Form
             'display_name' => '',
             'max_videos' => $this->default_max_videos_per_user ?? 20,
         ];
-        
+
         // Force re-index to ensure Livewire detects the change
         $this->featured_users = array_values($this->featured_users);
     }

@@ -35,82 +35,82 @@ class TikTokService
         }
 
         $cacheKey = "tiktok_videos_{$username}_{$count}_{$cursor}";
-        
-        return Cache::remember($cacheKey, 1800, function() use ($username, $count, $cursor) {
-            try {
-                $response = $this->client->get($this->baseUrl . 'user/posts', [
-                    'headers' => [
-                        'x-rapidapi-host' => 'tiktok-scraper7.p.rapidapi.com',
-                        'x-rapidapi-key' => $this->apiKey,
-                    ],
-                    'query' => [
-                        'unique_id' => $username,
-                        'count' => $count,
-                        'cursor' => $cursor,
-                    ],
-                ]);
 
-                $statusCode = $response->getStatusCode();
-                $body = $response->getBody()->getContents();
+        // return Cache::remember($cacheKey, 1800, function () use ($username, $count, $cursor) {
+        try {
+            $response = $this->client->get($this->baseUrl . 'user/posts', [
+                'headers' => [
+                    'x-rapidapi-host' => 'tiktok-scraper7.p.rapidapi.com',
+                    'x-rapidapi-key' => $this->apiKey,
+                ],
+                'query' => [
+                    'unique_id' => $username,
+                    'count' => $count,
+                    'cursor' => $cursor,
+                ],
+            ]);
 
-                if ($statusCode === 403) {
-                    return $this->errorResponse('API subscription required');
-                }
+            $statusCode = $response->getStatusCode();
+            $body = $response->getBody()->getContents();
 
-                if ($statusCode !== 200) {
-                    return $this->errorResponse("API returned status code: {$statusCode}");
-                }
-
-                $data = json_decode($body, true);
-                
-                if (json_last_error() !== JSON_ERROR_NONE) {
-                    return $this->errorResponse('Invalid JSON response');
-                }
-
-                if (isset($data['code']) && $data['code'] !== 0) {
-                    return $this->errorResponse($data['msg'] ?? 'API request failed');
-                }
-
-                $responseData = $data['data'] ?? [];
-                $videos = $responseData['videos'] ?? [];
-                
-                foreach ($videos as &$video) {
-                    $video['_username'] = $username;
-                }
-                
-                return [
-                    'success' => true,
-                    'videos' => $videos,
-                    'has_more' => $responseData['hasMore'] ?? false,
-                    'cursor' => $responseData['cursor'] ?? 0,
-                ];
-
-            } catch (\Exception $e) {
-                Log::error("TikTok API Error: " . $e->getMessage());
-                return $this->errorResponse($e->getMessage());
+            if ($statusCode === 403) {
+                return $this->errorResponse('API subscription required');
             }
-        });
+
+            if ($statusCode !== 200) {
+                return $this->errorResponse("API returned status code: {$statusCode}");
+            }
+
+            $data = json_decode($body, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return $this->errorResponse('Invalid JSON response');
+            }
+
+            if (isset($data['code']) && $data['code'] !== 0) {
+                return $this->errorResponse($data['msg'] ?? 'API request failed');
+            }
+
+            $responseData = $data['data'] ?? [];
+            $videos = $responseData['videos'] ?? [];
+
+            foreach ($videos as &$video) {
+                $video['_username'] = $username;
+            }
+
+            return [
+                'success' => true,
+                'videos' => $videos,
+                'has_more' => $responseData['hasMore'] ?? false,
+                'cursor' => $responseData['cursor'] ?? 0,
+            ];
+
+        } catch (\Exception $e) {
+            Log::error("TikTok API Error: " . $e->getMessage());
+            return $this->errorResponse($e->getMessage());
+        }
+        // });
     }
 
     /**
      * Get videos from multiple users
      */
-    public function getMultipleUsersVideos(array $usernames, $videosPerUser = 12)
+    public function getMultipleUsersVideos(array $users)
     {
         $allVideos = [];
-        
-        foreach ($usernames as $username) {
-            $result = $this->getUserVideos($username, $videosPerUser);
-            
+
+        foreach ($users as $user) {
+            $result = $this->getUserVideos($user['username'], $user['max_videos'] ?? config('tiktok.default_max_videos_per_user'));
+
             if ($result['success'] && !empty($result['videos'])) {
                 $allVideos = array_merge($allVideos, $result['videos']);
             }
         }
-        
+
         usort($allVideos, function ($a, $b) {
             return ($b['create_time'] ?? 0) - ($a['create_time'] ?? 0);
         });
-        
+
         return [
             'success' => true,
             'videos' => $allVideos,
@@ -121,12 +121,12 @@ class TikTokService
     /**
      * Sync videos from API to database
      */
-    public function syncVideos(array $usernames, int $videosPerUser = 12)
+    public function syncVideos(array $users)
     {
         try {
             DB::beginTransaction();
 
-            $result = $this->getMultipleUsersVideos($usernames, $videosPerUser);
+            $result = $this->getMultipleUsersVideos($users);
 
             if (!$result['success']) {
                 throw new \Exception('Failed to fetch videos');
@@ -137,11 +137,28 @@ class TikTokService
 
             foreach ($result['videos'] as $video) {
                 $videoData = $this->prepareVideoData($video);
-                
+
                 $existingVideo = TikTokVideo::where('aweme_id', $videoData['aweme_id'])->first();
 
                 if ($existingVideo) {
-                    $existingVideo->update($videoData);
+                    $existingVideo->update(
+                        [
+                            'title' => $videoData['title'],
+                            'desc' => $videoData['desc'],
+                            'play_url' => $videoData['play_url'],
+                            'cover' => $videoData['cover'],
+                            'origin_cover' => $videoData['origin_cover'],
+                            'play_count' => $videoData['play_count'],
+                            'digg_count' => $videoData['digg_count'],
+                            'comment_count' => $videoData['comment_count'],
+                            'share_count' => $videoData['share_count'],
+                            'author_avatar' => $videoData['author_avatar'],
+                            'author_avatar_medium' => $videoData['author_avatar_medium'],
+                            'author_avatar_larger' => $videoData['author_avatar_larger'],
+                            'music_title' => $videoData['music_title'],
+                            'video_description' => $videoData['video_description']
+                        ]
+                    );
                     $updatedCount++;
                 } else {
                     TikTokVideo::create($videoData);
@@ -166,7 +183,7 @@ class TikTokService
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("TikTok Sync Error: " . $e->getMessage());
-            
+
             return [
                 'success' => false,
                 'error' => $e->getMessage(),
@@ -227,26 +244,26 @@ class TikTokService
     {
         $author = $video['author'] ?? [];
         $musicInfo = $video['music_info'] ?? [];
-        
+
         return [
             'aweme_id' => $video['aweme_id'] ?? null,
             'video_id' => $video['video_id'] ?? null,
             'sync_at' => now(),
             'title' => $video['title'] ?? '',
             'desc' => $video['desc'] ?? $video['title'] ?? '',
-            
+
             // Video URLs - direct from API response
             'play_url' => $video['play'] ?? null,
             'cover' => $video['cover'] ?? null,
             'origin_cover' => $video['origin_cover'] ?? null,
             'dynamic_cover' => $video['ai_dynamic_cover'] ?? null,
-            
+
             // Statistics - direct counts
             'play_count' => $video['play_count'] ?? 0,
             'digg_count' => $video['digg_count'] ?? 0,
             'comment_count' => $video['comment_count'] ?? 0,
             'share_count' => $video['share_count'] ?? 0,
-            
+
             // Author info
             'username' => $video['_username'] ?? $author['unique_id'] ?? null,
             'author_name' => $author['unique_id'] ?? null,
@@ -254,20 +271,20 @@ class TikTokService
             'author_avatar' => $author['avatar'] ?? null,
             'author_avatar_medium' => $author['avatar'] ?? null,
             'author_avatar_larger' => $author['avatar'] ?? null,
-            
+
             // Hashtags & timestamps
             'hashtags' => $this->extractHashtags($video),
             'create_time' => isset($video['create_time']) ? date('Y-m-d H:i:s', $video['create_time']) : now(),
-            
+
             // Video metadata
             'duration' => $video['duration'] ?? 0,
             'video_format' => 'mp4',
-            
+
             // Music info
             'music_title' => $musicInfo['title'] ?? null,
             'music_author' => $musicInfo['author'] ?? null,
             'video_description' => $video['desc'] ?? $video['title'] ?? null,
-            
+
             // Status
             'is_active' => true,
             'is_featured' => false,
@@ -280,7 +297,7 @@ class TikTokService
     private function extractHashtags($video)
     {
         $hashtags = [];
-        
+
         // Check if title has hashtags
         if (isset($video['title']) && !empty($video['title'])) {
             preg_match_all('/#(\w+)/', $video['title'], $matches);
@@ -288,7 +305,7 @@ class TikTokService
                 $hashtags = array_merge($hashtags, $matches[1]);
             }
         }
-        
+
         // Check if desc has hashtags
         if (isset($video['desc']) && !empty($video['desc'])) {
             preg_match_all('/#(\w+)/', $video['desc'], $matches);
@@ -296,7 +313,7 @@ class TikTokService
                 $hashtags = array_merge($hashtags, $matches[1]);
             }
         }
-        
+
         // Remove duplicates and return
         return array_unique($hashtags);
     }
@@ -307,7 +324,7 @@ class TikTokService
     public function getVideoDetails($awemeId)
     {
         $video = TikTokVideo::where('aweme_id', $awemeId)->first();
-        
+
         if (!$video) {
             return ['success' => false, 'error' => 'Video not found'];
         }
@@ -348,7 +365,7 @@ class TikTokService
         } elseif ($number >= 1000) {
             return round($number / 1000, 1) . 'K';
         }
-        
+
         return number_format($number);
     }
 
