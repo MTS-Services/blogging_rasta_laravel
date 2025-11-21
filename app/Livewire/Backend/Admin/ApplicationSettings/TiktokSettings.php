@@ -11,7 +11,7 @@ use Throwable;
 class TiktokSettings extends Component
 {
     public TikTokSettingsForm $form;
-    
+
     public $tiktok_settings = [];
 
     public function mount()
@@ -25,14 +25,14 @@ class TiktokSettings extends Component
             'videos_per_user_per_page',
             'cache_duration'
         ]);
-        
+
         // Load form data
         $this->form->rapidapi_key = $this->tiktok_settings['rapidapi_key'] ?? '';
-        
+
         // Decode featured users
         $featuredUsers = json_decode($this->tiktok_settings['featured_users'] ?? '[]', true);
         $this->form->featured_users = is_array($featuredUsers) && !empty($featuredUsers) ? $featuredUsers : [];
-        
+
         $this->form->default_max_videos_per_user = $this->tiktok_settings['default_max_videos_per_user'] ?? 20;
         $this->form->videos_per_page = $this->tiktok_settings['videos_per_page'] ?? 12;
         $this->form->videos_per_user_per_page = $this->tiktok_settings['videos_per_user_per_page'] ?? 4;
@@ -81,31 +81,26 @@ class TiktokSettings extends Component
                 'type' => 'success',
                 'message' => __('TikTok settings updated successfully.')
             ]);
-            
+
             $this->success( __('TikTok settings updated successfully.'));
             $this->dispatch('tiktok-settings-updated');
-            
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Validation failed
             $this->dispatch('notify', [
                 'type' => 'error',
                 'message' => __('Please check the form for errors.')
             ]);
-            
+
            $this->error( __('Please check the form for errors.'));
             Log::error('TikTok Settings Validation Error: ' . json_encode($e->errors()));
-            
+
             throw $e;
-            
+
         } catch (Throwable $e) {
             // Other errors
-            $this->dispatch('notify', [
-                'type' => 'error',
-                'message' => __('Something went wrong! Please try again .')
-            ]);
-            
-           $this->error( __('Something went wrong! Please try again.'));
-            Log::error('TikTok Settings Update Error: ' . $e->getMessage());
+
+           $this->error( 'Something went wrong! Please try again.');
             Log::error($e->getTraceAsString());
         }
     }
