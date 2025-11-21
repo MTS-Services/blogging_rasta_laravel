@@ -72,7 +72,8 @@ class Home extends Component
             // Get videos for current page
             $videos = $query->skip(($this->currentPage - 1) * $this->videosPerPage)
                 ->take($this->videosPerPage)
-                ->get();
+                ->get()
+                ->shuffle();
 
             // Format videos for display
             $this->featuredVideos = $videos->map(function ($video) {
