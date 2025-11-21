@@ -82,7 +82,7 @@ class TiktokSettings extends Component
                 'message' => __('TikTok settings updated successfully.')
             ]);
 
-            $this->success( __('TikTok settings updated successfully.'));
+            $this->success(__('TikTok settings updated successfully.'));
             $this->dispatch('tiktok-settings-updated');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -92,16 +92,14 @@ class TiktokSettings extends Component
                 'message' => __('Please check the form for errors.')
             ]);
 
-           $this->error( __('Please check the form for errors.'));
+            $this->error(__('Please check the form for errors.'));
             Log::error('TikTok Settings Validation Error: ' . json_encode($e->errors()));
 
             throw $e;
 
         } catch (Throwable $e) {
-            // Other errors
-
-           $this->error( 'Something went wrong! Please try again.');
-            Log::error($e->getTraceAsString());
+            // Other error
+            Log::error($e->getMessage());
         }
     }
 
