@@ -164,6 +164,20 @@ class Admin extends AuthBaseModel implements Auditable
     /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
     |       Methods                                   |
     =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
+
+     public function scopeActive($query): Builder
+    {
+        return $query->where('status', AdminStatus::ACTIVE->value);
+    }
+
+    /**
+     * Scope a query to only include inactive admins.
+     */
+    public function scopeInactive($query): Builder
+    {
+        return $query->where('status', AdminStatus::ACTIVE->value);
+    }
+    
     public function isActive(): bool
     {
         return $this->status === AdminStatus::ACTIVE;
@@ -176,6 +190,6 @@ class Admin extends AuthBaseModel implements Auditable
 
     public function deactivate(): void
     {
-        $this->update(['status' => AdminStatus::INACTIVE]);
+        $this->update(['status' => AdminStatus::ACTIVE]);
     }
 }
