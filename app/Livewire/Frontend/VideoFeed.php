@@ -91,6 +91,7 @@ class VideoFeed extends Component
                     '_username' => $video->username,
                     'keywords' => $keywords,
                     'text_extra' => $this->formatKeywordsAsTextExtra($keywords),
+                    'tiktok_url' => $this->getTikTokUrl($video->username, $video->video_id),
                 ];
             })->toArray();
 
@@ -112,6 +113,26 @@ class VideoFeed extends Component
 
         $this->loading = false;
     }
+
+    /**
+     * Generate TikTok video URL
+     */
+  
+
+    private function getTikTokUrl($username, $videoId)
+    {
+        $url = "https://www.tiktok.com/@{$username}/video/{$videoId}";
+
+        // Log the generated URL
+        Log::info('Generated TikTok URL', [
+            'username' => $username,
+            'video_id' => $videoId,
+            'url' => $url,
+        ]);
+
+        return $url;
+    }
+
 
     /**
      * Convert keywords array to text_extra format
