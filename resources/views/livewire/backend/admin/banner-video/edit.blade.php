@@ -21,13 +21,13 @@
 
                 <div class="w-full col-span-2">
                     <x-ui.file-input wire:model="form.thumbnail" label="{{ __('Thumbnail') }}" accept="image/*"
-                        :error="$errors->first('form.thumbnail')" hint="Upload a profile picture (Max: 2MB, Formats: JPG, PNG, GIF, WebP) "
+                        :error="$errors->first('form.thumbnail')" hint="Upload a profile picture ( Formats: JPG, PNG, GIF, WebP) "
                         :existingFiles="$existingThumbnail" removeModel="form.removeThumbnail" />
                 </div>
 
                 <div class="w-full col-span-2">
                     <x-ui.file-input wire:model="form.file" label="{{ __('File') }}"
-                        :error="$errors->first('form.file')" hint="Upload a profile picture (Max: 50MB, Formats: MP4, WebM)"
+                        :error="$errors->first('form.file')" hint="Upload a profile picture ( Formats: MP4, WebM)"
                         :existingFiles="$existingFile" removeModel="form.removeFile" />
                 </div>
 
