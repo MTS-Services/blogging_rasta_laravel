@@ -52,7 +52,8 @@ class VideoFeed extends Component
             // Get videos for current page
             $videosCollection = $query->skip(($this->currentPage - 1) * $this->videosPerPage)
                 ->take($this->videosPerPage)
-                ->get();
+                ->get()
+                ->shuffle();
 
             // Format videos for display
             $this->videos = $videosCollection->map(function ($video) {
@@ -123,12 +124,6 @@ class VideoFeed extends Component
     {
         $url = "https://www.tiktok.com/@{$username}/video/{$videoId}";
 
-        // Log the generated URL
-        Log::info('Generated TikTok URL', [
-            'username' => $username,
-            'video_id' => $videoId,
-            'url' => $url,
-        ]);
 
         return $url;
     }
