@@ -23,7 +23,7 @@ class TikTokVideos extends Component
     public $selectAll = false;
     public $bulkAction = '';
 
-    protected $tiktokService;
+    protected TikTokService $tiktokService;
 
     public function boot(TikTokService $tiktokService)
     {
@@ -171,16 +171,16 @@ class TikTokVideos extends Component
     public function syncVideos()
     {
         try {
-            $usernames = config('tiktok.featured_users', []);
+            $users = config('tiktok.featured_users', []);
 
-            if (empty($usernames)) {
+            if (empty($users)) {
                 $this->error('No TikTok users configured');
                 return;
             }
 
-            $usernames = array_column($usernames, 'username');
+            // $usernames = array_column($usernames, 'username');
 
-            $result = $this->tiktokService->syncVideos($usernames, 20);
+            $result = $this->tiktokService->syncVideos($users );
 
             if ($result['success']) {
                 $this->success("Synced: {$result['synced']} new, {$result['updated']} updated");
