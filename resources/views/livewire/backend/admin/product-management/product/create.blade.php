@@ -31,6 +31,7 @@
                 <div class="w-full">
                     <x-ui.label value="category" for="category_id" class="mb-1" />
                     <x-ui.select wire:model="form.category_id" id="category_id">
+                        <option value="">{{ __('Select Category') }}</option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->title }}</option>
                         @endforeach

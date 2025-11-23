@@ -46,7 +46,7 @@ class ProductForm extends Form
        
 
         return [
-            'category_id' => 'nullable|integer|exists:categories,id',
+            'category_id' => 'required|integer|exists:categories,id',
             'title' => 'required|string|max:255',
             'slug' => $slugRule,
             'description' => 'nullable|string',
