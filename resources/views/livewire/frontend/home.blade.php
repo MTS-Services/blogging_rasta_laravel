@@ -20,12 +20,12 @@
 
                     <h2
                         class="font-semibold font-montserrat text-second-800 mb-6 wrap-break-word
-                        @if (session('locale') === 'fr') text-4xl 
-                            md:text-6xl 
+                        @if (session('locale') === 'fr') text-4xl
+                            md:text-6xl
                             lg:text-7xl
                         @else
-                            text-5xl 
-                            md:text-7xl 
+                            text-5xl
+                            md:text-7xl
                             lg:text-8xl @endif
                         ">
                         {{ __('Naturally') }}
@@ -266,41 +266,42 @@
                                         </div>
                                     @endif
                                 </div>
-
                                 {{-- Creator Info --}}
-                                <div class="flex items-center gap-3 mt-3">
-                                    <div class="w-10 h-10 flex-shrink-0">
-                                        <img src="{{ $authorAvatar }}" alt="{{ $authorName }}"
-                                            class="w-full h-full rounded-full object-cover border-2 border-purple-500"
-                                            onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($authorName) }}&size=200&background=667eea&color=fff'">
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <h6 class="text-text-primary font-semibold font-inter truncate"
-                                            title="{{ $title }}">
-                                            {{ $title }}
-                                        </h6>
-                                        <p class="text-sm font-normal text-text-primary font-outfit truncate"
-                                            title="{{ $authorName }}">
-                                            {{ $authorName }}
-                                        </p>
-                                        <div class="flex items-center gap-3 text-xs text-text-muted mt-0.5">
-                                            @if ($playCount > 0)
-                                                <span>{{ $this->formatNumber($playCount) }}
-                                                    {{ __('views') }}</span>
-                                            @endif
-                                            @if ($diggCount > 0)
-                                                <span class="flex items-center gap-1">
-                                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd"
-                                                            d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                                                            clip-rule="evenodd" />
-                                                    </svg>
-                                                    {{ $this->formatNumber($diggCount) }}
-                                                </span>
-                                            @endif
+                                <a href="{{ route('video.details', $video['video_id']) }}" wire:navigate>
+                                    <div class="flex items-center gap-3 mt-3">
+                                        <div class="w-10 h-10 flex-shrink-0">
+                                            <img src="{{ $authorAvatar }}" alt="{{ $authorName }}"
+                                                class="w-full h-full rounded-full object-cover border-2 border-purple-500"
+                                                onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($authorName) }}&size=200&background=667eea&color=fff'">
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <h6 class="text-text-primary font-semibold font-inter truncate"
+                                                title="{{ $title }}">
+                                                {{ $title }}
+                                            </h6>
+                                            <p class="text-sm font-normal text-text-primary font-outfit truncate"
+                                                title="{{ $authorName }}">
+                                                {{ $authorName }}
+                                            </p>
+                                            <div class="flex items-center gap-3 text-xs text-text-muted mt-0.5">
+                                                @if ($playCount > 0)
+                                                    <span>{{ $this->formatNumber($playCount) }}
+                                                        {{ __('views') }}</span>
+                                                @endif
+                                                @if ($diggCount > 0)
+                                                    <span class="flex items-center gap-1">
+                                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd"
+                                                                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                                                                clip-rule="evenodd" />
+                                                        </svg>
+                                                        {{ $this->formatNumber($diggCount) }}
+                                                    </span>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         @endforeach
                     </div>
