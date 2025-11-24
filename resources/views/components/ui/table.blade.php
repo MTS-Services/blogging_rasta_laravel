@@ -278,7 +278,7 @@
                                                                 title="{{ $action['label'] }}"
                                                                 target="{{ $action['target'] ?? '_self' }}"
                                                                 class="block px-4 py-2 w-full text-sm text-left dark:text-zinc-100! dark:hover:text-zinc-900! hover:bg-zinc-300 hover:text-gray-900"
-                                                                wire:navigate>
+                                                                {{ isset($action['wire']) && $action['wire'] == false ? '' : 'wire:navigate' }}>
                                                                 {{ $action['label'] }}
                                                             </a>
 
@@ -288,7 +288,7 @@
                                                                 title="{{ $action['label'] }}"
                                                                 target="{{ $action['target'] ?? '_self' }}"
                                                                 class="block px-4 py-2 w-full text-sm text-left dark:text-zinc-100! dark:hover:text-zinc-900! hover:bg-zinc-300 hover:text-gray-900"
-                                                                wire:navigate>
+                                                                {{ isset($action['wire']) && $action['wire'] == false ? '' : 'wire:navigate' }}>
                                                                 {{ $action['label'] }}
                                                             </a>
 
@@ -427,7 +427,7 @@
                                                 <a href="{{ $href }}" title="{{ $action['label'] }}"
                                                     target="{{ $action['target'] ?? '_self' }}"
                                                     class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:hover:text-black hover:bg-zinc-300 dark:hover:bg-zinc-400"
-                                                    wire:navigate>
+                                                    {{ isset($action['wire']) && $action['wire'] == false ? '' : 'wire:navigate' }}>
                                                     {{ $action['label'] }}
                                                 </a>
 
@@ -437,7 +437,7 @@
                                                     title="{{ $action['label'] }}"
                                                     target="{{ $action['target'] ?? '_self' }}"
                                                     class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 dark:hover:text-black hover:bg-zinc-300 dark:hover:bg-zinc-400"
-                                                    wire:navigate>
+                                                    {{ isset($action['wire']) && $action['wire'] == false ? '' : 'wire:navigate' }}>
                                                     {{ $action['label'] }}
                                                 </a>
 

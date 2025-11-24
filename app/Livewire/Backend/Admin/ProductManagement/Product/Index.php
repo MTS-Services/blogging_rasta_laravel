@@ -62,7 +62,7 @@ class Index extends Component
                 'label' => 'Sale Price',
                 'sortable' => true
             ],
-            
+
             [
                 'key' => 'status',
                 'label' => 'Status',
@@ -100,6 +100,7 @@ class Index extends Component
             [
                 'key' => 'id',
                 'label' => 'Edit',
+                'wire' => false,
                 'route' => 'admin.pm.product.edit',
                 'encrypt' => true
             ],
