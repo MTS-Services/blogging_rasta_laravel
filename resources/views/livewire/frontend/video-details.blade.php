@@ -231,8 +231,7 @@
     </section>
 
     {{-- Share Modal --}}
-    <div id="shareModal"
-        class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+    <div id="shareModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transform transition-all">
             {{-- Modal Header --}}
             <div class="flex items-center justify-between mb-6">
