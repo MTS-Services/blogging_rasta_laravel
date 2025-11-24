@@ -1,4 +1,16 @@
 <div>
+
+    @section('meta')
+        <meta property="og:title" content="{{ $data->title }}">
+        <meta property="og:description" content="{{ $data->video_description ?? $data->title }}">
+        <meta property="og:image" content="{{ $data->cover }}">
+        <meta property="og:url" content="{{ url()->current() }}">
+
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ $data->title }}">
+        <meta name="twitter:description" content="{{ $data->video_description ?? $data->title }}">
+        <meta name="twitter:image" content="{{ $data->cover }}">
+    @endsection
     {{-- Hero Section with Video --}}
     <section class="bg-gradient">
         <div class="container pt-20 pb-12 lg:pt-24">
@@ -30,9 +42,10 @@
                         class="relative w-full aspect-[1/1] max-w-[500px] mx-auto lg:max-w-none overflow-hidden rounded-2xl shadow-2xl">
                         @if ($data->play_url)
                             {{-- Video Element --}}
-                            <video x-ref="mainVideo" x-show="playing" x-on:ended="stopVideo()" x-on:error="playing = false"
-                                class="w-full h-full object-cover" poster="{{ $data->cover }}" playsinline
-                                preload="metadata" controls controlsList="nodownload" x-cloak>
+                            <video x-ref="mainVideo" x-show="playing" x-on:ended="stopVideo()"
+                                x-on:error="playing = false" class="w-full h-full object-cover"
+                                poster="{{ $data->cover }}" playsinline preload="metadata" controls
+                                controlsList="nodownload" x-cloak>
                                 <source src="{{ $data->play_url }}" type="video/mp4">
                             </video>
 
