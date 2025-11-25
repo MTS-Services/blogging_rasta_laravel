@@ -135,7 +135,7 @@
                             tiktokUrl: '{{ $tiktokUrl }}',
                             videoTitle: '{{ $escapedTitle }}',
                             videoDesc: '{{ $escapedDesc }}',
-                        
+
                             playVideo() {
                                 this.playing = true;
                                 this.$nextTick(() => {
@@ -153,7 +153,7 @@
                                     }
                                 });
                             },
-                        
+
                             stopVideo() {
                                 this.playing = false;
                                 if (this.$refs.video) {
@@ -161,24 +161,24 @@
                                     this.$refs.video.currentTime = 0;
                                 }
                             },
-                        
+
                             openOnTikTok() {
                                 window.open(this.tiktokUrl, '_blank');
                                 this.showShareMenu = false;
                             },
-                        
+
                             shareToWhatsApp() {
                                 const text = encodeURIComponent(this.videoTitle + '\n' + this.tiktokUrl);
                                 window.open('https://wa.me/?text=' + text, '_blank');
                                 this.showShareMenu = false;
                             },
-                        
+
                             shareToFacebook() {
                                 const url = encodeURIComponent(this.tiktokUrl);
                                 window.open('https://www.facebook.com/sharer/sharer.php?u=' + url, '_blank', 'width=600,height=400');
                                 this.showShareMenu = false;
                             },
-                        
+
                             shareToMessenger() {
                                 const url = encodeURIComponent(this.tiktokUrl);
                                 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -189,14 +189,14 @@
                                 }
                                 this.showShareMenu = false;
                             },
-                        
+
                             shareToTwitter() {
                                 const text = encodeURIComponent(this.videoTitle);
                                 const url = encodeURIComponent(this.tiktokUrl);
                                 window.open('https://twitter.com/intent/tweet?text=' + text + '&url=' + url, '_blank', 'width=600,height=400');
                                 this.showShareMenu = false;
                             },
-                        
+
                             copyLink() {
                                 navigator.clipboard.writeText(this.tiktokUrl).then(() => {
                                     alert('Link copied to clipboard!');
@@ -321,30 +321,30 @@
                                             showModal: false,
                                             videoData: {},
                                             shareUrl: '',
-                                        
+
                                             init() {
                                                 this.$watch('showModal', value => {
                                                     document.body.style.overflow = value ? 'hidden' : 'auto';
                                                 });
-                                        
+
                                                 window.addEventListener('open-share-modal', (event) => {
                                                     this.videoData = event.detail;
                                                     this.shareUrl = '{{ url('') }}/video/' + event.detail.videoId;
                                                     this.showModal = true;
                                                 });
                                             },
-                                        
+
                                             closeModal() {
                                                 this.showModal = false;
                                             },
-                                        
+
                                             shareVia(platform) {
                                                 const url = encodeURIComponent(this.shareUrl);
                                                 const title = encodeURIComponent(this.videoData.title);
                                                 const description = encodeURIComponent(this.videoData.description);
-                                        
+
                                                 let shareUrl = '';
-                                        
+
                                                 switch (platform) {
                                                     case 'whatsapp':
                                                         shareUrl = `https://wa.me/?text=${title}%20${url}`;
@@ -367,12 +367,12 @@
                                                         shareUrl = `mailto:?subject=${title}&body=${description}%20${url}`;
                                                         break;
                                                 }
-                                        
+
                                                 if (shareUrl) {
                                                     window.open(shareUrl, '_blank', 'width=600,height=400');
                                                 }
                                             },
-                                        
+
                                             copyLink() {
                                                 navigator.clipboard.writeText(this.shareUrl).then(() => {
                                                     this.$refs.copySuccess.classList.remove('hidden');
@@ -386,7 +386,7 @@
                                             }
                                         }" x-show="showModal"
                                             @keydown.escape.window="closeModal()"
-                                            class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+                                            class="fixed inset-0 bg-black/50 opacity-30! z-50 flex items-center justify-center p-4"
                                             x-cloak style="display: none;">
 
                                             <div @click.away="closeModal()" x-show="showModal"

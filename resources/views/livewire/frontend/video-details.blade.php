@@ -299,6 +299,14 @@
                         </svg>
                         <span class="font-semibold text-sky-600">Twitter</span>
                     </button>
+                    <button onclick="shareVia('messenger')"
+                        class="flex items-center gap-3 p-3 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors">
+                        <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 0C5.373 0 0 4.974 0 11.111c0 3.497 1.745 6.616 4.472 8.652V24l4.086-2.242c1.09.301 2.246.464 3.442.464 6.627 0 12-4.974 12-11.111C24 4.974 18.627 0 12 0zm1.191 14.963l-3.055-3.26-5.963 3.26L10.732 8l3.131 3.259L19.752 8l-6.561 6.963z" />
+                        </svg>
+                        <span class="font-semibold text-blue-500">Messenger</span>
+                    </button>
 
                     {{-- Email --}}
                     <button onclick="shareVia('email')"
@@ -399,6 +407,15 @@
                         break;
                     case 'twitter':
                         shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+                        break;
+                    case 'messenger':
+                        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator
+                            .userAgent);
+                        if (isMobile) {
+                            shareUrl = `fb-messenger://share/?link=${url}`;
+                        } else {
+                            shareUrl = `https://www.facebook.com/dialog/send?link=${url}&redirect_uri=${url}`;
+                        }
                         break;
                     case 'email':
                         shareUrl = `mailto:?subject=${title}&body=${description}%20${url}`;
