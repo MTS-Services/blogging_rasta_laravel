@@ -18,17 +18,44 @@
             <!-- Add other form fields here -->
             <div class="mt-6 space-y-4 grid grid-cols-2 gap-5">
 
-
-                <div class="w-full col-span-2">
+                <div>
+                    <x-ui.label for="title_en" :value="__('Title (EN)')" />
+                    <x-ui.input id="title_en" type="text" class="mt-1 block w-full" wire:model="form.title_en"
+                        placeholder="Enter Product Title" />
+                    <x-ui.input-error :messages="$errors->get('form.title_en')" class="mt-2" />
+                </div>
+                <div>
+                    <x-ui.label for="title_fr" :value="__('Title (FR)')" />
+                    <x-ui.input id="title_fr" type="text" class="mt-1 block w-full" wire:model="form.title_fr"
+                        placeholder="Enter Product Title" />
+                    <x-ui.input-error :messages="$errors->get('form.title_fr')" class="mt-2" />
+                </div>
+                {{-- <div class="w-full col-span-2">
                     <x-ui.file-input wire:model="form.thumbnail" label="{{ __('Thumbnail') }}" accept="image/*"
                         :error="$errors->first('form.thumbnail')" hint="Upload a profile picture ( Formats: JPG, PNG, GIF, WebP) "
                         :existingFiles="$existingThumbnail" removeModel="form.removeThumbnail" />
-                </div>
+                </div> --}}
 
                 <div class="w-full col-span-2">
-                    <x-ui.file-input wire:model="form.file" label="{{ __('File') }}"
-                        :error="$errors->first('form.file')" hint="Upload a profile picture ( Formats: MP4, WebM)"
-                        :existingFiles="$existingFile" removeModel="form.removeFile" />
+                    <x-ui.file-input accept="video/*" wire:model="form.banner_video" label="{{ __('Banner Video') }}"
+                        :error="$errors->first('form.banner_video')" hint="Upload a profile picture ( Formats: MP4, WebM)" :existingFiles="$existingBannerVideo"
+                        removeModel="form.removeBannerVideo" />
+                </div>
+
+                {{-- description --}}
+                <div class="w-full mt-2">
+                    <x-ui.label value="Description (EN)" class="mb-1" />
+                    <x-ui.textarea wire:model="form.description_en" placeholder="Enter your main content here..."
+                        :height="350" />
+
+                    <x-ui.input-error :messages="$errors->get('form.description_en')" />
+                </div>
+                <div class="w-full mt-2">
+                    <x-ui.label value="Description (FR)" class="mb-1" />
+                    <x-ui.textarea wire:model="form.description_fr" placeholder="Enter your main content here..."
+                        :height="350" />
+
+                    <x-ui.input-error :messages="$errors->get('form.description_fr')" />
                 </div>
 
 

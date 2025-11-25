@@ -89,13 +89,6 @@ if (!function_exists('auth_storage_url')) {
 
 // ==================== Existing Application Setting Helpers ====================
 
-if (!function_exists('site_name')) {
-    function site_name()
-    {
-        return config('app.name', 'Laravel Application');
-    }
-}
-
 if (!function_exists('site_short_name')) {
     function site_short_name()
     {
@@ -115,10 +108,10 @@ if (!function_exists('site_favicon')) {
     }
 }
 
-if (!function_exists('site_tagline')) {
-    function site_tagline()
+if (!function_exists('site_name')) {
+    function site_name()
     {
-        return config('app.tagline', 'Laravel Application Tagline');
+        return app(ApplicationSettingsService::class)->findData('app_name', 'LA');
     }
 }
 
@@ -215,7 +208,7 @@ if (!function_exists('generate_otp')) {
 //     }
 // }
 
-if (! function_exists('detectFileType')) {
+if (!function_exists('detectFileType')) {
     function detectFileType($filePath)
     {
         // Check if the file exists

@@ -13,10 +13,13 @@ use App\Repositories\Contracts\BannerVideoRepositoryInterface;
 
 class CreateOrUpdateAction
 {
-    public function __construct(protected BannerVideoRepositoryInterface $interface) {}
+    public function __construct(protected BannerVideoRepositoryInterface $interface)
+    {
+    }
 
     public function execute(array $data): BannerVideo
     {
+
         return DB::transaction(function () use ($data) {
 
             $oldData = [];
@@ -30,9 +33,9 @@ class CreateOrUpdateAction
             $newData = $data;
 
 
-            // File 
-            $oldFilePath = Arr::get($oldData, 'file');
-            $uploadedFile = Arr::get($data, 'file');
+            // File
+            $oldFilePath = Arr::get($oldData, 'banner_video');
+            $uploadedFile = Arr::get($data, 'banner_video');
             $newFilePath = null;
             if ($uploadedFile instanceof UploadedFile) {
                 if ($oldFilePath && Storage::disk('public')->exists($oldFilePath)) {
@@ -41,21 +44,21 @@ class CreateOrUpdateAction
                 $prefix = uniqid('IMX') . '-' . time() . '-' . uniqid();
                 $fileName = $prefix . '-' . $uploadedFile->getClientOriginalName();
                 $newFilePath = Storage::disk('public')->putFileAs('banner_videos', $uploadedFile, $fileName);
-                $newData['file'] = $newFilePath;
-            } elseif (Arr::get($data, 'removeFile')) {
+                $newData['banner_video'] = $newFilePath;
+            } elseif (Arr::get($data, 'removeBannerVideo')) {
                 if ($oldFilePath && Storage::disk('public')->exists($oldFilePath)) {
                     Storage::disk('public')->delete($oldFilePath);
                 }
-                $newData['file'] = null;
+                $newData['banner_video'] = null;
             }
 
 
-            if (!$newData['removeFile'] && !$newFilePath) {
-                $newData['file'] = $oldFilePath ?? null;
+            if (!$newData['removeBannerVideo'] && !$newFilePath) {
+                $newData['banner_video'] = $oldFilePath ?? null;
             }
-            unset($newData['removeFile']);
+            unset($newData['removeBannerVideo']);
 
-            // Thumbnail 
+            // Thumbnail
             $oldThumbnailPath = Arr::get($oldData, 'thumbnail');
             $uploadedThumbnail = Arr::get($data, 'thumbnail');
             $newThumbnailPath = null;

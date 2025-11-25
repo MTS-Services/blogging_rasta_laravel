@@ -16,7 +16,7 @@ class Edit extends Component
 
     public BannerVideoForm $form;
     public ?BannerVideo $data;
-    public $existingFile;
+    public $existingBannerVideo;
     public $existingThumbnail;
 
     protected BannerVideoService $service;
@@ -31,7 +31,7 @@ class Edit extends Component
         $this->data = $this->service->getFirstData();
         if ($this->data) {
             $this->form->setData($this->data);
-            $this->existingFile = $this->data->file;
+            $this->existingBannerVideo = $this->data->banner_video;
             $this->existingThumbnail = $this->data->thumbnail;
         }
     }
@@ -63,7 +63,7 @@ class Edit extends Component
         $this->form->reset();
         if ($this->data !== null) {
             $this->form->setData($this->data);
-            $this->existingFile = $this->data->file;
+            $this->existingBannerVideo = $this->data->banner_video;
             $this->existingThumbnail = $this->data->thumbnail;
         }
     }

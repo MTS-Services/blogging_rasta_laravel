@@ -14,7 +14,12 @@
                     </div>
 
                     {{-- Heading --}}
+
                     <h2
+                        class="text-5xl md:text-7xl lg:text-8xl font-semibold font-montserrat text-second-800 mb-6 text-zinc-900">
+                        {{ (app()->getLocale() === 'en' ? $banner->title_en : $banner->title_fr) ?? __('Discover routines that actually work') }}
+                    </h2>
+                    {{-- <h2
                         class="text-5xl md:text-7xl lg:text-8xl font-semibold font-montserrat text-second-800 mb-6 text-zinc-900">
                         {{ __('Glow') }}</h2>
 
@@ -29,11 +34,11 @@
                             lg:text-8xl @endif
                         ">
                         {{ __('Naturally') }}
-                    </h2>
+                    </h2> --}}
 
                     {{-- Description --}}
                     <p class="text-lg md:text-xl text-text-primary font-medium font-inter max-w-lg mx-auto lg:mx-0">
-                        {{ __('Discover routines that actually work. Explore trending videos, shop vetted products, and get personalized advice tailored to your skin type.') }}
+                        {{ (app()->getLocale() === 'en' ? $banner->description_en : $banner->description_fr) ?? __('Discover routines that actually work. Explore trending videos, shop vetted products, and get personalized advice tailored to your skin type.') }}
                     </p>
 
                     {{-- Buttons --}}
@@ -57,13 +62,14 @@
 
                 <!-- Banner Video Section -->
                 <div class="w-full lg:w-1/2 flex justify-center relative">
-                    @if ($banner && $banner->file)
+                    @if ($banner && $banner->banner_video)
                         <!-- Video Container -->
                         <div class="relative w-full max-w-[500px] lg:max-w-none">
                             <!-- Video Element with Controls (Fixed Height for Matching Thumbnail) -->
-                            <video id="bannerVideo" controls poster="{{ asset('storage/' . $banner->thumbnail) }}"
+                            {{-- poster="{{ asset('storage/' . $banner->thumbnail) }}" --}}
+                            <video id="bannerVideo" controls
                                 class="w-full h-[500px] lg:h-[600px] rounded-lg object-cover block">
-                                <source src="{{ asset('storage/' . $banner->file) }}" type="video/mp4">
+                                <source src="{{ asset('storage/' . $banner->banner_video) }}" type="video/mp4">
                                 {{ __('Your browser video support is not enough.') }}
                             </video>
 

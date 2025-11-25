@@ -21,7 +21,7 @@
                     x-transition:leave-start="opacity-100 translate-x-0"
                     x-transition:leave-end="opacity-0 -translate-x-4">
                     <h1 class="text-xl font-bold text-accent-content">{{ site_short_name() }}</h1>
-                    <p class="text-text-secondary text-sm">{{ site_tagline() }}</p>
+                    <p class="text-text-secondary text-sm">{{ site_name() }}</p>
                 </div>
             </div>
         </a>
@@ -98,7 +98,7 @@
                     // ],
                 ]" />
 
-            <x-backend.navlink type="single" icon="youtube" name="Banner Videos" :route="route('admin.banner-video')"
+            <x-backend.navlink type="single" icon="youtube" name="Banner Videos" :route="route('admin.banner-video')" :wire="false"
                 active="banner-video" :page_slug="$active" />
             <x-backend.navlink type="single" icon="youtube" name="Tiktok Videos" :route="route('admin.tiktok-videos')"
                 active="tiktok-video" :page_slug="$active" />

@@ -95,11 +95,8 @@
                         <x-admin.profile-navlink route="{{ route('logout') }}" logout='true'
                             name="{{ __('Sign Out') }}" /> --}}
 
-                        <a href="#"
-                            class="block px-4 py-2 text-text-primary hover:bg-bg-white/10 transition-colors">{{ __('Profile') }}</a>
-
-                        <a href="#"
-                            class="block px-4 py-2 text-text-primary hover:bg-bg-white/10 transition-colors">{{ __('Settings') }}</a>
+                        <a href="{{ route('admin.um.admin.view', encrypt(admin()->id)) }}"
+                            class="block px-4 py-2 text-text-primary hover:bg-bg-white/10 transition-colors">Profile</a>
                         <div class="border-t border-white/10 my-2"></div>
                         <button wire:click="logout"
                             class="block px-4 py-2 text-text-primary hover:bg-bg-white/10 transition-colors">{{ __('Sign out') }}</button>

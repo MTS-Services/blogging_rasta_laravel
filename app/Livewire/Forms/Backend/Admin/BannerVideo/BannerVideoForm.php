@@ -15,19 +15,28 @@ class BannerVideoForm extends Form
     public ?int $id = null;
 
     public ?UploadedFile $thumbnail = null;
-    public ?UploadedFile $file = null;
+    public ?UploadedFile $banner_video = null;
 
     public $removeThumbnail = false;
-    public $removeFile = false;
+    public $removeBannerVideo = false;
+
+    public string $title_en = '';
+    public string $description_en = '';
+    public string $title_fr = '';
+    public string $description_fr = '';
 
 
     public function rules(): array
     {
         return [
             'thumbnail' => 'nullable',
-            'file' => 'nullable',
+            'banner_video' => 'nullable',
+            'title_en' => 'required|string|max:255',
+            'description_en' => 'required|string',
+            'title_fr' => 'required|string|max:255',
+            'description_fr' => 'required|string',
             'removeThumbnail' => 'boolean',
-            'removeFile' => 'boolean',
+            'removeBannerVideo' => 'boolean',
         ];
     }
 
@@ -36,13 +45,17 @@ class BannerVideoForm extends Form
     public function setData($data): void
     {
         $this->id = $data->id;
+        $this->title_en = $data->title_en;
+        $this->description_en = $data->description_en;
+        $this->title_fr = $data->title_fr;
+        $this->description_fr = $data->description_fr;
     }
 
     public function reset(...$properties): void
     {
         $this->id = null;
         $this->thumbnail = null;
-        $this->file = null;
+        $this->banner_video = null;
         $this->resetValidation();
     }
 }

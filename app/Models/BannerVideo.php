@@ -14,7 +14,11 @@ class BannerVideo extends AuthBaseModel implements Auditable
     protected $fillable = [
         'sort_order',
         'thumbnail',
-        'file',
+        'banner_video',
+        'title_en',
+        'description_en',
+        'title_fr',
+        'description_fr',
 
 
         'restored_at',

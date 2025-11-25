@@ -6,13 +6,14 @@
             <div class="flex flex-col lg:flex-row items-center justify-between gap-14">
                 {{-- Image Section --}}
                 <div class="w-full lg:w-1/2 flex justify-center relative">
-                    @if ($banner && $banner->file)
+                    @if ($banner && $banner->banner_video)
                         <!-- Video Container -->
                         <div class="relative w-full max-w-[500px] lg:max-w-none">
                             <!-- Video Element with Controls (Fixed Height for Matching Thumbnail) -->
-                            <video id="bannerVideo" controls poster="{{ asset('storage/' . $banner->thumbnail) }}"
+                            {{-- poster="{{ asset('storage/' . $banner->thumbnail) }}" --}}
+                            <video id="bannerVideo" controls
                                 class="w-full h-[500px] lg:h-[600px] rounded-lg object-cover block">
-                                <source src="{{ asset('storage/' . $banner->file) }}" type="video/mp4">
+                                <source src="{{ asset('storage/' . $banner->banner_video) }}" type="video/mp4">
                                 {{ __('Your browser video support is not enough.') }}
                             </video>
 
@@ -44,10 +45,11 @@
                         {{-- Heading --}}
                         <h2
                             class="text-3xl font-bold font-montserrat text-second-800 pb-6 text-text-primary lg:text-left">
-                            {{ __('Your Source for Viral Beauty Trends & Skincare Inspiration') }}</h2>
+                            {{ (app()->getLocale() === 'en' ? $banner->title_en : $banner->title_fr) ?? __('Your Source for Viral Beauty Trends & Skincare Inspiration') }}
+                        </h2>
                         {{-- Description --}}
                         <p class="text-base text-text-primary font-normal font-inter lg:text-left">
-                            {{ __('Diodio Glow is a digital platform dedicated to showcasing the latest beauty trends, skincare routines, and viral content from across Senegal and the global beauty community. We curate, highlight, and organize the products, routines, and videos that people are already talking about—so you can easily explore what’s trending.') }}
+                            {{ (app()->getLocale() === 'en' ? $banner->description_en : $banner->description_fr) ?? __('Diodio Glow is a digital platform dedicated to showcasing the latest beauty trends, skincare routines, and viral content from across Senegal and the global beauty community. We curate, highlight, and organize the products, routines, and videos that people are already talking about—so you can easily explore what’s trending.') }}
                         </p>
                     </div>
 
