@@ -45,11 +45,11 @@
                         {{-- Heading --}}
                         <h2
                             class="text-3xl font-bold font-montserrat text-second-800 pb-6 text-text-primary lg:text-left">
-                            {{ (app()->getLocale() === 'en' ? $banner->title_en : $banner->title_fr) ?? __('Your Source for Viral Beauty Trends & Skincare Inspiration') }}
+                            {{ (app()->getLocale() === 'en' ? $banner?->title_en : $banner?->title_fr) ?? __('Your Source for Viral Beauty Trends & Skincare Inspiration') }}
                         </h2>
                         {{-- Description --}}
                         <p class="text-base text-text-primary font-normal font-inter lg:text-left">
-                            {{ (app()->getLocale() === 'en' ? $banner->description_en : $banner->description_fr) ?? __('Diodio Glow is a digital platform dedicated to showcasing the latest beauty trends, skincare routines, and viral content from across Senegal and the global beauty community. We curate, highlight, and organize the products, routines, and videos that people are already talking about—so you can easily explore what’s trending.') }}
+                            {{ (app()->getLocale() === 'en' ? $banner?->description_en : $banner?->description_fr) ?? __('Diodio Glow is a digital platform dedicated to showcasing the latest beauty trends, skincare routines, and viral content from across Senegal and the global beauty community. We curate, highlight, and organize the products, routines, and videos that people are already talking about—so you can easily explore what’s trending.') }}
                         </p>
                     </div>
 

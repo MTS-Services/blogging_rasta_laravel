@@ -17,7 +17,7 @@
 
                     <h2
                         class="text-5xl md:text-7xl lg:text-8xl font-semibold font-montserrat text-second-800 mb-6 text-zinc-900">
-                        {{ (app()->getLocale() === 'en' ? $banner->title_en : $banner->title_fr) ?? __('Discover routines that actually work') }}
+                        {{ (app()->getLocale() === 'en' ? $banner?->title_en : $banner?->title_fr) ?? __('Discover routines that actually work') }}
                     </h2>
                     {{-- <h2
                         class="text-5xl md:text-7xl lg:text-8xl font-semibold font-montserrat text-second-800 mb-6 text-zinc-900">
@@ -38,7 +38,7 @@
 
                     {{-- Description --}}
                     <p class="text-lg md:text-xl text-text-primary font-medium font-inter max-w-lg mx-auto lg:mx-0">
-                        {{ (app()->getLocale() === 'en' ? $banner->description_en : $banner->description_fr) ?? __('Discover routines that actually work. Explore trending videos, shop vetted products, and get personalized advice tailored to your skin type.') }}
+                        {{ (app()->getLocale() === 'en' ? $banner?->description_en : $banner?->description_fr) ?? __('Discover routines that actually work. Explore trending videos, shop vetted products, and get personalized advice tailored to your skin type.') }}
                     </p>
 
                     {{-- Buttons --}}
