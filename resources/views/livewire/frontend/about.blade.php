@@ -6,14 +6,14 @@
             <div class="flex flex-col lg:flex-row items-center justify-between gap-14">
                 {{-- Image Section --}}
                 <div class="w-full lg:w-1/2 flex justify-center relative">
-                    @if ($banner && $banner->banner_video)
+                    @if ($aboutCms && $aboutCms->banner_video)
                         <!-- Video Container -->
                         <div class="relative w-full max-w-[500px] lg:max-w-none">
                             <!-- Video Element with Controls (Fixed Height for Matching Thumbnail) -->
-                            {{-- poster="{{ asset('storage/' . $banner->thumbnail) }}" --}}
+                            {{-- poster="{{ asset('storage/' . $aboutCms->thumbnail) }}" --}}
                             <video id="bannerVideo" controls
                                 class="w-full h-[500px] lg:h-[600px] rounded-lg object-cover block">
-                                <source src="{{ asset('storage/' . $banner->banner_video) }}" type="video/mp4">
+                                <source src="{{ asset('storage/' . $aboutCms->banner_video) }}" type="video/mp4">
                                 {{ __('Your browser video support is not enough.') }}
                             </video>
 
@@ -45,31 +45,37 @@
                         {{-- Heading --}}
                         <h2
                             class="text-3xl font-bold font-montserrat text-second-800 pb-6 text-text-primary lg:text-left">
-                            {{ (app()->getLocale() === 'en' ? $banner?->title_en : $banner?->title_fr) ?? __('Your Source for Viral Beauty Trends & Skincare Inspiration') }}
+                            {{ (app()->getLocale() === 'en' ? $aboutCms?->title_en : $aboutCms?->title_fr) ?? __('Your Source for Viral Beauty Trends & Skincare Inspiration') }}
                         </h2>
                         {{-- Description --}}
-                        <p class="text-base text-text-primary font-normal font-inter lg:text-left">
-                            {{ (app()->getLocale() === 'en' ? $banner?->description_en : $banner?->description_fr) ?? __('Diodio Glow is a digital platform dedicated to showcasing the latest beauty trends, skincare routines, and viral content from across Senegal and the global beauty community. We curate, highlight, and organize the products, routines, and videos that people are already talking about—so you can easily explore what’s trending.') }}
-                        </p>
-                    </div>
 
-                    <div class="pt-16">
-                        <div class="flex gap-2 items-center lg:text-left">
-                            <flux:icon name="check" class="w-6 h-6 stroke-second-50 bg-second-500 rounded-full" />
-                            <p class="text-base text-text-primary font-semibold font-inter">
-                                {{ __('50K+ followers across TikTok, Instagram & YouTube') }}</p>
-                        </div>
-                        <div class="flex gap-2 items-center pt-10 lg:text-left">
-                            <flux:icon name="check" class="w-6 h-6 stroke-second-50 bg-second-500 rounded-full" />
-                            <p class="text-base text-text-primary font-semibold font-inter">
-                                {{ __('100+ curated products handpicked for quality and affordability') }}</p>
-                        </div>
-                        <div class="flex gap-2 items-center pt-10 lg:text-left">
-                            <flux:icon name="check" class="w-6 h-6 stroke-second-50 bg-second-500 rounded-full" />
-                            <p class="text-base text-text-primary font-semibold font-inter">
-                                {{ __('95% satisfaction rate from product recommendations') }}</p>
-                        </div>
                     </div>
+                    @if ($aboutCms?->about_us_en || $aboutCms?->about_us_fr)
+                        {!! app()->getLocale() === 'en' ? $aboutCms?->about_us_en : $aboutCms?->about_us_fr !!}
+                    @else
+                        <div class="">
+                            <p class="text-base text-text-primary font-normal font-inter lg:text-left mb-10">
+                                {{ __(
+                                    'Diodio Glow is a digital platform dedicated to showcasing the latest beauty trends, skincare routines, and viral content from across Senegal and the global beauty community. We curate, highlight, and organize the products, routines, and videos that people are already talking about—so you can easily explore what’s trending.',
+                                ) }}
+                            </p>
+                            <div class="flex gap-2 items-center lg:text-left">
+                                <flux:icon name="check" class="w-6 h-6 stroke-second-50 bg-second-500 rounded-full" />
+                                <p class="text-base text-text-primary font-semibold font-inter">
+                                    {{ __('50K+ followers across TikTok, Instagram & YouTube') }}</p>
+                            </div>
+                            <div class="flex gap-2 items-center pt-10 lg:text-left">
+                                <flux:icon name="check" class="w-6 h-6 stroke-second-50 bg-second-500 rounded-full" />
+                                <p class="text-base text-text-primary font-semibold font-inter">
+                                    {{ __('100+ curated products handpicked for quality and affordability') }}</p>
+                            </div>
+                            <div class="flex gap-2 items-center pt-10 lg:text-left">
+                                <flux:icon name="check" class="w-6 h-6 stroke-second-50 bg-second-500 rounded-full" />
+                                <p class="text-base text-text-primary font-semibold font-inter">
+                                    {{ __('95% satisfaction rate from product recommendations') }}</p>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -123,7 +129,8 @@
                     <p class="text-sm text-gray-500">Shop our collection</p>
                 </a>
 
-                <a href="mailto:contact@diodioglow.com" class="{{ $cardClasses }} lg:max-w-full">
+                <a href="mailto:{{ $aboutCms?->contact_email ?? 'diodioglowsn@gmail.com' }}"
+                    class="{{ $cardClasses }} lg:max-w-full">
                     <svg xmlns="http://www.w3.org/2000/svg" class="{{ $iconClasses }}" viewBox="0 0 24 24"
                         fill="none" stroke="#ff98b1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
@@ -143,58 +150,68 @@
         <div class="container py-12">
 
             <h2 class="text-5xl font-bold font-montserrat pb-6 text-text-primary">
-                {{ __('Our Mission') }}
+                {{ (app()->getLocale() === 'en' ? $aboutCms?->mission_title_en : $aboutCms?->mission_title_fr) ?? __('Our Mission') }}
             </h2>
 
-            <p class="text-base font-normal font-inter text-muted">
-                {{ __('make beauty discovery easier, enjoyable, and accessible for everyone.') }}
-            </p>
+            @if ($aboutCms?->mission_en || $aboutCms?->mission_fr)
+                {!! app()->getLocale() === 'en' ? $aboutCms?->mission_en : $aboutCms?->mission_fr !!}
+            @else
+                <p class="text-base font-normal font-inter text-muted">
+                    {{ __('make beauty discovery easier, enjoyable, and accessible for everyone.') }}
+                </p>
 
-            <p class="text-base font-normal font-inter text-muted mt-6">
-                {{ __('Whether it’s a viral TikTok skincare hack, an African beauty routine, or a popular product review, Diodio Glow brings everything together in one place. We focus on spotlighting authentic routines, diverse skin needs, and the beauty content people love to watch.') }}
-            </p>
+                <p class="text-base font-normal font-inter text-muted mt-6">
+                    {{ __('Whether it’s a viral TikTok skincare hack, an African beauty routine, or a popular product review, Diodio Glow brings everything together in one place. We focus on spotlighting authentic routines, diverse skin needs, and the beauty content people love to watch.') }}
+                </p>
 
-            <p class="text-base font-normal font-inter text-muted mt-6">
-                {{ __('This platform is powered by community-driven trends, curated recommendations, and quality-driven product selections designed to help you find what works for your skin.') }}
-            </p>
+                <p class="text-base font-normal font-inter text-muted mt-6">
+                    {{ __('This platform is powered by community-driven trends, curated recommendations, and quality-driven product selections designed to help you find what works for your skin.') }}
+                </p>
 
-            <hr class="my-10 border-gray-300" />
+                <hr class="my-10 border-gray-300" />
 
-            <!-- New content added from AI image text -->
-            <h3 class="text-3xl font-bold font-montserrat pb-4 text-text-primary">
-                {{ __('What You’ll Find on Diodio Glow') }}
-            </h3>
+                <!-- New content added from AI image text -->
+                <h3 class="text-3xl font-bold font-montserrat pb-4 text-text-primary">
+                    {{ __('What You’ll Find on Diodio Glow') }}
+                </h3>
 
-            <ul class="list-disc pl-6 text-base font-inter text-muted space-y-2">
-                <li>{{ __('Curated viral beauty videos & routines from Senegal and beyond') }}</li>
-                <li>{{ __('Product discoveries and reviews organized for easy browsing') }}</li>
-                <li>{{ __('Beauty insights, trends, and articles focused on real results') }}</li>
-                <li>{{ __('A growing library of content shaped by what people are searching and sharing') }}</li>
-            </ul>
+                <ul class="list-disc pl-6 text-base font-inter text-muted space-y-2">
+                    <li>{{ __('Curated viral beauty videos & routines from Senegal and beyond') }}</li>
+                    <li>{{ __('Product discoveries and reviews organized for easy browsing') }}</li>
+                    <li>{{ __('Beauty insights, trends, and articles focused on real results') }}</li>
+                    <li>{{ __('A growing library of content shaped by what people are searching and sharing') }}</li>
+                </ul>
 
-            <p class="text-base font-normal font-inter text-muted mt-8">
-                {{ __('Our goal is to make Diodio Glow one of the leading online destinations for beauty inspiration—not an influencer, but a platform that brings together the best of beauty, culture, and skincare trends.') }}
-            </p>
+                <p class="text-base font-normal font-inter text-muted mt-8">
+                    {{ __('Our goal is to make Diodio Glow one of the leading online destinations for beauty inspiration—not an influencer, but a platform that brings together the best of beauty, culture, and skincare trends.') }}
+                </p>
 
-            <h3 class="text-3xl font-bold font-montserrat pb-4 mt-10 text-text-primary">
-                {{ __('Your Source for Viral Beauty Trends & Skincare Inspiration') }}
-            </h3>
+                <h3 class="text-3xl font-bold font-montserrat pb-4 mt-10 text-text-primary">
+                    {{ __('Your Source for Viral Beauty Trends & Skincare Inspiration') }}
+                </h3>
 
-            <p class="text-base font-normal font-inter text-muted">
-                {{ __('Diodio Glow is a digital platform dedicated to showcasing the latest beauty trends, skincare routines, and viral content from across Senegal and the global beauty community. We curate, highlight, and organize the products, routines, and videos that people are already talking about—so you can easily explore what’s trending.') }}
-            </p>
+                <p class="text-base font-normal font-inter text-muted">
+                    {{ __('Diodio Glow is a digital platform dedicated to showcasing the latest beauty trends, skincare routines, and viral content from across Senegal and the global beauty community. We curate, highlight, and organize the products, routines, and videos that people are already talking about—so you can easily explore what’s trending.') }}
+                </p>
 
-            <p class="text-base font-normal font-inter text-muted mt-6">
-                {{ __('Our mission is simple: make beauty discovery easier, enjoyable, and accessible for everyone.') }}
-            </p>
+                <p class="text-base font-normal font-inter text-muted mt-6">
+                    {{ __('Our mission is simple: make beauty discovery easier, enjoyable, and accessible for everyone.') }}
+                </p>
 
-            <p class="text-base font-normal font-inter text-muted mt-6">
-                {{ __('Whether it’s a viral TikTok skincare hack, an African beauty routine, or a popular product review, Diodio Glow brings everything together in one place. We focus on spotlighting authentic routines, diverse skin needs, and the beauty content people love to watch.') }}
-            </p>
+                <p class="text-base font-normal font-inter text-muted mt-6">
+                    {{ __('Whether it’s a viral TikTok skincare hack, an African beauty routine, or a popular product review, Diodio Glow brings everything together in one place. We focus on spotlighting authentic routines, diverse skin needs, and the beauty content people love to watch.') }}
+                </p>
 
-            <p class="text-base font-normal font-inter text-muted mt-6">
-                {{ __('This platform is powered by community-driven trends, curated recommendations, and quality-driven product selections designed to help you find what works for your skin.') }}
-            </p>
+                <p class="text-base font-normal font-inter text-muted mt-6">
+                    {{ __('This platform is powered by community-driven trends, curated recommendations, and quality-driven product selections designed to help you find what works for your skin.') }}
+                </p>
+            @endif
+
+
+
+
+
+
 
         </div>
     </section>

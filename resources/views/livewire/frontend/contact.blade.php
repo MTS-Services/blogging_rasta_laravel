@@ -70,7 +70,8 @@
                     <div class="mt-6 text-sm text-slate-500">
                         {{-- <p><strong>{{ __('Phone:') }}</strong> +1 (555) 123-4567</p> --}}
                         <p><strong>{{ __('Email:') }}</strong>
-                            <a href="mailto:diodioglowsn@gmail.com" class="hover:underline duration-300 hover:text-zinc-300">diodioglowsn@gmail.com</a>
+                            <a href="mailto:{{ $aboutCms->contact_email ?? 'diodioglowsn@gmail.com' }}"
+                                class="hover:underline duration-300 hover:text-zinc-300">{{ $aboutCms->contact_email ?? 'diodioglowsn@gmail.com' }}</a>
                         </p>
 
                     </div>

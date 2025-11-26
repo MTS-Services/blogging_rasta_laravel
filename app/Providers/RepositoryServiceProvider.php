@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\Contracts\AboutCmsRepositoryInterface;
+use App\Repositories\Eloquent\AboutCmsRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\Eloquent\BlogRepository;
 use App\Repositories\Eloquent\UserRepository;
@@ -59,7 +61,7 @@ class RepositoryServiceProvider extends ServiceProvider
 
         $this->app->bind(
             BannerVideoRepositoryInterface::class,
-           BannerVideoRepository::class
+            BannerVideoRepository::class
         );
 
         $this->app->bind(
@@ -79,6 +81,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             ContactRepositoryInterface::class,
             ContactRepository::class
+        );
+        $this->app->bind(
+            AboutCmsRepositoryInterface::class,
+            AboutCmsRepository::class
         );
     }
 

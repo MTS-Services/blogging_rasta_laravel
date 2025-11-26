@@ -2,36 +2,34 @@
 
 namespace App\Livewire\Frontend;
 
-use App\Services\BannerVideoService;
+use App\Services\AboutCmsService;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class About extends Component
 {
-     public $banner = null;
-    protected $bannerService;
-     public function boot( BannerVideoService $bannerService)
+    public $aboutCms = null;
+    protected AboutCmsService $aboutCmsService;
+    public function boot(AboutCmsService $aboutCmsService)
     {
-        $this->bannerService = $bannerService;
+        $this->aboutCmsService = $aboutCmsService;
     }
 
-    public function mount(){
+    public function mount()
+    {
         $this->loadBanner();
     }
 
-      public function loadBanner()
+    public function loadBanner()
     {
         try {
-            $this->banner = $this->bannerService->getFirstData();
-            
-            Log::info('Banner video loaded', [
-                'has_banner' => $this->banner !== null,
-            ]);
+            $this->aboutCms = $this->aboutCmsService->getFirstData();
+
         } catch (\Exception $e) {
-            Log::error('Banner loading failed', [
+            Log::error('Data loading failed', [
                 'error' => $e->getMessage()
             ]);
-            $this->banner = null;
+            $this->data = null;
         }
     }
 

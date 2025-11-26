@@ -118,6 +118,8 @@
                 :page_slug="$active" />
             <x-backend.navlink type="single" icon="phone" name="Contact" :route="route('admin.contact.index')" active="contact"
                 :page_slug="$active" />
+            <x-backend.navlink type="single" icon="folder" :wire="false" name="About CMS" :route="route('admin.about-cms')"
+                active="about-cms" :page_slug="$active" />
             <div class="pt-4 pb-2">
                 <p class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 uppercase"
                     x-show="(desktop && sidebar_expanded) || (!desktop && mobile_menu_open)">
