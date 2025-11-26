@@ -52,6 +52,7 @@ RUN chown -R www-data:www-data /var/www
 RUN mkdir -p storage/framework/{views,sessions,cache} \
     && mkdir -p storage/logs \
     && mkdir -p bootstrap/cache \
+    && mkdir -p /var/log/supervisor \
     && chown -R www-data:www-data storage/framework storage/logs bootstrap/cache \
     && chmod -R 775 storage/framework storage/logs bootstrap/cache
 
