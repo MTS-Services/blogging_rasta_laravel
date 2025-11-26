@@ -123,6 +123,7 @@ class TikTokService
      */
     public function syncVideos(array $users)
     {
+        Log::info("Starting TikTok Sync for users: " . implode(', ', array_column($users, 'username')));
         try {
             DB::beginTransaction();
 

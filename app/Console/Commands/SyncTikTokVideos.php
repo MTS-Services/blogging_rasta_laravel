@@ -2,62 +2,64 @@
 
 namespace App\Console\Commands;
 
+use App\Models\ApplicationSetting;
 use App\Services\TikTokService;
 use Illuminate\Console\Command;
-use Throwable; // Import Throwable for catching all errors/exceptions
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class SyncTikTokVideos extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'app:sync-tiktok-videos';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Synchronizes the latest videos from configured featured TikTok users.';
 
-    /**
-     * Execute the console command.
-     */
     public function handle(TikTokService $tiktokService)
     {
         $this->info('Starting TikTok video synchronization...');
 
         try {
-            // 1. Get the list of featured users from the configuration
-            $users = config('tiktok.featured_users', []);
+            // Get the featured users and decode JSON
+            $usersJson = ApplicationSetting::where('key', 'featured_users')
+                ->pluck('value')
+                ->first();
 
-            if (empty($users)) {
+            $users = json_decode($usersJson, true);
+
+            Log::info("Starting TikTok Sync for users: " . implode(', ', array_column($users, 'username')));
+
+            if (empty($users) || !is_array($users)) {
                 $this->warn('No featured TikTok users found in configuration.');
-                return self::SUCCESS; // Exit successfully if there's nothing to do
+                return self::SUCCESS;
             }
 
-            $this->comment('Found ' . count($users) . ' users to process.');
+            // Execute sync
+            $result = $tiktokService->syncVideos($users);
 
-            // 2. Execute the sync logic via the Service layer
-            // The TikTokService is injected directly into the handle method (Method Injection)
-            // which is a standard Laravel practice.
-            $tiktokService->syncVideos($users);
-
-            $this->info('TikTok video synchronization completed successfully!');
-
-            return self::SUCCESS;
+            // Handle result
+            if ($result['success']) {
+                $message = sprintf(
+                    'Sync completed! New: %d, Updated: %d, Total: %d',
+                    $result['synced'],
+                    $result['updated'],
+                    $result['total']
+                );
+                $this->info($message);
+                Log::info($message);
+                return self::SUCCESS;
+            } else {
+                $error = 'Sync failed: ' . ($result['error'] ?? 'Unknown error');
+                $this->error($error);
+                Log::error($error);
+                return self::FAILURE;
+            }
 
         } catch (Throwable $e) {
-            // 3. Handle any exceptions or errors during the process
-            $this->error('An error occurred during synchronization!');
-            $this->error($e->getMessage()); // Display the error message
-
-            // Optionally log the full exception stack trace for debugging
-            $this->getOutput()->writeln('<error>' . $e->getTraceAsString() . '</error>');
-
-            // Return a failure status code
+            $error = 'TikTok sync exception: ' . $e->getMessage();
+            $this->error($error);
+            Log::error($error, [
+                'exception' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return self::FAILURE;
         }
     }
