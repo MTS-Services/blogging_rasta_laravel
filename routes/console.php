@@ -9,7 +9,7 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('app:sync-tiktok-videos')
-    ->everyMinute()
+    ->everyFifteenMinutes()
     ->withoutOverlapping()
     ->onSuccess(function () {
         \Log::info('TikTok video synchronization completed successfully via scheduled task.');
