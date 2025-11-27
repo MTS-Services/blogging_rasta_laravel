@@ -17,7 +17,8 @@ class TikTokService
     public function __construct()
     {
         $this->client = new Client([
-            'timeout' => 30,
+            'timeout' => 60,
+            'connect_timeout' => 10,
             'verify' => true,
             'http_errors' => false
         ]);
