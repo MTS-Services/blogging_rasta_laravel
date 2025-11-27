@@ -27,14 +27,86 @@ class TikTokService
     /**
      * Get user videos with pagination
      */
+    // public function getUserVideos($username, $count = 12, $cursor = 0)
+    // {
+    //     if (empty($this->apiKey)) {
+    //         Log::error("TikTok API key not configured");
+    //         return $this->errorResponse('API key not configured');
+    //     }
+
+    //     try {
+    //         $response = $this->client->get($this->baseUrl . 'user/posts', [
+    //             'headers' => [
+    //                 'x-rapidapi-host' => 'tiktok-scraper7.p.rapidapi.com',
+    //                 'x-rapidapi-key' => $this->apiKey,
+    //             ],
+    //             'query' => [
+    //                 'unique_id' => $username,
+    //                 'count' => $count,
+    //                 'cursor' => $cursor,
+    //             ],
+    //         ]);
+
+    //         $statusCode = $response->getStatusCode();
+    //         $body = $response->getBody()->getContents();
+
+    //         if ($statusCode === 403) {
+    //             return $this->errorResponse('API subscription required');
+    //         }
+
+    //         if ($statusCode !== 200) {
+    //             return $this->errorResponse("API returned status code: {$statusCode}");
+    //         }
+
+    //         $data = json_decode($body, true);
+
+    //         if (json_last_error() !== JSON_ERROR_NONE) {
+    //             return $this->errorResponse('Invalid JSON response');
+    //         }
+
+    //         if (isset($data['code']) && $data['code'] !== 0) {
+    //             return $this->errorResponse($data['msg'] ?? 'API request failed');
+    //         }
+
+    //         $responseData = $data['data'] ?? [];
+    //         $videos = $responseData['videos'] ?? [];
+
+    //         foreach ($videos as &$video) {
+    //             $video['_username'] = $username;
+    //         }
+
+    //         return [
+    //             'success' => true,
+    //             'videos' => $videos,
+    //             'has_more' => $responseData['hasMore'] ?? false,
+    //             'cursor' => $responseData['cursor'] ?? 0,
+    //         ];
+
+    //     } catch (\Exception $e) {
+    //         Log::error("TikTok API Error: " . $e->getMessage());
+    //         return $this->errorResponse($e->getMessage());
+    //     }
+    // }
+
+
     public function getUserVideos($username, $count = 12, $cursor = 0)
     {
+        Log::info("getUserVideos called", [
+            'username' => $username,
+            'count' => $count,
+            'cursor' => $cursor,
+            'api_key_set' => !empty($this->apiKey),
+            'api_key_length' => $this->apiKey ? strlen($this->apiKey) : 0
+        ]);
+
         if (empty($this->apiKey)) {
             Log::error("TikTok API key not configured");
             return $this->errorResponse('API key not configured');
         }
 
         try {
+            Log::info("Making API request to: " . $this->baseUrl . 'user/posts');
+
             $response = $this->client->get($this->baseUrl . 'user/posts', [
                 'headers' => [
                     'x-rapidapi-host' => 'tiktok-scraper7.p.rapidapi.com',
@@ -50,26 +122,44 @@ class TikTokService
             $statusCode = $response->getStatusCode();
             $body = $response->getBody()->getContents();
 
+            Log::info("API Response received", [
+                'status_code' => $statusCode,
+                'body_length' => strlen($body),
+                'body_preview' => substr($body, 0, 200)
+            ]);
+
             if ($statusCode === 403) {
+                Log::error("API returned 403 - subscription required");
                 return $this->errorResponse('API subscription required');
             }
 
             if ($statusCode !== 200) {
+                Log::error("API returned non-200 status", ['status' => $statusCode, 'body' => $body]);
                 return $this->errorResponse("API returned status code: {$statusCode}");
             }
 
             $data = json_decode($body, true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
+                Log::error("JSON decode error", ['error' => json_last_error_msg(), 'body' => $body]);
                 return $this->errorResponse('Invalid JSON response');
             }
 
+            Log::info("API data decoded", [
+                'has_data' => isset($data['data']),
+                'code' => $data['code'] ?? null,
+                'msg' => $data['msg'] ?? null
+            ]);
+
             if (isset($data['code']) && $data['code'] !== 0) {
+                Log::error("API returned error code", ['code' => $data['code'], 'msg' => $data['msg'] ?? '']);
                 return $this->errorResponse($data['msg'] ?? 'API request failed');
             }
 
             $responseData = $data['data'] ?? [];
             $videos = $responseData['videos'] ?? [];
+
+            Log::info("Videos extracted", ['count' => count($videos)]);
 
             foreach ($videos as &$video) {
                 $video['_username'] = $username;
@@ -83,20 +173,70 @@ class TikTokService
             ];
 
         } catch (\Exception $e) {
-            Log::error("TikTok API Error: " . $e->getMessage());
+            Log::error("TikTok API Exception", [
+                'message' => $e->getMessage(),
+                'class' => get_class($e),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return $this->errorResponse($e->getMessage());
         }
     }
-
     /**
      * Get videos from multiple users
      */
+    // public function getMultipleUsersVideos(array $users)
+    // {
+    //     $allVideos = [];
+
+    //     foreach ($users as $user) {
+    //         $result = $this->getUserVideos($user['username'], $user['max_videos'] ?? config('tiktok.default_max_videos_per_user'));
+
+    //         if ($result['success'] && !empty($result['videos'])) {
+    //             $allVideos = array_merge($allVideos, $result['videos']);
+    //         }
+    //     }
+
+    //     usort($allVideos, function ($a, $b) {
+    //         return ($b['create_time'] ?? 0) - ($a['create_time'] ?? 0);
+    //     });
+
+    //     return [
+    //         'success' => true,
+    //         'videos' => $allVideos,
+    //         'total_videos' => count($allVideos),
+    //     ];
+    // }
+
     public function getMultipleUsersVideos(array $users)
     {
         $allVideos = [];
+        $errors = [];
 
         foreach ($users as $user) {
-            $result = $this->getUserVideos($user['username'], $user['max_videos'] ?? config('tiktok.default_max_videos_per_user'));
+            Log::info("Fetching videos for user: " . $user['username']);
+
+            $result = $this->getUserVideos(
+                $user['username'],
+                $user['max_videos'] ?? config('tiktok.default_max_videos_per_user')
+            );
+
+            Log::info("Result for {$user['username']}", [
+                'success' => $result['success'],
+                'video_count' => count($result['videos'] ?? []),
+                'error' => $result['error'] ?? null
+            ]);
+
+            if (!$result['success']) {
+                $errors[] = [
+                    'username' => $user['username'],
+                    'error' => $result['error'] ?? 'Unknown error'
+                ];
+                Log::error("Failed to fetch videos for {$user['username']}", [
+                    'error' => $result['error'] ?? 'Unknown error'
+                ]);
+            }
 
             if ($result['success'] && !empty($result['videos'])) {
                 $allVideos = array_merge($allVideos, $result['videos']);
@@ -107,10 +247,17 @@ class TikTokService
             return ($b['create_time'] ?? 0) - ($a['create_time'] ?? 0);
         });
 
+        // Log final result
+        Log::info("getMultipleUsersVideos completed", [
+            'total_videos' => count($allVideos),
+            'errors' => $errors
+        ]);
+
         return [
-            'success' => true,
+            'success' => empty($errors) || !empty($allVideos),
             'videos' => $allVideos,
             'total_videos' => count($allVideos),
+            'errors' => $errors,
         ];
     }
 
