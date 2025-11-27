@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\ApplicationSetting;
 use App\Models\TikTokVideo;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
@@ -22,7 +23,9 @@ class TikTokService
             'verify' => true,
             'http_errors' => false
         ]);
-        $this->apiKey = config('tiktok.rapidapi_key');
+        $this->apiKey = ApplicationSetting::where('key', ApplicationSetting::RAPIDAPI_KEY)
+            ->pluck('value')
+            ->first();
     }
 
     /**
