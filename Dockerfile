@@ -4,7 +4,6 @@ FROM php:8.3-fpm
 COPY ./docker/php.ini /usr/local/etc/php/conf.d/custom.ini
 
 # Install system dependencies and PHP extensions
-# Combining update, install, and cleanup in one RUN command
 RUN apt-get update && apt-get install -y \
     nginx \
     git \
@@ -26,10 +25,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js 20 LTS
-# Separating Node.js installation into distinct steps for clarity and cache efficiency
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-RUN apt-get update && apt-get install -y nodejs
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get update && apt-get install -y nodejs \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
@@ -40,40 +38,31 @@ WORKDIR /var/www
 # Copy Laravel app source
 COPY . .
 
-# Change ownership of the entire application directory to the www-data user
-RUN chown -R www-data:www-data /var/www
-
-# Prepare Laravel cache paths & permissions
-# RUN mkdir -p storage/framework/{views,sessions,cache} \
-#     && mkdir -p bootstrap/cache \
-#     && chown -R www-data:www-data storage bootstrap/cache \
-#     && chmod -R 775 storage bootstrap/cache
-
+# Create all necessary directories
 RUN mkdir -p storage/framework/{views,sessions,cache} \
     && mkdir -p storage/logs \
+    && mkdir -p storage/app/public \
     && mkdir -p bootstrap/cache \
-    && mkdir -p /var/log/supervisor \
-    && chown -R www-data:www-data storage/framework storage/logs bootstrap/cache \
-    && chmod -R 775 storage/framework storage/logs bootstrap/cache
+    && mkdir -p /var/log/supervisor
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
-
-# Install npm dependencies and build assets
-# Combining npm install and build into one RUN command
+# Install dependencies (before changing ownership for better Docker layer caching)
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 RUN npm install && npm run build
 
+# CRITICAL: Set ownership and permissions (do this AFTER all file operations)
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 775 storage \
+    && chmod -R 775 bootstrap/cache
+
+# Create log file with correct permissions
+RUN touch storage/logs/laravel.log \
+    && chown www-data:www-data storage/logs/laravel.log \
+    && chmod 664 storage/logs/laravel.log
+
 # Laravel Artisan commands
-# Grouping related commands
-# RUN php artisan config:clear && php artisan route:clear && php artisan view:clear \
-#     && php artisan config:cache && php artisan route:cache && php artisan view:cache \
-#     && php artisan migrate --force || true \
-#     && php artisan optimize:clear
 RUN php artisan config:clear \
     && php artisan route:clear \
-    && php artisan view:clear \
-    && php artisan config:cache \
-    && php artisan view:cache
+    && php artisan view:clear
 
 # Configure Nginx and Supervisor
 RUN rm -f /etc/nginx/sites-enabled/default
