@@ -18,7 +18,7 @@ class TikTokService
     {
         $this->client = new Client([
             'timeout' => 30,
-            'verify' => false,
+            'verify' => true,
             'http_errors' => false
         ]);
         $this->apiKey = config('tiktok.rapidapi_key');
@@ -34,9 +34,6 @@ class TikTokService
             return $this->errorResponse('API key not configured');
         }
 
-        $cacheKey = "tiktok_videos_{$username}_{$count}_{$cursor}";
-
-        // return Cache::remember($cacheKey, 1800, function () use ($username, $count, $cursor) {
         try {
             $response = $this->client->get($this->baseUrl . 'user/posts', [
                 'headers' => [
@@ -89,7 +86,6 @@ class TikTokService
             Log::error("TikTok API Error: " . $e->getMessage());
             return $this->errorResponse($e->getMessage());
         }
-        // });
     }
 
     /**
@@ -124,10 +120,14 @@ class TikTokService
     public function syncVideos(array $users)
     {
         Log::info("Starting TikTok Sync for users: " . implode(', ', array_column($users, 'username')));
+
+        $this->clearCache();
         try {
             DB::beginTransaction();
 
             $result = $this->getMultipleUsersVideos($users);
+
+            Log::info("API Result", ['success' => $result['success'], 'video_count' => count($result['videos'] ?? [])]);
 
             if (!$result['success']) {
                 throw new \Exception('Failed to fetch videos');

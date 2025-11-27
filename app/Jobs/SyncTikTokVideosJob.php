@@ -35,7 +35,7 @@ class SyncTikTokVideosJob implements ShouldQueue
      *
      * @var int
      */
-    public $backoff = 60;
+    public $backoff = [60, 300, 900];
 
     /**
      * Delete the job if its models no longer exist.
@@ -61,7 +61,7 @@ class SyncTikTokVideosJob implements ShouldQueue
 
         try {
             // Get the featured users and decode JSON
-            $usersJson = ApplicationSetting::where('key', 'featured_users')
+            $usersJson = ApplicationSetting::where('key', ApplicationSetting::FEATURED_USERS_KEY)
                 ->pluck('value')
                 ->first();
 
