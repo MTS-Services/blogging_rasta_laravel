@@ -51,6 +51,9 @@ class ApplicationSetting extends Model
     const TIME_FORMAT_12 = 'h:i A';
     const TIME_FORMAT_24 = 'H:i:s';
 
+    public const FEATURED_USERS_KEY = 'featured_users';
+    public const RAPIDAPI_KEY = 'rapidapi_key';
+
     protected $fillable = [
         'key',
         'value',
