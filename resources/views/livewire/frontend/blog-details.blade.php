@@ -1,7 +1,7 @@
 <div>
     @section('meta')
         <meta name="description" content="{!! $data->meta_description ?? $data->description !!}">
-        <meta name="keywords" content="{{ $data->meta_keywords ?? $data->title }}">
+        <meta name="keywords" content="{{ $data->meta_keywords ? implode(',', $data->meta_keywords) : $data->title }}">
         <meta name="title" content="{{ $data->meta_title ?? $data->title }}">
 
         <meta property="og:title" content="{{ $data->meta_title ?? $data->title }}" />
