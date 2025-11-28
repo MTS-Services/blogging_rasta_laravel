@@ -237,19 +237,19 @@
     </div>
 
     <script>
-        function loadQRCode() {
-            fetch('{{ route('user.two-factor.qr-code') }}')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('qrCodeContainer').innerHTML = data.svg;
-                    document.getElementById('qrCodeContainer').classList.remove('hidden');
-                    document.getElementById('qrCode').classList.add('hidden');
-                })
-                .catch(error => {
-                    console.error('Error loading QR code:', error);
-                    alert('Failed to load QR code. Please try again.');
-                });
-        }
+        // function loadQRCode() {
+        //     fetch('{{ route('user.two-factor.qr-code') }}')
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             document.getElementById('qrCodeContainer').innerHTML = data.svg;
+        //             document.getElementById('qrCodeContainer').classList.remove('hidden');
+        //             document.getElementById('qrCode').classList.add('hidden');
+        //         })
+        //         .catch(error => {
+        //             console.error('Error loading QR code:', error);
+        //             alert('Failed to load QR code. Please try again.');
+        //         });
+        // }
 
         function showRecoveryCodes() {
             fetch('{{ route('user.two-factor.recovery-codes') }}')

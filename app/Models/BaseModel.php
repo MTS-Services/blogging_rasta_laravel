@@ -96,7 +96,7 @@ class BaseModel extends Model implements Auditable
     }
     public function getRestoredAtHumanAttribute(): ?string
     {
-        return dateTimeHumanFormat($this->attributes['restored_at']);
+        return $this->restored_at ? dateTimeHumanFormat($this->attributes['restored_at']) : null;
     }
 
     public function getCreatedAtFormattedAttribute(): string
@@ -113,8 +113,8 @@ class BaseModel extends Model implements Auditable
     {
         return dateTimeFormat($this->attributes['deleted_at']);
     }
-    public function getRestoredAtFormattedAttribute(): string
+    public function getRestoredAtFormattedAttribute(): ?string
     {
-        return dateTimeFormat($this->attributes['restored_at']);
+        return $this->restored_at ? dateTimeFormat($this->attributes['restored_at']) : null;
     }
 }

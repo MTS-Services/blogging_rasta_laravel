@@ -9,14 +9,14 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
-use Laravel\Fortify\TwoFactorAuthenticatable;
+// use Laravel\Fortify\TwoFactorAuthenticatable;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AuthBaseModel extends Authenticatable
 {
-    use HasFactory, Notifiable, TwoFactorAuthenticatable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /* ================================================================
      * *** PROPERTIES ***

@@ -547,9 +547,9 @@
                                 </div>
 
                                 {{-- Hashtags --}}
-                                @if (!empty($video['keywords']))
+                                @if (!empty($video['videoKeywords']))
                                     <div class="flex flex-wrap gap-2 sm:gap-3 mt-3">
-                                        @foreach ($video['keywords'] as $keyword)
+                                        @foreach ($video['videoKeywords'] as $keyword)
                                             <span
                                                 class="text-xs sm:text-sm text-second-500 lowercase font-medium">#{{ $keyword }}</span>
                                         @endforeach

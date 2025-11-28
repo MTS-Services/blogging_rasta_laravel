@@ -3,8 +3,8 @@
         <div class="glass-card rounded-lg overflow-hidden">
             <!-- Header -->
             <div class="p-6 bg-gradient-to-r from-zinc-600 to-zinc-700">
-                <h2 class="text-2xl font-bold text-text-btn-primary">{{__('Two-Factor Authentication')}}</h2>
-                <p class="text-zinc-100 mt-1">{{__('Secure your account with additional protection')}}</p>
+                <h2 class="text-2xl font-bold text-text-btn-primary">{{ __('Two-Factor Authentication') }}</h2>
+                <p class="text-zinc-100 mt-1">{{ __('Secure your account with additional protection') }}</p>
             </div>
 
             <div class="p-6">
@@ -18,7 +18,7 @@
                                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                     clip-rule="evenodd"></path>
                             </svg>
-                            <p class="font-semibold">{{__('Two-factor authentication setup is in progress')}}</p>
+                            <p class="font-semibold">{{ __('Two-factor authentication setup is in progress') }}</p>
                         </div>
                     </div>
                 @endif
@@ -32,7 +32,7 @@
                                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                     clip-rule="evenodd"></path>
                             </svg>
-                            <p class="font-semibold">{{__('Two-factor authentication confirmed successfully!')}}</p>
+                            <p class="font-semibold">{{ __('Two-factor authentication confirmed successfully!') }}</p>
                         </div>
                     </div>
                 @endif
@@ -46,7 +46,7 @@
                                     d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
                                     clip-rule="evenodd"></path>
                             </svg>
-                            <p class="font-semibold">{{__('Two-factor authentication has been disabled.')}}</p>
+                            <p class="font-semibold">{{ __('Two-factor authentication has been disabled.') }}</p>
                         </div>
                     </div>
                 @endif
@@ -60,7 +60,7 @@
                                     d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
                                     clip-rule="evenodd"></path>
                             </svg>
-                            <p class="font-semibold">{{__('New recovery codes have been generated!')}}</p>
+                            <p class="font-semibold">{{ __('New recovery codes have been generated!') }}</p>
                         </div>
                     </div>
                 @endif
@@ -68,12 +68,12 @@
                 <!-- Enable/Disable 2FA -->
                 @if (!$twoFactorEnabled)
                     <div class="border-t border-text-muted/20 pt-6">
-                        <h3 class="text-lg font-semibold mb-4">{{__('Enable Two-Factor Authentication')}}</h3>
+                        <h3 class="text-lg font-semibold mb-4">{{ __('Enable Two-Factor Authentication') }}</h3>
                         <p class="text-text-secondary mb-6">
                             {{ __('When two-factor authentication is enabled, you will be prompted for a secure, random token
-                            during authentication.
-                            You may retrieve this token from your phone\'s Google Authenticator, Authy, or any compatible
-                            authenticator application.') }}
+                                                        during authentication.
+                                                        You may retrieve this token from your phone\'s Google Authenticator, Authy, or any compatible
+                                                        authenticator application.') }}
                         </p>
 
                         <form method="POST" action="{{ route('user.two-factor.enable') }}">
@@ -91,12 +91,13 @@
                     <!-- QR Code Section -->
                     @if (!auth()->user()->two_factor_confirmed_at)
                         <div class="border-t border-text-muted/20 pt-6 mb-6">
-                            <h3 class="text-lg font-semibold mb-4">{{__('Finish Enabling Two-Factor Authentication')}}</h3>
+                            <h3 class="text-lg font-semibold mb-4">
+                                {{ __('Finish Enabling Two-Factor Authentication') }}</h3>
 
                             <p class="text-text-secondary mb-4">
                                 {{ __('To finish enabling two-factor authentication, scan the following QR code using your
-                                phone\'s authenticator application
-                                or enter the setup key and provide the generated OTP code.') }}
+                                                                phone\'s authenticator application
+                                                                or enter the setup key and provide the generated OTP code.') }}
                             </p>
 
                             <!-- QR Code Display -->
@@ -106,7 +107,7 @@
                                     <div class="text-center">
                                         <x-ui.button class="w-auto py-2!" type="button" onclick="loadQRCode()"
                                             variant="primary">
-                                    {{ __('Show QR Code') }}
+                                            {{ __('Show QR Code') }}
                                         </x-ui.button>
                                         {{-- <button type="button" onclick="loadQRCode()"
                                             class="px-6 py-3 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition">
@@ -123,7 +124,7 @@
 
                                 <div class="mb-4">
                                     <label for="code" class="block text-sm font-medium text-text-primary mb-2">
-                                    {{ __(' Confirm with code from authenticator app') }}
+                                        {{ __(' Confirm with code from authenticator app') }}
                                     </label>
                                     <input type="text" id="code" name="code"
                                         class="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md bg-bg-primary text-text-primary focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-accent-foreground"
@@ -148,11 +149,11 @@
                     <!-- Recovery Codes Section -->
                     @if (auth()->user()->two_factor_confirmed_at)
                         <div class="border-t border-text-muted/20 pt-6 mb-6">
-                            <h3 class="text-lg font-semibold mb-4">{{__('Recovery Codes')}}</h3>
+                            <h3 class="text-lg font-semibold mb-4">{{ __('Recovery Codes') }}</h3>
                             <p class="text-text-secondary mb-4">
                                 '{{ __('Store these recovery codes in a secure password manager. They can be used to recover
-                                access to your account
-                                if your two-factor authentication device is lost.') }}'
+                                                                access to your account
+                                                                if your two-factor authentication device is lost.') }}'
                             </p>
 
                             <x-ui.button class="w-auto py-2! mb-4" type="button" onclick="showRecoveryCodes()"
@@ -167,9 +168,11 @@
                                         <!-- Codes loaded here via JavaScript -->
                                     </div>
                                 </div>
-                                <p class="text-sm text-text-secondary mt-2">{{__('💡 Save these codes in a safe place. Each
-                                    code
-                                    can only be used once.')}}</p>
+                                <p class="text-sm text-text-secondary mt-2">
+                                    {{ __('💡 Save these codes in a safe place. Each
+                                                                        code
+                                                                        can only be used once.') }}
+                                </p>
                             </div>
 
                             <form method="POST" action="{{ route('user.two-factor.recovery-codes.store') }}"
@@ -187,11 +190,12 @@
                     @if (is_null(auth()->user()->two_factor_confirmed_at))
                         <!-- Cancel 2FA Processing -->
                         <div class="border-t border-text-muted/20 pt-6">
-                            <h3 class="text-lg font-semibold mb-4 text-pink-600">{{__('Cancel Processing')}}</h3>
+                            <h3 class="text-lg font-semibold mb-4 text-pink-600">{{ __('Cancel Processing') }}</h3>
                             <p class="text-text-secondary mb-4">
-                                ⚠️ <strong>{{__('Warning:')}}</strong> {{ __('Canceling two-factor authentication processing will make
-                                your admin
-                                account significantly less secure.') }}
+                                ⚠️ <strong>{{ __('Warning:') }}</strong>
+                                {{ __('Canceling two-factor authentication processing will make
+                                                                your admin
+                                                                account significantly less secure.') }}
                             </p>
 
                             <form method="POST" action="{{ route('user.two-factor.disable') }}">
@@ -211,10 +215,12 @@
                     @else
                         <!-- Disable 2FA -->
                         <div class="border-t border-text-muted/20 pt-6">
-                            <h3 class="text-lg font-semibold mb-4 text-pink-600">{{__('Disable Two-Factor Authentication')}}</h3>
+                            <h3 class="text-lg font-semibold mb-4 text-pink-600">
+                                {{ __('Disable Two-Factor Authentication') }}</h3>
                             <p class="text-text-secondary mb-4">
-                                ⚠️ <strong>{{__('Warning:')}}</strong> {{ __('Disabling two-factor authentication will make your admin
-                                account significantly less secure.') }}
+                                ⚠️ <strong>{{ __('Warning:') }}</strong>
+                                {{ __('Disabling two-factor authentication will make your admin
+                                                                account significantly less secure.') }}
                             </p>
 
                             <form method="POST" action="{{ route('user.two-factor.disable') }}">
@@ -246,19 +252,19 @@
     </div>
 
     <script>
-        function loadQRCode() {
-            fetch('{{ route('user.two-factor.qr-code') }}')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('qrCodeContainer').innerHTML = data.svg;
-                    document.getElementById('qrCodeContainer').classList.remove('hidden');
-                    document.getElementById('qrCode').classList.add('hidden');
-                })
-                .catch(error => {
-                    console.error('Error loading QR code:', error);
-                    alert('Failed to load QR code. Please try again.');
-                });
-        }
+        // function loadQRCode() {
+        //     fetch('{{ route('user.two-factor.qr-code') }}')
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             document.getElementById('qrCodeContainer').innerHTML = data.svg;
+        //             document.getElementById('qrCodeContainer').classList.remove('hidden');
+        //             document.getElementById('qrCode').classList.add('hidden');
+        //         })
+        //         .catch(error => {
+        //             console.error('Error loading QR code:', error);
+        //             alert('Failed to load QR code. Please try again.');
+        //         });
+        // }
 
         function showRecoveryCodes() {
             fetch('{{ route('user.two-factor.recovery-codes') }}')

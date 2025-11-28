@@ -15,7 +15,7 @@ class VideoFeedController extends Controller
     }
     public function userVideoFeed($username)
     {
-       
+
         // Pass username to the view
         return view($this->masterView, compact('username'));
     }

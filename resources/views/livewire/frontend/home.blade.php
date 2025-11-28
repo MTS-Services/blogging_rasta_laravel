@@ -1,4 +1,5 @@
 <div>
+
     <section class="bg-gradient">
         {{-- Banner Section --}}
         <div class="container pt-20 pb-16 lg:pt-24">

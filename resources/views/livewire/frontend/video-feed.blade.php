@@ -13,67 +13,22 @@
 
             {{-- Filter Tabs (User-based) --}}
             <div class="flex flex-wrap gap-1 sm:gap-2 mb-5 xl:mb-10 mx-auto">
-                @foreach ($this->users as $name => $username)
-                    @if ($username === 'All')
-                        <a href="{{ route('video-feed') }}" wire:navigate
-                            class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
-                            {{ $activeUser === $username
+                @foreach ($this->users as $user)
+                    {{-- @if ($username === 'All') --}}
+                    <a href="{{ route('video-feed', [
+                        'activeUser' => $user['username'],
+                    ]) }}"
+                        wire:navigate
+                        class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
+                            {{ $activeUser === $user['username']
                                 ? 'bg-second-500 text-white'
                                 : 'bg-second-800/10 text-second-500 hover:bg-second-400/40' }}">
-                            {{ $name }}
-                        </a>
-                    @else
-                        @php
-                            $featuredUsers = config('tiktok.featured_users', []);
-                            $userData = collect($featuredUsers)->firstWhere('username', $username);
-                            $actualUsername = $userData['username'];
-                        @endphp
-                        <a href="{{ route('user-video-feed', ['username' => $actualUsername]) }}" wire:navigate
-                            class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
-                             {{ $activeUser === $username
-                                 ? 'bg-second-500 text-white'
-                                 : 'bg-second-800/10 text-second-500 hover:bg-second-400/40' }}">
-                            {{ $name }}
-                        </a>
-                    @endif
+                        {{ $user['display_name'] }}
+                    </a>
                 @endforeach
             </div>
-
-            {{-- Loading State --}}
-            @if ($loading)
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @for ($i = 0; $i < 9; $i++)
-                        <div class="animate-pulse bg-bg-primary p-4 rounded-2xl shadow-md border border-second-500/40">
-                            <div class="bg-gray-300 w-full h-80 rounded-lg mb-2"></div>
-                            <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-                            <div class="h-3 bg-gray-300 rounded w-1/2 mb-4"></div>
-                            <div class="flex gap-4 py-2 border-t border-b">
-                                <div class="h-5 bg-gray-300 rounded w-12"></div>
-                                <div class="h-5 bg-gray-300 rounded w-12"></div>
-                                <div class="h-5 bg-gray-300 rounded w-12"></div>
-                            </div>
-                        </div>
-                    @endfor
-                </div>
-            @endif
-
-            {{-- Error State --}}
-            @if ($error && !$loading)
-                <div class="bg-red-50 border-l-4 border-red-400 rounded-lg p-6 max-w-2xl mx-auto">
-                    <div class="flex items-start">
-                        <svg class="w-6 h-6 text-red-400 mr-3 flex-shrink-0 mt-0.5" fill="currentColor"
-                            viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                        <p class="text-red-700 font-medium">{{ $error }}</p>
-                    </div>
-                </div>
-            @endif
-
             {{-- Video Cards Grid --}}
-            @if (!$loading && count($videos) > 0)
+            @if (count($videos) > 0)
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach ($videos as $video)
                         @php
@@ -115,15 +70,15 @@
                                 $video['video']['play_addr']['url_list'][0] ??
                                 ($video['video']['play'] ?? ($video['video']['play_addr'] ?? ($video['play'] ?? '')));
 
-                            $hashtags = [];
-                            if (isset($video['text_extra']) && is_array($video['text_extra'])) {
-                                foreach ($video['text_extra'] as $extra) {
-                                    if (isset($extra['hashtag_name'])) {
-                                        $hashtags[] = '#' . $extra['hashtag_name'];
-                                    }
-                                }
-                            }
-                            $hashtags = array_slice($hashtags, 0, 3);
+                            // $hashtags = [];
+                            // if (isset($video['text_extra']) && is_array($video['text_extra'])) {
+                            //     foreach ($video['text_extra'] as $extra) {
+                            //         if (isset($extra['hashtag_name'])) {
+                            //             $hashtags[] = '#' . $extra['hashtag_name'];
+                            //         }
+                            //     }
+                            // }
+                            // $hashtags = array_slice($hashtags, 0, 3);
 
                             // Escape quotes in title and desc for JavaScript
                             $escapedTitle = addslashes($videoTitle);
@@ -135,7 +90,7 @@
                             tiktokUrl: '{{ $tiktokUrl }}',
                             videoTitle: '{{ $escapedTitle }}',
                             videoDesc: '{{ $escapedDesc }}',
-                        
+
                             playVideo() {
                                 this.playing = true;
                                 this.$nextTick(() => {
@@ -153,7 +108,7 @@
                                     }
                                 });
                             },
-                        
+
                             stopVideo() {
                                 this.playing = false;
                                 if (this.$refs.video) {
@@ -161,24 +116,24 @@
                                     this.$refs.video.currentTime = 0;
                                 }
                             },
-                        
+
                             openOnTikTok() {
                                 window.open(this.tiktokUrl, '_blank');
                                 this.showShareMenu = false;
                             },
-                        
+
                             shareToWhatsApp() {
                                 const text = encodeURIComponent(this.videoTitle + '\n' + this.tiktokUrl);
                                 window.open('https://wa.me/?text=' + text, '_blank');
                                 this.showShareMenu = false;
                             },
-                        
+
                             shareToFacebook() {
                                 const url = encodeURIComponent(this.tiktokUrl);
                                 window.open('https://www.facebook.com/sharer/sharer.php?u=' + url, '_blank', 'width=600,height=400');
                                 this.showShareMenu = false;
                             },
-                        
+
                             shareToMessenger() {
                                 const url = encodeURIComponent(this.tiktokUrl);
                                 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -189,14 +144,14 @@
                                 }
                                 this.showShareMenu = false;
                             },
-                        
+
                             shareToTwitter() {
                                 const text = encodeURIComponent(this.videoTitle);
                                 const url = encodeURIComponent(this.tiktokUrl);
                                 window.open('https://twitter.com/intent/tweet?text=' + text + '&url=' + url, '_blank', 'width=600,height=400');
                                 this.showShareMenu = false;
                             },
-                        
+
                             copyLink() {
                                 navigator.clipboard.writeText(this.tiktokUrl).then(() => {
                                     alert('Link copied to clipboard!');
@@ -321,30 +276,30 @@
                                             showModal: false,
                                             videoData: {},
                                             shareUrl: '',
-                                        
+
                                             init() {
                                                 this.$watch('showModal', value => {
                                                     document.body.style.overflow = value ? 'hidden' : 'auto';
                                                 });
-                                        
+
                                                 window.addEventListener('open-share-modal', (event) => {
                                                     this.videoData = event.detail;
                                                     this.shareUrl = '{{ url('') }}/video/' + event.detail.videoId;
                                                     this.showModal = true;
                                                 });
                                             },
-                                        
+
                                             closeModal() {
                                                 this.showModal = false;
                                             },
-                                        
+
                                             shareVia(platform) {
                                                 const url = encodeURIComponent(this.shareUrl);
                                                 const title = encodeURIComponent(this.videoData.title);
                                                 const description = encodeURIComponent(this.videoData.description);
-                                        
+
                                                 let shareUrl = '';
-                                        
+
                                                 switch (platform) {
                                                     case 'whatsapp':
                                                         shareUrl = `https://wa.me/?text=${title}%20${url}`;
@@ -367,12 +322,12 @@
                                                         shareUrl = `mailto:?subject=${title}&body=${description}%20${url}`;
                                                         break;
                                                 }
-                                        
+
                                                 if (shareUrl) {
                                                     window.open(shareUrl, '_blank', 'width=600,height=400');
                                                 }
                                             },
-                                        
+
                                             copyLink() {
                                                 navigator.clipboard.writeText(this.shareUrl).then(() => {
                                                     this.$refs.copySuccess.classList.remove('hidden');
@@ -525,11 +480,11 @@
                                     </div>
                                 </div>
 
-                                @if (!empty($video['keywords']))
+                                @if (!empty($video['videoKeywords']))
                                     <div class="flex flex-wrap gap-2 sm:gap-3 mt-3">
-                                        @foreach ($video['keywords'] as $keyword)
+                                        @foreach ($video['videoKeywords'] as $keyword)
                                             <span
-                                                class="text-xs sm:text-sm text-second-500 lowercase font-medium">#{{ $keyword }}</span>
+                                                class="text-xs sm:text-sm text-second-500 lowercase font-medium">#{{ $keyword->name }}</span>
                                         @endforeach
                                     </div>
                                 @endif
@@ -538,32 +493,26 @@
                     @endforeach
                 </div>
 
-
                 {{-- Pagination --}}
-                @if ($this->shouldShowPagination())
+                @if ($videos->hasPages())
                     <div class="mt-8 sm:mt-12 px-2 sm:px-4">
                         <div
                             class="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-3 sm:gap-4 p-3 sm:p-6 rounded-xl sm:rounded-2xl">
 
-                            {{-- Page Info - Left Side (Hidden on Mobile) --}}
                             <div class="hidden sm:flex text-sm font-inter">
                                 <span class="text-gray-600">{{ __('Page') }}</span>
                                 <span
                                     class="mx-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-second-500 to-zinc-500 text-white font-bold text-base shadow-md">
-                                    {{ $currentPage }}
+                                    {{ $videos->currentPage() }}
                                 </span>
-                                @if ($this->getTotalPages() > $currentPage)
-                                    <span class="text-gray-600">{{ __('of') }}</span>
-                                    <span class="ml-1 font-semibold text-gray-800">{{ $this->getTotalPages() }}</span>
-                                @endif
+                                <span class="text-gray-600">{{ __('of') }}</span>
+                                <span class="ml-1 font-semibold text-gray-800">{{ $videos->lastPage() }}</span>
                             </div>
 
-                            {{-- Right Side Controls --}}
                             <div class="flex items-center gap-2 sm:gap-3">
-
                                 {{-- Previous Button --}}
                                 <button wire:click="previousPage" wire:loading.attr="disabled"
-                                    wire:target="previousPage" @if (!$this->hasPreviousPage()) disabled @endif
+                                    wire:target="previousPage" @disabled($videos->onFirstPage())
                                     class="group relative px-3 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl border-2 border-second-500/40 bg-white hover:bg-gradient-to-r hover:from-second-500 hover:to-second-600 text-gray-700 hover:text-white font-semibold transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-700 flex items-center gap-1 sm:gap-2 shadow-sm sm:shadow-md hover:shadow-lg sm:hover:shadow-xl hover:scale-105 disabled:hover:scale-100">
 
                                     <svg wire:loading.remove wire:target="previousPage"
@@ -589,18 +538,21 @@
                                         class="hidden sm:inline">{{ __('Previous') }}</span>
                                 </button>
 
-                                {{-- Page Numbers --}}
+                                {{-- Page Numbers (Desktop) --}}
                                 <div class="hidden md:flex items-center gap-1.5 sm:gap-2">
                                     @php
-                                        $totalPages = $this->getTotalPages();
+                                        $currentPage = $videos->currentPage();
+                                        $lastPage = $videos->lastPage();
                                         $start = max(1, $currentPage - 2);
-                                        $end = min($totalPages, $currentPage + 2);
+                                        $end = min($lastPage, $currentPage + 2);
                                     @endphp
 
                                     @if ($start > 1)
                                         <button wire:click="goToPage(1)" wire:loading.attr="disabled"
                                             wire:target="goToPage(1)"
-                                            class="px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl border-2 border-second-500/40 bg-white hover:bg-second-50 text-gray-700 font-semibold transition-all duration-300 shadow-sm sm:shadow-md hover:shadow-lg hover:scale-105 text-sm sm:text-base flex items-center justify-center min-w-[2.5rem] sm:min-w-[3rem]">
+                                            class="px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl border-2 border-second-500/40 bg-white hover:bg-second-50 text-gray-700 font-semibold transition-all duration-300 shadow-sm sm:shadow-md hover:shadow-lg hover:scale-105 text-sm sm:text-base flex items-center justify-center min-w-[2.5rem] sm:min-w-[3rem] disabled:opacity-50 disabled:cursor-not-allowed">
+
+                                            <span wire:loading.remove wire:target="goToPage(1)">1</span>
 
                                             <span wire:loading wire:target="goToPage(1)" class="flex items-center">
                                                 <div class="relative w-4 h-4 sm:w-5 sm:h-5">
@@ -615,8 +567,6 @@
                                                     </div>
                                                 </div>
                                             </span>
-
-                                            <span wire:loading.remove wire:target="goToPage(1)">1</span>
                                         </button>
                                         @if ($start > 2)
                                             <span
@@ -627,8 +577,11 @@
                                     @for ($i = $start; $i <= $end; $i++)
                                         <button wire:click="goToPage({{ $i }})"
                                             wire:loading.attr="disabled" wire:target="goToPage({{ $i }})"
-                                            class="px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl border-2 transition-all duration-300 font-semibold shadow-sm sm:shadow-md hover:shadow-lg hover:scale-105 text-sm sm:text-base flex items-center justify-center min-w-[2.5rem] sm:min-w-[3rem]
+                                            class="px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl border-2 transition-all duration-300 font-semibold shadow-sm sm:shadow-md hover:shadow-lg hover:scale-105 text-sm sm:text-base flex items-center justify-center min-w-[2.5rem] sm:min-w-[3rem] disabled:opacity-50 disabled:cursor-not-allowed
                             {{ $i === $currentPage ? 'bg-gradient-to-r from-second-500 to-zinc-500 text-white border-transparent ring-2 ring-second-300' : 'border-second-500/40 bg-white hover:bg-second-50 text-gray-700' }}">
+
+                                            <span wire:loading.remove
+                                                wire:target="goToPage({{ $i }})">{{ $i }}</span>
 
                                             <span wire:loading wire:target="goToPage({{ $i }})"
                                                 class="flex items-center">
@@ -644,22 +597,22 @@
                                                     </div>
                                                 </div>
                                             </span>
-
-                                            <span wire:loading.remove
-                                                wire:target="goToPage({{ $i }})">{{ $i }}</span>
                                         </button>
                                     @endfor
 
-                                    @if ($end < $totalPages)
-                                        @if ($end < $totalPages - 1)
+                                    @if ($end < $lastPage)
+                                        @if ($end < $lastPage - 1)
                                             <span
                                                 class="px-1 sm:px-2 text-gray-400 font-bold text-sm sm:text-base">...</span>
                                         @endif
-                                        <button wire:click="goToPage({{ $totalPages }})"
-                                            wire:loading.attr="disabled" wire:target="goToPage({{ $totalPages }})"
-                                            class="px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl border-2 border-second-500/40 bg-white hover:bg-second-50 text-gray-700 font-semibold transition-all duration-300 shadow-sm sm:shadow-md hover:shadow-lg hover:scale-105 text-sm sm:text-base flex items-center justify-center min-w-[2.5rem] sm:min-w-[3rem]">
+                                        <button wire:click="goToPage({{ $lastPage }})"
+                                            wire:loading.attr="disabled" wire:target="goToPage({{ $lastPage }})"
+                                            class="px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl border-2 border-second-500/40 bg-white hover:bg-second-50 text-gray-700 font-semibold transition-all duration-300 shadow-sm sm:shadow-md hover:shadow-lg hover:scale-105 text-sm sm:text-base flex items-center justify-center min-w-[2.5rem] sm:min-w-[3rem] disabled:opacity-50 disabled:cursor-not-allowed">
 
-                                            <span wire:loading wire:target="goToPage({{ $totalPages }})"
+                                            <span wire:loading.remove
+                                                wire:target="goToPage({{ $lastPage }})">{{ $lastPage }}</span>
+
+                                            <span wire:loading wire:target="goToPage({{ $lastPage }})"
                                                 class="flex items-center">
                                                 <div class="relative w-4 h-4 sm:w-5 sm:h-5">
                                                     <div
@@ -673,14 +626,11 @@
                                                     </div>
                                                 </div>
                                             </span>
-
-                                            <span wire:loading.remove
-                                                wire:target="goToPage({{ $totalPages }})">{{ $totalPages }}</span>
                                         </button>
                                     @endif
                                 </div>
 
-                                {{-- Current Page (Mobile) --}}
+                                {{-- Mobile Page Indicator --}}
                                 <div
                                     class="md:hidden px-3 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-second-500 to-zinc-500 text-white font-bold shadow-md sm:shadow-lg ring-2 ring-second-300 text-sm sm:text-base">
                                     {{ $currentPage }}
@@ -688,7 +638,7 @@
 
                                 {{-- Next Button --}}
                                 <button wire:click="nextPage" wire:loading.attr="disabled" wire:target="nextPage"
-                                    @if (!$this->hasNextPage()) disabled @endif
+                                    @disabled(!$videos->hasMorePages())
                                     class="group relative px-3 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl border-2 border-second-500/40 bg-white hover:bg-gradient-to-r hover:from-second-500 hover:to-second-600 text-gray-700 hover:text-white font-semibold transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-700 flex items-center gap-1 sm:gap-2 shadow-sm sm:shadow-md hover:shadow-lg sm:hover:shadow-xl hover:scale-105 disabled:hover:scale-100">
 
                                     <span wire:loading.remove wire:target="nextPage"
@@ -713,7 +663,6 @@
                                             d="M9 5l7 7-7 7" />
                                     </svg>
                                 </button>
-
                             </div>
                         </div>
                     </div>
@@ -721,8 +670,8 @@
 
             @endif
 
-            {{-- Empty State --}}
-            @if (!$loading && count($videos) == 0 && !$error)
+
+            @if (count($videos) == 0)
                 <div class="text-center py-16">
                     <svg class="w-24 h-24 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">

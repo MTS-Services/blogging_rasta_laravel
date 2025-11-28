@@ -24,7 +24,7 @@ class TikTokMultiUserService
 
     /**
      * Get user videos with pagination support
-     * 
+     *
      * @param string $username TikTok username
      * @param int $count Number of videos per page (default: 12)
      * @param string|int $cursor Pagination cursor (default: 0)
@@ -38,8 +38,8 @@ class TikTokMultiUserService
         }
 
         $cacheKey = "tiktok_videos_{$username}_{$count}_{$cursor}";
-        
-        return Cache::remember($cacheKey, 1800, function() use ($username, $count, $cursor) {
+
+        // return Cache::remember($cacheKey, 1800, function() use ($username, $count, $cursor) {
             try {
                 $response = $this->client->get($this->baseUrl . 'user/posts', [
                     'headers' => [
@@ -72,7 +72,7 @@ class TikTokMultiUserService
                 }
 
                 $data = json_decode($body, true);
-                
+
                 if (json_last_error() !== JSON_ERROR_NONE) {
                     return $this->errorResponse('Invalid JSON response from API');
                 }
@@ -87,12 +87,12 @@ class TikTokMultiUserService
                 $videos = $responseData['videos'] ?? [];
                 $hasMore = $responseData['hasMore'] ?? false;
                 $nextCursor = $responseData['cursor'] ?? 0;
-                
+
                 // Add username to each video for identification
                 foreach ($videos as &$video) {
                     $video['_username'] = $username;
                 }
-                
+
                 // Extract user info from first video's author
                 $user = null;
                 if (!empty($videos) && isset($videos[0]['author'])) {
@@ -105,7 +105,7 @@ class TikTokMultiUserService
                     'has_more' => $hasMore,
                     'next_cursor' => $nextCursor
                 ]);
-                
+
                 return [
                     'success' => true,
                     'videos' => $videos,
@@ -119,12 +119,12 @@ class TikTokMultiUserService
                 Log::error("TikTok Videos Error ({$username}): " . $e->getMessage());
                 return $this->errorResponse($e->getMessage());
             }
-        });
+        // });
     }
 
     /**
      * Get paginated videos from multiple users
-     * 
+     *
      * @param array $usernames Array of TikTok usernames
      * @param int $videosPerUser Videos per user per page
      * @param array $cursors Array of cursors for each user [username => cursor]
@@ -133,8 +133,8 @@ class TikTokMultiUserService
      * @return array
      */
     public function getMultipleUsersVideos(
-        array $usernames, 
-        $videosPerUser = 12, 
+        array $usernames,
+        $videosPerUser = 12,
         array $cursors = [],
         array $userVideoLimits = [],
         array $userVideoCounts = []
@@ -143,25 +143,25 @@ class TikTokMultiUserService
         $usersCursors = [];
         $usersHasMore = [];
         $updatedCounts = $userVideoCounts;
-        
+
         foreach ($usernames as $username) {
             // Check if user has reached their limit
             $maxLimit = $userVideoLimits[$username] ?? null;
             $currentCount = $userVideoCounts[$username] ?? 0;
-            
+
             if ($maxLimit !== null && $currentCount >= $maxLimit) {
                 // User has reached their limit, skip
                 $usersHasMore[$username] = false;
                 $usersCursors[$username] = $cursors[$username] ?? 0;
                 continue;
             }
-            
+
             $cursor = $cursors[$username] ?? 0;
             $result = $this->getUserVideos($username, $videosPerUser, $cursor);
-            
+
             if ($result['success'] && !empty($result['videos'])) {
                 $videosToAdd = $result['videos'];
-                
+
                 // If user has a limit, enforce it
                 if ($maxLimit !== null) {
                     $remaining = $maxLimit - $currentCount;
@@ -171,29 +171,29 @@ class TikTokMultiUserService
                     } else {
                         $usersHasMore[$username] = $result['has_more'];
                     }
-                    
+
                     // Update count
                     $updatedCounts[$username] = $currentCount + count($videosToAdd);
                 } else {
                     $usersHasMore[$username] = $result['has_more'];
                 }
-                
+
                 foreach ($videosToAdd as $video) {
                     $allVideos[] = $video;
                 }
-                
+
                 // Store pagination info for each user
                 $usersCursors[$username] = $result['cursor'];
             }
         }
-        
+
         // Sort by creation time (newest first)
         usort($allVideos, function ($a, $b) {
             $timeA = $a['create_time'] ?? 0;
             $timeB = $b['create_time'] ?? 0;
             return $timeB - $timeA;
         });
-        
+
         return [
             'success' => true,
             'videos' => $allVideos,
@@ -215,7 +215,7 @@ class TikTokMultiUserService
                 Cache::forget("tiktok_videos_{$username}_{$count}_{$cursor}");
             }
         }
-        
+
         Log::info("Cache cleared for user: {$username}");
     }
 
@@ -228,7 +228,7 @@ class TikTokMultiUserService
         foreach ($users as $user) {
             $this->clearUserCache($user['username']);
         }
-        
+
         Log::info("All TikTok cache cleared");
     }
 
@@ -239,7 +239,7 @@ class TikTokMultiUserService
     {
         return config('tiktok.featured_users', []);
     }
-    
+
     /**
      * Test API connection
      */
@@ -313,7 +313,7 @@ class TikTokMultiUserService
         } elseif ($number >= 1000) {
             return round($number / 1000, 1) . 'K';
         }
-        
+
         return number_format($number);
     }
 

@@ -9,7 +9,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use OwenIt\Auditing\Contracts\Auditable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
 use App\Traits\AuditableTrait;
 use App\Enums\UserStatus;
 use Laravel\Scout\Attributes\SearchUsingPrefix;
@@ -22,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
 class User extends AuthBaseModel implements Auditable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable, AuditableTrait, Searchable;
+    use HasFactory, Notifiable, AuditableTrait, Searchable;
 
     /**
      * The attributes that are mass assignable.

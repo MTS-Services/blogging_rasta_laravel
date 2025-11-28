@@ -75,10 +75,10 @@ class ApplicationSetting extends Model
      */
     public static function get($key, $default = null)
     {
-        return Cache::rememberForever("app_setting_{$key}", function () use ($key, $default) {
+        // return Cache::rememberForever("app_setting_{$key}", function () use ($key, $default) {
             $setting = self::where('key', $key)->first();
             return $setting ? $setting->value : $default;
-        });
+        // });
     }
 
     /**

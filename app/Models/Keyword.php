@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use App\Traits\AuditableTrait;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Scout\Attributes\SearchUsingPrefix;
 
-class Keyword extends AuthBaseModel implements Auditable
+class Keyword extends BaseModel implements Auditable
 {
     use AuditableTrait;
 
@@ -89,6 +89,11 @@ class Keyword extends AuthBaseModel implements Auditable
     public function shouldBeSearchable(): bool
     {
         return is_null($this->deleted_at);
+    }
+
+    public function videos(): BelongsToMany
+    {
+        return $this->belongsToMany(TikTokVideo::class, 'video_keywords', 'keyword_id', 'tik_tok_video_id');
     }
 
 

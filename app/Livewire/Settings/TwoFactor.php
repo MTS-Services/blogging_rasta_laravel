@@ -6,7 +6,7 @@ use Exception;
 use Laravel\Fortify\Actions\ConfirmTwoFactorAuthentication;
 use Laravel\Fortify\Actions\DisableTwoFactorAuthentication;
 use Laravel\Fortify\Actions\EnableTwoFactorAuthentication;
-use Laravel\Fortify\Features;
+// use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\Validate;
@@ -37,33 +37,33 @@ class TwoFactor extends Component
     /**
      * Mount the component.
      */
-    public function mount(DisableTwoFactorAuthentication $disableTwoFactorAuthentication): void
-    {
-        abort_unless(Features::enabled(Features::twoFactorAuthentication()), Response::HTTP_FORBIDDEN);
+    // public function mount(DisableTwoFactorAuthentication $disableTwoFactorAuthentication): void
+    // {
+    //     abort_unless(Features::enabled(Features::twoFactorAuthentication()), Response::HTTP_FORBIDDEN);
 
-        if (Fortify::confirmsTwoFactorAuthentication() && is_null(auth()->user()->two_factor_confirmed_at)) {
-            $disableTwoFactorAuthentication(auth()->user());
-        }
+    //     if (Fortify::confirmsTwoFactorAuthentication() && is_null(auth()->user()->two_factor_confirmed_at)) {
+    //         $disableTwoFactorAuthentication(auth()->user());
+    //     }
 
-        $this->twoFactorEnabled = auth()->user()->hasEnabledTwoFactorAuthentication();
-        $this->requiresConfirmation = Features::optionEnabled(Features::twoFactorAuthentication(), 'confirm');
-    }
+    //     $this->twoFactorEnabled = auth()->user()->hasEnabledTwoFactorAuthentication();
+    //     $this->requiresConfirmation = Features::optionEnabled(Features::twoFactorAuthentication(), 'confirm');
+    // }
 
     /**
      * Enable two-factor authentication for the user.
      */
-    public function enable(EnableTwoFactorAuthentication $enableTwoFactorAuthentication): void
-    {
-        $enableTwoFactorAuthentication(auth()->user());
+    // public function enable(EnableTwoFactorAuthentication $enableTwoFactorAuthentication): void
+    // {
+    //     $enableTwoFactorAuthentication(auth()->user());
 
-        if (! $this->requiresConfirmation) {
-            $this->twoFactorEnabled = auth()->user()->hasEnabledTwoFactorAuthentication();
-        }
+    //     if (! $this->requiresConfirmation) {
+    //         $this->twoFactorEnabled = auth()->user()->hasEnabledTwoFactorAuthentication();
+    //     }
 
-        $this->loadSetupData();
+    //     $this->loadSetupData();
 
-        $this->showModal = true;
-    }
+    //     $this->showModal = true;
+    // }
 
     /**
      * Load the two-factor authentication setup data for the user.
@@ -101,16 +101,16 @@ class TwoFactor extends Component
     /**
      * Confirm two-factor authentication for the user.
      */
-    public function confirmTwoFactor(ConfirmTwoFactorAuthentication $confirmTwoFactorAuthentication): void
-    {
-        $this->validate();
+    // public function confirmTwoFactor(ConfirmTwoFactorAuthentication $confirmTwoFactorAuthentication): void
+    // {
+    //     $this->validate();
 
-        $confirmTwoFactorAuthentication(auth()->user(), $this->code);
+    //     $confirmTwoFactorAuthentication(auth()->user(), $this->code);
 
-        $this->closeModal();
+    //     $this->closeModal();
 
-        $this->twoFactorEnabled = true;
-    }
+    //     $this->twoFactorEnabled = true;
+    // }
 
     /**
      * Reset two-factor verification state.
@@ -125,12 +125,12 @@ class TwoFactor extends Component
     /**
      * Disable two-factor authentication for the user.
      */
-    public function disable(DisableTwoFactorAuthentication $disableTwoFactorAuthentication): void
-    {
-        $disableTwoFactorAuthentication(auth()->user());
+    // public function disable(DisableTwoFactorAuthentication $disableTwoFactorAuthentication): void
+    // {
+    //     $disableTwoFactorAuthentication(auth()->user());
 
-        $this->twoFactorEnabled = false;
-    }
+    //     $this->twoFactorEnabled = false;
+    // }
 
     /**
      * Close the two-factor authentication modal.

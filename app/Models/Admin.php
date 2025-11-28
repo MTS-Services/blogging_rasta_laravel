@@ -6,7 +6,7 @@ use App\Enums\AdminStatus;
 use App\Enums\OtpType;
 use App\Models\AuthBaseModel;
 use App\Traits\AuditableTrait;
-use Laravel\Fortify\TwoFactorAuthenticatable;
+// use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Scout\Attributes\SearchUsingPrefix;
 use Laravel\Scout\Searchable;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Admin extends AuthBaseModel implements Auditable
 {
-    use TwoFactorAuthenticatable, AuditableTrait, Searchable;
+    use AuditableTrait, Searchable;
 
     protected $guard = 'admin';
 
@@ -177,7 +177,7 @@ class Admin extends AuthBaseModel implements Auditable
     {
         return $query->where('status', AdminStatus::ACTIVE->value);
     }
-    
+
     public function isActive(): bool
     {
         return $this->status === AdminStatus::ACTIVE;

@@ -17,15 +17,15 @@ Route::middleware('guest:web')->group(function () {
     Route::get('login', function () {
         return view('frontend.auth.user.login');
     })->name('login');
-    
+
     Route::get('register', function () {
         return view('frontend.auth.user.register');
     })->name('register');
-    
+
     Route::get('forgot-password', function () {
         return view('frontend.auth.user.forgot-password');
     })->name('password.request');
-    
+
     // User Two-Factor Challenge
     Route::get('two-factor-challenge', function () {
         if (!session()->has('login.id')) {
@@ -34,15 +34,15 @@ Route::middleware('guest:web')->group(function () {
         }
         return view('frontend.auth.user.two-factor-challenge');
     })->name('two-factor.login');
-    
+
     Route::post('two-factor-challenge', [UserTwoFactorSessionController::class, 'store'])
         ->middleware(['throttle:6,1'])
         ->name('two-factor.login.store');
-    
+
     Route::get('reset-password/{token}', function ($token) {
         return view('frontend.auth.user.reset-password', compact('token'));
     })->name('password.reset');
-    
+
     Route::get('password-reset/verify-otp', function () {
         return view('frontend.auth.user.verify-reset-otp');
     })->middleware(['throttle:6,1'])->name('verify-reset-otp');
@@ -51,16 +51,16 @@ Route::middleware('guest:web')->group(function () {
 Route::middleware('auth:web')->group(function () {
     Route::get('verify-email', function () {
         return view('frontend.auth.user.verify-email');
-    })->name('verification.notice');
-    
+    })->name('user-verification.notice');
+
     Route::get('verify-otp', function () {
         return view('frontend.auth.user.verify-otp');
     })->name('verify-otp')->middleware(['throttle:6,1']);
 
     Route::get('verify-email/{id}/{hash}', UserVerifyEmailController::class)
         ->middleware(['signed', 'throttle:6,1'])
-        ->name('verification.verify');
-        
+        ->name('user.verification.verify');
+
     // User 2FA Management
     Route::prefix('user/profile/two-factor')->name('two-factor.')->group(function () {
         Route::get('/', [UserTwoFactorController::class, 'index'])->name('index');
@@ -71,25 +71,25 @@ Route::middleware('auth:web')->group(function () {
 
 Route::post('logout', Logout::class)->name('logout');
 
-// Admin Auth Routes 
+// Admin Auth Routes
 Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
     Route::middleware('guest:admin')->group(function () {
         Route::get('login', function () {
             return view('frontend.auth.admin.login');
         })->name('login');
-        
+
         Route::get('forgot-password', function () {
             return view('frontend.auth.admin.forgot-password');
         })->name('password.request');
-        
+
         Route::get('password-reset/verify-otp', function () {
             return view('frontend.auth.admin.verify-reset-otp');
         })->name('reset.verify-otp')->middleware(['throttle:6,1']);
-        
+
         Route::get('reset-password/{token}', function (string $token) {
             return view('frontend.auth.admin.reset-password', compact('token'));
         })->name('password.reset');
-        
+
         // Admin Two-Factor Challenge
         Route::get('two-factor-challenge', function () {
             if (!session()->has('login.id')) {
@@ -98,7 +98,7 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
             }
             return view('frontend.auth.admin.two-factor-challenge');
         })->name('two-factor.login');
-        
+
         // Route::post('two-factor-challenge', [AdminTwoFactorSessionController::class, 'store'])
         //     ->middleware(['throttle:6,1'])
         //     ->name('two-factor.login.store');
@@ -108,7 +108,7 @@ Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
         Route::get('verify-email', function () {
             return view('frontend.auth.admin.verify-email');
         })->name('verification.notice');
-        
+
         Route::get('verify-otp', function () {
             return view('frontend.auth.admin.verify-otp');
         })->name('verify-otp')->middleware(['throttle:6,1']);

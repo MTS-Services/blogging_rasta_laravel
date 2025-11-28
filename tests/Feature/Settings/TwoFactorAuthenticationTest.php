@@ -1,19 +1,19 @@
 <?php
 
 use App\Models\User;
-use Laravel\Fortify\Features;
+// use Laravel\Fortify\Features;
 use Livewire\Livewire;
 
-beforeEach(function () {
-    if (! Features::canManageTwoFactorAuthentication()) {
-        $this->markTestSkipped('Two-factor authentication is not enabled.');
-    }
+// beforeEach(function () {
+//     if (!Features::canManageTwoFactorAuthentication()) {
+//         $this->markTestSkipped('Two-factor authentication is not enabled.');
+//     }
 
-    Features::twoFactorAuthentication([
-        'confirm' => true,
-        'confirmPassword' => true,
-    ]);
-});
+//     Features::twoFactorAuthentication([
+//         'confirm' => true,
+//         'confirmPassword' => true,
+//     ]);
+// });
 
 test('two factor settings page can be rendered', function () {
     $user = User::factory()->withoutTwoFactor()->create();

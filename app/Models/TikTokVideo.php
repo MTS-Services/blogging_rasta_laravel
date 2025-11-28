@@ -4,6 +4,7 @@ namespace App\Models;
 
 
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TikTokVideo extends BaseModel
@@ -57,12 +58,17 @@ class TikTokVideo extends BaseModel
         'create_time' => 'datetime',
     ];
 
-    public function videoKeywords(): HasMany
+    // public function videoKeywords(): HasMany
+    // {
+    //     return $this->hasMany(VideoKeyword::class,'tik_tok_video_id','id');
+    // }
+
+    public function videoKeywords(): BelongsToMany
     {
-        return $this->hasMany(VideoKeyword::class,'tik_tok_video_id','id');
+        return $this->belongsToMany(Keyword::class, 'video_keywords', 'tik_tok_video_id', 'keyword_id');
     }
 
-     public function scopeActive($query)
+    public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
@@ -89,7 +95,7 @@ class TikTokVideo extends BaseModel
     public function scopeOrdered($query)
     {
         return $query->orderBy('sort_order', 'desc')
-                     ->orderBy('create_time', 'desc');
+            ->orderBy('create_time', 'desc');
     }
 
     /**
@@ -130,7 +136,7 @@ class TikTokVideo extends BaseModel
         } elseif ($number >= 1000) {
             return round($number / 1000, 1) . 'K';
         }
-        
+
         return number_format($number);
     }
 

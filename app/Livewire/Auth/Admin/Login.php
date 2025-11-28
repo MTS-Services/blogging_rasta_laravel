@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Laravel\Fortify\Features;
+// use Laravel\Fortify\Features;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -36,16 +36,16 @@ class Login extends Component
 
         $user = $this->validateCredentials();
 
-        if (Features::canManageTwoFactorAuthentication() && $user->hasEnabledTwoFactorAuthentication()) {
-            Session::put([
-                'login.id' => $user->getKey(),
-                'login.remember' => $this->remember,
-            ]);
+        // if (Features::canManageTwoFactorAuthentication() && $user->hasEnabledTwoFactorAuthentication()) {
+        //     Session::put([
+        //         'login.id' => $user->getKey(),
+        //         'login.remember' => $this->remember,
+        //     ]);
 
-            $this->redirect(route('admin.two-factor.login'), navigate: true);
+        //     $this->redirect(route('admin.two-factor.login'), navigate: true);
 
-            return;
-        }
+        //     return;
+        // }
 
         Auth::guard('admin')->login($user, $this->remember);
 

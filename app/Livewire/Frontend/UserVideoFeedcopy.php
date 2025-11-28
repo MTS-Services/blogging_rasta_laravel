@@ -7,11 +7,9 @@ use App\Models\TikTokVideo;
 use App\Services\TikTokService;
 use Illuminate\Support\Facades\Log;
 
-class UserVideoFeed extends Component
+class UserVideoFeedcopy extends Component
 {
     public $username;
-
-    // public $keywords = [];
     public $displayName;
     public $videos = [];
     public $loading = true;
@@ -20,9 +18,6 @@ class UserVideoFeed extends Component
     // Pagination properties
     public $currentPage = 1;
     public $videosPerPage = 9;
-
-    // Cache total count to avoid repeated queries
-    private $cachedTotalVideos = null;
 
     protected $tiktokService;
 
@@ -61,30 +56,65 @@ class UserVideoFeed extends Component
 
         try {
             // Query videos from database for this specific user with keywords relationship
-            $query = TikTokVideo::with(['videoKeywords'])
+            $query = TikTokVideo::with(['videoKeywords.keyword'])
                 ->where('is_active', true)
                 ->where('username', $this->username)
                 ->orderBy('create_time', 'desc');
 
-            // Get total count for pagination and cache it
-            $this->cachedTotalVideos = $query->count();
+            // Get total count for pagination
+            $totalVideos = $query->count();
 
             // Get videos for current page
             $videosCollection = $query->skip(($this->currentPage - 1) * $this->videosPerPage)
                 ->take($this->videosPerPage)
                 ->get();
 
-            $this->videos = $videosCollection;
+            // Format videos for display
+            $this->videos = $videosCollection->map(function ($video) {
+                // Extract keywords from relationship
+                $keywords = $video->videoKeywords->map(function ($videoKeyword) {
+                    return $videoKeyword->keyword->name ?? null;
+                })->filter()->values()->toArray();
 
-            // dd($this->videos);
-
-            // $this->keywords = Keyword::with('videos')->withCount('videos')->get();
+                return [
+                    'aweme_id' => $video->aweme_id,
+                    'video_id' => $video->video_id,
+                    'title' => $video->title ?: $video->desc ?: 'TikTok Video',
+                    'desc' => $video->desc,
+                    'cover' => $video->cover,
+                    'origin_cover' => $video->origin_cover,
+                    'dynamic_cover' => $video->dynamic_cover,
+                    'play' => $video->play_url,
+                    'create_time' => strtotime($video->create_time),
+                    'play_count' => $video->play_count,
+                    'digg_count' => $video->digg_count,
+                    'comment_count' => $video->comment_count,
+                    'share_count' => $video->share_count,
+                    'video' => [
+                        'cover' => $video->cover,
+                        'origin_cover' => $video->origin_cover,
+                        'dynamic_cover' => $video->dynamic_cover,
+                        'play' => $video->play_url,
+                    ],
+                    'author' => [
+                        'unique_id' => $video->username,
+                        'nickname' => $video->author_nickname ?: $video->username,
+                        'avatar' => $video->author_avatar,
+                        'avatar_larger' => $video->author_avatar_larger,
+                        'avatar_medium' => $video->author_avatar_medium,
+                    ],
+                    '_username' => $video->username,
+                    'keywords' => $keywords,
+                    'text_extra' => $this->formatKeywordsAsTextExtra($keywords),
+                    'tiktok_url' => $this->getTikTokUrl($video->username, $video->video_id),
+                ];
+            })->toArray();
 
             Log::info('UserVideoFeed - Videos loaded from database', [
                 'username' => $this->username,
                 'page' => $this->currentPage,
                 'videos_count' => count($this->videos),
-                'total_videos' => $this->cachedTotalVideos,
+                'total_videos' => $totalVideos,
             ]);
         } catch (\Exception $e) {
             $this->error = 'Failed to load videos: ' . $e->getMessage();
@@ -128,16 +158,6 @@ class UserVideoFeed extends Component
         return $textExtra;
     }
 
-    /**
-     * Get total videos count (uses cache if available)
-     */
-    private function getTotalVideosCount()
-    {
-        if ($this->cachedTotalVideos === null) {
-            $this->cachedTotalVideos = $this->getFilteredQuery()->count();
-        }
-        return $this->cachedTotalVideos;
-    }
 
     /**
      * Get filtered query for this user
@@ -150,7 +170,8 @@ class UserVideoFeed extends Component
 
     public function shouldShowPagination()
     {
-        return $this->getTotalVideosCount() > $this->videosPerPage;
+        $totalVideos = $this->getFilteredQuery()->count();
+        return $totalVideos > $this->videosPerPage;
     }
 
     public function goToPage($page)
@@ -159,7 +180,8 @@ class UserVideoFeed extends Component
             return;
         }
 
-        $totalPages = ceil($this->getTotalVideosCount() / $this->videosPerPage);
+        $totalVideos = $this->getFilteredQuery()->count();
+        $totalPages = ceil($totalVideos / $this->videosPerPage);
 
         if ($page > $totalPages) {
             return;
@@ -191,7 +213,8 @@ class UserVideoFeed extends Component
 
     public function hasNextPage()
     {
-        $totalPages = ceil($this->getTotalVideosCount() / $this->videosPerPage);
+        $totalVideos = $this->getFilteredQuery()->count();
+        $totalPages = ceil($totalVideos / $this->videosPerPage);
         return $this->currentPage < $totalPages;
     }
 
@@ -202,7 +225,8 @@ class UserVideoFeed extends Component
 
     public function getTotalPages()
     {
-        return max(1, ceil($this->getTotalVideosCount() / $this->videosPerPage));
+        $totalVideos = $this->getFilteredQuery()->count();
+        return max(1, ceil($totalVideos / $this->videosPerPage));
     }
 
     public function getUsersProperty()
