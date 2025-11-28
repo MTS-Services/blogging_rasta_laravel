@@ -158,7 +158,7 @@ class VideoFeed extends Component
         $query = TikTokVideo::where('is_active', true);
 
         if ($this->activeUser !== 'All') {
-            $query->where('author_nickname', $this->activeUser);
+            $query->where('username', $this->activeUser);
         }
 
         return $query;
@@ -237,7 +237,8 @@ class VideoFeed extends Component
         $users = ['All' => 'All'];
 
         // Get distinct author nicknames from active videos
-        $authors = TikTokVideo::where('is_active', true)->distinct('username')
+        $authors = TikTokVideo::where('is_active', true)
+            ->distinct('username')
             ->pluck('username', 'author_nickname')
             ->toArray();
         return array_merge($users, $authors);
