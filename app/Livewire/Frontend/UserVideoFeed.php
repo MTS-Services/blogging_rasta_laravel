@@ -33,11 +33,11 @@ class UserVideoFeed extends Component
         // Get display name (author_nickname) from first video of this user
         $firstVideo = TikTokVideo::where('is_active', true)
             ->where('username', $username)
-            ->whereNotNull('author_nickname')
+            // ->whereNotNull('author_nickname')
             ->first();
 
         if (!$firstVideo) {
-            $this->error = 'User not found';
+            $this->error = 'No videos found for this user.';
             $this->loading = false;
             return;
         }
@@ -106,7 +106,7 @@ class UserVideoFeed extends Component
                     '_username' => $video->username,
                     'keywords' => $keywords,
                     'text_extra' => $this->formatKeywordsAsTextExtra($keywords),
-                     'tiktok_url' => $this->getTikTokUrl($video->username, $video->video_id),
+                    'tiktok_url' => $this->getTikTokUrl($video->username, $video->video_id),
                 ];
             })->toArray();
 
@@ -137,7 +137,7 @@ class UserVideoFeed extends Component
         return $url;
     }
 
-// Replace the extractHashtagsAsTextExtra() method:
+    // Replace the extractHashtagsAsTextExtra() method:
 
     /**
      * Convert keywords array to text_extra format
@@ -231,18 +231,12 @@ class UserVideoFeed extends Component
 
     public function getUsersProperty()
     {
-        $users = ['All'];
+        $users = ['All' => 'All'];
 
         // Get distinct author nicknames from active videos
-        $authors = TikTokVideo::where('is_active', true)
-            ->whereNotNull('author_nickname')
-            ->where('author_nickname', '!=', '')
-            ->select('author_nickname')
-            ->distinct()
-            ->orderBy('author_nickname')
-            ->pluck('author_nickname')
+        $authors = TikTokVideo::where('is_active', true)->distinct('username')
+            ->pluck('username', 'author_nickname')
             ->toArray();
-
         return array_merge($users, $authors);
     }
 

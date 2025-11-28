@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamp('sync_at')->nullable()->index();
 
             // Video Content
-            $table->string('title')->nullable();
+            $table->longText('title')->nullable();
             $table->longText('desc')->nullable();
             $table->longText('play_url')->nullable();
             $table->longText('cover')->nullable();

@@ -118,7 +118,7 @@ class VideoFeed extends Component
     /**
      * Generate TikTok video URL
      */
-  
+
 
     private function getTikTokUrl($username, $videoId)
     {
@@ -232,17 +232,12 @@ class VideoFeed extends Component
 
     public function getUsersProperty()
     {
-        $users = ['All'];
-        
-        $authors = TikTokVideo::where('is_active', true)
-            ->whereNotNull('author_nickname')
-            ->where('author_nickname', '!=', '')
-            ->select('author_nickname')
-            ->distinct()
-            ->orderBy('author_nickname')
-            ->pluck('author_nickname')
+        $users = ['All' => 'All'];
+
+        // Get distinct author nicknames from active videos
+        $authors = TikTokVideo::where('is_active', true)->distinct('username')
+            ->pluck('username', 'author_nickname')
             ->toArray();
-        
         return array_merge($users, $authors);
     }
 

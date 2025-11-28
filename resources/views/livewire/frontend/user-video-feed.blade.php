@@ -20,29 +20,29 @@
             </div>
 
             {{-- Filter Tabs (User-based) --}}
-            <div class="flex flex-wrap gap-1 sm:gap-2 xl:ps-20 mb-5 xl:mb-10 max-w-2xl mx-auto">
-                @foreach ($this->users as $user)
-                    @if ($user === 'All')
+            <div class="flex flex-wrap gap-1 sm:gap-2 mb-5 xl:mb-10 mx-auto">
+                @foreach ($this->users as $name => $username)
+                    @if ($username === 'All')
                         <a href="{{ route('video-feed') }}" wire:navigate
                             class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
-                            {{ $displayName === $user
+                            {{ $username === $username
                                 ? 'bg-second-500 text-white'
                                 : 'bg-second-800/10 text-second-500 hover:bg-second-400/40' }}">
-                            {{ $user }}
+                            {{ $name }}
                         </a>
                     @else
                         @php
                             // Find actual username for this display name
                             $featuredUsers = config('tiktok.featured_users', []);
-                            $userData = collect($featuredUsers)->firstWhere('display_name', $user);
-                            $actualUsername = $userData['username'] ?? strtolower(str_replace(' ', '', $user));
+                            $userData = collect($featuredUsers)->firstWhere('username', $username);
+                            $actualUsername = $userData['username'];
                         @endphp
                         <a href="{{ route('user-video-feed', ['username' => $actualUsername]) }}" wire:navigate
                             class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
-                             {{ $displayName === $user
+                             {{ $actualUsername === $username
                                  ? 'bg-second-500 text-white'
                                  : 'bg-second-800/10 text-second-500 hover:bg-second-400/40' }}">
-                            {{ $user }}
+                            {{ $name }}
                         </a>
                     @endif
                 @endforeach
@@ -150,7 +150,7 @@
                             tiktokUrl: '{{ $tiktokUrl }}',
                             videoTitle: '{{ $escapedTitle }}',
                             videoDesc: '{{ $escapedDesc }}',
-
+                        
                             playVideo() {
                                 this.playing = true;
                                 this.$nextTick(() => {
@@ -168,7 +168,7 @@
                                     }
                                 });
                             },
-
+                        
                             stopVideo() {
                                 this.playing = false;
                                 if (this.$refs.video) {
@@ -176,24 +176,24 @@
                                     this.$refs.video.currentTime = 0;
                                 }
                             },
-
+                        
                             openOnTikTok() {
                                 window.open(this.tiktokUrl, '_blank');
                                 this.showShareMenu = false;
                             },
-
+                        
                             shareToWhatsApp() {
                                 const text = encodeURIComponent(this.videoTitle + '\n' + this.tiktokUrl);
                                 window.open('https://wa.me/?text=' + text, '_blank');
                                 this.showShareMenu = false;
                             },
-
+                        
                             shareToFacebook() {
                                 const url = encodeURIComponent(this.tiktokUrl);
                                 window.open('https://www.facebook.com/sharer/sharer.php?u=' + url, '_blank', 'width=600,height=400');
                                 this.showShareMenu = false;
                             },
-
+                        
                             shareToMessenger() {
                                 const url = encodeURIComponent(this.tiktokUrl);
                                 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -204,14 +204,14 @@
                                 }
                                 this.showShareMenu = false;
                             },
-
+                        
                             shareToTwitter() {
                                 const text = encodeURIComponent(this.videoTitle);
                                 const url = encodeURIComponent(this.tiktokUrl);
                                 window.open('https://twitter.com/intent/tweet?text=' + text + '&url=' + url, '_blank', 'width=600,height=400');
                                 this.showShareMenu = false;
                             },
-
+                        
                             copyLink() {
                                 navigator.clipboard.writeText(this.tiktokUrl).then(() => {
                                     alert('Link copied to clipboard!');
@@ -342,30 +342,30 @@
                                             showModal: false,
                                             videoData: {},
                                             shareUrl: '',
-
+                                        
                                             init() {
                                                 this.$watch('showModal', value => {
                                                     document.body.style.overflow = value ? 'hidden' : 'auto';
                                                 });
-
+                                        
                                                 window.addEventListener('open-share-modal', (event) => {
                                                     this.videoData = event.detail;
                                                     this.shareUrl = '{{ url('') }}/video/' + event.detail.videoId;
                                                     this.showModal = true;
                                                 });
                                             },
-
+                                        
                                             closeModal() {
                                                 this.showModal = false;
                                             },
-
+                                        
                                             shareVia(platform) {
                                                 const url = encodeURIComponent(this.shareUrl);
                                                 const title = encodeURIComponent(this.videoData.title);
                                                 const description = encodeURIComponent(this.videoData.description);
-
+                                        
                                                 let shareUrl = '';
-
+                                        
                                                 switch (platform) {
                                                     case 'whatsapp':
                                                         shareUrl = `https://wa.me/?text=${title}%20${url}`;
@@ -388,12 +388,12 @@
                                                         shareUrl = `mailto:?subject=${title}&body=${description}%20${url}`;
                                                         break;
                                                 }
-
+                                        
                                                 if (shareUrl) {
                                                     window.open(shareUrl, '_blank', 'width=600,height=400');
                                                 }
                                             },
-
+                                        
                                             copyLink() {
                                                 navigator.clipboard.writeText(this.shareUrl).then(() => {
                                                     this.$refs.copySuccess.classList.remove('hidden');
