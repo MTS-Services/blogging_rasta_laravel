@@ -27,65 +27,37 @@
                     </a>
                 @endforeach
             </div>
-
-            {{-- Loading State --}}
-            {{-- @if ($loading)
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @for ($i = 0; $i < 9; $i++)
-                        <div class="animate-pulse bg-bg-primary p-4 rounded-2xl shadow-md border border-second-500/40">
-                            <div class="bg-gray-300 w-full h-80 rounded-lg mb-2"></div>
-                            <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-                            <div class="h-3 bg-gray-300 rounded w-1/2 mb-4"></div>
-                            <div class="flex gap-4 py-2 border-t border-b">
-                                <div class="h-5 bg-gray-300 rounded w-12"></div>
-                                <div class="h-5 bg-gray-300 rounded w-12"></div>
-                                <div class="h-5 bg-gray-300 rounded w-12"></div>
-                            </div>
-                        </div>
-                    @endfor
-                </div>
-            @endif --}}
-
-            {{-- Error State --}}
-            {{-- @if ($error && !$loading)
-                <div class="bg-red-50 border-l-4 border-red-400 rounded-lg p-6 max-w-2xl mx-auto">
-                    <div class="flex items-start">
-                        <svg class="w-6 h-6 text-red-400 mr-3 flex-shrink-0 mt-0.5" fill="currentColor"
-                            viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                        <p class="text-red-700 font-medium">{{ $error }}</p>
-                    </div>
-                </div>
-            @endif --}}
-
             {{-- Video Cards Grid --}}
             @if (count($videos) > 0)
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach ($videos as $video)
-                        {{-- @dd($video) --}}
-
                         @php
-                            $videoId = $video->video_id;
-                            $videoTitle = $video->title ?? 'TikTok Video';
-                            $desc = $video->desc ?? ($video->title ?? 'TikTok Video');
-                            $createTime = $video->create_time ?? time();
-                            $tiktokUrl = $this->getTikTokUrl($video->username, $video->video_id) ?? '#';
+                            $videoId = $video['video_id'];
+                            $videoTitle = $video['title'] ?? 'TikTok Video';
+                            $desc = $video['desc'] ?? ($video['title'] ?? 'TikTok Video');
+                            $createTime = $video['create_time'] ?? time();
+                            $tiktokUrl = $video['tiktok_url'] ?? '#';
 
-                            $cover = $video->cover ?? ($video->origin_cover ?? ($video->dynamic_cover ?? ''));
+                            $cover =
+                                $video['video']['cover'] ??
+                                ($video['video']['origin_cover'] ??
+                                    ($video['video']['dynamic_cover'] ?? ($video['cover'] ?? '')));
 
-                            $playCount = $video->play_count;
-                            $diggCount = $video->digg_count;
-                            $commentCount = $video->comment_count;
-                            $shareCount = $video->share_count;
+                            $playCount =
+                                $video['play_count'] ??
+                                ($video['statistics']['play_count'] ??
+                                    ($video['stats']['play_count'] ??
+                                        ($video['statistics']['playCount'] ?? ($video['stats']['playCount'] ?? 0))));
+                            $diggCount = $video['digg_count'] ?? ($video['diggCount'] ?? 0);
+                            $commentCount = $video['comment_count'] ?? ($video['commentCount'] ?? 0);
+                            $shareCount = $video['share_count'] ?? ($video['shareCount'] ?? 0);
 
-                            $author = $video->author_nickname ?? $video->username;
-                            $username = $video->username;
-                            $authorName = $video->author_nickname ?? $video->username;
+                            $author = $video['author'] ?? [];
+                            $username = $video['_username'] ?? ($author['unique_id'] ?? 'unknown');
+                            $authorName = $author['nickname'] ?? ($author['nick_name'] ?? $username);
                             $authorAvatar =
-                                $video->author_avatar ?? ($video->author_avatar_medium ?? $video->author_avatar_larger);
+                                $author['avatar_larger'] ??
+                                ($author['avatar_medium'] ?? ($author['avatar_thumb'] ?? ($author['avatar'] ?? '')));
 
                             if (empty($authorAvatar)) {
                                 $authorAvatar =
@@ -94,17 +66,19 @@
                                     '&size=200&background=667eea&color=fff';
                             }
 
-                            $playUrl = $video->play_url;
+                            $playUrl =
+                                $video['video']['play_addr']['url_list'][0] ??
+                                ($video['video']['play'] ?? ($video['video']['play_addr'] ?? ($video['play'] ?? '')));
 
-                            // $hashtags = [];
-                            // if (isset($video['text_extra']) && is_array($video['text_extra'])) {
-                            //     foreach ($video['text_extra'] as $extra) {
-                            //         if (isset($extra['hashtag_name'])) {
-                            //             $hashtags[] = '#' . $extra['hashtag_name'];
-                            //         }
-                            //     }
-                            // }
-                            // $hashtags = array_slice($hashtags, 0, 3);
+                            $hashtags = [];
+                            if (isset($video['text_extra']) && is_array($video['text_extra'])) {
+                                foreach ($video['text_extra'] as $extra) {
+                                    if (isset($extra['hashtag_name'])) {
+                                        $hashtags[] = '#' . $extra['hashtag_name'];
+                                    }
+                                }
+                            }
+                            $hashtags = array_slice($hashtags, 0, 3);
 
                             // Escape quotes in title and desc for JavaScript
                             $escapedTitle = addslashes($videoTitle);
@@ -519,7 +493,6 @@
                     @endforeach
                 </div>
 
-
                 {{-- Pagination --}}
                 @if ($videos->hasPages())
                     <div class="mt-8 sm:mt-12 px-2 sm:px-4">
@@ -697,7 +670,7 @@
 
             @endif
 
-            {{-- Empty State --}}
+
             @if (count($videos) == 0)
                 <div class="text-center py-16">
                     <svg class="w-24 h-24 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor"

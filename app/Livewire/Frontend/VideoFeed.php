@@ -37,6 +37,14 @@ class VideoFeed extends Component
         $this->dispatch('scroll-to-videos');
     }
 
+    private function getTikTokUrl($username, $videoId)
+    {
+        $url = "https://www.tiktok.com/@{$username}/video/{$videoId}";
+
+
+        return $url;
+    }
+
     // Custom pagination methods
     public function nextPage()
     {
