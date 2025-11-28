@@ -173,7 +173,7 @@
                         @foreach ($featuredVideos as $video)
                             @php
                                 // Extract video data
-                                $videoId = $video['aweme_id'] ?? ($video['video_id'] ?? '');
+                                $videoId = ($video['video_id']);
                                 $title = $video['title'] ?: 'TikTok Video';
                                 $cover = $video['cover'] ?? ($video['origin_cover'] ?? '');
                                 $playUrl = $video['play'] ?? '';
