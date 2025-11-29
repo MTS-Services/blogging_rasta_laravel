@@ -13,60 +13,25 @@
 
             {{-- Filter Tabs (User-based) --}}
             <div class="flex flex-wrap gap-1 sm:gap-2 mb-5 xl:mb-10 mx-auto">
-
-
-                @foreach ($this->users as $name => $username)
+                @foreach ($this->users as $user)
+                    {{-- @if ($username === 'All') --}}
                     <a href="{{ route('video-feed', [
-                        'activeUser' => $username,
+                        'activeUser' => $user['username'],
                     ]) }}"
                         wire:navigate
                         class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
-                            {{ $activeUser === $username
+                            {{ $activeUser === $user['username']
                                 ? 'bg-second-500 text-white'
                                 : 'bg-second-800/10 text-second-500 hover:bg-second-400/40' }}">
-                        {{ $name }}
+                        {{ $user['display_name'] }}
                     </a>
                 @endforeach
             </div>
-            {{-- Loading State --}}
-            @if ($loading)
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
-                    @for ($i = 0; $i < 12; $i++)
-                        <div class="animate-pulse bg-bg-primary p-4 rounded-2xl shadow-md border border-second-500/40">
-                            <div class="bg-gray-300 w-full h-80 rounded-lg mb-2"></div>
-                            <div class="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-                            <div class="h-3 bg-gray-300 rounded w-1/2 mb-4"></div>
-                            <div class="flex gap-4 py-2 border-t border-b">
-                                <div class="h-5 bg-gray-300 rounded w-12"></div>
-                                <div class="h-5 bg-gray-300 rounded w-12"></div>
-                                <div class="h-5 bg-gray-300 rounded w-12"></div>
-                            </div>
-                        </div>
-                    @endfor
-                </div>
-            @endif
-
-            {{-- Error State --}}
-            @if ($error && !$loading)
-                <div class="bg-red-50 border-l-4 border-red-400 rounded-lg p-6 max-w-2xl mx-auto">
-                    <div class="flex items-start">
-                        <svg class="w-6 h-6 text-red-400 mr-3 flex-shrink-0 mt-0.5" fill="currentColor"
-                            viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                clip-rule="evenodd"></path>
-                        </svg>
-                        <p class="text-red-700 font-medium">{{ $error }}</p>
-                    </div>
-                </div>
-            @endif
-
             {{-- Video Cards Grid --}}
-            @if (!$loading && count($videos) > 0)
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+            @if (count($videos) > 0)
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach ($videos as $video)
                         @php
-                            // Extract video data from API response
                             $videoId = $video['video_id'];
                             $videoTitle = $video['title'] ?? 'TikTok Video';
                             $desc = $video['desc'] ?? ($video['title'] ?? 'TikTok Video');
@@ -122,7 +87,6 @@
 
                         <div x-data="{
                             playing: false,
-                            showShareMenu: false,
                             tiktokUrl: '{{ $tiktokUrl }}',
                             videoTitle: '{{ $escapedTitle }}',
                             videoDesc: '{{ $escapedDesc }}',
@@ -203,7 +167,6 @@
                             {{-- Video Container --}}
                             <div class="relative w-full sm:h-80 lg:h-98 h-70 mb-2 rounded-lg overflow-hidden">
                                 @if ($playUrl)
-                                    {{-- Video Element (hidden until playing) --}}
                                     <video x-ref="video" x-show="playing" x-on:ended="stopVideo()"
                                         x-on:error="playing = false" class="w-full h-full object-cover"
                                         poster="{{ $cover }}" playsinline preload="metadata" controls
@@ -211,7 +174,6 @@
                                         <source src="{{ $playUrl }}" type="video/mp4">
                                     </video>
 
-                                    {{-- Thumbnail (visible until video plays) --}}
                                     <div x-show="!playing" x-on:click="playVideo()"
                                         class="absolute inset-0 cursor-pointer">
                                         @if ($cover)
@@ -228,7 +190,6 @@
                                             </div>
                                         @endif
 
-                                        {{-- Play button overlay --}}
                                         <div
                                             class="absolute inset-0 flex items-center justify-center transition-all duration-300 hover:bg-opacity-50">
                                             <div class="transform hover:scale-110 transition-transform duration-300">
@@ -240,7 +201,6 @@
                                         </div>
                                     </div>
                                 @else
-                                    {{-- No video available --}}
                                     <div
                                         class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
                                         @if ($cover)
@@ -295,9 +255,6 @@
                                     </button>
 
                                     {{-- Share Button --}}
-                                    {{-- Replace the Share Button section in your user feed (around line 200) with this: --}}
-
-                                    {{-- Share Button --}}
                                     <div class="relative">
                                         <button
                                             @click.stop="$dispatch('open-share-modal', {
@@ -313,6 +270,7 @@
                                                 class="text-base text-text-muted">{{ $this->formatNumber($shareCount) }}</span>
                                         </button>
 
+                                        {{-- Share Menu Dropdown --}}
                                         {{-- Share Modal --}}
                                         <div x-data="{
                                             showModal: false,
@@ -383,7 +341,7 @@
                                             }
                                         }" x-show="showModal"
                                             @keydown.escape.window="closeModal()"
-                                            class="fixed inset-0 bg-black/50 opacity-30 z-50 flex items-center justify-center p-4"
+                                            class="fixed inset-0 bg-black/50 opacity-30! z-50 flex items-center justify-center p-4"
                                             x-cloak style="display: none;">
 
                                             <div @click.away="closeModal()" x-show="showModal"
@@ -522,12 +480,11 @@
                                     </div>
                                 </div>
 
-                                {{-- Hashtags --}}
                                 @if (!empty($video['videoKeywords']))
                                     <div class="flex flex-wrap gap-2 sm:gap-3 mt-3">
                                         @foreach ($video['videoKeywords'] as $keyword)
                                             <span
-                                                class="text-xs sm:text-sm text-second-500 lowercase font-medium">#{{ $keyword }}</span>
+                                                class="text-xs sm:text-sm text-second-500 lowercase font-medium">#{{ $keyword->name }}</span>
                                         @endforeach
                                     </div>
                                 @endif
@@ -536,46 +493,43 @@
                     @endforeach
                 </div>
 
-                {{-- Pagination - Show if needed --}}
-                @if ($this->shouldShowPagination())
-                    <div class="mt-12 px-4">
-                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 rounded-2xl">
+                {{-- Pagination --}}
+                @if ($videos->hasPages())
+                    <div class="mt-8 sm:mt-12 px-2 sm:px-4">
+                        <div
+                            class="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-3 sm:gap-4 p-3 sm:p-6 rounded-xl sm:rounded-2xl">
 
-                            {{-- Page Info - Left Side (Always Visible) --}}
                             <div class="hidden sm:flex text-sm font-inter">
                                 <span class="text-gray-600">{{ __('Page') }}</span>
                                 <span
                                     class="mx-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-second-500 to-zinc-500 text-white font-bold text-base shadow-md">
-                                    {{ $currentPage }}
+                                    {{ $videos->currentPage() }}
                                 </span>
-                                @if ($this->getTotalPages() > $currentPage)
-                                    <span class="text-gray-600">{{ __('of') }}</span>
-                                    <span class="ml-1 font-semibold text-gray-800">{{ $this->getTotalPages() }}</span>
-                                @endif
+                                <span class="text-gray-600">{{ __('of') }}</span>
+                                <span class="ml-1 font-semibold text-gray-800">{{ $videos->lastPage() }}</span>
                             </div>
 
-                            {{-- Right Side Controls --}}
-                            <div class="flex items-center gap-3">
-
+                            <div class="flex items-center gap-2 sm:gap-3">
                                 {{-- Previous Button --}}
                                 <button wire:click="previousPage" wire:loading.attr="disabled"
-                                    wire:target="previousPage" @if (!$this->hasPreviousPage()) disabled @endif
-                                    class="group relative px-5 py-2.5 rounded-xl border-2 border-second-500/40 bg-white hover:bg-gradient-to-r hover:from-second-500 hover:to-second-600 text-gray-700 hover:text-white font-semibold transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-700 flex items-center gap-2 shadow-md hover:shadow-xl hover:scale-105 disabled:hover:scale-100">
+                                    wire:target="previousPage" @disabled($videos->onFirstPage())
+                                    class="group relative px-3 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl border-2 border-second-500/40 bg-white hover:bg-gradient-to-r hover:from-second-500 hover:to-second-600 text-gray-700 hover:text-white font-semibold transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-700 flex items-center gap-1 sm:gap-2 shadow-sm sm:shadow-md hover:shadow-lg sm:hover:shadow-xl hover:scale-105 disabled:hover:scale-100">
 
                                     <svg wire:loading.remove wire:target="previousPage"
-                                        class="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        class="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:-translate-x-1"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                             d="M15 19l-7-7 7-7" />
                                     </svg>
 
                                     <span wire:loading wire:target="previousPage" class="flex items-center">
-                                        <div class="relative w-5 h-5">
-                                            <div class="w-5 h-5 rounded-full border border-gray-200"></div>
-                                            <div
-                                                class="absolute top-0 left-0 w-5 h-5 rounded-full border border-transparent border-t-second-500 border-r-second-500 animate-spin">
+                                        <div class="relative w-4 h-4 sm:w-5 sm:h-5">
+                                            <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-gray-200">
                                             </div>
-                                            <div class="absolute top-0 left-0 w-5 h-5 rounded-full border border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
+                                            <div
+                                                class="absolute top-0 left-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-transparent border-t-second-500 border-r-second-500 animate-spin">
+                                            </div>
+                                            <div class="absolute top-0 left-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
                                                 style="animation-direction: reverse; animation-duration: 1s;"></div>
                                         </div>
                                     </span>
@@ -584,130 +538,140 @@
                                         class="hidden sm:inline">{{ __('Previous') }}</span>
                                 </button>
 
-                                {{-- Page Numbers (for desktop) --}}
-                                <div class="hidden md:flex items-center gap-2">
+                                {{-- Page Numbers (Desktop) --}}
+                                <div class="hidden md:flex items-center gap-1.5 sm:gap-2">
                                     @php
-                                        $totalPages = $this->getTotalPages();
+                                        $currentPage = $videos->currentPage();
+                                        $lastPage = $videos->lastPage();
                                         $start = max(1, $currentPage - 2);
-                                        $end = min($totalPages, $currentPage + 2);
+                                        $end = min($lastPage, $currentPage + 2);
                                     @endphp
 
                                     @if ($start > 1)
                                         <button wire:click="goToPage(1)" wire:loading.attr="disabled"
                                             wire:target="goToPage(1)"
-                                            class="px-4 py-2.5 rounded-xl border-2 border-second-500/40 bg-white hover:bg-second-50 text-gray-700 font-semibold transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 flex items-center justify-center min-w-[3rem]">
+                                            class="px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl border-2 border-second-500/40 bg-white hover:bg-second-50 text-gray-700 font-semibold transition-all duration-300 shadow-sm sm:shadow-md hover:shadow-lg hover:scale-105 text-sm sm:text-base flex items-center justify-center min-w-[2.5rem] sm:min-w-[3rem] disabled:opacity-50 disabled:cursor-not-allowed">
+
+                                            <span wire:loading.remove wire:target="goToPage(1)">1</span>
 
                                             <span wire:loading wire:target="goToPage(1)" class="flex items-center">
-                                                <div class="relative w-5 h-5">
-                                                    <div class="w-5 h-5 rounded-full border border-gray-200"></div>
+                                                <div class="relative w-4 h-4 sm:w-5 sm:h-5">
                                                     <div
-                                                        class="absolute top-0 left-0 w-5 h-5 rounded-full border border-transparent border-t-second-500 border-r-second-500 animate-spin">
+                                                        class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-gray-200">
                                                     </div>
-                                                    <div class="absolute top-0 left-0 w-5 h-5 rounded-full border border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
+                                                    <div
+                                                        class="absolute top-0 left-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-transparent border-t-second-500 border-r-second-500 animate-spin">
+                                                    </div>
+                                                    <div class="absolute top-0 left-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
                                                         style="animation-direction: reverse; animation-duration: 1s;">
                                                     </div>
                                                 </div>
                                             </span>
-
-                                            <span wire:loading.remove wire:target="goToPage(1)">1</span>
                                         </button>
                                         @if ($start > 2)
-                                            <span class="px-2 text-gray-400 font-bold">...</span>
+                                            <span
+                                                class="px-1 sm:px-2 text-gray-400 font-bold text-sm sm:text-base">...</span>
                                         @endif
                                     @endif
 
                                     @for ($i = $start; $i <= $end; $i++)
                                         <button wire:click="goToPage({{ $i }})"
                                             wire:loading.attr="disabled" wire:target="goToPage({{ $i }})"
-                                            class="px-4 py-2.5 rounded-xl border-2 transition-all duration-300 font-semibold shadow-md hover:shadow-lg hover:scale-105 flex items-center justify-center min-w-[3rem]
+                                            class="px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl border-2 transition-all duration-300 font-semibold shadow-sm sm:shadow-md hover:shadow-lg hover:scale-105 text-sm sm:text-base flex items-center justify-center min-w-[2.5rem] sm:min-w-[3rem] disabled:opacity-50 disabled:cursor-not-allowed
                             {{ $i === $currentPage ? 'bg-gradient-to-r from-second-500 to-zinc-500 text-white border-transparent ring-2 ring-second-300' : 'border-second-500/40 bg-white hover:bg-second-50 text-gray-700' }}">
-
-                                            <span wire:loading wire:target="goToPage({{ $i }})"
-                                                class="flex items-center">
-                                                <div class="relative w-5 h-5">
-                                                    <div class="w-5 h-5 rounded-full border border-gray-200"></div>
-                                                    <div
-                                                        class="absolute top-0 left-0 w-5 h-5 rounded-full border border-transparent border-t-second-500 border-r-second-500 animate-spin">
-                                                    </div>
-                                                    <div class="absolute top-0 left-0 w-5 h-5 rounded-full border border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
-                                                        style="animation-direction: reverse; animation-duration: 1s;">
-                                                    </div>
-                                                </div>
-                                            </span>
 
                                             <span wire:loading.remove
                                                 wire:target="goToPage({{ $i }})">{{ $i }}</span>
-                                        </button>
-                                    @endfor
 
-                                    @if ($end < $totalPages)
-                                        @if ($end < $totalPages - 1)
-                                            <span class="px-2 text-gray-400 font-bold">...</span>
-                                        @endif
-                                        <button wire:click="goToPage({{ $totalPages }})"
-                                            wire:loading.attr="disabled" wire:target="goToPage({{ $totalPages }})"
-                                            class="px-4 py-2.5 rounded-xl border-2 border-second-500/40 bg-white hover:bg-second-50 text-gray-700 font-semibold transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 flex items-center justify-center min-w-[3rem]">
-
-                                            <span wire:loading wire:target="goToPage({{ $totalPages }})"
+                                            <span wire:loading wire:target="goToPage({{ $i }})"
                                                 class="flex items-center">
-                                                <div class="relative w-5 h-5">
-                                                    <div class="w-5 h-5 rounded-full border border-gray-200"></div>
+                                                <div class="relative w-4 h-4 sm:w-5 sm:h-5">
                                                     <div
-                                                        class="absolute top-0 left-0 w-5 h-5 rounded-full border border-transparent border-t-second-500 border-r-second-500 animate-spin">
+                                                        class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-gray-200">
                                                     </div>
-                                                    <div class="absolute top-0 left-0 w-5 h-5 rounded-full border border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
+                                                    <div
+                                                        class="absolute top-0 left-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-transparent border-t-second-500 border-r-second-500 animate-spin">
+                                                    </div>
+                                                    <div class="absolute top-0 left-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
                                                         style="animation-direction: reverse; animation-duration: 1s;">
                                                     </div>
                                                 </div>
                                             </span>
+                                        </button>
+                                    @endfor
+
+                                    @if ($end < $lastPage)
+                                        @if ($end < $lastPage - 1)
+                                            <span
+                                                class="px-1 sm:px-2 text-gray-400 font-bold text-sm sm:text-base">...</span>
+                                        @endif
+                                        <button wire:click="goToPage({{ $lastPage }})"
+                                            wire:loading.attr="disabled" wire:target="goToPage({{ $lastPage }})"
+                                            class="px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl border-2 border-second-500/40 bg-white hover:bg-second-50 text-gray-700 font-semibold transition-all duration-300 shadow-sm sm:shadow-md hover:shadow-lg hover:scale-105 text-sm sm:text-base flex items-center justify-center min-w-[2.5rem] sm:min-w-[3rem] disabled:opacity-50 disabled:cursor-not-allowed">
 
                                             <span wire:loading.remove
-                                                wire:target="goToPage({{ $totalPages }})">{{ $totalPages }}</span>
+                                                wire:target="goToPage({{ $lastPage }})">{{ $lastPage }}</span>
+
+                                            <span wire:loading wire:target="goToPage({{ $lastPage }})"
+                                                class="flex items-center">
+                                                <div class="relative w-4 h-4 sm:w-5 sm:h-5">
+                                                    <div
+                                                        class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-gray-200">
+                                                    </div>
+                                                    <div
+                                                        class="absolute top-0 left-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-transparent border-t-second-500 border-r-second-500 animate-spin">
+                                                    </div>
+                                                    <div class="absolute top-0 left-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
+                                                        style="animation-direction: reverse; animation-duration: 1s;">
+                                                    </div>
+                                                </div>
+                                            </span>
                                         </button>
                                     @endif
                                 </div>
 
-                                {{-- Current Page (for mobile) --}}
+                                {{-- Mobile Page Indicator --}}
                                 <div
-                                    class="md:hidden px-5 py-2.5 rounded-xl bg-gradient-to-r from-second-500 to-zinc-500 text-white font-bold shadow-lg ring-2 ring-second-300">
+                                    class="md:hidden px-3 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-second-500 to-zinc-500 text-white font-bold shadow-md sm:shadow-lg ring-2 ring-second-300 text-sm sm:text-base">
                                     {{ $currentPage }}
                                 </div>
 
                                 {{-- Next Button --}}
                                 <button wire:click="nextPage" wire:loading.attr="disabled" wire:target="nextPage"
-                                    @if (!$this->hasNextPage()) disabled @endif
-                                    class="group relative px-5 py-2.5 rounded-xl border-2 border-second-500/40 bg-white hover:bg-gradient-to-r hover:from-second-500 hover:to-second-600 text-gray-700 hover:text-white font-semibold transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-700 flex items-center gap-2 shadow-md hover:shadow-xl hover:scale-105 disabled:hover:scale-100">
+                                    @disabled(!$videos->hasMorePages())
+                                    class="group relative px-3 py-2 sm:px-5 sm:py-2.5 rounded-lg sm:rounded-xl border-2 border-second-500/40 bg-white hover:bg-gradient-to-r hover:from-second-500 hover:to-second-600 text-gray-700 hover:text-white font-semibold transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-700 flex items-center gap-1 sm:gap-2 shadow-sm sm:shadow-md hover:shadow-lg sm:hover:shadow-xl hover:scale-105 disabled:hover:scale-100">
 
                                     <span wire:loading.remove wire:target="nextPage"
                                         class="hidden sm:inline">{{ __('Next') }}</span>
 
                                     <span wire:loading wire:target="nextPage" class="flex items-center">
-                                        <div class="relative w-5 h-5">
-                                            <div class="w-5 h-5 rounded-full border border-gray-200"></div>
-                                            <div
-                                                class="absolute top-0 left-0 w-5 h-5 rounded-full border border-transparent border-t-second-500 border-r-second-500 animate-spin">
+                                        <div class="relative w-4 h-4 sm:w-5 sm:h-5">
+                                            <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-gray-200">
                                             </div>
-                                            <div class="absolute top-0 left-0 w-5 h-5 rounded-full border border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
+                                            <div
+                                                class="absolute top-0 left-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-transparent border-t-second-500 border-r-second-500 animate-spin">
+                                            </div>
+                                            <div class="absolute top-0 left-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-transparent border-b-zinc-500 border-l-zinc-500 animate-spin"
                                                 style="animation-direction: reverse; animation-duration: 1s;"></div>
                                         </div>
                                     </span>
 
                                     <svg wire:loading.remove wire:target="nextPage"
-                                        class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        class="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                             d="M9 5l7 7-7 7" />
                                     </svg>
                                 </button>
-
                             </div>
                         </div>
                     </div>
                 @endif
+
             @endif
 
-            {{-- Empty State --}}
-            @if (!$loading && count($videos) == 0 && !$error)
+
+            @if (count($videos) == 0)
                 <div class="text-center py-16">
                     <svg class="w-24 h-24 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
@@ -717,7 +681,11 @@
                     </svg>
                     <h3 class="text-2xl font-semibold text-gray-900 mb-2">{{ __('No videos available') }}</h3>
                     <p class="text-gray-600">
-                        {{ __('No videos found for this user') }}
+                        @if ($activeUser !== 'All')
+                            {{ __('No videos found for') }} {{ $activeUser }}
+                        @else
+                            {{ __('Check back soon for new content') }}
+                        @endif
                     </p>
                 </div>
             @endif
