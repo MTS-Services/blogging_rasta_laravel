@@ -43,6 +43,7 @@ class VideoFeed extends Component
             $category = UserCategory::with('users')->find($categoryId);
             if ($category) {
                 $this->users = $category->users->toArray();
+                $this->activeUser = $this->users[0]['username'];
             }
         } else {
             $this->users = [];
@@ -61,20 +62,11 @@ class VideoFeed extends Component
             $category = UserCategory::with('users')->find($this->selectedCategory);
             if ($category) {
                 $this->users = $category->users->toArray();
+                $this->activeUser = $this->users[0]['username'];
             }
         }
 
         $this->loadVideos();
-    }
-
-    private function loadUsersForCategory()
-    {
-        if ($this->selectedCategory !== 'All') {
-            $category = UserCategory::with('users')->find($this->selectedCategory);
-            if ($category) {
-                $this->users = $category->users->toArray();
-            }
-        }
     }
 
     public function loadVideos()
