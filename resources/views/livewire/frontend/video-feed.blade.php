@@ -60,21 +60,23 @@
 
 
             {{-- Filter Tabs (User-based) --}}
-            <div class="flex flex-wrap gap-1 sm:gap-2 mb-5 xl:mb-10 mx-auto">
-                @foreach ($users as $user)
-                    <a href="{{ route('video-feed', [
-                        'activeUser' => $user['username'],
-                        'selectedCategory' => $selectedCategory,
-                    ]) }}"
-                        wire:navigate
-                        class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
+            @if ($selectedCategory !== 'All')
+                <div class="flex flex-wrap gap-1 sm:gap-2 mb-5 xl:mb-10 mx-auto">
+                    @foreach ($users as $user)
+                        <a href="{{ route('video-feed', [
+                            'activeUser' => $user['username'],
+                            'selectedCategory' => $selectedCategory,
+                        ]) }}"
+                            wire:navigate
+                            class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
                             {{ $activeUser === $user['username']
                                 ? 'bg-second-500 text-white'
                                 : 'bg-second-800/10 text-second-500 hover:bg-second-400/40' }}">
-                        {{ $user['name'] }}
-                    </a>
-                @endforeach
-            </div>
+                            {{ $user['name'] }}
+                        </a>
+                    @endforeach
+                </div>
+            @endif
             {{-- Loading State --}}
             @if ($loading)
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">

@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Frontend;
 
+use App\Models\TikTokUser;
 use App\Models\UserCategory;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use App\Models\TikTokVideo;
@@ -43,10 +45,9 @@ class VideoFeed extends Component
             $category = UserCategory::with('users')->find($categoryId);
             if ($category) {
                 $this->users = $category->users->toArray();
-                $this->activeUser = $this->users[0]['username'];
             }
         } else {
-            $this->users = [];
+            $this->users = TikTokUser::active()->get()->toArray();
         }
 
         // Reset to "All" users when category changes
@@ -62,8 +63,9 @@ class VideoFeed extends Component
             $category = UserCategory::with('users')->find($this->selectedCategory);
             if ($category) {
                 $this->users = $category->users->toArray();
-                $this->activeUser = $this->users[0]['username'];
             }
+        } else {
+            $this->users = TikTokUser::active()->get()->toArray();
         }
 
         $this->loadVideos();
@@ -80,9 +82,16 @@ class VideoFeed extends Component
                 ->where('is_active', true)
                 ->orderBy('create_time', 'desc');
 
+
+
             // Filter by user if not 'All'
             if ($this->activeUser !== 'All') {
                 $query->where('username', $this->activeUser);
+            } elseif ($this->activeUser == 'All') {
+                $usernames = Collection::make($this->users)
+                    ->pluck('username')
+                    ->toArray();
+                $query->whereIn('username', $usernames);
             }
 
             // Get total count for pagination
