@@ -55,7 +55,7 @@
                     //     'icon' => 'user',
                     //     'active' => 'admin-users',
                     // ],
-                
+
                     // [
                     //     'name' => 'Pending Users',
                     //     'route' => '#',
@@ -83,7 +83,35 @@
                         'icon' => 'user',
                         'active' => 'product',
                     ],
-                
+
+                    // [
+                    //     'name' => 'Pending Users',
+                    //     'route' => '#',
+                    //     'icon' => 'user-plus',
+                    //     'active' => 'admin-users-pending',
+                    // ],
+                    // [
+                    //     'name' => 'Banned Users',
+                    //     'route' => '#',
+                    //     'icon' => 'user-round-x',
+                    //     'active' => 'admin-users-banned',
+                    // ],
+                ]" />
+            <x-backend.navlink type="dropdown" icon="user-circle" name="TikTok Users" :page_slug="$active"
+                :items="[
+                    [
+                        'name' => 'Categories',
+                        'route' => route('admin.tm.user-category.index'),
+                        'icon' => 'user-circle',
+                        'active' => 'user-category',
+                    ],
+                    [
+                        'name' => 'Users',
+                        'route' => route('admin.tm.user.index'),
+                        'icon' => 'user-circle',
+                        'active' => 'tiktok-user',
+                    ],
+
                     // [
                     //     'name' => 'Pending Users',
                     //     'route' => '#',

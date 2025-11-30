@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Frontend;
 
+use App\Models\UserCategory;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use App\Models\TikTokVideo;
@@ -12,6 +13,12 @@ class VideoFeed extends Component
 {
     #[Url(keep: true)]
     public $activeUser = 'All';
+
+    #[Url(keep: true)]
+    public $selectedCategory = 'All';
+
+    public $users = [];
+
     public $videos = [];
     public $loading = true;
     public $error = null;
@@ -27,9 +34,47 @@ class VideoFeed extends Component
         $this->tiktokService = $tiktokService;
     }
 
+    public function selectCategory($categoryId)
+    {
+        $this->selectedCategory = $categoryId;
+
+        // Load users from database
+        if ($categoryId !== 'All') {
+            $category = UserCategory::with('users')->find($categoryId);
+            if ($category) {
+                $this->users = $category->users->toArray();
+            }
+        } else {
+            $this->users = [];
+        }
+
+        // Reset to "All" users when category changes
+        $this->activeUser = 'All';
+        $this->currentPage = 1;
+        $this->loadVideos();
+    }
+
     public function mount()
     {
+        // Load users based on selected category from URL
+        if ($this->selectedCategory !== 'All') {
+            $category = UserCategory::with('users')->find($this->selectedCategory);
+            if ($category) {
+                $this->users = $category->users->toArray();
+            }
+        }
+
         $this->loadVideos();
+    }
+
+    private function loadUsersForCategory()
+    {
+        if ($this->selectedCategory !== 'All') {
+            $category = UserCategory::with('users')->find($this->selectedCategory);
+            if ($category) {
+                $this->users = $category->users->toArray();
+            }
+        }
     }
 
     public function loadVideos()
@@ -232,17 +277,10 @@ class VideoFeed extends Component
         return max(1, ceil($totalVideos / $this->videosPerPage));
     }
 
-    public function getUsersProperty()
-    {
-        $users = ['All' => 'All'];
+    // public function getUsersProperty()
+    // {
 
-        // Get distinct author nicknames from active videos
-        $authors = TikTokVideo::where('is_active', true)
-            ->distinct('username')
-            ->pluck('username', 'author_nickname')
-            ->toArray();
-        return array_merge($users, $authors);
-    }
+    // }
 
     public function formatNumber($number)
     {
@@ -251,6 +289,8 @@ class VideoFeed extends Component
 
     public function render()
     {
-        return view('livewire.frontend.video-feed');
+
+        $categories = UserCategory::active()->with('users')->get();
+        return view('livewire.frontend.video-feed', compact('categories'));
     }
 }
