@@ -27,6 +27,11 @@ use App\Repositories\Eloquent\ApplicationSettingsRepository;
 use App\Repositories\Contracts\BannerVideoRepositoryInterface;
 use App\Repositories\Contracts\ContactRepositoryInterface;
 use App\Repositories\Eloquent\ContactRepository;
+use App\Repositories\Contracts\UserCategoryRepositoryInterface;
+use App\Repositories\Eloquent\UserCategoryRepository;
+use App\Repositories\Contracts\TikTokUserRepositoryInterface;
+use App\Repositories\Eloquent\TikTokUserRepository;
+
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -85,6 +90,14 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             AboutCmsRepositoryInterface::class,
             AboutCmsRepository::class
+        );
+        $this->app->bind(
+            UserCategoryRepositoryInterface::class,
+            UserCategoryRepository::class
+        );
+        $this->app->bind(
+            TikTokUserRepositoryInterface::class,
+            TikTokUserRepository::class
         );
     }
 

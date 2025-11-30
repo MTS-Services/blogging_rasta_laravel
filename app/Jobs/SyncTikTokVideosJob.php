@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\ApplicationSetting;
+use App\Models\TikTokUser;
 use App\Services\TikTokService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -61,18 +62,15 @@ class SyncTikTokVideosJob implements ShouldQueue
 
         try {
             // Get the featured users and decode JSON
-            $usersJson = ApplicationSetting::where('key', ApplicationSetting::FEATURED_USERS_KEY)
-                ->pluck('value')
-                ->first();
+            $users = TikTokUser::active()->get();
 
-            if (empty($usersJson)) {
+            if (empty($users)) {
                 Log::warning('No featured_users setting found in application settings.');
                 return;
             }
 
-            $users = json_decode($usersJson, true);
 
-            if (empty($users) || !is_array($users)) {
+            if (empty($users) || count($users) < 1) {
                 Log::warning('Featured users configuration is empty or invalid.');
                 return;
             }

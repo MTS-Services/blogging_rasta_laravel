@@ -9,11 +9,13 @@ use App\Http\Controllers\Backend\Admin\KeywordController;
 use App\Http\Controllers\Backend\Admin\AuditingController;
 use App\Http\Controllers\Backend\Admin\Settings\LanguageController;
 use App\Http\Controllers\Backend\Admin\UserManagement\UserController;
+use App\Http\Controllers\Backend\Admin\TikTokManagement\UserController as TikTokUserController;
 use App\Http\Controllers\Backend\Admin\UserManagement\AdminController;
 use App\Http\Controllers\Backend\Admin\BannerVideo\BannerVideoController;
 use App\Http\Controllers\Backend\Admin\ProductManagement\ProductController;
 use App\Http\Controllers\Backend\Admin\ProductManagement\CategoryController;
 use App\Http\Controllers\Backend\Admin\TikTokManagement\TikTokMixedFeedController;
+use App\Http\Controllers\Backend\Admin\TikTokManagement\UserCategoryController;
 use App\Http\Controllers\Backend\Admin\ApplicationSettings\ApplicationSettingsController;
 use App\Http\Controllers\Backend\Admin\ContactController;
 
@@ -106,6 +108,27 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
             Route::get('/view/{id}', 'view')->name('view');
             Route::get('/trash', 'trash')->name('trash');
         });
+
+    });
+
+    Route::group(['prefix' => 'tiktok-management', 'as' => 'tm.'], function () {
+        Route::controller(UserCategoryController::class)->name('user-category.')->prefix('user-category')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::get('/view/{id}', 'view')->name('view');
+            Route::get('/trash', 'trash')->name('trash');
+        });
+
+        Route::controller(TikTokUserController::class)->name('user.')->prefix('user')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::get('/view/{id}', 'view')->name('view');
+            Route::get('/trash', 'trash')->name('trash');
+        });
+
+
 
     });
 

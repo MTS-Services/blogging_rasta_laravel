@@ -21,7 +21,7 @@
                     <p class="text-xs text-gray-400 mt-1">{{ __('Get your API key from RapidAPI TikTok API') }}</p>
                 </div>
 
-                <!-- Featured Users Section -->
+                {{-- <!-- Featured Users Section -->
                 <div class="pt-5 mt-3 ">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-semibold text-text-white">{{ __('Featured TikTok Users') }}</h3>
@@ -79,7 +79,7 @@
                             </div>
                         @endforelse
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Video Settings -->
                 <div class="pt-5 mt-3 ">

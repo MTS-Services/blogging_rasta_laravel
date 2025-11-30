@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ApplicationSetting;
+use App\Models\TikTokUser;
 use App\Models\TikTokVideo;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
@@ -213,7 +214,7 @@ class TikTokService
     //     ];
     // }
 
-    public function getMultipleUsersVideos(array $users)
+    public function getMultipleUsersVideos($users)
     {
         $allVideos = [];
         $errors = [];
@@ -223,7 +224,7 @@ class TikTokService
 
             $result = $this->getUserVideos(
                 $user['username'],
-                $user['max_videos'] ?? config('tiktok.default_max_videos_per_user')
+                $user['max_videos']
             );
 
             Log::info("Result for {$user['username']}", [
@@ -268,9 +269,9 @@ class TikTokService
     /**
      * Sync videos from API to database
      */
-    public function syncVideos(array $users)
+    public function syncVideos($users)
     {
-        Log::info("Starting TikTok Sync for users: " . implode(', ', array_column($users, 'username')));
+        Log::info("Starting TikTok Sync for users: ");
 
         $this->clearCache();
         try {
