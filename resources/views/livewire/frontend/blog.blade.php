@@ -1,5 +1,5 @@
 <div class="bg-gradient">
-    <div class="container px-0 lg:px-24 pb-0 sm:pb-24 py-12">
+    <div class="container px-0 lg:px-24 pb-12 py-12">
         <h2 class="text-4xl md:text-5xl font-bold font-montserrat text-text-primary text-center">{{ __('Blog') }}
         </h2>
 
@@ -7,8 +7,8 @@
             @php $layout = $index % 2; @endphp
 
             @if ($layout === 0)
-                <div class="flex gap-12 items-center justify-between mt-12">
-                    <div class="bg-second-500/15 p-6 flex-1 lg:flex-1/2">
+                <div class="flex gap-12 items-center justify-between my-6 flex-col-reverse md:flex-row">
+                    <div class="bg-second-500/15 p-6 flex-1 lg:flex-1/2 w-full">
 
                         <h3 class="text-3xl font-semibold text-text-primary line-clamp-2">
                             {{ $blog->title }}
@@ -29,12 +29,12 @@
             @endif
 
             @if ($layout === 1)
-                <div class="flex gap-12 items-center justify-between mt-12 lg:mt-20">
+                <div class="flex gap-12 items-center justify-between my-6  flex-col md:flex-row">
                     <div class="flex-1 lg:flex-1/2 flex justify-center">
                         <x-blog-media :file="$blog->file" class="!object-cover" />
                     </div>
 
-                    <div class="bg-blog p-6 flex-1 lg:flex-1/2 mt-8 lg:mt-0">
+                    <div class="bg-blog p-6 flex-1 lg:flex-1/2 mt-8 lg:mt-0 w-full">
 
                         <h3 class="text-3xl font-semibold text-text-primary line-clamp-2">
                             {{ $blog->title }}
