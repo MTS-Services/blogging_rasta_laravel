@@ -78,7 +78,7 @@ class VideoFeed extends Component
 
         try {
             // Base query - only active videos with keywords relationship
-            $query = TikTokVideo::with(['videoKeywords.keyword'])
+            $query = TikTokVideo::with(['videoKeywords'])
                 ->where('is_active', true)
                 ->orderBy('create_time', 'desc');
 
