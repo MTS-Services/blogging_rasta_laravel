@@ -75,8 +75,6 @@ class SyncTikTokVideosJob implements ShouldQueue
                 return;
             }
 
-            Log::info('Starting TikTok sync for users: ' . implode(', ', array_column($users, 'username')));
-
             // Execute sync
             $result = $tiktokService->syncVideos($users);
 
