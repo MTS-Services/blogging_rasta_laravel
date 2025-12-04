@@ -16,82 +16,26 @@ class TikTokService
     protected $apiKey;
     protected $baseUrl = 'https://tiktok-scraper7.p.rapidapi.com/';
 
-    public function __construct()
+    protected $thumbnailService;
+
+    // Update your __construct method to inject ThumbnailDownloadService:
+    public function __construct(ThumbnailDownloadService $thumbnailService)
     {
+        $this->thumbnailService = $thumbnailService;
+
         $this->client = new Client([
             'timeout' => 60,
             'connect_timeout' => 10,
             'verify' => true,
             'http_errors' => false
         ]);
+
         $this->apiKey = ApplicationSetting::where('key', ApplicationSetting::RAPIDAPI_KEY)
             ->pluck('value')
             ->first();
     }
 
-    /**
-     * Get user videos with pagination
-     */
-    // public function getUserVideos($username, $count = 12, $cursor = 0)
-    // {
-    //     if (empty($this->apiKey)) {
-    //         Log::error("TikTok API key not configured");
-    //         return $this->errorResponse('API key not configured');
-    //     }
 
-    //     try {
-    //         $response = $this->client->get($this->baseUrl . 'user/posts', [
-    //             'headers' => [
-    //                 'x-rapidapi-host' => 'tiktok-scraper7.p.rapidapi.com',
-    //                 'x-rapidapi-key' => $this->apiKey,
-    //             ],
-    //             'query' => [
-    //                 'unique_id' => $username,
-    //                 'count' => $count,
-    //                 'cursor' => $cursor,
-    //             ],
-    //         ]);
-
-    //         $statusCode = $response->getStatusCode();
-    //         $body = $response->getBody()->getContents();
-
-    //         if ($statusCode === 403) {
-    //             return $this->errorResponse('API subscription required');
-    //         }
-
-    //         if ($statusCode !== 200) {
-    //             return $this->errorResponse("API returned status code: {$statusCode}");
-    //         }
-
-    //         $data = json_decode($body, true);
-
-    //         if (json_last_error() !== JSON_ERROR_NONE) {
-    //             return $this->errorResponse('Invalid JSON response');
-    //         }
-
-    //         if (isset($data['code']) && $data['code'] !== 0) {
-    //             return $this->errorResponse($data['msg'] ?? 'API request failed');
-    //         }
-
-    //         $responseData = $data['data'] ?? [];
-    //         $videos = $responseData['videos'] ?? [];
-
-    //         foreach ($videos as &$video) {
-    //             $video['_username'] = $username;
-    //         }
-
-    //         return [
-    //             'success' => true,
-    //             'videos' => $videos,
-    //             'has_more' => $responseData['hasMore'] ?? false,
-    //             'cursor' => $responseData['cursor'] ?? 0,
-    //         ];
-
-    //     } catch (\Exception $e) {
-    //         Log::error("TikTok API Error: " . $e->getMessage());
-    //         return $this->errorResponse($e->getMessage());
-    //     }
-    // }
 
 
     public function getUserVideos($username, $count = 12, $cursor = 0)
@@ -188,31 +132,7 @@ class TikTokService
             return $this->errorResponse($e->getMessage());
         }
     }
-    /**
-     * Get videos from multiple users
-     */
-    // public function getMultipleUsersVideos(array $users)
-    // {
-    //     $allVideos = [];
 
-    //     foreach ($users as $user) {
-    //         $result = $this->getUserVideos($user['username'], $user['max_videos'] ?? config('tiktok.default_max_videos_per_user'));
-
-    //         if ($result['success'] && !empty($result['videos'])) {
-    //             $allVideos = array_merge($allVideos, $result['videos']);
-    //         }
-    //     }
-
-    //     usort($allVideos, function ($a, $b) {
-    //         return ($b['create_time'] ?? 0) - ($a['create_time'] ?? 0);
-    //     });
-
-    //     return [
-    //         'success' => true,
-    //         'videos' => $allVideos,
-    //         'total_videos' => count($allVideos),
-    //     ];
-    // }
 
     public function getMultipleUsersVideos($users)
     {
@@ -309,7 +229,8 @@ class TikTokService
                             'author_avatar_medium' => $videoData['author_avatar_medium'],
                             'author_avatar_larger' => $videoData['author_avatar_larger'],
                             'music_title' => $videoData['music_title'],
-                            'video_description' => $videoData['video_description']
+                            'video_description' => $videoData['video_description'],
+                            'thumbnail_url' => $videoData['thumbnail_url']
                         ]
                     );
                     $updatedCount++;
@@ -393,31 +314,100 @@ class TikTokService
     /**
      * Prepare video data for database
      */
+    // private function prepareVideoData($video)
+    // {
+    //     $author = $video['author'] ?? [];
+    //     $musicInfo = $video['music_info'] ?? [];
+
+    //     return [
+    //         'aweme_id' => $video['aweme_id'] ?? null,
+    //         'video_id' => $video['video_id'] ?? null,
+    //         'sync_at' => now(),
+    //         'title' => $video['title'] ?? '',
+    //         'desc' => $video['desc'] ?? $video['title'] ?? '',
+
+    //         // Video URLs - direct from API response
+    //         'play_url' => $video['play'] ?? null,
+    //         'cover' => $video['cover'] ?? null,
+    //         'origin_cover' => $video['origin_cover'] ?? null,
+    //         'dynamic_cover' => $video['ai_dynamic_cover'] ?? null,
+
+    //         // Statistics - direct counts
+    //         'play_count' => $video['play_count'] ?? 0,
+    //         'digg_count' => $video['digg_count'] ?? 0,
+    //         'comment_count' => $video['comment_count'] ?? 0,
+    //         'share_count' => $video['share_count'] ?? 0,
+
+    //         // Author info
+    //         'username' => $video['_username'] ?? $author['unique_id'] ?? null,
+    //         'author_name' => $author['unique_id'] ?? null,
+    //         'author_nickname' => $author['nickname'] ?? null,
+    //         'author_avatar' => $author['avatar'] ?? null,
+    //         'author_avatar_medium' => $author['avatar'] ?? null,
+    //         'author_avatar_larger' => $author['avatar'] ?? null,
+
+    //         // Hashtags & timestamps
+    //         'hashtags' => $this->extractHashtags($video),
+    //         'create_time' => isset($video['create_time']) ? date('Y-m-d H:i:s', $video['create_time']) : now(),
+
+    //         // Video metadata
+    //         'duration' => $video['duration'] ?? 0,
+    //         'video_format' => 'mp4',
+
+    //         // Music info
+    //         'music_title' => $musicInfo['title'] ?? null,
+    //         'music_author' => $musicInfo['author'] ?? null,
+    //         'video_description' => $video['desc'] ?? $video['title'] ?? null,
+
+    //         // Status
+    //         'is_active' => true,
+    //         'is_featured' => false,
+    //     ];
+    // }
+
     private function prepareVideoData($video)
     {
         $author = $video['author'] ?? [];
         $musicInfo = $video['music_info'] ?? [];
+        $awemeId = $video['aweme_id'] ?? uniqid();
+
+        // Original TikTok CDN URLs
+        $originCover = $video['origin_cover'] ?? null;
+        $cover = $video['cover'] ?? null;
+        $dynamicCover = $video['ai_dynamic_cover'] ?? null;
+
+        // Download and store thumbnail locally
+        $localThumbnail = null;
+        if ($originCover) {
+            $localThumbnail = $this->thumbnailService->downloadAndStore($originCover, $awemeId);
+        }
+
+        // Fallback to cover if origin_cover download failed
+        if (!$localThumbnail && $cover) {
+            $localThumbnail = $this->thumbnailService->downloadAndStore($cover, $awemeId);
+        }
 
         return [
-            'aweme_id' => $video['aweme_id'] ?? null,
+            'aweme_id' => $awemeId,
             'video_id' => $video['video_id'] ?? null,
             'sync_at' => now(),
             'title' => $video['title'] ?? '',
             'desc' => $video['desc'] ?? $video['title'] ?? '',
 
-            // Video URLs - direct from API response
+            // Store original URLs as backup
             'play_url' => $video['play'] ?? null,
-            'cover' => $video['cover'] ?? null,
-            'origin_cover' => $video['origin_cover'] ?? null,
-            'dynamic_cover' => $video['ai_dynamic_cover'] ?? null,
+            'cover' => $cover,
+            'origin_cover' => $originCover,
+            'dynamic_cover' => $dynamicCover,
 
-            // Statistics - direct counts
+            // Store local thumbnail URL (THIS IS THE KEY!)
+            'thumbnail_url' => $localThumbnail,
+
             'play_count' => $video['play_count'] ?? 0,
             'digg_count' => $video['digg_count'] ?? 0,
             'comment_count' => $video['comment_count'] ?? 0,
             'share_count' => $video['share_count'] ?? 0,
 
-            // Author info
             'username' => $video['_username'] ?? $author['unique_id'] ?? null,
             'author_name' => $author['unique_id'] ?? null,
             'author_nickname' => $author['nickname'] ?? null,
@@ -425,24 +415,23 @@ class TikTokService
             'author_avatar_medium' => $author['avatar'] ?? null,
             'author_avatar_larger' => $author['avatar'] ?? null,
 
-            // Hashtags & timestamps
             'hashtags' => $this->extractHashtags($video),
-            'create_time' => isset($video['create_time']) ? date('Y-m-d H:i:s', $video['create_time']) : now(),
+            'create_time' => isset($video['create_time'])
+                ? date('Y-m-d H:i:s', $video['create_time'])
+                : now(),
 
-            // Video metadata
             'duration' => $video['duration'] ?? 0,
             'video_format' => 'mp4',
 
-            // Music info
             'music_title' => $musicInfo['title'] ?? null,
             'music_author' => $musicInfo['author'] ?? null,
             'video_description' => $video['desc'] ?? $video['title'] ?? null,
 
-            // Status
             'is_active' => true,
             'is_featured' => false,
         ];
     }
+
 
     /**
      * Extract hashtags from video - updated for new API structure
@@ -487,6 +476,7 @@ class TikTokService
             'video' => $video,
             'urls' => [
                 'play_url' => $video->play_url,
+                'thumbnail_url' => $video->thumbnail_url,
                 'cover' => $video->cover,
                 'origin_cover' => $video->origin_cover,
                 'dynamic_cover' => $video->dynamic_cover,

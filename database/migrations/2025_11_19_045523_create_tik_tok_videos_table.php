@@ -26,6 +26,7 @@ return new class extends Migration
             $table->longText('cover')->nullable();
             $table->longText('origin_cover')->nullable();
             $table->longText('dynamic_cover')->nullable();
+            $table->longText('thumbnail_url')->nullable();
 
             // Statistics
             $table->bigInteger('play_count')->default(0);
