@@ -176,6 +176,7 @@
                                 $videoId = ($video['video_id']);
                                 $title = $video['title'] ?: 'TikTok Video';
                                 $cover = $video['cover'] ?? ($video['origin_cover'] ?? '');
+                                $thumbnail_url = $video['thumbnail_url'];
                                 $playUrl = $video['play'] ?? '';
                                 $createTime = $video['create_time'] ?? time();
 
@@ -227,7 +228,7 @@
                                         {{-- Video Element --}}
                                         <video x-ref="video" x-show="playing" x-on:ended="stopVideo()"
                                             x-on:error="playing = false" class="w-full h-full object-cover"
-                                            poster="{{ $cover }}" playsinline preload="metadata" controls
+                                            poster="{{ $thumbnail_url }}" playsinline preload="metadata" controls
                                             controlsList="nodownload" x-cloak>
                                             <source src="{{ $playUrl }}" type="video/mp4">
                                         </video>
@@ -235,8 +236,8 @@
                                         {{-- Thumbnail --}}
                                         <div x-show="!playing" x-on:click="playVideo()"
                                             class="absolute inset-0 cursor-pointer">
-                                            @if ($cover)
-                                                <img src="{{ $cover }}" alt="{{ $title }}"
+                                            @if ($thumbnail_url)
+                                                <img src="{{ $thumbnail_url }}" alt="{{ $title }}"
                                                     class="w-full h-full object-cover" loading="lazy">
                                             @else
                                                 <div
