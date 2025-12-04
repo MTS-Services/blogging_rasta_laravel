@@ -97,6 +97,7 @@ class Home extends Component
                         'avatar' => $video->author_avatar,
                     ],
                     '_username' => $video->username,
+                    'thumbnail_url' => $video->thumbnail_url
                 ];
             })->toArray();
 
@@ -115,7 +116,7 @@ class Home extends Component
             $this->featuredVideos = [];
         }
 
-       
+
         $this->loading = false;
     }
 

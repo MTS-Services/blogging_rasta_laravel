@@ -126,6 +126,7 @@
                                 $video['video']['cover'] ??
                                 ($video['video']['origin_cover'] ??
                                     ($video['video']['dynamic_cover'] ?? ($video['cover'] ?? '')));
+                            $thumbnail_url = $video['thumbnail_url'];
 
                             $playCount =
                                 $video['play_count'] ??
@@ -255,7 +256,7 @@
                                     {{-- Video Element (hidden until playing) --}}
                                     <video x-ref="video" x-show="playing" x-on:ended="stopVideo()"
                                         x-on:error="playing = false" class="w-full h-full object-cover"
-                                        poster="{{ $cover }}" playsinline preload="metadata" controls
+                                        poster="{{ $thumbnail_url }}" playsinline preload="metadata" controls
                                         controlsList="nodownload" x-cloak>
                                         <source src="{{ $playUrl }}" type="video/mp4">
                                     </video>
@@ -263,8 +264,8 @@
                                     {{-- Thumbnail (visible until video plays) --}}
                                     <div x-show="!playing" x-on:click="playVideo()"
                                         class="absolute inset-0 cursor-pointer">
-                                        @if ($cover)
-                                            <img src="{{ $cover }}" alt="{{ $desc }}"
+                                        @if ($thumbnail_url)
+                                            <img src="{{ $thumbnail_url }}" alt="{{ $desc }}"
                                                 class="w-full h-full object-cover" loading="lazy">
                                         @else
                                             <div
@@ -292,8 +293,8 @@
                                     {{-- No video available --}}
                                     <div
                                         class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
-                                        @if ($cover)
-                                            <img src="{{ $cover }}" alt="{{ $desc }}"
+                                        @if ($thumbnail_url)
+                                            <img src="{{ $thumbnail_url }}" alt="{{ $desc }}"
                                                 class="w-full h-full object-cover" loading="lazy">
                                         @else
                                             <div class="flex flex-col items-center justify-center text-white">
@@ -353,7 +354,7 @@
                                                 videoId: '{{ $videoId }}',
                                                 title: '{{ $escapedTitle }}',
                                                 description: '{{ $escapedDesc }}',
-                                                cover: '{{ $cover }}',
+                                                cover: '{{ $thumbnail_url }}',
                                                 author: '{{ $authorName }}'
                                             })"
                                             class="flex items-center gap-1 text-scond-800/20 hover:text-second-500 transition-colors">

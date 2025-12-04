@@ -93,6 +93,7 @@ class VideoFeedcopy extends Component
                     'keywords' => $keywords,
                     'text_extra' => $this->formatKeywordsAsTextExtra($keywords),
                     'tiktok_url' => $this->getTikTokUrl($video->username, $video->video_id),
+                    'thumbnail_url' => $video->thumbnail_url
                 ];
             })->toArray();
 
