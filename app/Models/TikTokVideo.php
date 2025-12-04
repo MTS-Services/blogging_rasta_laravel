@@ -45,6 +45,7 @@ class TikTokVideo extends BaseModel
         'music_title',
         'music_author',
         'video_description',
+        'thumbnail_url',
     ];
 
     /**
@@ -57,6 +58,104 @@ class TikTokVideo extends BaseModel
         'sync_at' => 'datetime',
         'create_time' => 'datetime',
     ];
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->appends = array_merge(parent::getAppends(), [
+            'thumbnail',
+            'video_title',
+            'video_description_text',
+            'canonical_url',
+        ]);
+    }
+
+
+    public function getRouteKeyName(): string
+    {
+        return 'video_id';
+    }
+
+    public function getThumbnailAttribute(): string
+    {
+        // Priority 1: Local stored thumbnail
+        if ($this->thumbnail_url && !str_contains($this->thumbnail_url, 'tiktokcdn')) {
+            return $this->thumbnail_url;
+        }
+
+        // Priority 2: Use image proxy for TikTok CDN URLs
+        if ($this->origin_cover) {
+            return route('image.proxy', ['url' => $this->origin_cover]);
+        }
+
+        if ($this->cover) {
+            return route('image.proxy', ['url' => $this->cover]);
+        }
+
+        // Priority 3: Fallback to default
+        return asset('assets\images\video\video (1).png');
+    }
+
+    public function getVideoTitleAttribute(): string
+    {
+        return $this->title
+            ?? $this->desc
+            ?? $this->video_description
+            ?? "TikTok Video by {$this->author_nickname}";
+    }
+
+    public function getVideoDescriptionTextAttribute(): string
+    {
+        $desc = $this->video_description
+            ?? $this->desc
+            ?? $this->title
+            ?? '';
+
+        return strip_tags($desc);
+    }
+
+    public function getCanonicalUrlAttribute(): string
+    {
+        return route('video.details', $this->video_id);
+    }
+
+    // public function getSchemaMarkup(): string
+    // {
+    //     $schema = Schema::videoObject()
+    //         ->name($this->video_title)
+    //         ->description($this->video_description_text)
+    //         ->thumbnailUrl($this->thumbnail)
+    //         ->uploadDate($this->create_time?->toIso8601String() ?? $this->created_at->toIso8601String())
+    //         ->duration("PT{$this->duration}S")
+    //         ->contentUrl($this->play_url)
+    //         ->embedUrl($this->canonical_url)
+    //         ->interactionStatistic([
+    //             Schema::interactionCounter()
+    //                 ->interactionType('https://schema.org/WatchAction')
+    //                 ->userInteractionCount($this->play_count),
+    //             Schema::interactionCounter()
+    //                 ->interactionType('https://schema.org/LikeAction')
+    //                 ->userInteractionCount($this->digg_count),
+    //             Schema::interactionCounter()
+    //                 ->interactionType('https://schema.org/CommentAction')
+    //                 ->userInteractionCount($this->comment_count),
+    //         ]);
+
+    //     if ($this->author_nickname) {
+    //         $schema->author(
+    //             Schema::person()
+    //                 ->name($this->author_nickname)
+    //                 ->url("https://www.tiktok.com/@{$this->username}")
+    //         );
+    //     }
+
+    //     if (!empty($this->hashtags)) {
+    //         $schema->keywords(implode(', ', $this->hashtags));
+    //     }
+
+    //     return $schema->toScript();
+    // }
+
 
     // public function videoKeywords(): HasMany
     // {

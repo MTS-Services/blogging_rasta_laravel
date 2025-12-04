@@ -74,7 +74,7 @@
                             $createTime = $video->create_time ?? time();
                             $tiktokUrl = $this->getTikTokUrl($video->username, $video->video_id) ?? '#';
 
-                            $cover = $video->cover ?? ($video->origin_cover ?? ($video->dynamic_cover ?? ''));
+                            $cover = $video->thumbnail_url ;
 
                             $playCount = $video->play_count;
                             $diggCount = $video->digg_count;

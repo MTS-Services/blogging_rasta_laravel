@@ -17,7 +17,7 @@
 
             <div class="aspect-video max-w-2xl mx-auto bg-black rounded-lg overflow-hidden">
                 @if ($data->play_url)
-                    <video controls class="w-full h-full" poster="{{ $data->cover ?? $data->origin_cover }}">
+                    <video controls class="w-full h-full" poster="{{ $data->thumbnail_url }}">
                         <source src="{{ $data->play_url }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>

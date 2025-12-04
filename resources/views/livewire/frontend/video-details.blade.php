@@ -3,13 +3,13 @@
     @section('meta')
         <meta property="og:title" content="{{ $data->title }}">
         <meta property="og:description" content="{{ $data->video_description ?? $data->title }}">
-        <meta property="og:image" content="{{ $data->cover }}">
+        <meta property="og:image" content="{{ $data->thumbnail_url }}">
         <meta property="og:url" content="{{ url()->current() }}">
 
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="{{ $data->title }}">
         <meta name="twitter:description" content="{{ $data->video_description ?? $data->title }}">
-        <meta name="twitter:image" content="{{ $data->cover }}">
+        <meta name="twitter:image" content="{{ $data->thumbnail_url }}">
     @endsection
     {{-- Hero Section with Video --}}
     <section class="bg-gradient">
@@ -44,15 +44,15 @@
                             {{-- Video Element --}}
                             <video x-ref="mainVideo" x-show="playing" x-on:ended="stopVideo()"
                                 x-on:error="playing = false" class="w-full h-full object-cover"
-                                poster="{{ $data->cover }}" playsinline preload="metadata" controls
+                                poster="{{ $data->thumbnail_url }}" playsinline preload="metadata" controls
                                 controlsList="nodownload" x-cloak>
                                 <source src="{{ $data->play_url }}" type="video/mp4">
                             </video>
 
                             {{-- Thumbnail --}}
                             <div x-show="!playing" x-on:click="playVideo()" class="absolute inset-0 cursor-pointer">
-                                @if ($data->cover)
-                                    <img src="{{ $data->cover }}" alt="{{ $data->title }}"
+                                @if ($data->thumbnail_url)
+                                    <img src="{{ $data->thumbnail_url }}" alt="{{ $data->title }}"
                                         class="w-full h-full object-cover" loading="lazy">
                                 @else
                                     <div
@@ -249,7 +249,7 @@
             {{-- Video Preview --}}
             <div class="mb-6 p-4 bg-second-50 rounded-xl">
                 <div class="flex items-center gap-3">
-                    <img src="{{ $data->cover }}" alt="{{ $data->title }}"
+                    <img src="{{ $data->thumbnail_url }}" alt="{{ $data->title }}"
                         class="w-20 h-20 rounded-lg object-cover">
                     <div class="flex-1 min-w-0">
                         <p class="font-semibold text-text-primary font-inter truncate">
