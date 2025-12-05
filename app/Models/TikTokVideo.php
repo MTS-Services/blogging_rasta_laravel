@@ -86,16 +86,16 @@ class TikTokVideo extends BaseModel
         }
 
         // Priority 2: Use image proxy for TikTok CDN URLs
-        if ($this->origin_cover) {
-            return route('image.proxy', ['url' => $this->origin_cover]);
-        }
+        // if ($this->origin_cover) {
+        //     return route('image.proxy', ['url' => $this->origin_cover]);
+        // }
 
-        if ($this->cover) {
-            return route('image.proxy', ['url' => $this->cover]);
-        }
+        // if ($this->cover) {
+        //     return route('image.proxy', ['url' => $this->cover]);
+        // }
 
         // Priority 3: Fallback to default
-        return asset('assets/images/video/video (1).png');
+        return asset('assets/images/default_thum.png');
     }
 
     public function getVideoTitleAttribute(): string
