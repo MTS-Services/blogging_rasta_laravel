@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\BlogStatus;
+use App\Services\SitemapService;
 use OwenIt\Auditing\Contracts\Auditable;
 use Laravel\Scout\Attributes\SearchUsingPrefix;
 use Illuminate\Database\Eloquent\Builder;
@@ -34,6 +35,18 @@ class Blog extends BaseModel implements Auditable
         'meta_keywords' => 'array',
     ];
 
+
+
+    protected static function booted()
+    {
+        static::updated(function ($model) {
+            app(SitemapService::class)->generate();
+        });
+
+        static::deleted(function ($model) {
+            app(SitemapService::class)->generate();
+        });
+    }
     /* =#=#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=
     |           Query Scopes                                       |
     =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */

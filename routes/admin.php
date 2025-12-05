@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Backend\Admin\AboutCmsController;
+use App\Http\Controllers\SitemapController;
 use Firebase\JWT\Key;
 use App\Livewire\Frontend\Blog;
 use Illuminate\Support\Facades\Route;
@@ -131,6 +132,8 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
 
 
     });
+
+    Route::get('/sitemap-generate', [SitemapController::class, 'generate'])->name('sitemap.generate');
 
 
     Route::controller(TikTokMixedFeedController::class)->prefix('tiktok-videos')->group(function () {
