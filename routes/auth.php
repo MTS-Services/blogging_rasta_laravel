@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 // User Auth Routes
 Route::middleware('guest:web')->group(function () {
     Route::get('login', function () {
-        return view('frontend.auth.user.login');
+        return redirect()->route('admin.login');
     })->name('login');
 
     Route::get('register', function () {
