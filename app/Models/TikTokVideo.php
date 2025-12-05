@@ -63,7 +63,7 @@ class TikTokVideo extends BaseModel
     {
         parent::__construct($attributes);
         $this->appends = array_merge(parent::getAppends(), [
-            'thumbnail',
+            'thumbnail_url',
             'video_title',
             'video_description_text',
             'canonical_url',
@@ -76,11 +76,13 @@ class TikTokVideo extends BaseModel
         return 'video_id';
     }
 
-    public function getThumbnailAttribute(): string
+    public function getThumbnailUrlAttribute(): string
     {
-        // Priority 1: Local stored thumbnail
-        if ($this->thumbnail_url && !str_contains($this->thumbnail_url, 'tiktokcdn')) {
-            return $this->thumbnail_url;
+        $thumbnail = $this->getRawOriginal('thumbnail_url');
+
+        // Priority 1: Local stored thumbnail (not from TikTok CDN)
+        if ($thumbnail && !str_contains($thumbnail, 'tiktokcdn')) {
+            return $thumbnail;
         }
 
         // Priority 2: Use image proxy for TikTok CDN URLs
@@ -93,7 +95,7 @@ class TikTokVideo extends BaseModel
         }
 
         // Priority 3: Fallback to default
-        return asset('assets\images\video\video (1).png');
+        return asset('assets/images/video/video (1).png');
     }
 
     public function getVideoTitleAttribute(): string
