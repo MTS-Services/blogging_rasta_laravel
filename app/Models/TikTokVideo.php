@@ -95,7 +95,7 @@ class TikTokVideo extends BaseModel
         // }
 
         // Priority 3: Fallback to default
-        return asset('assets/images/default_thumb.png');
+        return asset('assets/images/default_thumb.jpg');
     }
 
     public function getVideoTitleAttribute(): string
