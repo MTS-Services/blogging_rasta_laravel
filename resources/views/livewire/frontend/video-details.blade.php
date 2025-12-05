@@ -1,16 +1,45 @@
 <div>
 
     @section('meta')
-        <meta property="og:title" content="{{ $data->title }}">
-        <meta property="og:description" content="{{ $data->video_description ?? $data->title }}">
+        <meta property="og:title" content="{{ $data->title ?? 'DioDioGlow Video' }}">
+        <meta property="og:description" content="{!! $data->video_description ? Str::limit(html_entity_decode($data->video_description)) : $data->title !!}">
         <meta property="og:image" content="{{ $data->thumbnail_url }}">
         <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:image:secure_url" content="{{ $data->thumbnail_url }}">
+        <link rel="image_src" href="{{ $data->thumbnail_url }}">
 
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="{{ $data->title }}">
-        <meta name="twitter:description" content="{{ $data->video_description ?? $data->title }}">
+        <meta name="twitter:description" content="{!! $data->video_description ? Str::limit(html_entity_decode($data->video_description)) : $data->title !!}">
         <meta name="twitter:image" content="{{ $data->thumbnail_url }}">
     @endsection
+
+    @section('head_scripts')
+        <script type="application/ld+json">
+            @php
+            echo json_encode([
+                "@context" => "https://schema.org",
+                "@type" => "VideoObject",
+                "name" => $data->video_description
+                            ? Str::limit(strip_tags($data->video_description), 160)
+                            : $data->title,
+                "description" => $data->video_description
+                            ? Str::limit(strip_tags($data->video_description), 160)
+                            : $data->title,
+                "thumbnailUrl" => [$data->thumbnail_url],
+                "uploadDate" => \Carbon\Carbon::parse($data->created_at)->toIso8601String(),
+                "contentUrl" => $data->play_url,
+                "interactionStatistic" => [
+                    "@type" => "InteractionCounter",
+                    "interactionType" => ["@type" => "WatchAction"],
+                    "userInteractionCount" => $data->play_count,
+                ]
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            @endphp
+        </script>
+    @endsection
+
+
     {{-- Hero Section with Video --}}
     <section class="bg-gradient">
         <div class="container pt-20 pb-12 lg:pt-24">
