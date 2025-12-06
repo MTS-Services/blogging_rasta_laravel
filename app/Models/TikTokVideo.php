@@ -4,6 +4,7 @@ namespace App\Models;
 
 
 use App\Models\BaseModel;
+use App\Services\SitemapService;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -68,6 +69,18 @@ class TikTokVideo extends BaseModel
             'video_description_text',
             'canonical_url',
         ]);
+    }
+
+
+    protected static function booted()
+    {
+        static::updated(function ($model) {
+            app(SitemapService::class)->generate();
+        });
+
+        static::deleted(function ($model) {
+            app(SitemapService::class)->generate();
+        });
     }
 
 

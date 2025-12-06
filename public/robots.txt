@@ -1,2 +1,28 @@
 User-agent: *
-Disallow:
+
+Disallow: /admin/*
+
+Allow: /
+
+# Allow all AI crawlers explicitly
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+
+Sitemap: https://diodioglow.com/sitemap.xml
+

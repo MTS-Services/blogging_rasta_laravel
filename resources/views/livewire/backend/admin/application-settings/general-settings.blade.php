@@ -3,6 +3,7 @@
     <div class="glass-card rounded-2xl p-6 mb-6">
         <div class="flex items-center justify-between">
             <h2 class="text-xl font-bold text-text-white">{{ __('General Settings') }}</h2>
+            <a href="{{ route('admin.sitemap.generate') }}" class="btn btn-primary">Generate New Sitemap</a>
         </div>
     </div>
     <div class="glass-card rounded-2xl p-6 mb-6">
