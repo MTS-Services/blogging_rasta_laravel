@@ -29,12 +29,15 @@ class SitemapService
             ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
             ->setPriority(1.0));
 
-        $sitemap->add(Url::create('/terms_conditions'));
-        $sitemap->add(Url::create('/privacy_policy'));
+        $sitemap->add(Url::create('/video-feed'));
+        $sitemap->add(Url::create('/product'));
         $sitemap->add(Url::create('/blog'));
+        $sitemap->add(Url::create('/about'));
+        $sitemap->add(Url::create('/privacy-policy'));
+        $sitemap->add(Url::create('/terms-of-service'));
+        $sitemap->add(Url::create('/affiliate'));
+        $sitemap->add(Url::create('/support'));
         $sitemap->add(Url::create('/contact'));
-        $sitemap->add(Url::create('/forum'));
-        $sitemap->add(Url::create('/single-forum'));
 
         // Example: Dynamic routes from posts
         $blogs = Blog::published()->get();

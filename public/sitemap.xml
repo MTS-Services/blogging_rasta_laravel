@@ -2,27 +2,36 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
     <url>
     <loc>http://127.0.0.1:8000</loc>
-    <lastmod>2025-12-05T12:28:49+00:00</lastmod>
+    <lastmod>2025-12-06T06:27:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
             </url>
     <url>
-    <loc>http://127.0.0.1:8000/terms_conditions</loc>
+    <loc>http://127.0.0.1:8000/video-feed</loc>
             </url>
     <url>
-    <loc>http://127.0.0.1:8000/privacy_policy</loc>
+    <loc>http://127.0.0.1:8000/product</loc>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/blog</loc>
             </url>
     <url>
+    <loc>http://127.0.0.1:8000/about</loc>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/privacy-policy</loc>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/terms-of-service</loc>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/affiliate</loc>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/support</loc>
+            </url>
+    <url>
     <loc>http://127.0.0.1:8000/contact</loc>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/forum</loc>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/single-forum</loc>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/blog/details/getting-started-with-our-platform</loc>
