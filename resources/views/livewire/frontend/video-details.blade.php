@@ -27,6 +27,8 @@
                 "thumbnailUrl" => [$data->thumbnail_url],
                 "uploadDate" => \Carbon\Carbon::parse($data->created_at)->toIso8601String(),
                 "contentUrl" => $data->play_url,
+                'duration'=>$data->duration,
+                "embedUrl" => route('video.embed', $data->slug),
                 "interactionStatistic" => [
                     "@type" => "InteractionCounter",
                     "interactionType" => ["@type" => "WatchAction"],

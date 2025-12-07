@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Frontend\VideoDetailsController;
+use App\Http\Controllers\Frontend\VideoEmbedController;
 use App\Http\Controllers\ImageProxyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\BlogController;
@@ -26,3 +27,5 @@ Route::get('/support', [StaticController::class, 'support'])->name('support');
 Route::get('/contact', [StaticController::class, 'contact'])->name('contact');
 Route::get('/image-proxy', [ImageProxyController::class, 'proxy'])
     ->name('image.proxy');
+
+Route::get('/embed/{slug}', [VideoEmbedController::class, 'embed'])->name('video.embed');

@@ -114,6 +114,7 @@ class VideoFeed extends Component
                     'aweme_id' => $video->aweme_id,
                     'video_id' => $video->video_id,
                     'slug' => $video->slug ?: $video->video_id,
+                    'duration'=>$video->duration,
                     'title' => $video->title ?: $video->desc ?: 'TikTok Video',
                     'desc' => $video->desc,
                     'cover' => $video->cover,

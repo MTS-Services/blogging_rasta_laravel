@@ -56,14 +56,20 @@
 <body class="min-h-screen flex flex-col bg-linear-to-br from-start! to-end! text-text-primary">
 
     {{-- @if (!(request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.request') || request()->routeIs('password.reset') || request()->routeIs('verify-reset-otp') || request()->routeIs('verification.notice') || request()->routeIs('verify-otp') || request()->routeIs('verification.verify') || request()->routeIs('two-factor.*') || request()->routeIs('two-factor.login') || request()->routeIs('two-factor.login.store') || request()->routeIs('admin.*'))) --}}
+
     <livewire:frontend.partials.header />
+ 
     {{-- @endif --}}
     <main class="flex-1">
         {{ $slot }}
     </main>
     {{-- @if (!(request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.request') || request()->routeIs('password.reset') || request()->routeIs('verify-reset-otp') || request()->routeIs('verification.notice') || request()->routeIs('verify-otp') || request()->routeIs('verification.verify') || request()->routeIs('two-factor.*') || request()->routeIs('two-factor.login') || request()->routeIs('two-factor.login.store') || request()->routeIs('admin.*'))) --}}
-    <livewire:frontend.partials.footer />
+
     {{-- @endif --}}
+
+    <livewire:frontend.partials.footer />
+    
+
 
 
     <div id="navigation-loader" x-transition.opacity
@@ -76,6 +82,7 @@
             <div class="w-4 h-4 rounded-full bg-accent animate-[bounce-dot_1.2s_infinite]"></div>
         </div>
     </div>
+  
 
     @fluxScripts()
 
