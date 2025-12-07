@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class TikTokService
 {
@@ -33,6 +34,41 @@ class TikTokService
         $this->apiKey = ApplicationSetting::where('key', ApplicationSetting::RAPIDAPI_KEY)
             ->pluck('value')
             ->first();
+    }
+
+
+    private function isMeaningfulTitle($title)
+    {
+        if (empty($title)) {
+            return false;
+        }
+
+        // Remove emojis and special characters, keep only letters and numbers
+        $cleanTitle = preg_replace('/[^\p{L}\p{N}\s]/u', '', $title);
+        $cleanTitle = trim($cleanTitle);
+
+        // If after removing emojis/special chars, we have less than 3 characters, it's not meaningful
+        return strlen($cleanTitle) >= 3;
+    }
+
+    /**
+     * Extract emojis from text
+     */
+    private function extractEmojis($text)
+    {
+        if (empty($text)) {
+            return '';
+        }
+
+        // Match emojis (comprehensive Unicode ranges)
+        preg_match_all('/[\x{1F300}-\x{1F9FF}\x{2600}-\x{26FF}\x{2700}-\x{27BF}\x{1F600}-\x{1F64F}\x{1F680}-\x{1F6FF}\x{1F1E0}-\x{1F1FF}]/u', $text, $matches);
+
+        if (!empty($matches[0])) {
+            // Keep max 3 emojis
+            return implode('', array_slice($matches[0], 0, 3));
+        }
+
+        return '';
     }
 
 
@@ -311,65 +347,221 @@ class TikTokService
         }
     }
 
-    /**
-     * Prepare video data for database
-     */
-    // private function prepareVideoData($video)
-    // {
-    //     $author = $video['author'] ?? [];
-    //     $musicInfo = $video['music_info'] ?? [];
 
-    //     return [
-    //         'aweme_id' => $video['aweme_id'] ?? null,
-    //         'video_id' => $video['video_id'] ?? null,
-    //         'sync_at' => now(),
-    //         'title' => $video['title'] ?? '',
-    //         'desc' => $video['desc'] ?? $video['title'] ?? '',
+    public function updateEmptyVideos()
+    {
+        try {
+            Log::info("Starting update of empty videos...");
 
-    //         // Video URLs - direct from API response
-    //         'play_url' => $video['play'] ?? null,
-    //         'cover' => $video['cover'] ?? null,
-    //         'origin_cover' => $video['origin_cover'] ?? null,
-    //         'dynamic_cover' => $video['ai_dynamic_cover'] ?? null,
+            // Find videos with empty data OR only emoji/special characters
+            $videos = TikTokVideo::all();
 
-    //         // Statistics - direct counts
-    //         'play_count' => $video['play_count'] ?? 0,
-    //         'digg_count' => $video['digg_count'] ?? 0,
-    //         'comment_count' => $video['comment_count'] ?? 0,
-    //         'share_count' => $video['share_count'] ?? 0,
+            $videosToUpdate = $videos->filter(function ($video) {
+                return !$this->isMeaningfulTitle($video->title) ||
+                    !$this->isMeaningfulTitle($video->desc) ||
+                    empty($video->slug);
+            });
 
-    //         // Author info
-    //         'username' => $video['_username'] ?? $author['unique_id'] ?? null,
-    //         'author_name' => $author['unique_id'] ?? null,
-    //         'author_nickname' => $author['nickname'] ?? null,
-    //         'author_avatar' => $author['avatar'] ?? null,
-    //         'author_avatar_medium' => $author['avatar'] ?? null,
-    //         'author_avatar_larger' => $author['avatar'] ?? null,
+            Log::info("Found videos to update", ['count' => $videosToUpdate->count()]);
 
-    //         // Hashtags & timestamps
-    //         'hashtags' => $this->extractHashtags($video),
-    //         'create_time' => isset($video['create_time']) ? date('Y-m-d H:i:s', $video['create_time']) : now(),
+            $updatedCount = 0;
+            $errors = [];
 
-    //         // Video metadata
-    //         'duration' => $video['duration'] ?? 0,
-    //         'video_format' => 'mp4',
+            foreach ($videosToUpdate as $video) {
+                $awemeId = $video->aweme_id ?? (string) Str::uuid();
 
-    //         // Music info
-    //         'music_title' => $musicInfo['title'] ?? null,
-    //         'music_author' => $musicInfo['author'] ?? null,
-    //         'video_description' => $video['desc'] ?? $video['title'] ?? null,
+                try {
+                    $updates = [];
+                    $changed = false;
 
-    //         // Status
-    //         'is_active' => true,
-    //         'is_featured' => false,
-    //     ];
-    // }
+                    $username = $video->username ?? 'creator';
+
+                    // Generate title if not meaningful
+                    if (!$this->isMeaningfulTitle($video->title)) {
+                        $updates['title'] = $this->generateTitleWithCategory($video->title, $username, $video->toArray());
+                        $changed = true;
+                    }
+
+                    // Generate description if not meaningful
+                    if (!$this->isMeaningfulTitle($video->desc)) {
+                        $title = $updates['title'] ?? $video->title;
+                        $category = $this->detectCategory($video->toArray());
+                        $updates['desc'] = $this->generateDescriptionWithCategory($video->desc, $username, $category);
+                        $updates['video_description'] = $updates['desc'];
+                        $changed = true;
+                    }
+
+                    // Generate slug if empty or needs update
+                    if (empty($video->slug) || $changed) {
+                        $title = $updates['title'] ?? $video->title;
+                        $updates['slug'] = $this->generateSlug($title, $awemeId, $username, $video->toArray());
+                        $changed = true;
+                    }
+
+                    // Update video if changes were made
+                    if ($changed) {
+                        $video->update($updates);
+                        $updatedCount++;
+
+                        Log::info("Updated video", [
+                            'aweme_id' => $awemeId,
+                            'old_title' => $video->title,
+                            'new_title' => $updates['title'] ?? null,
+                        ]);
+                    }
+
+                } catch (\Exception $e) {
+                    $errors[] = [
+                        'aweme_id' => $awemeId,
+                        'error' => $e->getMessage()
+                    ];
+                    Log::error("Failed to update video", [
+                        'aweme_id' => $awemeId,
+                        'error' => $e->getMessage()
+                    ]);
+                }
+            }
+
+            Log::info("Update completed", [
+                'updated' => $updatedCount,
+                'errors' => count($errors)
+            ]);
+
+            return [
+                'success' => true,
+                'message' => "Successfully updated {$updatedCount} videos",
+                'updated' => $updatedCount,
+                'total_found' => $videosToUpdate->count(),
+                'errors' => $errors
+            ];
+
+        } catch (\Exception $e) {
+            Log::error("Update empty videos failed", [
+                'error' => $e->getMessage()
+            ]);
+
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+    private function getEmojiDescription($text)
+    {
+        if (empty($text)) {
+            return '';
+        }
+
+        // Map common emojis to text for slug
+        $emojiMap = [
+            '❤️' => 'love',
+            '😍' => 'love',
+            '🔥' => 'fire',
+            '💯' => '100',
+            '😂' => 'lol',
+            '🎵' => 'music',
+            '🎶' => 'music',
+            '💃' => 'dance',
+            '🕺' => 'dance',
+            '⚽' => 'football',
+            '🏀' => 'basketball',
+            '🎮' => 'gaming',
+            '📱' => 'phone',
+            '💰' => 'money',
+            '👑' => 'king',
+            '💪' => 'strong',
+            '🙏' => 'pray',
+            '✨' => 'sparkle',
+            '🌟' => 'star',
+            '👍' => 'like',
+            '👏' => 'clap',
+        ];
+
+        $emojiNames = [];
+
+        foreach ($emojiMap as $emoji => $name) {
+            if (mb_strpos($text, $emoji) !== false) {
+                $emojiNames[] = $name;
+
+                // Only take first 2 emojis
+                if (count($emojiNames) >= 2) {
+                    break;
+                }
+            }
+        }
+
+        return !empty($emojiNames) ? implode('-', $emojiNames) : '';
+    }
+
+    public function generateSlug($title, $videoId, $username = 'creator', $videoData = [])
+    {
+        // Check if title is meaningful (not just emojis/special chars)
+        if ($this->isMeaningfulTitle($title)) {
+            // Title has meaningful text, use it for slug
+            $slug = Str::slug($title);
+        } else {
+            // Title is empty OR only emojis - generate meaningful slug
+            $category = $this->detectCategory($videoData);
+
+            // Extract emojis for emoji name mapping (optional)
+            $emojiText = $this->getEmojiDescription($title);
+
+            if (!empty($emojiText)) {
+                // Format: video-tiktok-username-emoji-name-category-diodioglow
+                $slug = 'video-tiktok-' . Str::slug($username) . '-' . $emojiText . '-' . Str::slug($category) . '-diodioglow';
+            } else {
+                // Format: video-tiktok-username-category-diodioglow
+                $slug = 'video-tiktok-' . Str::slug($username) . '-' . Str::slug($category) . '-diodioglow';
+            }
+        }
+
+        // Ensure uniqueness
+        $originalSlug = $slug;
+        $counter = 1;
+
+        while (TikTokVideo::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $videoId . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
+    }
+
 
     private function prepareVideoData($video)
     {
         $author = $video['author'] ?? [];
         $musicInfo = $video['music_info'] ?? [];
-        $awemeId = $video['aweme_id'] ?? uniqid();
+        $awemeId = $video['aweme_id'] ?? (string) Str::uuid();
+
+        // Get original title/desc from TikTok
+        $originalTitle = trim($video['title'] ?? '');
+        $originalDesc = trim($video['desc'] ?? '');
+
+        // Get username for fallback
+        $username = $video['_username'] ?? $author['unique_id'] ?? 'creator';
+
+        // Check if title is meaningful (not empty, not just emojis)
+        if (!$this->isMeaningfulTitle($originalTitle)) {
+            // Title is empty OR only emojis - generate meaningful title
+            $finalTitle = $this->generateTitleWithCategory($originalTitle, $username, $video);
+        } else {
+            // Title is meaningful, use it
+            $finalTitle = $originalTitle;
+        }
+
+        // Check if description is meaningful
+        if (!$this->isMeaningfulTitle($originalDesc)) {
+            // Description is empty OR only emojis - generate meaningful description
+            $category = $this->detectCategory($video);
+            $finalDesc = $this->generateDescriptionWithCategory($originalDesc, $username, $category);
+        } else {
+            // Description is meaningful, use it
+            $finalDesc = $originalDesc;
+        }
+
+        // Generate slug (handles emoji/special character titles automatically)
+        $slug = $this->generateSlug($finalTitle, $awemeId, $username, $video);
 
         // Original TikTok CDN URLs
         $originCover = $video['origin_cover'] ?? null;
@@ -382,7 +574,6 @@ class TikTokService
             $localThumbnail = $this->thumbnailService->downloadAndStore($originCover, $awemeId);
         }
 
-        // Fallback to cover if origin_cover download failed
         if (!$localThumbnail && $cover) {
             $localThumbnail = $this->thumbnailService->downloadAndStore($cover, $awemeId);
         }
@@ -391,16 +582,14 @@ class TikTokService
             'aweme_id' => $awemeId,
             'video_id' => $video['video_id'] ?? null,
             'sync_at' => now(),
-            'title' => $video['title'] ?? '',
-            'desc' => $video['desc'] ?? $video['title'] ?? '',
+            'title' => $finalTitle,
+            'slug' => $slug,
+            'desc' => $finalDesc,
 
-            // Store original URLs as backup
             'play_url' => $video['play'] ?? null,
             'cover' => $cover,
             'origin_cover' => $originCover,
             'dynamic_cover' => $dynamicCover,
-
-            // Store local thumbnail URL (THIS IS THE KEY!)
             'thumbnail_url' => $localThumbnail,
 
             'play_count' => $video['play_count'] ?? 0,
@@ -408,7 +597,7 @@ class TikTokService
             'comment_count' => $video['comment_count'] ?? 0,
             'share_count' => $video['share_count'] ?? 0,
 
-            'username' => $video['_username'] ?? $author['unique_id'] ?? null,
+            'username' => $username,
             'author_name' => $author['unique_id'] ?? null,
             'author_nickname' => $author['nickname'] ?? null,
             'author_avatar' => $author['avatar'] ?? null,
@@ -425,11 +614,150 @@ class TikTokService
 
             'music_title' => $musicInfo['title'] ?? null,
             'music_author' => $musicInfo['author'] ?? null,
-            'video_description' => $video['desc'] ?? $video['title'] ?? null,
+            'video_description' => $finalDesc,
 
             'is_active' => true,
             'is_featured' => false,
         ];
+    }
+
+
+    /**
+     * Auto-generate title ONLY when original is empty
+     */
+    private function generateAutoTitle($username)
+    {
+        return "Vidéo TikTok virale de @{$username} | DiodioGlow";
+    }
+
+    /**
+     * Auto-generate description ONLY when original is empty
+     */
+    private function generateAutoDescription($username, $title)
+    {
+        return "Découvrez cette vidéo TikTok captivante de @{$username}. " .
+            "Suivez les tendances virales du Sénégal avec DiodioGlow - " .
+            "Votre source #1 pour le meilleur contenu TikTok, buzz, musique et actualités.";
+    }
+
+    // ============================================
+    // STEP 5: Optional - Add Category Detection
+    // ============================================
+
+    /**
+     * Detect video category from hashtags or content (optional enhancement)
+     */
+    private function detectCategory($video)
+    {
+        if (empty($video)) {
+            return 'tendance';
+        }
+
+        // Get hashtags
+        $hashtags = [];
+        if (isset($video['hashtags'])) {
+            $hashtags = is_array($video['hashtags']) ? $video['hashtags'] : [];
+        } elseif (is_object($video) && isset($video->hashtags)) {
+            $hashtags = is_array($video->hashtags) ? $video->hashtags : json_decode($video->hashtags, true) ?? [];
+        }
+
+        $hashtagString = strtolower(implode(' ', $hashtags));
+
+        // Get title and description
+        $title = '';
+        $desc = '';
+
+        if (is_array($video)) {
+            $title = strtolower($video['title'] ?? '');
+            $desc = strtolower($video['desc'] ?? '');
+        } elseif (is_object($video)) {
+            $title = strtolower($video->title ?? '');
+            $desc = strtolower($video->desc ?? '');
+        }
+
+        $content = $hashtagString . ' ' . $title . ' ' . $desc;
+
+        // Define category keywords (French and English)
+        $categories = [
+            'musique' => ['music', 'song', 'musique', 'beat', 'rap', 'dance', 'danse', 'chanson', 'audio', 'sound'],
+            'buzz' => ['viral', 'trending', 'buzz', 'hot', 'popular', 'populaire', 'tendance', 'trend'],
+            'politique' => ['politique', 'politics', 'senegal', 'government', 'gouvernement', 'election', 'president'],
+            'humour' => ['funny', 'comedy', 'humour', 'lol', 'meme', 'drole', 'rire', 'blague', 'laugh'],
+            'sport' => ['sport', 'football', 'basketball', 'fitness', 'gym', 'match', 'goal', 'training'],
+            'mode' => ['fashion', 'style', 'mode', 'outfit', 'look', 'vetement', 'clothes', 'drip'],
+            'cuisine' => ['food', 'cooking', 'recette', 'cuisine', 'recipe', 'dish', 'eat', 'restaurant'],
+            'beaute' => ['beauty', 'makeup', 'beaute', 'maquillage', 'skincare', 'hair', 'cheveux'],
+            'education' => ['learn', 'education', 'tutorial', 'tuto', 'apprendre', 'study', 'school'],
+            'voyage' => ['travel', 'voyage', 'trip', 'vacation', 'destination', 'tourisme'],
+        ];
+
+        // Check each category
+        foreach ($categories as $category => $keywords) {
+            foreach ($keywords as $keyword) {
+                if (strpos($content, $keyword) !== false) {
+                    return $category;
+                }
+            }
+        }
+
+        // Default category
+        return 'tendance';
+    }
+
+    /**
+     * Enhanced title generation with category (optional)
+     */
+    private function generateTitleWithCategory($originalTitle, $username, $video = [])
+    {
+        // If title has meaningful text (not just emojis), use it
+        if ($this->isMeaningfulTitle($originalTitle)) {
+            return trim($originalTitle);
+        }
+
+        // Title is empty OR only emojis/special characters
+        // Extract emojis from original title if any
+        $emojis = $this->extractEmojis($originalTitle);
+
+        // Detect category
+        $category = $this->detectCategory($video);
+
+        // Build meaningful title with emojis
+        if (!empty($emojis)) {
+            // Format: Vidéo TikTok 😍🔥 de @username – musique | DiodioGlow
+            return "Vidéo TikTok {$emojis} de @{$username} – {$category} | DiodioGlow";
+        } else {
+            // No emojis, just generate standard title
+            return "Vidéo TikTok virale de @{$username} – {$category} | DiodioGlow";
+        }
+    }
+
+
+
+    /**
+     * Enhanced description with category (optional)
+     */
+    private function generateDescriptionWithCategory($originalDesc, $username, $category)
+    {
+        // If description has meaningful text, use it
+        if ($this->isMeaningfulTitle($originalDesc)) {
+            return trim($originalDesc);
+        }
+
+        // Description is empty OR only emojis
+        // Extract emojis if any
+        $emojis = $this->extractEmojis($originalDesc);
+
+        $baseDescription = "Découvrez cette vidéo TikTok captivante de @{$username}";
+
+        if (!empty($emojis)) {
+            $baseDescription .= " {$emojis}";
+        }
+
+        $baseDescription .= " dans la catégorie {$category}. " .
+            "Suivez les tendances virales du Sénégal avec DiodioGlow - " .
+            "Votre source #1 pour le meilleur contenu TikTok, buzz, musique et actualités.";
+
+        return $baseDescription;
     }
 
 

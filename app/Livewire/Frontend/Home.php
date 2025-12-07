@@ -79,6 +79,7 @@ class Home extends Component
             $this->featuredVideos = $videos->map(function ($video) {
                 return [
                     'aweme_id' => $video->aweme_id,
+                    'slug' => $video->slug,
                     'video_id' => $video->video_id,
                     'title' => $video->title ?: $video->desc ?: 'TikTok Video',
                     'desc' => $video->desc,

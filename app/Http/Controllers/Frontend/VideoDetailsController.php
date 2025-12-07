@@ -10,10 +10,10 @@ class VideoDetailsController extends Controller
 {
     protected $masterView = 'frontend.pages.video-details';
 
-    public function index($id)
+    public function index($slug)
     {
 
-        $video = TikTokVideo::where('video_id', $id)->firstOrFail();
+        $video = TikTokVideo::where('slug', $slug)->orWhere('video_id', $slug)->firstOrFail();
         return view($this->masterView, [
             'data' => $video,
         ]);

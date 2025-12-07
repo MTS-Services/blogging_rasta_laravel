@@ -193,6 +193,34 @@ class TikTokVideos extends Component
         }
     }
 
+
+    public function updateEmptyVideos()
+    {
+        $result = $this->tiktokService->updateEmptyVideos();
+
+        if ($result['success']) {
+            // return response()->json([
+            //     'success' => true,
+            //     'message' => $result['message'],
+            //     'data' => [
+            //         'updated' => $result['updated'],
+            //         'total_found' => $result['total_found'],
+            //         'errors' => $result['errors']
+            //     ]
+            // ]);
+
+            $this->success($result['message'] . " Updated: {$result['updated']}" . " Total Found: {$result['total_found']}");
+        }
+
+        // return response()->json([
+        //     'success' => false,
+        //     'message' => 'Failed to update videos',
+        //     'error' => $result['error']
+        // ], 500);
+
+        $this->success('Empty videos not found');
+    }
+
     /**
      * Toggle featured status
      */

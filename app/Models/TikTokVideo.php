@@ -20,6 +20,7 @@ class TikTokVideo extends BaseModel
         'sort_order',
         'aweme_id',
         'video_id',
+        'slug',
         'sync_at',
         'title',
         'desc',
@@ -69,6 +70,28 @@ class TikTokVideo extends BaseModel
             'video_description_text',
             'canonical_url',
         ]);
+    }
+
+
+    public static function generateSlug($title, $videoId)
+    {
+        $slug = \Illuminate\Support\Str::slug($title);
+
+        // If slug is empty (title was empty), use video ID
+        if (empty($slug)) {
+            $slug = 'diodioglow-' . $videoId;
+        }
+
+        // Ensure uniqueness
+        $originalSlug = $slug;
+        $counter = 1;
+
+        while (static::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
     }
 
 
