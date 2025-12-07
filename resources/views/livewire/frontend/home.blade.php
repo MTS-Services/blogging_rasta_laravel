@@ -173,7 +173,8 @@
                         @foreach ($featuredVideos as $video)
                             @php
                                 // Extract video data
-                                $videoId = ($video['video_id']);
+                                $videoId = $video['video_id'];
+                                $slug = $video['slug'];
                                 $title = $video['title'] ?: 'TikTok Video';
                                 $cover = $video['cover'] ?? ($video['origin_cover'] ?? '');
                                 $thumbnail_url = $video['thumbnail_url'];
@@ -275,7 +276,7 @@
                                     @endif
                                 </div>
                                 {{-- Creator Info --}}
-                                <a href="{{ route('video.details', $video['video_id']) }}" wire:navigate>
+                                <a href="{{ route('video.details', $video['slug']) }}" wire:navigate>
                                     <div class="flex items-center gap-3 mt-3">
                                         <div class="w-10 h-10 flex-shrink-0">
                                             <img src="{{ $authorAvatar }}" alt="{{ $authorName }}"

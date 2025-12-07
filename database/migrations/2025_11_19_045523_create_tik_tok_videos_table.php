@@ -21,6 +21,7 @@ return new class extends Migration
 
             // Video Content
             $table->longText('title')->nullable();
+            $table->longText('slug')->nullable()->index();
             $table->longText('desc')->nullable();
             $table->longText('play_url')->nullable();
             $table->longText('cover')->nullable();
