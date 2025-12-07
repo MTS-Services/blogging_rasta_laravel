@@ -1,6 +1,7 @@
 <div>
-
     <section class="bg-gradient">
+
+
         {{-- Banner Section --}}
         <div class="container pt-20 pb-16 lg:pt-24">
             <div class="flex flex-col lg:flex-row items-center justify-between gap-12">
