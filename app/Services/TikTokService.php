@@ -245,9 +245,9 @@ class TikTokService
             $updatedCount = 0;
 
             foreach ($result['videos'] as $video) {
-                $videoData = $this->prepareVideoData($video);
+                $existingVideo = TikTokVideo::where('video_id', $video['video_id'])->first();
+                $videoData = $this->prepareVideoData($video, $existingVideo);
 
-                $existingVideo = TikTokVideo::where('video_id', $videoData['video_id'])->first();
 
                 if ($existingVideo) {
                     $existingVideo->update(
@@ -535,7 +535,7 @@ class TikTokService
 
 
 
-    private function prepareVideoData($video)
+    private function prepareVideoData($video, $existingVideo = null)
     {
         $author = $video['author'] ?? [];
         $musicInfo = $video['music_info'] ?? [];
@@ -549,7 +549,7 @@ class TikTokService
         $username = $video['_username'] ?? $author['unique_id'] ?? 'creator';
 
         // Check if title is meaningful (not empty, not just emojis)
-        if (!$this->isMeaningfulTitle($originalTitle)) {
+        if (!$existingVideo && !$this->isMeaningfulTitle($originalTitle)) {
             // Title is empty OR only emojis - generate meaningful title
             $finalTitle = $this->generateTitleWithCategory($originalTitle, $username, $video);
         } else {
@@ -558,7 +558,7 @@ class TikTokService
         }
 
         // Check if description is meaningful
-        if (!$this->isMeaningfulTitle($originalDesc)) {
+        if (!$existingVideo && !$this->isMeaningfulTitle($originalDesc)) {
             // Description is empty OR only emojis - generate meaningful description
             $category = $this->detectCategory($video);
             $finalDesc = $this->generateDescriptionWithCategory($originalDesc, $username, $category);
@@ -568,7 +568,9 @@ class TikTokService
         }
 
         // Generate slug (handles emoji/special character titles automatically)
-        $slug = $this->generateSlug($finalTitle, $awemeId, $username, $video);
+        if (!$existingVideo) {
+            $slug = $this->generateSlug($finalTitle, $awemeId, $username, $video);
+        }
 
         // Original TikTok CDN URLs
         $originCover = $video['origin_cover'] ?? null;
@@ -577,13 +579,18 @@ class TikTokService
 
         // Download and store thumbnail locally
         $localThumbnail = null;
-        if ($originCover) {
-            $localThumbnail = $this->thumbnailService->downloadAndStore($originCover, $awemeId);
+        if (!$existingVideo || (isset($existingVideo->thumbnail_url) && empty($existingVideo?->thumbnail_url))) {
+            if ($originCover) {
+                $localThumbnail = $this->thumbnailService->downloadAndStore($originCover, $awemeId);
+            }
+
+            if (!$localThumbnail && $cover) {
+                $localThumbnail = $this->thumbnailService->downloadAndStore($cover, $awemeId);
+            }
+        } else {
+            $localThumbnail = $existingVideo->thumbnail_url;
         }
 
-        if (!$localThumbnail && $cover) {
-            $localThumbnail = $this->thumbnailService->downloadAndStore($cover, $awemeId);
-        }
 
         return [
             'aweme_id' => $awemeId,
