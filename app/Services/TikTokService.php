@@ -495,37 +495,46 @@ class TikTokService
 
     public function generateSlug($title, $videoId, $username = 'creator', $videoData = [])
     {
-        // Check if title is meaningful (not just emojis/special chars)
+        // 1. Build raw slug (your existing logic)
         if ($this->isMeaningfulTitle($title)) {
-            // Title has meaningful text, use it for slug
-            $slug = Str::slug($title);
+            $rawSlug = Str::slug($title);
         } else {
-            // Title is empty OR only emojis - generate meaningful slug
             $category = $this->detectCategory($videoData);
-
-            // Extract emojis for emoji name mapping (optional)
             $emojiText = $this->getEmojiDescription($title);
 
             if (!empty($emojiText)) {
-                // Format: video-tiktok-username-emoji-name-category-diodioglow
-                $slug = 'video-tiktok-' . Str::slug($username) . '-' . $emojiText . '-' . Str::slug($category) . '-diodioglow';
+                $rawSlug = 'video-tiktok-' . Str::slug($username) . '-' . $emojiText . '-' . Str::slug($category) . '-diodioglow';
             } else {
-                // Format: video-tiktok-username-category-diodioglow
-                $slug = 'video-tiktok-' . Str::slug($username) . '-' . Str::slug($category) . '-diodioglow';
+                $rawSlug = 'video-tiktok-' . Str::slug($username) . '-' . Str::slug($category) . '-diodioglow';
             }
         }
 
-        // Ensure uniqueness
-        $originalSlug = $slug;
+        // 2. Limit slug to 70 characters MAX
+        // BUT keep it clean (no trailing hyphens)
+        $slug = substr($rawSlug, 0, 70);
+        $slug = rtrim($slug, '-');
+
+        // 3. Ensure uniqueness in database
+        $uniqueSlug = $slug;
         $counter = 1;
 
-        while (TikTokVideo::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $videoId . '-' . $counter;
+        while (TikTokVideo::where('slug', $uniqueSlug)->exists()) {
+
+            // Append "-ID-counter"
+            $suffix = '-' . $videoId . '-' . $counter;
+
+            // Ensure final slug (base + suffix) ≤ 70 chars
+            $baseMaxLength = 70 - strlen($suffix);
+            $baseSlug = substr($slug, 0, $baseMaxLength);
+            $baseSlug = rtrim($baseSlug, '-');
+
+            $uniqueSlug = $baseSlug . $suffix;
             $counter++;
         }
 
-        return $slug;
+        return $uniqueSlug;
     }
+
 
 
     private function prepareVideoData($video)
