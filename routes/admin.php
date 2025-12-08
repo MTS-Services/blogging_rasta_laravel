@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Backend\Admin\AboutCmsController;
+use App\Http\Controllers\Backend\Admin\VideoManagementController;
 use App\Http\Controllers\SitemapController;
 use Firebase\JWT\Key;
 use App\Livewire\Frontend\Blog;
@@ -25,6 +26,37 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
         return view('backend.admin.pages.dashboard');
     })->name('dashboard');
 
+
+    // Dashboard
+    // Route::controller(VideoManagementController::class)->name('vm.')->prefix('video-management')->group(function () {
+    //     Route::get('/', 'index')->name('index');
+
+    //     // Actions - Remove nested prefix
+    //     Route::post('/redownload-missing', 'redownloadMissing')->name('redownload-missing');
+    //     Route::post('/cleanup-expired', 'cleanupExpired')->name('cleanup-expired');
+    //     Route::post('/delete-old', 'deleteOld')->name('delete-old');
+    //     Route::post('/verify-fix', 'verifyAndFix')->name('verify-fix');
+    //     Route::get('/statistics', 'getStatistics')->name('statistics');
+    // });
+
+
+    Route::controller(VideoManagementController::class)
+        ->name('vm.')
+        ->prefix('video-management')
+        ->group(function () {
+            // Main dashboard
+            Route::get('/', 'index')->name('index');
+
+            // Job dispatch endpoints
+            Route::post('/redownload-missing', 'redownloadMissing')->name('redownload-missing');
+            Route::post('/cleanup-expired', 'cleanupExpired')->name('cleanup-expired');
+            Route::post('/delete-old', 'deleteOld')->name('delete-old');
+            Route::post('/verify-fix', 'verifyAndFix')->name('verify-fix');
+
+            // Monitoring endpoints
+            Route::get('/job-progress', 'getJobProgress')->name('job-progress');
+            Route::get('/statistics', 'getStatistics')->name('statistics');
+        });
     Route::group(['prefix' => 'user-management', 'as' => 'um.'], function () {
 
         Route::controller(AdminController::class)->name('admin.')->prefix('admin')->group(function () {

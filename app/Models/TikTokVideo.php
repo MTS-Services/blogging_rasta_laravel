@@ -48,6 +48,7 @@ class TikTokVideo extends BaseModel
         'music_author',
         'video_description',
         'thumbnail_url',
+        'local_video_url',
     ];
 
     /**
@@ -69,7 +70,42 @@ class TikTokVideo extends BaseModel
             'video_title',
             'video_description_text',
             'canonical_url',
+            'playback_url',
         ]);
+    }
+
+    /**
+     * Get the video URL for playback (prefers local, falls back to CDN)
+     */
+    public function getPlaybackUrlAttribute()
+    {
+        // Use local video if available, otherwise fall back to CDN URL
+        return $this->local_video_url ?? $this->play_url;
+    }
+
+    /**
+     * Check if video has local storage
+     */
+    public function hasLocalVideo()
+    {
+        return !empty($this->local_video_url);
+    }
+
+    /**
+     * Check if local video is accessible
+     */
+    public function isLocalVideoAccessible()
+    {
+        if (!$this->hasLocalVideo()) {
+            return false;
+        }
+
+        try {
+            // Simple check - you can enhance this
+            return !empty($this->local_video_url);
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
 
@@ -207,7 +243,13 @@ class TikTokVideo extends BaseModel
 
     public function scopeActive($query)
     {
-        return $query->where('is_active', true);
+        return $query->where('is_active', true)
+            ->orWhere('is_active', 1); // Handle both boolean and integer
+    }
+    public function scopeInactive($query)
+    {
+        return $query->where('is_active', false)
+            ->orWhere('is_active', 0); // Handle both boolean and integer
     }
 
     /**

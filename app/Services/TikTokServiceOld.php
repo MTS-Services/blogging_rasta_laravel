@@ -11,24 +11,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
-class TikTokService
+class TikTokServiceOld
 {
     protected $client;
     protected $apiKey;
     protected $baseUrl = 'https://tiktok-scraper7.p.rapidapi.com/';
 
     protected $thumbnailService;
-    protected $videoService;
-
-
 
     // Update your __construct method to inject ThumbnailDownloadService:
-    public function __construct(
-        ThumbnailDownloadService $thumbnailService,
-        VideoDownloadService $videoService // NEW
-    ) {
+    public function __construct(ThumbnailDownloadService $thumbnailService)
+    {
         $this->thumbnailService = $thumbnailService;
-        $this->videoService = $videoService; // NEW
 
         $this->client = new Client([
             'timeout' => 60,
@@ -233,7 +227,7 @@ class TikTokService
      */
     public function syncVideos($users)
     {
-        Log::info("Starting TikTok Sync for users");
+        Log::info("Starting TikTok Sync for users: ");
 
         $this->clearCache();
         try {
@@ -251,29 +245,30 @@ class TikTokService
             $updatedCount = 0;
 
             foreach ($result['videos'] as $video) {
-                $existingVideo = TikTokVideo::where('video_id', $videoData['video_id'])->first();
+                $existingVideo = TikTokVideo::where('video_id', $video['video_id'])->first();
                 $videoData = $this->prepareVideoData($video, $existingVideo);
 
 
                 if ($existingVideo) {
-                    $existingVideo->update([
-                        'title' => $videoData['title'],
-                        'desc' => $videoData['desc'],
-                        'play_url' => $videoData['play_url'],
-                        'local_video_url' => $videoData['local_video_url'], // NEW
-                        'cover' => $videoData['cover'],
-                        'origin_cover' => $videoData['origin_cover'],
-                        'play_count' => $videoData['play_count'],
-                        'digg_count' => $videoData['digg_count'],
-                        'comment_count' => $videoData['comment_count'],
-                        'share_count' => $videoData['share_count'],
-                        'author_avatar' => $videoData['author_avatar'],
-                        'author_avatar_medium' => $videoData['author_avatar_medium'],
-                        'author_avatar_larger' => $videoData['author_avatar_larger'],
-                        'music_title' => $videoData['music_title'],
-                        'video_description' => $videoData['video_description'],
-                        'thumbnail_url' => $videoData['thumbnail_url']
-                    ]);
+                    $existingVideo->update(
+                        [
+                            'title' => $videoData['title'],
+                            'desc' => $videoData['desc'],
+                            'play_url' => $videoData['play_url'],
+                            'cover' => $videoData['cover'],
+                            'origin_cover' => $videoData['origin_cover'],
+                            'play_count' => $videoData['play_count'],
+                            'digg_count' => $videoData['digg_count'],
+                            'comment_count' => $videoData['comment_count'],
+                            'share_count' => $videoData['share_count'],
+                            'author_avatar' => $videoData['author_avatar'],
+                            'author_avatar_medium' => $videoData['author_avatar_medium'],
+                            'author_avatar_larger' => $videoData['author_avatar_larger'],
+                            'music_title' => $videoData['music_title'],
+                            'video_description' => $videoData['video_description'],
+                            'thumbnail_url' => $videoData['thumbnail_url']
+                        ]
+                    );
                     $updatedCount++;
                 } else {
                     TikTokVideo::create($videoData);
@@ -555,37 +550,36 @@ class TikTokService
 
         // Check if title is meaningful (not empty, not just emojis)
         if (!$existingVideo && !$this->isMeaningfulTitle($originalTitle)) {
+            // Title is empty OR only emojis - generate meaningful title
             $finalTitle = $this->generateTitleWithCategory($originalTitle, $username, $video);
         } else {
+            // Title is meaningful, use it
             $finalTitle = $originalTitle;
         }
 
         // Check if description is meaningful
         if (!$existingVideo && !$this->isMeaningfulTitle($originalDesc)) {
+            // Description is empty OR only emojis - generate meaningful description
             $category = $this->detectCategory($video);
             $finalDesc = $this->generateDescriptionWithCategory($originalDesc, $username, $category);
         } else {
+            // Description is meaningful, use it
             $finalDesc = $originalDesc;
         }
 
-        // Generate slug
+        // Generate slug (handles emoji/special character titles automatically)
         if (!$existingVideo) {
             $slug = $this->generateSlug($finalTitle, $awemeId, $username, $video);
-        } else {
-            $slug = $existingVideo->slug;
         }
 
         // Original TikTok CDN URLs
         $originCover = $video['origin_cover'] ?? null;
         $cover = $video['cover'] ?? null;
         $dynamicCover = $video['ai_dynamic_cover'] ?? null;
-        $playUrl = $video['play'] ?? null; // TikTok CDN video URL
 
-        // ========================================
-        // NEW: Download and store thumbnail locally
-        // ========================================
+        // Download and store thumbnail locally
         $localThumbnail = null;
-        if (!$existingVideo || empty($existingVideo->thumbnail_url)) {
+        if (!$existingVideo || (isset($existingVideo->thumbnail_url) && empty($existingVideo?->thumbnail_url))) {
             if ($originCover) {
                 $localThumbnail = $this->thumbnailService->downloadAndStore($originCover, $awemeId);
             }
@@ -597,61 +591,6 @@ class TikTokService
             $localThumbnail = $existingVideo->thumbnail_url;
         }
 
-        // ========================================
-        // NEW: Download and store video locally
-        // ========================================
-        $localVideoUrl = null;
-
-        if (!$existingVideo || empty($existingVideo->local_video_url)) {
-            // New video OR existing video without local storage
-            if ($playUrl) {
-                Log::info('Downloading video for storage', [
-                    'aweme_id' => $awemeId,
-                    'username' => $username
-                ]);
-
-                // Download with retry mechanism (3 attempts)
-                $localVideoUrl = $this->videoService->downloadWithRetry(
-                    $playUrl,
-                    $awemeId,
-                    $username,
-                    3 // max retries
-                );
-
-                if ($localVideoUrl) {
-                    Log::info('Video downloaded successfully', [
-                        'aweme_id' => $awemeId,
-                        'local_url' => $localVideoUrl
-                    ]);
-                } else {
-                    Log::error('Failed to download video after retries', [
-                        'aweme_id' => $awemeId,
-                        'cdn_url' => substr($playUrl, 0, 100)
-                    ]);
-                }
-            }
-        } else {
-            // Use existing local video
-            $localVideoUrl = $existingVideo->local_video_url;
-
-            // Verify existing video still exists
-            if (!$this->videoService->videoExists($localVideoUrl)) {
-                Log::warning('Local video missing, re-downloading', [
-                    'aweme_id' => $awemeId,
-                    'old_path' => $localVideoUrl
-                ]);
-
-                // Re-download if missing
-                if ($playUrl) {
-                    $localVideoUrl = $this->videoService->downloadWithRetry(
-                        $playUrl,
-                        $awemeId,
-                        $username,
-                        3
-                    );
-                }
-            }
-        }
 
         return [
             'aweme_id' => $awemeId,
@@ -661,10 +600,7 @@ class TikTokService
             'slug' => $slug,
             'desc' => $finalDesc,
 
-            // Store both CDN URL (reference) and local URL (actual playback)
-            'play_url' => $playUrl, // Keep original CDN URL as reference
-            'local_video_url' => $localVideoUrl, // NEW: Local storage URL for playback
-
+            'play_url' => $video['play'] ?? null,
             'cover' => $cover,
             'origin_cover' => $originCover,
             'dynamic_cover' => $dynamicCover,

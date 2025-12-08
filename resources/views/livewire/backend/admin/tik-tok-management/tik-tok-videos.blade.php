@@ -25,6 +25,10 @@
                 </span>
                 {{ __('Update Empty Videos') }}
             </x-ui.button>
+            <x-ui.button href="{{ route('admin.vm.index') }}" wire:navigate variant="primary"
+                class="w-full py-2! sm:w-auto">
+                {{ __('Video Management') }}
+            </x-ui.button>
         </div>
     </div>
 
