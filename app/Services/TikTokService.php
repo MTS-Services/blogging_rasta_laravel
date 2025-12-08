@@ -368,7 +368,7 @@ class TikTokService
             $errors = [];
 
             foreach ($videosToUpdate as $video) {
-                $awemeId = $video->aweme_id ?? (string) Str::uuid();
+                $awemeId = $video->aweme_id ?? $video->video_id;
 
                 try {
                     $updates = [];
@@ -539,7 +539,7 @@ class TikTokService
     {
         $author = $video['author'] ?? [];
         $musicInfo = $video['music_info'] ?? [];
-        $awemeId = $video['aweme_id'] ?? (string) Str::uuid();
+        $awemeId = $video['aweme_id'] ?? $video['video_id'];
 
         // Get original title/desc from TikTok
         $originalTitle = trim($video['title'] ?? '');
