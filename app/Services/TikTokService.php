@@ -495,7 +495,7 @@ class TikTokService
 
     public function generateSlug($title, $videoId, $username = 'creator', $videoData = [])
     {
-        // 1. Build raw slug (your existing logic)
+        // 1. Build raw slug
         if ($this->isMeaningfulTitle($title)) {
             $rawSlug = Str::slug($title);
         } else {
@@ -509,31 +509,29 @@ class TikTokService
             }
         }
 
-        // 2. Limit slug to 70 characters MAX
-        // BUT keep it clean (no trailing hyphens)
+        // 2. Limit raw slug to max 70 chars
         $slug = substr($rawSlug, 0, 70);
         $slug = rtrim($slug, '-');
 
-        // 3. Ensure uniqueness in database
-        $uniqueSlug = $slug;
-        $counter = 1;
+        // 3. FAST uniqueness check — count similar slugs
+        $likePattern = $slug . '%';
 
-        while (TikTokVideo::where('slug', $uniqueSlug)->exists()) {
+        $count = TikTokVideo::where('slug', 'LIKE', $likePattern)->count();
 
-            // Append "-ID-counter"
-            $suffix = '-' . $videoId . '-' . $counter;
-
-            // Ensure final slug (base + suffix) ≤ 70 chars
-            $baseMaxLength = 70 - strlen($suffix);
-            $baseSlug = substr($slug, 0, $baseMaxLength);
-            $baseSlug = rtrim($baseSlug, '-');
-
-            $uniqueSlug = $baseSlug . $suffix;
-            $counter++;
+        if ($count === 0) {
+            return $slug; // Slug is unique
         }
 
-        return $uniqueSlug;
+        // 4. Add suffix without exceeding 70 chars (videoId + count)
+        $suffix = '-' . $videoId . '-' . $count;
+        $maxBaseLength = 70 - strlen($suffix);
+
+        $baseSlug = substr($slug, 0, $maxBaseLength);
+        $baseSlug = rtrim($baseSlug, '-');
+
+        return $baseSlug . $suffix;
     }
+
 
 
 
