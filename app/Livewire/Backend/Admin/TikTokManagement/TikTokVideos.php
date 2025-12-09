@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Backend\Admin\TikTokManagement;
 
+use App\Jobs\SyncTikTokVideosJob;
 use App\Models\TikTokUser;
 use App\Models\TikTokVideo;
 use App\Services\TikTokService;
@@ -171,23 +172,40 @@ class TikTokVideos extends Component
      */
     public function syncVideos()
     {
+        // try {
+        //     $users = TikTokUser::active()->get();
+
+        //     if (empty($users)) {
+        //         $this->error('No TikTok users configured');
+        //         return;
+        //     }
+
+        //     // $usernames = array_column($usernames, 'username');
+
+        //     $result = $this->tiktokService->syncVideos($users);
+
+        //     if ($result['success']) {
+        //         $this->success("Synced: {$result['synced']} new, {$result['updated']} updated");
+        //     } else {
+        //         $this->error($result['error'] ?? 'Sync failed');
+        //     }
+        // } catch (\Exception $e) {
+        //     $this->error('Sync error: ' . $e->getMessage());
+        // }
+
+
         try {
             $users = TikTokUser::active()->get();
 
-            if (empty($users)) {
+            if ($users->isEmpty()) {
                 $this->error('No TikTok users configured');
                 return;
             }
 
-            // $usernames = array_column($usernames, 'username');
+            // Dispatch job with users collection
+            SyncTikTokVideosJob::dispatch();
 
-            $result = $this->tiktokService->syncVideos($users);
-
-            if ($result['success']) {
-                $this->success("Synced: {$result['synced']} new, {$result['updated']} updated");
-            } else {
-                $this->error($result['error'] ?? 'Sync failed');
-            }
+            $this->info('TikTok video sync job dispatched successfully.');
         } catch (\Exception $e) {
             $this->error('Sync error: ' . $e->getMessage());
         }
