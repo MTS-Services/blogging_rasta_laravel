@@ -251,7 +251,7 @@ class TikTokService
             $updatedCount = 0;
 
             foreach ($result['videos'] as $video) {
-                $existingVideo = TikTokVideo::where('video_id', $videoData['video_id'])->first();
+                $existingVideo = TikTokVideo::where('video_id', $video['video_id'])->first();
                 $videoData = $this->prepareVideoData($video, $existingVideo);
 
 
@@ -562,6 +562,7 @@ class TikTokService
 
         // Check if description is meaningful
         if (!$existingVideo && !$this->isMeaningfulTitle($originalDesc)) {
+            // Description is empty OR only emojis - generate meaningful description
             $category = $this->detectCategory($video);
             $finalDesc = $this->generateDescriptionWithCategory($originalDesc, $username, $category);
         } else {
@@ -585,7 +586,7 @@ class TikTokService
         // NEW: Download and store thumbnail locally
         // ========================================
         $localThumbnail = null;
-        if (!$existingVideo || empty($existingVideo->thumbnail_url)) {
+        if (!$existingVideo || (isset($existingVideo->thumbnail_url) && empty($existingVideo?->thumbnail_url))) {
             if ($originCover) {
                 $localThumbnail = $this->thumbnailService->downloadAndStore($originCover, $awemeId);
             }
