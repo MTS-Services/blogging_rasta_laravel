@@ -6,7 +6,7 @@
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Manage and sync TikTok videos</p>
         </div>
         {{-- Sync Button --}}
-        <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center justify-between gap-2 flex-col sm:flex-row px-5 sm:px-0 w-full sm:w-auto">
             <x-ui.button wire:click="syncVideos" variant="primary" class="w-full py-2! sm:w-auto">
                 <span wire:loading.remove wire:target="syncVideos">
                     <flux:icon icon="arrow-path" class="w-4 h-4" />

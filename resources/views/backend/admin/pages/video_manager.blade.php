@@ -5,30 +5,20 @@
     <div class="container mx-auto px-4 py-8">
 
         {{-- Page Header with Action Buttons --}}
-        <div class="mb-8 flex items-center justify-between">
+        <div class="mb-8 flex items-center justify-between flex-col sm:flex-row w-full sm:w-auto">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Video Management</h1>
                 <p class="text-gray-600">Manage TikTok video downloads and cleanup expired videos</p>
             </div>
-            <div class="flex gap-3">
-                <button onclick="openStatisticsModal()"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                        </path>
-                    </svg>
+            <div class="flex gap-3 flex-col sm:flex-row w-full sm:w-auto">
+                <x-ui.button onclick="openStatisticsModal()" variant="secondary" class="w-full py-2! sm:w-auto">
+                    <flux:icon icon="chart-pie" class="w-4 h-4" />
                     See Statistics
-                </button>
-                <button onclick="openJobsModal()"
-                    class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 10V3L4 14h7v7l9-11h-7z">
-                        </path>
-                    </svg>
+                </x-ui.button>
+                <x-ui.button onclick="openJobsModal()" variant="primary" class="w-full py-2! sm:w-auto">
+                    <flux:icon icon="clock" class="w-4 h-4" />
                     Jobs Progress
-                </button>
+                </x-ui.button>
             </div>
         </div>
 
@@ -126,21 +116,20 @@
                         <p class="text-sm text-gray-600 mb-4">Download videos that don't have local storage. This helps
                             recover videos with expired CDN URLs.</p>
 
-                        <div class="flex items-center gap-3 mb-4">
-                            <div>
+                        <div class="flex items-center gap-3 mb-4  flex-col sm:flex-row w-full sm:w-auto">
+                            <div class="w-full">
                                 <label class="text-xs text-gray-600">Limit</label>
-                                <input type="number" id="redownload-limit" value="50" min="1"
-                                    max="500"
-                                    class="mt-1 block w-24 px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                <input type="number" id="redownload-limit" value="50" min="1" max="500"
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
                             </div>
-                            <div class="flex items-center">
+                            <div class="flex items-center w-full">
                                 <input type="checkbox" id="redownload-force" class="mr-2">
                                 <label for="redownload-force" class="text-sm text-gray-600">Force redownload
                                     all</label>
                             </div>
                         </div>
 
-                        <button onclick="redownloadMissing()"
+                        <x-ui.button onclick="redownloadMissing()" variant="secondary"
                             class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             id="btn-redownload">
                             <span class="btn-text">Start Redownload</span>
@@ -155,7 +144,7 @@
                                 </svg>
                                 Processing...
                             </span>
-                        </button>
+                        </x-ui.button>
                     </div>
                 </div>
             </div>
@@ -175,20 +164,20 @@
                         <p class="text-sm text-gray-600 mb-4">Check for videos with expired CDN URLs and deactivate or
                             delete them.</p>
 
-                        <div class="flex items-center gap-3 mb-4">
-                            <div>
+                        <div class="flex items-center gap-3 mb-4  flex-col sm:flex-row w-full sm:w-auto">
+                            <div class="w-full">
                                 <label class="text-xs text-gray-600">Older than (days)</label>
                                 <input type="number" id="cleanup-days" value="7" min="1"
                                     max="365"
-                                    class="mt-1 block w-24 px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
                             </div>
-                            <div class="flex items-center">
+                            <div class="flex items-center w-full">
                                 <input type="checkbox" id="cleanup-delete" class="mr-2">
                                 <label for="cleanup-delete" class="text-sm text-gray-600">Delete inactive</label>
                             </div>
                         </div>
 
-                        <button onclick="cleanupExpired()"
+                        <x-ui.button onclick="cleanupExpired()" variant="primary"
                             class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             id="btn-cleanup">
                             <span class="btn-text">Start Cleanup</span>
@@ -203,7 +192,7 @@
                                 </svg>
                                 Processing...
                             </span>
-                        </button>
+                        </x-ui.button>
                     </div>
                 </div>
             </div>
@@ -224,13 +213,13 @@
                         <p class="text-sm text-gray-600 mb-4">Check if local video files exist and attempt to fix
                             broken references.</p>
 
-                        <div class="mb-4">
+                        <div class="mb-4 w-full">
                             <label class="text-xs text-gray-600">Check limit</label>
                             <input type="number" id="verify-limit" value="100" min="1" max="500"
-                                class="mt-1 block w-24 px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
                         </div>
 
-                        <button onclick="verifyAndFix()"
+                        <x-ui.button onclick="verifyAndFix()" variant="secondary"
                             class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             id="btn-verify">
                             <span class="btn-text">Verify & Fix</span>
@@ -245,7 +234,7 @@
                                 </svg>
                                 Processing...
                             </span>
-                        </button>
+                        </x-ui.button>
                     </div>
                 </div>
             </div>
@@ -265,21 +254,21 @@
                         <p class="text-sm text-gray-600 mb-4">Free up storage space by deleting inactive videos older
                             than specified days.</p>
 
-                        <div class="flex items-center gap-3 mb-4">
-                            <div>
+                        <div class="flex items-center gap-3 mb-4 flex-col sm:flex-row w-full sm:w-auto">
+                            <div class="w-full">
                                 <label class="text-xs text-gray-600">Older than (days)</label>
                                 <input type="number" id="delete-days" value="90" min="30" max="365"
-                                    class="mt-1 block w-24 px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
                             </div>
-                            <div>
+                            <div class="w-full">
                                 <label class="text-xs text-gray-600">Limit</label>
                                 <input type="number" id="delete-limit" value="100" min="1"
                                     max="500"
-                                    class="mt-1 block w-24 px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
                             </div>
                         </div>
 
-                        <button onclick="deleteOld()"
+                        <x-ui.button onclick="deleteOld()" variant="primary"
                             class="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             id="btn-delete">
                             <span class="btn-text">Delete Old Videos</span>
@@ -294,7 +283,7 @@
                                 </svg>
                                 Processing...
                             </span>
-                        </button>
+                        </x-ui.button>
                     </div>
                 </div>
             </div>
@@ -525,14 +514,14 @@
                             <div class="mt-6 bg-gray-50 rounded-lg p-4">
                                 <h4 class="text-sm font-semibold text-gray-700 mb-2">Quick Actions</h4>
                                 <div class="flex gap-3">
-                                    <button onclick="refreshStatistics(); closeStatisticsModal();"
-                                        class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors">
+                                    <x-ui.button variant="secondary" onclick="refreshStatistics(); closeStatisticsModal();"
+                                        class="w-full py-2! ">
                                         Refresh Main Dashboard
-                                    </button>
-                                    <button onclick="closeStatisticsModal();"
-                                        class="bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors">
+                                    </x-ui.button>
+                                    <x-ui.button variant="primary" onclick="closeStatisticsModal();"
+                                        class="w-full py-2! ">
                                         Close
-                                    </button>
+                                    </x-ui.button>
                                 </div>
                             </div>
                         `;
@@ -633,23 +622,23 @@
                                     <p class="text-sm text-gray-700 mb-2">${progress.message || 'Processing...'}</p>
 
                                     ${progress.data && Object.keys(progress.data).length > 0 ? `
-                                                                                <div class="mt-3 bg-white rounded p-3 text-xs">
-                                                                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-                                                                                        ${Object.entries(progress.data).map(([key, value]) => {
-                                                                                            if (typeof value !== 'object') {
-                                                                                                const label = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                                                                                                return `
+                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="mt-3 bg-white rounded p-3 text-xs">
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                                                                                                                                                                                                                                                                                                                                                                                                                        ${Object.entries(progress.data).map(([key, value]) => {
+                                                                                                                                                                                                                                                                                                                                                                                                                                            if (typeof value !== 'object') {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                const label = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                                                                                                                                                                                                                                                                                                                                                                                                                                                return `
                                                             <div>
                                                                 <span class="text-gray-500">${label}:</span>
                                                                 <span class="font-semibold ml-1">${value}</span>
                                                             </div>
                                                         `;
-                                                                                            }
-                                                                                            return '';
-                                                                                        }).join('')}
-                                                                                    </div>
-                                                                                </div>
-                                                                            ` : ''}
+                                                                                                                                                                                                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                                                                                                                                                                                                            return '';
+                                                                                                                                                                                                                                                                                                                                                                                                                                        }).join('')}
+                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                            ` : ''}
 
                                     <p class="text-xs text-gray-500 mt-2">Job ID: ${job.id}</p>
                                     <p class="text-xs text-gray-500">Updated: ${progress.updated_at || 'N/A'}</p>
