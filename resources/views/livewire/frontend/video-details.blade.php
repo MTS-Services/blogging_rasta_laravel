@@ -1,17 +1,24 @@
 <div>
 
     @section('meta')
-        <meta property="og:title" content="{{ $data->title ?? 'DioDioGlow Video' }}">
+        {{-- SEO PRIMARY TAGS --}}
+        <meta name="title" content="{{ $data->title ?? 'DioDioGlow Video Page Title' }}">
+        <meta name="description" content="{!! $data->video_description ? Str::limit(html_entity_decode($data->video_description), 160) : $data->title !!}">
+
+        {{-- Open Graph / Facebook --}}
+        <meta property="og:title" content="{{ $data->title ?? 'DioDioGlow Video Page Title' }}">
         <meta property="og:description" content="{!! $data->video_description ? Str::limit(html_entity_decode($data->video_description), 160) : $data->title !!}">
         <meta property="og:image" content="{{ $data->thumbnail_url }}">
         <meta property="og:url" content="{{ url()->current() }}">
         <meta property="og:image:secure_url" content="{{ $data->thumbnail_url }}">
         <link rel="image_src" href="{{ $data->thumbnail_url }}">
 
-        <meta name="twitter:card" content="summary_large_image">
+        {{-- Twitter --}}
+        <meta name="twitter:card" content="{{ site_name() }}">
         <meta name="twitter:title" content="{{ $data->title }}">
         <meta name="twitter:description" content="{!! $data->video_description ? Str::limit(html_entity_decode($data->video_description), 160) : $data->title !!}">
         <meta name="twitter:image" content="{{ $data->thumbnail_url }}">
+        <link rel="canonical" href="{{ url()->current() }}">
     @endsection
 
     @section('head_scripts')

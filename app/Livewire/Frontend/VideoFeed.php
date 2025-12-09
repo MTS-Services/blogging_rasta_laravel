@@ -42,7 +42,11 @@ class VideoFeed extends Component
 
         // Load users from database
         if ($categoryId !== 'All') {
-            $category = UserCategory::with('users')->find($categoryId);
+            $category = UserCategory::avtive()->with([
+                'users' => function ($query) {
+                    $query->active();   // <-- apply active() scope on users
+                }
+            ])->find($categoryId);
             if ($category) {
                 $this->users = $category->users->toArray();
             }
@@ -60,7 +64,11 @@ class VideoFeed extends Component
     {
         // Load users based on selected category from URL
         if ($this->selectedCategory !== 'All') {
-            $category = UserCategory::with('users')->find($this->selectedCategory);
+            $category = UserCategory::active()->with([
+                'users' => function ($query) {
+                    $query->active();   // <-- apply active() scope on users
+                }
+            ])->find($this->selectedCategory);
             if ($category) {
                 $this->users = $category->users->toArray();
             }
@@ -294,7 +302,15 @@ class VideoFeed extends Component
     public function render()
     {
 
-        $categories = UserCategory::active()->with('users')->get();
+        $categories = UserCategory::active()
+            ->whereHas('users', function ($q) {
+                $q->active();   // category must have minimum 1 active user
+            })
+            ->with([
+                'users' => function ($query) {
+                    $query->active();   // <-- apply active() scope on users
+                }
+            ])->get();
         return view('livewire.frontend.video-feed', compact('categories'));
     }
 }

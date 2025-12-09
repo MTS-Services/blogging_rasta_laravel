@@ -1,4 +1,27 @@
 <div>
+    @section('meta')
+        {{-- SEO PRIMARY TAGS --}}
+        <meta name="title" content="">
+        <meta name="description" content="">
+
+        {{-- Open Graph / Facebook --}}
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="">
+        <meta property="og:description" content="">
+        <meta property="og:image" content="">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:image:secure_url" content="">
+        <link rel="image_src" href="">
+
+        {{-- Twitter --}}
+        <meta name="twitter:card" content="{{ site_name() }}">
+        <meta name="twitter:title" content="">
+        <meta name="twitter:description" content="">
+        <meta name="twitter:image" content="{{ site_logo() }}">
+
+        {{-- Canonical URL --}}
+        <link rel="canonical" href="{{ url()->current() }}">
+    @endsection
     <div class=" font-sans">
         <main class="min-h-[90vh] flex items-center justify-center p-6">
             <section
