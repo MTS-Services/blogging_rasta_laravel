@@ -89,12 +89,12 @@ class VerifyAndFixBrokenVideosJob implements ShouldQueue
                     $progress = (int) ((($index + 1) / $total) * 100);
                     $this->updateProgress(
                         $progress,
-                        "Verifying {$video->aweme_id} " . ($index + 1) / $total . " )......."
+                        "Verifying {$video->video_id} " . ($index + 1) / $total . " )......."
                     );
 
                     Log::debug("Verifying video", [
                         'job_id' => $this->jobId,
-                        'aweme_id' => $video->aweme_id,
+                        'video_id' => $video->video_id,
                         'local_url' => $video->local_video_url
                     ]);
 
@@ -104,7 +104,7 @@ class VerifyAndFixBrokenVideosJob implements ShouldQueue
 
                         Log::warning("Broken local video found", [
                             'job_id' => $this->jobId,
-                            'aweme_id' => $video->aweme_id,
+                            'video_id' => $video->video_id,
                             'local_url' => $video->local_video_url
                         ]);
 
@@ -112,7 +112,7 @@ class VerifyAndFixBrokenVideosJob implements ShouldQueue
                         if (!empty($video->play_url)) {
                             $newLocalUrl = $videoService->downloadWithRetry(
                                 $video->play_url,
-                                $video->aweme_id,
+                                $video->video_id,
                                 $video->username,
                                 2 // max retries
                             );
@@ -125,7 +125,7 @@ class VerifyAndFixBrokenVideosJob implements ShouldQueue
                                 $fixedCount++;
 
                                 $details[] = [
-                                    'aweme_id' => $video->aweme_id,
+                                    'video_id' => $video->video_id,
                                     'username' => $video->username,
                                     'action' => 'fixed',
                                     'old_url' => $video->local_video_url,
@@ -134,7 +134,7 @@ class VerifyAndFixBrokenVideosJob implements ShouldQueue
 
                                 Log::info("Fixed broken video", [
                                     'job_id' => $this->jobId,
-                                    'aweme_id' => $video->aweme_id,
+                                    'video_id' => $video->video_id,
                                     'new_url' => $newLocalUrl
                                 ]);
                             } else {
@@ -143,7 +143,7 @@ class VerifyAndFixBrokenVideosJob implements ShouldQueue
                                 $clearedCount++;
 
                                 $details[] = [
-                                    'aweme_id' => $video->aweme_id,
+                                    'video_id' => $video->video_id,
                                     'username' => $video->username,
                                     'action' => 'cleared',
                                     'reason' => 'Could not redownload'
@@ -151,7 +151,7 @@ class VerifyAndFixBrokenVideosJob implements ShouldQueue
 
                                 Log::warning("Could not fix broken video, cleared URL", [
                                     'job_id' => $this->jobId,
-                                    'aweme_id' => $video->aweme_id
+                                    'video_id' => $video->video_id
                                 ]);
                             }
                         } else {
@@ -160,7 +160,7 @@ class VerifyAndFixBrokenVideosJob implements ShouldQueue
                             $clearedCount++;
 
                             $details[] = [
-                                'aweme_id' => $video->aweme_id,
+                                'video_id' => $video->video_id,
                                 'username' => $video->username,
                                 'action' => 'cleared',
                                 'reason' => 'No CDN URL available'
@@ -168,12 +168,12 @@ class VerifyAndFixBrokenVideosJob implements ShouldQueue
 
                             Log::warning("Cleared broken video URL (no CDN URL)", [
                                 'job_id' => $this->jobId,
-                                'aweme_id' => $video->aweme_id
+                                'video_id' => $video->video_id
                             ]);
                         }
                     } else {
                         $details[] = [
-                            'aweme_id' => $video->aweme_id,
+                            'video_id' => $video->video_id,
                             'username' => $video->username,
                             'action' => 'valid',
                             'reason' => 'Video file exists'
@@ -186,13 +186,13 @@ class VerifyAndFixBrokenVideosJob implements ShouldQueue
                 } catch (\Exception $e) {
                     Log::error("Error verifying video", [
                         'job_id' => $this->jobId,
-                        'aweme_id' => $video->aweme_id ?? 'unknown',
+                        'video_id' => $video->video_id ?? 'unknown',
                         'error' => $e->getMessage(),
                         'trace' => $e->getTraceAsString()
                     ]);
 
                     $details[] = [
-                        'aweme_id' => $video->aweme_id ?? 'unknown',
+                        'video_id' => $video->video_id ?? 'unknown',
                         'username' => $video->username ?? 'unknown',
                         'action' => 'error',
                         'reason' => $e->getMessage()

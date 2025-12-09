@@ -109,14 +109,14 @@ class RedownloadMissingVideosJob implements ShouldQueue
                     }
                     $this->updateProgress(
                         $progress,
-                        "Processing " . $video->aweme_id . " (" . ($index + 1) / $total . ")..."
+                        "Processing " . $video->video_id . " (" . ($index + 1) / $total . ")..."
                     );
 
                     // Skip if no play_url
                     if (empty($video->play_url)) {
                         $skippedCount++;
                         $details[] = [
-                            'aweme_id' => $video->aweme_id,
+                            'video_id' => $video->video_id,
                             'username' => $video->username,
                             'status' => 'skipped',
                             'reason' => 'No play URL available'
@@ -124,14 +124,14 @@ class RedownloadMissingVideosJob implements ShouldQueue
 
                         Log::warning("Skipped video - no play URL", [
                             'job_id' => $this->jobId,
-                            'aweme_id' => $video->aweme_id
+                            'video_id' => $video->video_id
                         ]);
                         continue;
                     }
 
                     Log::info("Processing video for redownload", [
                         'job_id' => $this->jobId,
-                        'aweme_id' => $video->aweme_id,
+                        'video_id' => $video->video_id,
                         'username' => $video->username,
                         'progress' => ($index + 1) / $total
                     ]);
@@ -139,7 +139,7 @@ class RedownloadMissingVideosJob implements ShouldQueue
                     // Download video with retry
                     $localUrl = $videoService->downloadWithRetry(
                         $video->play_url,
-                        $video->aweme_id,
+                        $video->video_id,
                         $video->username,
                         3 // max retries
                     );
@@ -153,7 +153,7 @@ class RedownloadMissingVideosJob implements ShouldQueue
 
                         $successCount++;
                         $details[] = [
-                            'aweme_id' => $video->aweme_id,
+                            'video_id' => $video->video_id,
                             'username' => $video->username,
                             'status' => 'success',
                             'local_url' => $localUrl
@@ -161,13 +161,13 @@ class RedownloadMissingVideosJob implements ShouldQueue
 
                         Log::info("Video redownloaded successfully", [
                             'job_id' => $this->jobId,
-                            'aweme_id' => $video->aweme_id,
+                            'video_id' => $video->video_id,
                             'local_url' => $localUrl
                         ]);
                     } else {
                         $failedCount++;
                         $details[] = [
-                            'aweme_id' => $video->aweme_id,
+                            'video_id' => $video->video_id,
                             'username' => $video->username,
                             'status' => 'failed',
                             'reason' => 'Download failed after retries'
@@ -175,7 +175,7 @@ class RedownloadMissingVideosJob implements ShouldQueue
 
                         Log::error("Failed to redownload video", [
                             'job_id' => $this->jobId,
-                            'aweme_id' => $video->aweme_id
+                            'video_id' => $video->video_id
                         ]);
                     }
 
@@ -185,7 +185,7 @@ class RedownloadMissingVideosJob implements ShouldQueue
                 } catch (\Exception $e) {
                     $failedCount++;
                     $details[] = [
-                        'aweme_id' => $video->aweme_id ?? 'unknown',
+                        'video_id' => $video->video_id ?? 'unknown',
                         'username' => $video->username ?? 'unknown',
                         'status' => 'error',
                         'reason' => $e->getMessage()
@@ -193,7 +193,7 @@ class RedownloadMissingVideosJob implements ShouldQueue
 
                     Log::error("Exception during video redownload", [
                         'job_id' => $this->jobId,
-                        'aweme_id' => $video->aweme_id ?? 'unknown',
+                        'video_id' => $video->video_id ?? 'unknown',
                         'error' => $e->getMessage(),
                         'trace' => $e->getTraceAsString()
                     ]);

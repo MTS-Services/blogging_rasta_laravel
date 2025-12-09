@@ -85,7 +85,8 @@ class VideoManagementService
                     if (empty($video->play_url)) {
                         $skippedCount++;
                         $details[] = [
-                            'aweme_id' => $video->aweme_id,
+
+                            'video_id' => $video->video_id,
                             'username' => $video->username,
                             'status' => 'skipped',
                             'reason' => 'No play URL available'
@@ -94,14 +95,15 @@ class VideoManagementService
                     }
 
                     Log::info("Processing video for redownload", [
-                        'aweme_id' => $video->aweme_id,
+
+                        'video_id' => $video->video_id,
                         'username' => $video->username
                     ]);
 
                     // Download video with retry
                     $localUrl = $this->videoService->downloadWithRetry(
                         $video->play_url,
-                        $video->aweme_id,
+                        $video->video_id,
                         $video->username,
                         3 // max retries
                     );
@@ -115,26 +117,30 @@ class VideoManagementService
 
                         $successCount++;
                         $details[] = [
-                            'aweme_id' => $video->aweme_id,
+
+                            'video_id' => $video->video_id,
                             'username' => $video->username,
                             'status' => 'success',
                             'local_url' => $localUrl
                         ];
 
                         Log::info("Video redownloaded successfully", [
-                            'aweme_id' => $video->aweme_id
+
+                            'video_id' => $video->video_id,
                         ]);
                     } else {
                         $failedCount++;
                         $details[] = [
-                            'aweme_id' => $video->aweme_id,
+
+                            'video_id' => $video->video_id,
                             'username' => $video->username,
                             'status' => 'failed',
                             'reason' => 'Download failed after retries'
                         ];
 
                         Log::error("Failed to redownload video", [
-                            'aweme_id' => $video->aweme_id
+
+                            'video_id' => $video->video_id,
                         ]);
                     }
 
@@ -144,14 +150,16 @@ class VideoManagementService
                 } catch (\Exception $e) {
                     $failedCount++;
                     $details[] = [
-                        'aweme_id' => $video->aweme_id,
+
+                        'video_id' => $video->video_id,
                         'username' => $video->username,
                         'status' => 'error',
                         'reason' => $e->getMessage()
                     ];
 
                     Log::error("Exception during video redownload", [
-                        'aweme_id' => $video->aweme_id,
+
+                        'video_id' => $video->video_id,
                         'error' => $e->getMessage()
                     ]);
                 }
@@ -250,14 +258,16 @@ class VideoManagementService
                             $deletedCount++;
 
                             $details[] = [
-                                'aweme_id' => $video->aweme_id,
+
+                                'video_id' => $video->video_id,
                                 'username' => $video->username,
                                 'action' => 'deleted',
                                 'reason' => 'Expired CDN URL and inactive'
                             ];
 
                             Log::info("Deleted expired video", [
-                                'aweme_id' => $video->aweme_id
+
+                                'video_id' => $video->video_id,
                             ]);
                         } else {
                             // Just deactivate
@@ -265,19 +275,22 @@ class VideoManagementService
                             $deactivatedCount++;
 
                             $details[] = [
-                                'aweme_id' => $video->aweme_id,
+
+                                'video_id' => $video->video_id,
                                 'username' => $video->username,
                                 'action' => 'deactivated',
                                 'reason' => 'Expired CDN URL'
                             ];
 
                             Log::info("Deactivated expired video", [
-                                'aweme_id' => $video->aweme_id
+
+                                'video_id' => $video->video_id,
                             ]);
                         }
                     } else {
                         $details[] = [
-                            'aweme_id' => $video->aweme_id,
+
+                            'video_id' => $video->video_id,
                             'username' => $video->username,
                             'action' => 'valid',
                             'reason' => 'CDN URL still accessible'
@@ -289,12 +302,14 @@ class VideoManagementService
 
                 } catch (\Exception $e) {
                     Log::error("Error checking video expiration", [
-                        'aweme_id' => $video->aweme_id,
+
+                        'video_id' => $video->video_id,
                         'error' => $e->getMessage()
                     ]);
 
                     $details[] = [
-                        'aweme_id' => $video->aweme_id,
+
+                        'video_id' => $video->video_id,
                         'username' => $video->username,
                         'action' => 'error',
                         'reason' => $e->getMessage()
@@ -499,7 +514,8 @@ class VideoManagementService
 
                 } catch (\Exception $e) {
                     Log::error("Failed to delete old video", [
-                        'aweme_id' => $video->aweme_id,
+
+                        'video_id' => $video->video_id,
                         'error' => $e->getMessage()
                     ]);
                 }
@@ -552,7 +568,8 @@ class VideoManagementService
                         $brokenCount++;
 
                         Log::warning("Broken local video found", [
-                            'aweme_id' => $video->aweme_id,
+
+                            'video_id' => $video->video_id,
                             'local_url' => $video->local_video_url
                         ]);
 
@@ -560,7 +577,7 @@ class VideoManagementService
                         if (!empty($video->play_url)) {
                             $newLocalUrl = $this->videoService->downloadWithRetry(
                                 $video->play_url,
-                                $video->aweme_id,
+                                $video->video_id,
                                 $video->username,
                                 2
                             );
@@ -570,7 +587,8 @@ class VideoManagementService
                                 $fixedCount++;
 
                                 Log::info("Fixed broken video", [
-                                    'aweme_id' => $video->aweme_id
+
+                                    'video_id' => $video->video_id,
                                 ]);
                             } else {
                                 // Mark as needing attention
@@ -584,7 +602,8 @@ class VideoManagementService
 
                 } catch (\Exception $e) {
                     Log::error("Error verifying video", [
-                        'aweme_id' => $video->aweme_id,
+
+                        'video_id' => $video->video_id,
                         'error' => $e->getMessage()
                     ]);
                 }

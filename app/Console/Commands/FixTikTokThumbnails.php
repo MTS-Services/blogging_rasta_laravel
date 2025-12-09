@@ -38,11 +38,11 @@ class FixTikTokThumbnails extends Command
 
         foreach ($videos as $video) {
             // Try origin_cover first
-            $localUrl = $service->downloadAndStore($video->origin_cover, $video->aweme_id);
+            $localUrl = $service->downloadAndStore($video->origin_cover, $video->video_id);
 
             // Fallback to cover
             if (!$localUrl && $video->cover) {
-                $localUrl = $service->downloadAndStore($video->cover, $video->aweme_id);
+                $localUrl = $service->downloadAndStore($video->cover, $video->video_id);
             }
 
             if ($localUrl) {

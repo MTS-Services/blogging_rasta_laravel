@@ -41,36 +41,36 @@ class VideoDownloadService
      * Download and store TikTok video locally
      *
      * @param string $videoUrl The TikTok CDN video URL
-     * @param string $awemeId The unique video ID
+     * @param string $videoId The unique video ID
      * @param string $username The creator username
      * @return string|null Local storage path or null on failure
      */
-    public function downloadAndStore($videoUrl, $awemeId, $username = 'creator')
+    public function downloadAndStore($videoUrl, $videoId, $username = 'creator')
     {
 
         ini_set('max_execution_time', 0); // unlimited
         set_time_limit(0);
         if (empty($videoUrl)) {
-            Log::warning('Empty video URL provided for download', ['aweme_id' => $awemeId]);
+            Log::warning('Empty video URL provided for download', ['video_id' => $videoId]);
             return null;
         }
 
         try {
             // Generate unique filename
-            $filename = $this->generateFilename($awemeId, $username);
+            $filename = $this->generateFilename($videoId, $username);
             $fullPath = "{$this->videoPath}/{$filename}";
 
             // Check if video already exists
             if (Storage::disk($this->disk)->exists($fullPath)) {
                 Log::info('Video already exists locally', [
-                    'aweme_id' => $awemeId,
+                    'video_id' => $videoId,
                     'path' => $fullPath
                 ]);
                 return Storage::disk($this->disk)->url($fullPath);
             }
 
             Log::info('Starting video download', [
-                'aweme_id' => $awemeId,
+                'video_id' => $videoId,
                 'url' => substr($videoUrl, 0, 100) . '...',
                 'filename' => $filename
             ]);
@@ -84,7 +84,7 @@ class VideoDownloadService
 
             if ($statusCode !== 200) {
                 Log::error('Failed to download video', [
-                    'aweme_id' => $awemeId,
+                    'video_id' => $videoId,
                     'status_code' => $statusCode,
                     'url' => substr($videoUrl, 0, 100)
                 ]);
@@ -109,7 +109,7 @@ class VideoDownloadService
 
             if (!$saved) {
                 Log::error('Failed to save video to storage', [
-                    'aweme_id' => $awemeId,
+                    'video_id' => $videoId,
                     'path' => $fullPath
                 ]);
                 return null;
@@ -118,7 +118,7 @@ class VideoDownloadService
             // Verify file exists
             if (!Storage::disk($this->disk)->exists($fullPath)) {
                 Log::error('Video not found after save', [
-                    'aweme_id' => $awemeId,
+                    'video_id' => $videoId,
                     'path' => $fullPath
                 ]);
                 return null;
@@ -130,7 +130,7 @@ class VideoDownloadService
 
             if ($sizeInMB < 0.1) {
                 Log::error('Video file too small, likely invalid', [
-                    'aweme_id' => $awemeId,
+                    'video_id' => $videoId,
                     'size_mb' => round($sizeInMB, 2)
                 ]);
 
@@ -140,7 +140,7 @@ class VideoDownloadService
 
             if ($sizeInMB > 100) {
                 Log::warning('Video file very large', [
-                    'aweme_id' => $awemeId,
+                    'video_id' => $videoId,
                     'size_mb' => round($sizeInMB, 2)
                 ]);
             }
@@ -148,7 +148,7 @@ class VideoDownloadService
             $localUrl = Storage::disk($this->disk)->url($fullPath);
 
             Log::info('Video downloaded and stored successfully', [
-                'aweme_id' => $awemeId,
+                'video_id' => $videoId,
                 'path' => $fullPath,
                 'size_mb' => round($sizeInMB, 2),
                 'local_url' => $localUrl
@@ -158,7 +158,7 @@ class VideoDownloadService
 
         } catch (\Exception $e) {
             Log::error('Exception while downloading video', [
-                'aweme_id' => $awemeId,
+                'video_id' => $videoId,
                 'error' => $e->getMessage(),
                 'type' => get_class($e),
                 'trace' => $e->getTraceAsString()
@@ -166,7 +166,7 @@ class VideoDownloadService
 
             // Clean up partial file if exists
             try {
-                $fullPath = "{$this->videoPath}/" . $this->generateFilename($awemeId, $username);
+                $fullPath = "{$this->videoPath}/" . $this->generateFilename($videoId, $username);
                 if (Storage::disk($this->disk)->exists($fullPath)) {
                     Storage::disk($this->disk)->delete($fullPath);
                 }
@@ -180,29 +180,29 @@ class VideoDownloadService
     /**
      * Generate unique filename for video
      *
-     * @param string $awemeId
+     * @param string $videoId
      * @param string $username
      * @return string
      */
-    private function generateFilename($awemeId, $username)
+    private function generateFilename($videoId, $username)
     {
         $cleanUsername = preg_replace('/[^a-z0-9_-]/i', '', $username);
         $timestamp = time();
 
-        // Format: username_awemeId_timestamp.mp4
-        return "{$cleanUsername}_{$awemeId}_{$timestamp}.mp4";
+        // Format: username_videoId_timestamp.mp4
+        return "{$cleanUsername}_{$videoId}_{$timestamp}.mp4";
     }
 
     /**
      * Download video with retry mechanism
      *
      * @param string $videoUrl
-     * @param string $awemeId
+     * @param string $videoId
      * @param string $username
      * @param int $maxRetries
      * @return string|null
      */
-    public function downloadWithRetry($videoUrl, $awemeId, $username = 'creator', $maxRetries = 3)
+    public function downloadWithRetry($videoUrl, $videoId, $username = 'creator', $maxRetries = 3)
     {
         $attempt = 0;
 
@@ -210,12 +210,12 @@ class VideoDownloadService
             $attempt++;
 
             Log::info('Attempting video download', [
-                'aweme_id' => $awemeId,
+                'video_id' => $videoId,
                 'attempt' => $attempt,
                 'max_retries' => $maxRetries
             ]);
 
-            $result = $this->downloadAndStore($videoUrl, $awemeId, $username);
+            $result = $this->downloadAndStore($videoUrl, $videoId, $username);
 
             if ($result !== null) {
                 return $result;
@@ -224,13 +224,15 @@ class VideoDownloadService
             if ($attempt < $maxRetries) {
                 // Wait before retry (exponential backoff)
                 $waitSeconds = pow(2, $attempt);
-                Log::info("Waiting {$waitSeconds}s before retry", ['aweme_id' => $awemeId]);
+                Log::info("Waiting {$waitSeconds}s before retry", [
+                    'video_id' => $videoId,
+                ]);
                 sleep($waitSeconds);
             }
         }
 
         Log::error('All video download attempts failed', [
-            'aweme_id' => $awemeId,
+            'video_id' => $videoId,
             'attempts' => $maxRetries
         ]);
 

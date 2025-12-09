@@ -105,7 +105,7 @@ class CleanupExpiredVideosJob implements ShouldQueue
                     $progress = (int) ((($index + 1) / $total) * 100);
                     $this->updateProgress(
                         $progress,
-                        "Checking {$video->aweme_id} " . ($index + 1) / $total . ").........."
+                        "Checking {$video->video_id} " . ($index + 1) / $total . ").........."
                     );
 
                     $checkedCount++;
@@ -122,7 +122,7 @@ class CleanupExpiredVideosJob implements ShouldQueue
                             $deletedCount++;
 
                             $details[] = [
-                                'aweme_id' => $video->aweme_id,
+                                'video_id' => $video->video_id,
                                 'username' => $video->username,
                                 'action' => 'deleted',
                                 'reason' => 'Expired CDN URL and inactive'
@@ -130,7 +130,7 @@ class CleanupExpiredVideosJob implements ShouldQueue
 
                             Log::info("Deleted expired video", [
                                 'job_id' => $this->jobId,
-                                'aweme_id' => $video->aweme_id
+                                'video_id' => $video->video_id
                             ]);
                         } else {
                             // Just deactivate
@@ -138,7 +138,7 @@ class CleanupExpiredVideosJob implements ShouldQueue
                             $deactivatedCount++;
 
                             $details[] = [
-                                'aweme_id' => $video->aweme_id,
+                                'video_id' => $video->video_id,
                                 'username' => $video->username,
                                 'action' => 'deactivated',
                                 'reason' => 'Expired CDN URL'
@@ -146,12 +146,12 @@ class CleanupExpiredVideosJob implements ShouldQueue
 
                             Log::info("Deactivated expired video", [
                                 'job_id' => $this->jobId,
-                                'aweme_id' => $video->aweme_id
+                                'video_id' => $video->video_id
                             ]);
                         }
                     } else {
                         $details[] = [
-                            'aweme_id' => $video->aweme_id,
+                            'video_id' => $video->video_id,
                             'username' => $video->username,
                             'action' => 'valid',
                             'reason' => 'CDN URL still accessible'
@@ -164,13 +164,13 @@ class CleanupExpiredVideosJob implements ShouldQueue
                 } catch (\Exception $e) {
                     Log::error("Error checking video expiration", [
                         'job_id' => $this->jobId,
-                        'aweme_id' => $video->aweme_id ?? 'unknown',
+                        'video_id' => $video->video_id ?? 'unknown',
                         'error' => $e->getMessage(),
                         'trace' => $e->getTraceAsString()
                     ]);
 
                     $details[] = [
-                        'aweme_id' => $video->aweme_id ?? 'unknown',
+                        'video_id' => $video->video_id ?? 'unknown',
                         'username' => $video->username ?? 'unknown',
                         'action' => 'error',
                         'reason' => $e->getMessage()
