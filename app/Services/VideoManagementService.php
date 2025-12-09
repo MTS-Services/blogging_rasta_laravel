@@ -101,11 +101,10 @@ class VideoManagementService
                     ]);
 
                     // Download video with retry
-                    $localUrl = $this->videoService->downloadWithRetry(
+                    $localUrl = $this->videoService->downloadAndStore(
                         $video->play_url,
                         $video->video_id,
                         $video->username,
-                        3 // max retries
                     );
 
                     if ($localUrl) {
@@ -575,11 +574,10 @@ class VideoManagementService
 
                         // Try to redownload
                         if (!empty($video->play_url)) {
-                            $newLocalUrl = $this->videoService->downloadWithRetry(
+                            $newLocalUrl = $this->videoService->downloadAndStore(
                                 $video->play_url,
                                 $video->video_id,
                                 $video->username,
-                                2
                             );
 
                             if ($newLocalUrl) {

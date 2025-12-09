@@ -137,11 +137,10 @@ class RedownloadMissingVideosJob implements ShouldQueue
                     ]);
 
                     // Download video with retry
-                    $localUrl = $videoService->downloadWithRetry(
+                    $localUrl = $videoService->downloadAndStore(
                         $video->play_url,
                         $video->video_id,
-                        $video->username,
-                        3 // max retries
+                        $video->username    
                     );
 
                     if ($localUrl) {

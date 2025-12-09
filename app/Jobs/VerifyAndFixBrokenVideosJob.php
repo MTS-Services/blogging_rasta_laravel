@@ -110,11 +110,10 @@ class VerifyAndFixBrokenVideosJob implements ShouldQueue
 
                         // Try to redownload
                         if (!empty($video->play_url)) {
-                            $newLocalUrl = $videoService->downloadWithRetry(
+                            $newLocalUrl = $videoService->downloadAndStore(
                                 $video->play_url,
                                 $video->video_id,
                                 $video->username,
-                                2 // max retries
                             );
 
                             if ($newLocalUrl) {

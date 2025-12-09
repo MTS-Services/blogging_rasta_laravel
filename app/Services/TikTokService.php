@@ -614,11 +614,10 @@ class TikTokService
         //         ]);
 
         //         // Download with retry mechanism (3 attempts)
-        //         $localVideoUrl = $this->videoService->downloadWithRetry(
+        //         $localVideoUrl = $this->videoService->downloadAndStore(
         //             $playUrl,
         //             $videoId,
         //             $username,
-        //             3 // max retries
         //         );
 
         //         if ($localVideoUrl) {
@@ -646,11 +645,10 @@ class TikTokService
 
         //         // Re-download if missing
         //         if ($playUrl) {
-        //             $localVideoUrl = $this->videoService->downloadWithRetry(
+        //             $localVideoUrl = $this->videoService->downloadAndStore(
         //                 $playUrl,
         //                 $videoId,
         //                 $username,
-        //                 3
         //             );
         //         }
         //     }
