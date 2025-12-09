@@ -605,54 +605,54 @@ class TikTokService
         // ========================================
         $localVideoUrl = null;
 
-        // if (!$existingVideo || empty($existingVideo->local_video_url)) {
-        //     // New video OR existing video without local storage
-        //     if ($playUrl) {
-        //         Log::info('Downloading video for storage', [
-        //             'video_id' => $videoId,
-        //             'username' => $username
-        //         ]);
+        if (!$existingVideo || empty($existingVideo->local_video_url)) {
+            // New video OR existing video without local storage
+            if ($playUrl) {
+                Log::info('Downloading video for storage', [
+                    'video_id' => $videoId,
+                    'username' => $username
+                ]);
 
-        //         // Download with retry mechanism (3 attempts)
-        //         $localVideoUrl = $this->videoService->downloadAndStore(
-        //             $playUrl,
-        //             $videoId,
-        //             $username,
-        //         );
+                // Download with retry mechanism (3 attempts)
+                $localVideoUrl = $this->videoService->downloadAndStore(
+                    $playUrl,
+                    $videoId,
+                    $username,
+                );
 
-        //         if ($localVideoUrl) {
-        //             Log::info('Video downloaded successfully', [
-        //                 'video_id' => $videoId,
-        //                 'local_url' => $localVideoUrl
-        //             ]);
-        //         } else {
-        //             Log::error('Failed to download video after retries', [
-        //                 'video_id' => $videoId,
-        //                 'cdn_url' => substr($playUrl, 0, 100)
-        //             ]);
-        //         }
-        //     }
-        // } else {
-        //     // Use existing local video
-        //     $localVideoUrl = $existingVideo->local_video_url;
+                if ($localVideoUrl) {
+                    Log::info('Video downloaded successfully', [
+                        'video_id' => $videoId,
+                        'local_url' => $localVideoUrl
+                    ]);
+                } else {
+                    Log::error('Failed to download video after retries', [
+                        'video_id' => $videoId,
+                        'cdn_url' => substr($playUrl, 0, 100)
+                    ]);
+                }
+            }
+        } else {
+            // Use existing local video
+            $localVideoUrl = $existingVideo->local_video_url;
 
-        //     // Verify existing video still exists
-        //     if (!$this->videoService->videoExists($localVideoUrl)) {
-        //         Log::warning('Local video missing, re-downloading', [
-        //             'video_id' => $videoId,
-        //             'old_path' => $localVideoUrl
-        //         ]);
+            // Verify existing video still exists
+            if (!$this->videoService->videoExists($localVideoUrl)) {
+                Log::warning('Local video missing, re-downloading', [
+                    'video_id' => $videoId,
+                    'old_path' => $localVideoUrl
+                ]);
 
-        //         // Re-download if missing
-        //         if ($playUrl) {
-        //             $localVideoUrl = $this->videoService->downloadAndStore(
-        //                 $playUrl,
-        //                 $videoId,
-        //                 $username,
-        //             );
-        //         }
-        //     }
-        // }
+                // Re-download if missing
+                if ($playUrl) {
+                    $localVideoUrl = $this->videoService->downloadAndStore(
+                        $playUrl,
+                        $videoId,
+                        $username,
+                    );
+                }
+            }
+        }
 
         return [
             'aweme_id' => $awemeId,

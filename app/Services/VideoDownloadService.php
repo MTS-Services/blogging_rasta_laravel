@@ -182,4 +182,45 @@ class VideoDownloadService
             return false;
         }
     }
+
+
+    /**
+     * Check if local video exists and is valid
+     *
+     * @param string $localPath
+     * @return bool
+     */
+    public function videoExists($localPath)
+    {
+        try {
+            if (empty($localPath)) {
+                return false;
+            }
+
+            // Extract path from URL more reliably
+            $path = str_replace([
+                Storage::disk($this->disk)->url(''),
+                url('storage/'),
+                url('/storage/')
+            ], '', $localPath);
+
+            // Clean up the path
+            $path = ltrim($path, '/');
+
+            if (!Storage::disk($this->disk)->exists($path)) {
+                return false;
+            }
+
+            // Check if file has content
+            $size = Storage::disk($this->disk)->size($path);
+            return $size > 0;
+
+        } catch (\Exception $e) {
+            Log::error('videoExists check failed', [
+                'path' => $localPath,
+                'error' => $e->getMessage()
+            ]);
+            return false;
+        }
+    }
 }

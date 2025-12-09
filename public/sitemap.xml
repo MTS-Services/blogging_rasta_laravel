@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
     <url>
     <loc>http://127.0.0.1:8000</loc>
-    <lastmod>2025-12-09T05:15:16+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:37+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
             </url>
@@ -52,356 +52,200 @@
     <priority>0.8</priority>
             </url>
     <url>
-    <loc>http://127.0.0.1:8000/video/7580923370162851095</loc>
-    <lastmod>2025-12-09T05:15:16+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580905406570974486</loc>
-    <lastmod>2025-12-09T05:15:16+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580873044172885270</loc>
-    <lastmod>2025-12-09T05:15:16+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580846708616219926</loc>
-    <lastmod>2025-12-09T05:15:16+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580797207406841110</loc>
-    <lastmod>2025-12-08T06:32:29+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580769723785219350</loc>
-    <lastmod>2025-12-08T06:32:29+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580761204130319638</loc>
-    <lastmod>2025-12-08T06:32:30+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580747473421962518</loc>
-    <lastmod>2025-12-08T06:32:30+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580745461598932246</loc>
-    <lastmod>2025-12-08T06:32:30+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580714406821088534</loc>
-    <lastmod>2025-12-08T06:32:31+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580709820504886550</loc>
-    <lastmod>2025-12-08T06:32:31+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580709592401726742</loc>
-    <lastmod>2025-12-08T06:32:32+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580580741071867158</loc>
-    <lastmod>2025-12-08T06:32:32+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580564356673572119</loc>
-    <lastmod>2025-12-08T06:32:32+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580513723710786838</loc>
-    <lastmod>2025-12-08T06:32:33+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580511534712147222</loc>
-    <lastmod>2025-12-08T06:32:33+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580472229327097110</loc>
-    <lastmod>2025-12-08T06:32:34+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580464498008476950</loc>
-    <lastmod>2025-12-08T06:32:34+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580452842863856918</loc>
-    <lastmod>2025-12-08T11:31:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580452471949020438</loc>
-    <lastmod>2025-12-08T11:52:45+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580439777812532502</loc>
-    <lastmod>2025-12-07T09:48:55+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580434486207270166</loc>
-    <lastmod>2025-12-07T09:48:55+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580423367484902678</loc>
-    <lastmod>2025-12-07T09:48:55+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580416019320016150</loc>
-    <lastmod>2025-12-07T09:48:56+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580378491078692118</loc>
-    <lastmod>2025-12-07T09:48:56+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580374606788267286</loc>
-    <lastmod>2025-12-07T09:48:56+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580166235439107350</loc>
-    <lastmod>2025-12-07T09:48:56+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580153110811692310</loc>
-    <lastmod>2025-12-07T09:48:57+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580144528175271170</loc>
-    <lastmod>2025-12-07T09:48:57+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7580108042151202070</loc>
-    <lastmod>2025-12-07T09:48:57+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7577110334926785814</loc>
-    <lastmod>2025-12-09T05:15:16+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7576655156184452374</loc>
-    <lastmod>2025-12-09T05:15:16+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7555475379746524438</loc>
-    <lastmod>2025-12-09T05:15:16+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7581280905604435223</loc>
-    <lastmod>2025-12-09T05:15:15+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7581266769898212630</loc>
-    <lastmod>2025-12-09T05:15:15+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7581258318916652311</loc>
-    <lastmod>2025-12-09T05:15:15+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7581245917680913686</loc>
-    <lastmod>2025-12-09T05:15:15+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7581231490327973142</loc>
-    <lastmod>2025-12-09T05:15:15+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7581212140497849622</loc>
-    <lastmod>2025-12-09T05:15:15+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7581193593797430531</loc>
-    <lastmod>2025-12-09T05:15:16+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7581114391752346902</loc>
-    <lastmod>2025-12-09T05:15:16+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7581113979750157590</loc>
-    <lastmod>2025-12-09T05:15:16+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
-    <loc>http://127.0.0.1:8000/video/7581112803138850070</loc>
-    <lastmod>2025-12-09T05:15:16+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-            </url>
-    <url>
     <loc>http://127.0.0.1:8000/video/7581702373903584534</loc>
-    <lastmod>2025-12-09T05:15:06+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/video/7581702047515413783</loc>
-    <lastmod>2025-12-09T05:15:08+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/video/7581671187818859798</loc>
-    <lastmod>2025-12-09T05:15:08+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/video/7581671127940992278</loc>
-    <lastmod>2025-12-09T05:15:09+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/video/7581647107908554006</loc>
-    <lastmod>2025-12-09T05:15:09+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/video/7581617848582147350</loc>
-    <lastmod>2025-12-09T05:15:10+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/video/7581585899243375895</loc>
-    <lastmod>2025-12-09T05:15:10+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/video/7581575738239782166</loc>
-    <lastmod>2025-12-09T05:15:11+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/video/7581567985286974742</loc>
-    <lastmod>2025-12-09T05:15:12+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/video/7581564355708325142</loc>
-    <lastmod>2025-12-09T05:15:12+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/video/7581547171170815254</loc>
-    <lastmod>2025-12-09T05:15:13+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/video/7581547069169470742</loc>
-    <lastmod>2025-12-09T05:15:13+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/video/7581539980674141462</loc>
-    <lastmod>2025-12-09T05:15:14+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/video/7581515983207009558</loc>
-    <lastmod>2025-12-09T05:15:14+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/video/7581485675963501827</loc>
-    <lastmod>2025-12-09T05:15:15+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
     <url>
     <loc>http://127.0.0.1:8000/video/7581474764384996630</loc>
-    <lastmod>2025-12-09T05:15:15+00:00</lastmod>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7581280905604435223</loc>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7581266769898212630</loc>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7581258318916652311</loc>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7581245917680913686</loc>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7581231490327973142</loc>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7581212140497849622</loc>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7581193593797430531</loc>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7581114391752346902</loc>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7581113979750157590</loc>
+    <lastmod>2025-12-09T09:21:36+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7581112803138850070</loc>
+    <lastmod>2025-12-09T09:21:37+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7580923370162851095</loc>
+    <lastmod>2025-12-09T09:21:37+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7580905406570974486</loc>
+    <lastmod>2025-12-09T09:21:37+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7580873044172885270</loc>
+    <lastmod>2025-12-09T09:21:37+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7580846708616219926</loc>
+    <lastmod>2025-12-09T09:21:37+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7577110334926785814</loc>
+    <lastmod>2025-12-09T09:21:37+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7576655156184452374</loc>
+    <lastmod>2025-12-09T09:21:37+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+            </url>
+    <url>
+    <loc>http://127.0.0.1:8000/video/7555475379746524438</loc>
+    <lastmod>2025-12-09T09:21:37+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
             </url>
