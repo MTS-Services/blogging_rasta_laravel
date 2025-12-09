@@ -3,12 +3,13 @@
 namespace App\Services;
 
 use App\Models\ApplicationSetting;
-use App\Models\TikTokUser;
 use App\Models\TikTokVideo;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class TikTokService
@@ -943,4 +944,57 @@ class TikTokService
             'videos' => [],
         ];
     }
+
+
+    public function cleanupUnusedLocalVideos(bool $debug = false): array
+    {
+        $folderPath = storage_path('app/public/videos/tiktok');
+
+        if (!File::exists($folderPath)) {
+            Log::warning("TikTok cleanup: folder not found => {$folderPath}");
+            return [
+                'success' => true,
+                'unused_count' => 0,
+                'deleted' => 0
+            ];
+        }
+
+        $allFiles = collect(File::files($folderPath))
+            ->map(fn($file) => $file->getFilename())
+            ->toArray();
+
+        $usedFiles = TikTokVideo::pluck('local_video_url')
+            ->filter()
+            ->map(fn($path) => basename($path))
+            ->unique()
+            ->toArray();
+
+        $unusedFiles = array_diff($allFiles, $usedFiles);
+
+        $deletedCount = 0;
+
+        foreach ($unusedFiles as $filename) {
+            $filePath = $folderPath . '/' . $filename;
+
+            if (!File::exists($filePath)) {
+                continue;
+            }
+
+            if ($debug) {
+                Log::info("TikTok cleanup (debug): Would delete => {$filename}");
+            }
+
+            Storage::disk('public')->delete('videos/tiktok/' . $filename);
+            $deletedCount++;
+
+            Log::info("TikTok cleanup: Deleted => {$filename}");
+        }
+
+        return [
+            'success' => true,
+            'unused_count' => count($unusedFiles),
+            'deleted' => $deletedCount
+        ];
+    }
+
 }

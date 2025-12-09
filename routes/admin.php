@@ -49,6 +49,7 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
 
             // Job dispatch endpoints
             Route::post('/redownload-missing', 'redownloadMissing')->name('redownload-missing');
+            Route::get('/cleanup-unused-videos', 'deleteUnusedVideos')->name('cleanup-unused-videos');
             Route::post('/cleanup-expired', 'cleanupExpired')->name('cleanup-expired');
             Route::post('/delete-old', 'deleteOld')->name('delete-old');
             Route::post('/verify-fix', 'verifyAndFix')->name('verify-fix');
