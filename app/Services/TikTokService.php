@@ -588,6 +588,7 @@ class TikTokService
         // NEW: Download and store thumbnail locally
         // ========================================
         $localThumbnail = null;
+        $localVideoUrl = null;
         if (!$existingVideo || (isset($existingVideo->thumbnail_url) && empty($existingVideo?->thumbnail_url))) {
             if ($originCover) {
                 $localThumbnail = $this->thumbnailService->downloadAndStore($originCover, $videoId);

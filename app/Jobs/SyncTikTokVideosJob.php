@@ -87,9 +87,9 @@ class SyncTikTokVideosJob implements ShouldQueue
                     $result['total']
                 );
                 Log::info($message);
-                Log::info('Update empty videos job started.');
-                UpdateEmptyVideosJob::dispatch();
-                Log::info('Update empty videos job completed.');
+                // Log::info('Update empty videos job started.');
+                // UpdateEmptyVideosJob::dispatch();
+                // Log::info('Update empty videos job completed.');
 
             } else {
                 $errorMessage = 'TikTok sync failed: ' . ($result['error'] ?? 'Unknown error');
