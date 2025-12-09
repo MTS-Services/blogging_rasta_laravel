@@ -11,7 +11,7 @@ class ThumbnailDownloadService
     /**
      * Download thumbnail from TikTok CDN and store locally
      */
-    public function downloadAndStore(string $tiktokUrl, string $awemeId): ?string
+    public function downloadAndStore(string $tiktokUrl, string $videoId): ?string
     {
         if (empty($tiktokUrl)) {
             return null;
@@ -32,7 +32,7 @@ class ThumbnailDownloadService
 
             // Generate filename
             $extension = $this->getImageExtension($response->header('Content-Type'));
-            $filename = "thumbnails/{$awemeId}.{$extension}";
+            $filename = "thumbnails/{$videoId}.{$extension}";
 
             // Store in public disk
             Storage::disk('public')->put($filename, $response->body());
@@ -51,7 +51,7 @@ class ThumbnailDownloadService
 
     protected function getImageExtension(?string $contentType): string
     {
-        return match($contentType) {
+        return match ($contentType) {
             'image/jpeg', 'image/jpg' => 'jpg',
             'image/png' => 'png',
             'image/webp' => 'webp',

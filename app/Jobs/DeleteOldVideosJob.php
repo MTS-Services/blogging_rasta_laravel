@@ -94,12 +94,12 @@ class DeleteOldVideosJob implements ShouldQueue
                     $progress = (int) ((($index + 1) / $total) * 100);
                     $this->updateProgress(
                         $progress,
-                        "Deleting " . ($video->aweme_id) . " (" . ($index + 1) / $total . ")......."
+                        "Deleting " . ($video->video_id) . " (" . ($index + 1) / $total . ")......."
                     );
 
                     Log::info("Processing video for deletion", [
                         'job_id' => $this->jobId,
-                        'aweme_id' => $video->aweme_id,
+                        'video_id' => $video->video_id,
                         'username' => $video->username,
                         'local_url' => $video->local_video_url,
                         'created_at' => $video->created_at
@@ -120,7 +120,7 @@ class DeleteOldVideosJob implements ShouldQueue
                         }
 
                         $details[] = [
-                            'aweme_id' => $video->aweme_id,
+                            'video_id' => $video->video_id,
                             'username' => $video->username,
                             'status' => 'deleted',
                             'size_mb' => $size ? round($size / (1024 * 1024), 2) : null,
@@ -129,14 +129,14 @@ class DeleteOldVideosJob implements ShouldQueue
 
                         Log::info("Video file deleted successfully", [
                             'job_id' => $this->jobId,
-                            'aweme_id' => $video->aweme_id,
+                            'video_id' => $video->video_id,
                             'size_mb' => $size ? round($size / (1024 * 1024), 2) : 0
                         ]);
                     } else {
                         $failedCount++;
 
                         $details[] = [
-                            'aweme_id' => $video->aweme_id,
+                            'video_id' => $video->video_id,
                             'username' => $video->username,
                             'status' => 'failed',
                             'reason' => 'Could not delete file'
@@ -144,7 +144,7 @@ class DeleteOldVideosJob implements ShouldQueue
 
                         Log::error("Failed to delete video file", [
                             'job_id' => $this->jobId,
-                            'aweme_id' => $video->aweme_id,
+                            'video_id' => $video->video_id,
                             'local_url' => $video->local_video_url
                         ]);
                     }
@@ -156,7 +156,7 @@ class DeleteOldVideosJob implements ShouldQueue
                     $failedCount++;
 
                     $details[] = [
-                        'aweme_id' => $video->aweme_id ?? 'unknown',
+                        'video_id' => $video->video_id ?? 'unknown',
                         'username' => $video->username ?? 'unknown',
                         'status' => 'error',
                         'reason' => $e->getMessage()
@@ -164,7 +164,7 @@ class DeleteOldVideosJob implements ShouldQueue
 
                     Log::error("Exception during video deletion", [
                         'job_id' => $this->jobId,
-                        'aweme_id' => $video->aweme_id ?? 'unknown',
+                        'video_id' => $video->video_id ?? 'unknown',
                         'error' => $e->getMessage(),
                         'trace' => $e->getTraceAsString()
                     ]);

@@ -373,7 +373,8 @@ class TikTokService
             $errors = [];
 
             foreach ($videosToUpdate as $video) {
-                $awemeId = $video->aweme_id ?? $video->video_id;
+                $awemeId = $video->aweme_id;
+                $videoId = $video->video_id;
 
                 try {
                     $updates = [];
@@ -399,7 +400,7 @@ class TikTokService
                     // Generate slug if empty or needs update
                     if (empty($video->slug) || $changed) {
                         $title = $updates['title'] ?? $video->title;
-                        $updates['slug'] = $this->generateSlug($title, $awemeId, $username, $video->toArray());
+                        $updates['slug'] = $this->generateSlug($title, $videoId, $username, $video->toArray());
                         $changed = true;
                     }
 
@@ -409,7 +410,7 @@ class TikTokService
                         $updatedCount++;
 
                         Log::info("Updated video", [
-                            'aweme_id' => $awemeId,
+                            'video_id' => $videoId,
                             'old_title' => $video->title,
                             'new_title' => $updates['title'] ?? null,
                         ]);
@@ -417,11 +418,11 @@ class TikTokService
 
                 } catch (\Exception $e) {
                     $errors[] = [
-                        'aweme_id' => $awemeId,
+                        'video_id' => $videoId,
                         'error' => $e->getMessage()
                     ];
                     Log::error("Failed to update video", [
-                        'aweme_id' => $awemeId,
+                        'video_id' => $videoId,
                         'error' => $e->getMessage()
                     ]);
                 }
@@ -544,7 +545,8 @@ class TikTokService
     {
         $author = $video['author'] ?? [];
         $musicInfo = $video['music_info'] ?? [];
-        $awemeId = $video['aweme_id'] ?? $video['video_id'];
+        $awemeId = $video['aweme_id'];
+        $videoId = $video['video_id'];
 
         // Get original title/desc from TikTok
         $originalTitle = trim($video['title'] ?? '');
@@ -571,7 +573,7 @@ class TikTokService
 
         // Generate slug
         if (!$existingVideo) {
-            $slug = $this->generateSlug($finalTitle, $awemeId, $username, $video);
+            $slug = $this->generateSlug($finalTitle, $videoId, $username, $video);
         } else {
             $slug = $existingVideo->slug;
         }
@@ -588,11 +590,11 @@ class TikTokService
         $localThumbnail = null;
         if (!$existingVideo || (isset($existingVideo->thumbnail_url) && empty($existingVideo?->thumbnail_url))) {
             if ($originCover) {
-                $localThumbnail = $this->thumbnailService->downloadAndStore($originCover, $awemeId);
+                $localThumbnail = $this->thumbnailService->downloadAndStore($originCover, $videoId);
             }
 
             if (!$localThumbnail && $cover) {
-                $localThumbnail = $this->thumbnailService->downloadAndStore($cover, $awemeId);
+                $localThumbnail = $this->thumbnailService->downloadAndStore($cover, $videoId);
             }
         } else {
             $localThumbnail = $existingVideo->thumbnail_url;
@@ -603,60 +605,58 @@ class TikTokService
         // ========================================
         $localVideoUrl = null;
 
-        // if (!$existingVideo || empty($existingVideo->local_video_url)) {
-        //     // New video OR existing video without local storage
-        //     if ($playUrl) {
-        //         Log::info('Downloading video for storage', [
-        //             'aweme_id' => $awemeId,
-        //             'username' => $username
-        //         ]);
+        if (!$existingVideo || empty($existingVideo->local_video_url)) {
+            // New video OR existing video without local storage
+            if ($playUrl) {
+                Log::info('Downloading video for storage', [
+                    'video_id' => $videoId,
+                    'username' => $username
+                ]);
 
-        //         // Download with retry mechanism (3 attempts)
-        //         $localVideoUrl = $this->videoService->downloadWithRetry(
-        //             $playUrl,
-        //             $awemeId,
-        //             $username,
-        //             3 // max retries
-        //         );
+                // Download with retry mechanism (3 attempts)
+                $localVideoUrl = $this->videoService->downloadAndStore(
+                    $playUrl,
+                    $videoId,
+                    $username,
+                );
 
-        //         if ($localVideoUrl) {
-        //             Log::info('Video downloaded successfully', [
-        //                 'aweme_id' => $awemeId,
-        //                 'local_url' => $localVideoUrl
-        //             ]);
-        //         } else {
-        //             Log::error('Failed to download video after retries', [
-        //                 'aweme_id' => $awemeId,
-        //                 'cdn_url' => substr($playUrl, 0, 100)
-        //             ]);
-        //         }
-        //     }
-        // } else {
-        //     // Use existing local video
-        //     $localVideoUrl = $existingVideo->local_video_url;
+                if ($localVideoUrl) {
+                    Log::info('Video downloaded successfully', [
+                        'video_id' => $videoId,
+                        'local_url' => $localVideoUrl
+                    ]);
+                } else {
+                    Log::error('Failed to download video after retries', [
+                        'video_id' => $videoId,
+                        'cdn_url' => substr($playUrl, 0, 100)
+                    ]);
+                }
+            }
+        } else {
+            // Use existing local video
+            $localVideoUrl = $existingVideo->local_video_url;
 
-        //     // Verify existing video still exists
-        //     if (!$this->videoService->videoExists($localVideoUrl)) {
-        //         Log::warning('Local video missing, re-downloading', [
-        //             'aweme_id' => $awemeId,
-        //             'old_path' => $localVideoUrl
-        //         ]);
+            // Verify existing video still exists
+            if (!$this->videoService->videoExists($localVideoUrl)) {
+                Log::warning('Local video missing, re-downloading', [
+                    'video_id' => $videoId,
+                    'old_path' => $localVideoUrl
+                ]);
 
-        //         // Re-download if missing
-        //         if ($playUrl) {
-        //             $localVideoUrl = $this->videoService->downloadWithRetry(
-        //                 $playUrl,
-        //                 $awemeId,
-        //                 $username,
-        //                 3
-        //             );
-        //         }
-        //     }
-        // }
+                // Re-download if missing
+                if ($playUrl) {
+                    $localVideoUrl = $this->videoService->downloadAndStore(
+                        $playUrl,
+                        $videoId,
+                        $username,
+                    );
+                }
+            }
+        }
 
         return [
             'aweme_id' => $awemeId,
-            'video_id' => $video['video_id'] ?? null,
+            'video_id' => $videoId,
             'sync_at' => now(),
             'title' => $finalTitle,
             'slug' => $slug,
@@ -870,9 +870,9 @@ class TikTokService
     /**
      * Get detailed video info for debugging
      */
-    public function getVideoDetails($awemeId)
+    public function getVideoDetails($videoId)
     {
-        $video = TikTokVideo::where('aweme_id', $awemeId)->first();
+        $video = TikTokVideo::where('video_id', $videoId)->first();
 
         if (!$video) {
             return ['success' => false, 'error' => 'Video not found'];

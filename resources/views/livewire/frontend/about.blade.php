@@ -1,5 +1,29 @@
 <div>
 
+    @section('meta')
+        {{-- SEO PRIMARY TAGS --}}
+        <meta name="title" content="">
+        <meta name="description" content="">
+
+        {{-- Open Graph / Facebook --}}
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="">
+        <meta property="og:description" content="">
+        <meta property="og:image" content="">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:image:secure_url" content="">
+        <link rel="image_src" href="">
+
+        {{-- Twitter --}}
+        <meta name="twitter:card" content="{{ site_name() }}">
+        <meta name="twitter:title" content="">
+        <meta name="twitter:description" content="">
+        <meta name="twitter:image" content="{{ site_logo() }}">
+
+        {{-- Canonical URL --}}
+        <link rel="canonical" href="{{ url()->current() }}">
+    @endsection
+
     <section class="bg-gradient mb-12 sm:mb-0">
         {{-- Banner Section --}}
         <div class="container pt-20 pb-16 lg:pt-24">
@@ -120,7 +144,8 @@
 
                 <a href="{{ route('product') }}" wire:navigate class="{{ $cardClasses }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="{{ $iconClasses }}" viewBox="0 0 24 24"
-                        fill="none" stroke="#ff7c9c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        fill="none" stroke="#ff7c9c" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
                         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                         <line x1="3" y1="6" x2="21" y2="6"></line>
                         <path d="M16 10a4 4 0 0 1-8 0"></path>
@@ -132,7 +157,8 @@
                 <a href="mailto:{{ $aboutCms?->contact_email ?? 'diodioglowsn@gmail.com' }}"
                     class="{{ $cardClasses }} lg:max-w-full">
                     <svg xmlns="http://www.w3.org/2000/svg" class="{{ $iconClasses }}" viewBox="0 0 24 24"
-                        fill="none" stroke="#ff98b1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        fill="none" stroke="#ff98b1" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                         <polyline points="22,6 12,13 2,6"></polyline>
                     </svg>
