@@ -605,7 +605,7 @@ class TikTokService
         // ========================================
         $localVideoUrl = null;
 
-        if (!$existingVideo || empty($existingVideo->local_video_url)) {
+        if (!$existingVideo || (isset($existingVideo->local_video_url) && empty($existingVideo?->local_video_url))) {
             // New video OR existing video without local storage
             if ($playUrl) {
                 Log::info('Downloading video for storage', [
