@@ -3,6 +3,7 @@
 namespace App\Livewire\Backend\Admin\TikTokManagement;
 
 use App\Jobs\SyncTikTokVideosJob;
+use App\Jobs\UpdateEmptyVideosJob;
 use App\Models\TikTokUser;
 use App\Models\TikTokVideo;
 use App\Services\TikTokService;
@@ -214,29 +215,20 @@ class TikTokVideos extends Component
 
     public function updateEmptyVideos()
     {
-        $result = $this->tiktokService->updateEmptyVideos();
+        // $result = $this->tiktokService->updateEmptyVideos();
 
-        if ($result['success']) {
-            // return response()->json([
-            //     'success' => true,
-            //     'message' => $result['message'],
-            //     'data' => [
-            //         'updated' => $result['updated'],
-            //         'total_found' => $result['total_found'],
-            //         'errors' => $result['errors']
-            //     ]
-            // ]);
+        // if ($result['success']) {
+        //     $this->success($result['message'] . " Updated: {$result['updated']}" . " Total Found: {$result['total_found']}");
+        // }
 
-            $this->success($result['message'] . " Updated: {$result['updated']}" . " Total Found: {$result['total_found']}");
+        // $this->success('Empty videos not found');
+
+        try {
+            UpdateEmptyVideosJob::dispatch();
+            $this->info('TikTok empty video update job dispatched successfully.');
+        } catch (\Exception $e) {
+            $this->error('Sync error: ' . $e->getMessage());
         }
-
-        // return response()->json([
-        //     'success' => false,
-        //     'message' => 'Failed to update videos',
-        //     'error' => $result['error']
-        // ], 500);
-
-        $this->success('Empty videos not found');
     }
 
     /**

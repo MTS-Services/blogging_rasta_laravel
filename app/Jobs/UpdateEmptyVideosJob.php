@@ -2,8 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Models\ApplicationSetting;
-use App\Models\TikTokUser;
 use App\Services\TikTokService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
-class SyncTikTokVideosJob implements ShouldQueue
+class UpdateEmptyVideosJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -58,46 +56,28 @@ class SyncTikTokVideosJob implements ShouldQueue
      */
     public function handle(TikTokService $tiktokService): void
     {
-        Log::info('TikTok video synchronization job started.');
+        Log::info('Update empty videos job started.');
 
         try {
-            // Get the featured users and decode JSON
-            $users = TikTokUser::active()->get();
 
-            if (empty($users)) {
-                Log::warning('No featured_users setting found in application settings.');
-                return;
-            }
-
-
-            if (empty($users) || count($users) < 1) {
-                Log::warning('Featured users configuration is empty or invalid.');
-                return;
-            }
 
             // Execute sync
-            $result = $tiktokService->syncVideos($users);
+            $result = $tiktokService->updateEmptyVideos();
 
-            // Handle result
             if ($result['success']) {
                 $message = sprintf(
-                    'TikTok sync completed successfully! New: %d, Updated: %d, Total: %d',
-                    $result['synced'],
+                    'Updated empty videos successfully! Updated: %d, Total: %d',
                     $result['updated'],
-                    $result['total']
+                    $result['total_found']
                 );
                 Log::info($message);
-                Log::info('Update empty videos job started.');
-                UpdateEmptyVideosJob::dispatch();
-                Log::info('Update empty videos job completed.');
-
             } else {
-                $errorMessage = 'TikTok sync failed: ' . ($result['error'] ?? 'Unknown error');
+                $errorMessage = 'Failed to update empty videos';
                 Log::error($errorMessage);
                 throw new \RuntimeException($errorMessage);
             }
         } catch (Throwable $e) {
-            Log::error('TikTok sync job exception: ' . $e->getMessage(), [
+            Log::error('Update empty videos job failed: ' . $e->getMessage(), [
                 'exception' => get_class($e),
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
@@ -115,7 +95,7 @@ class SyncTikTokVideosJob implements ShouldQueue
      */
     public function failed(Throwable $exception): void
     {
-        Log::critical('TikTok sync job failed after all retry attempts.', [
+        Log::critical('Update empty videos job failed after all retry attempts.', [
             'exception' => get_class($exception),
             'message' => $exception->getMessage(),
             'attempts' => $this->attempts()
