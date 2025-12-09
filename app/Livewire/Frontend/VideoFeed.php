@@ -42,7 +42,7 @@ class VideoFeed extends Component
 
         // Load users from database
         if ($categoryId !== 'All') {
-            $category = UserCategory::avtive()->with([
+            $category = UserCategory::active()->with([
                 'users' => function ($query) {
                     $query->active();   // <-- apply active() scope on users
                 }
