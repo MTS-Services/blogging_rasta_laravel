@@ -251,7 +251,7 @@ class TikTokService
             $updatedCount = 0;
 
             foreach ($result['videos'] as $video) {
-                $existingVideo = TikTokVideo::where('video_id', $videoData['video_id'])->first();
+                $existingVideo = TikTokVideo::where('video_id', $video['video_id'])->first();
                 $videoData = $this->prepareVideoData($video, $existingVideo);
 
 
