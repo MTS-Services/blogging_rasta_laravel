@@ -603,56 +603,56 @@ class TikTokService
         // ========================================
         $localVideoUrl = null;
 
-        if (!$existingVideo || empty($existingVideo->local_video_url)) {
-            // New video OR existing video without local storage
-            if ($playUrl) {
-                Log::info('Downloading video for storage', [
-                    'aweme_id' => $awemeId,
-                    'username' => $username
-                ]);
+        // if (!$existingVideo || empty($existingVideo->local_video_url)) {
+        //     // New video OR existing video without local storage
+        //     if ($playUrl) {
+        //         Log::info('Downloading video for storage', [
+        //             'aweme_id' => $awemeId,
+        //             'username' => $username
+        //         ]);
 
-                // Download with retry mechanism (3 attempts)
-                $localVideoUrl = $this->videoService->downloadWithRetry(
-                    $playUrl,
-                    $awemeId,
-                    $username,
-                    3 // max retries
-                );
+        //         // Download with retry mechanism (3 attempts)
+        //         $localVideoUrl = $this->videoService->downloadWithRetry(
+        //             $playUrl,
+        //             $awemeId,
+        //             $username,
+        //             3 // max retries
+        //         );
 
-                if ($localVideoUrl) {
-                    Log::info('Video downloaded successfully', [
-                        'aweme_id' => $awemeId,
-                        'local_url' => $localVideoUrl
-                    ]);
-                } else {
-                    Log::error('Failed to download video after retries', [
-                        'aweme_id' => $awemeId,
-                        'cdn_url' => substr($playUrl, 0, 100)
-                    ]);
-                }
-            }
-        } else {
-            // Use existing local video
-            $localVideoUrl = $existingVideo->local_video_url;
+        //         if ($localVideoUrl) {
+        //             Log::info('Video downloaded successfully', [
+        //                 'aweme_id' => $awemeId,
+        //                 'local_url' => $localVideoUrl
+        //             ]);
+        //         } else {
+        //             Log::error('Failed to download video after retries', [
+        //                 'aweme_id' => $awemeId,
+        //                 'cdn_url' => substr($playUrl, 0, 100)
+        //             ]);
+        //         }
+        //     }
+        // } else {
+        //     // Use existing local video
+        //     $localVideoUrl = $existingVideo->local_video_url;
 
-            // Verify existing video still exists
-            if (!$this->videoService->videoExists($localVideoUrl)) {
-                Log::warning('Local video missing, re-downloading', [
-                    'aweme_id' => $awemeId,
-                    'old_path' => $localVideoUrl
-                ]);
+        //     // Verify existing video still exists
+        //     if (!$this->videoService->videoExists($localVideoUrl)) {
+        //         Log::warning('Local video missing, re-downloading', [
+        //             'aweme_id' => $awemeId,
+        //             'old_path' => $localVideoUrl
+        //         ]);
 
-                // Re-download if missing
-                if ($playUrl) {
-                    $localVideoUrl = $this->videoService->downloadWithRetry(
-                        $playUrl,
-                        $awemeId,
-                        $username,
-                        3
-                    );
-                }
-            }
-        }
+        //         // Re-download if missing
+        //         if ($playUrl) {
+        //             $localVideoUrl = $this->videoService->downloadWithRetry(
+        //                 $playUrl,
+        //                 $awemeId,
+        //                 $username,
+        //                 3
+        //             );
+        //         }
+        //     }
+        // }
 
         return [
             'aweme_id' => $awemeId,
