@@ -237,9 +237,9 @@ class TikTokService
         Log::info("Starting TikTok Sync for users");
 
         $this->clearCache();
-        try {
-            DB::beginTransaction();
 
+        try {
+            // DON'T use transaction for the entire process
             $result = $this->getMultipleUsersVideos($users);
 
             Log::info("API Result", ['success' => $result['success'], 'video_count' => count($result['videos'] ?? [])]);
@@ -250,54 +250,92 @@ class TikTokService
 
             $syncedCount = 0;
             $updatedCount = 0;
+            $failedCount = 0;
+            $errors = [];
 
+            // Process each video individually with its own transaction
             foreach ($result['videos'] as $video) {
-                $existingVideo = TikTokVideo::where('video_id', $video['video_id'])->first();
-                $videoData = $this->prepareVideoData($video, $existingVideo);
+                try {
+                    DB::beginTransaction();
 
+                    $existingVideo = TikTokVideo::where('video_id', $video['video_id'])->first();
 
-                if ($existingVideo) {
-                    $existingVideo->update([
-                        'title' => $videoData['title'],
-                        'desc' => $videoData['desc'],
-                        'play_url' => $videoData['play_url'],
-                        'local_video_url' => $videoData['local_video_url'], // NEW
-                        'cover' => $videoData['cover'],
-                        'origin_cover' => $videoData['origin_cover'],
-                        'play_count' => $videoData['play_count'],
-                        'digg_count' => $videoData['digg_count'],
-                        'comment_count' => $videoData['comment_count'],
-                        'share_count' => $videoData['share_count'],
-                        'author_avatar' => $videoData['author_avatar'],
-                        'author_avatar_medium' => $videoData['author_avatar_medium'],
-                        'author_avatar_larger' => $videoData['author_avatar_larger'],
-                        'music_title' => $videoData['music_title'],
-                        'video_description' => $videoData['video_description'],
-                        'thumbnail_url' => $videoData['thumbnail_url']
+                    // Check if video already processed (has local_video_url)
+                    if ($existingVideo && !empty($existingVideo->local_video_url)) {
+                        Log::info("Video already processed, skipping", ['video_id' => $video['video_id']]);
+                        DB::commit();
+                        continue;
+                    }
+
+                    $videoData = $this->prepareVideoData($video, $existingVideo);
+
+                    if ($existingVideo) {
+                        $existingVideo->update([
+                            'title' => $videoData['title'],
+                            'desc' => $videoData['desc'],
+                            'play_url' => $videoData['play_url'],
+                            'local_video_url' => $videoData['local_video_url'],
+                            'cover' => $videoData['cover'],
+                            'origin_cover' => $videoData['origin_cover'],
+                            'play_count' => $videoData['play_count'],
+                            'digg_count' => $videoData['digg_count'],
+                            'comment_count' => $videoData['comment_count'],
+                            'share_count' => $videoData['share_count'],
+                            'author_avatar' => $videoData['author_avatar'],
+                            'author_avatar_medium' => $videoData['author_avatar_medium'],
+                            'author_avatar_larger' => $videoData['author_avatar_larger'],
+                            'music_title' => $videoData['music_title'],
+                            'video_description' => $videoData['video_description'],
+                            'thumbnail_url' => $videoData['thumbnail_url']
+                        ]);
+                        $updatedCount++;
+                    } else {
+                        TikTokVideo::create($videoData);
+                        $syncedCount++;
+                    }
+
+                    DB::commit();
+
+                    Log::info("Video processed successfully", [
+                        'video_id' => $video['video_id'],
+                        'type' => $existingVideo ? 'updated' : 'new'
                     ]);
-                    $updatedCount++;
-                } else {
-                    TikTokVideo::create($videoData);
-                    $syncedCount++;
+
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    $failedCount++;
+
+                    $errors[] = [
+                        'video_id' => $video['video_id'],
+                        'error' => $e->getMessage()
+                    ];
+
+                    Log::error("Failed to process video", [
+                        'video_id' => $video['video_id'],
+                        'error' => $e->getMessage()
+                    ]);
+
+                    // Continue with next video instead of stopping
+                    continue;
                 }
             }
 
-            DB::commit();
-
             Log::info("TikTok Sync Complete", [
                 'new' => $syncedCount,
-                'updated' => $updatedCount
+                'updated' => $updatedCount,
+                'failed' => $failedCount
             ]);
 
             return [
                 'success' => true,
                 'synced' => $syncedCount,
                 'updated' => $updatedCount,
+                'failed' => $failedCount,
                 'total' => $syncedCount + $updatedCount,
+                'errors' => $errors
             ];
 
         } catch (\Exception $e) {
-            DB::rollBack();
             Log::error("TikTok Sync Error: " . $e->getMessage());
 
             return [

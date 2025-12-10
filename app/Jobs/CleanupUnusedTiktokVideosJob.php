@@ -27,7 +27,7 @@ class CleanupUnusedTiktokVideosJob implements ShouldQueue
      *
      * @var int
      */
-    public $timeout = 300;
+    public $timeout = 1800;
 
     /**
      * Delay before retrying.
@@ -63,6 +63,8 @@ class CleanupUnusedTiktokVideosJob implements ShouldQueue
      */
     public function handle(TikTokService $tiktokService): void
     {
+        ini_set('memory_limit', '512M');
+        ini_set('max_execution_time', '1800');
         Log::info('Cleanup unused TikTok videos job started.', [
             'debug_mode' => $this->debug
         ]);
