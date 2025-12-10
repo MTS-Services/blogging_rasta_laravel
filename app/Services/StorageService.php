@@ -68,7 +68,7 @@ class StorageService
 
             $breakdown = [
                 'videos' => $this->getDirectorySize($storagePath . '/videos/tiktok'),
-                'thumbnails' => $this->getDirectorySize($storagePath . '/thumbnails/tiktok'),
+                'thumbnails' => $this->getDirectorySize($storagePath . '/thumbnails'),
                 'total_app' => $this->getDirectorySize($storagePath),
             ];
 
