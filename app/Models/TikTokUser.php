@@ -98,12 +98,14 @@ class TikTokUser extends BaseModel implements Auditable
      |  Scout Search Configuration
      ================================================================ */
 
-    #[SearchUsingPrefix(['id', 'title', 'status'])]
+    #[SearchUsingPrefix(['id', 'title', 'status', 'username', 'name'])]
     public function toSearchableArray(): array
     {
         return [
             'title' => $this->title,
             'status' => $this->status,
+            'username' => $this->username,
+            'name' => $this->name,
         ];
     }
 
