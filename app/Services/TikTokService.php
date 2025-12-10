@@ -3,12 +3,13 @@
 namespace App\Services;
 
 use App\Models\ApplicationSetting;
-use App\Models\TikTokUser;
 use App\Models\TikTokVideo;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class TikTokService
@@ -236,9 +237,9 @@ class TikTokService
         Log::info("Starting TikTok Sync for users");
 
         $this->clearCache();
-        try {
-            DB::beginTransaction();
 
+        try {
+            // DON'T use transaction for the entire process
             $result = $this->getMultipleUsersVideos($users);
 
             Log::info("API Result", ['success' => $result['success'], 'video_count' => count($result['videos'] ?? [])]);
@@ -249,54 +250,92 @@ class TikTokService
 
             $syncedCount = 0;
             $updatedCount = 0;
+            $failedCount = 0;
+            $errors = [];
 
+            // Process each video individually with its own transaction
             foreach ($result['videos'] as $video) {
-                $existingVideo = TikTokVideo::where('video_id', $video['video_id'])->first();
-                $videoData = $this->prepareVideoData($video, $existingVideo);
+                try {
+                    DB::beginTransaction();
 
+                    $existingVideo = TikTokVideo::where('video_id', $video['video_id'])->first();
 
-                if ($existingVideo) {
-                    $existingVideo->update([
-                        'title' => $videoData['title'],
-                        'desc' => $videoData['desc'],
-                        'play_url' => $videoData['play_url'],
-                        'local_video_url' => $videoData['local_video_url'], // NEW
-                        'cover' => $videoData['cover'],
-                        'origin_cover' => $videoData['origin_cover'],
-                        'play_count' => $videoData['play_count'],
-                        'digg_count' => $videoData['digg_count'],
-                        'comment_count' => $videoData['comment_count'],
-                        'share_count' => $videoData['share_count'],
-                        'author_avatar' => $videoData['author_avatar'],
-                        'author_avatar_medium' => $videoData['author_avatar_medium'],
-                        'author_avatar_larger' => $videoData['author_avatar_larger'],
-                        'music_title' => $videoData['music_title'],
-                        'video_description' => $videoData['video_description'],
-                        'thumbnail_url' => $videoData['thumbnail_url']
+                    // Check if video already processed (has local_video_url)
+                    if ($existingVideo && !empty($existingVideo->local_video_url)) {
+                        Log::info("Video already processed, skipping", ['video_id' => $video['video_id']]);
+                        DB::commit();
+                        continue;
+                    }
+
+                    $videoData = $this->prepareVideoData($video, $existingVideo);
+
+                    if ($existingVideo) {
+                        $existingVideo->update([
+                            'title' => $videoData['title'],
+                            'desc' => $videoData['desc'],
+                            'play_url' => $videoData['play_url'],
+                            'local_video_url' => $videoData['local_video_url'],
+                            'cover' => $videoData['cover'],
+                            'origin_cover' => $videoData['origin_cover'],
+                            'play_count' => $videoData['play_count'],
+                            'digg_count' => $videoData['digg_count'],
+                            'comment_count' => $videoData['comment_count'],
+                            'share_count' => $videoData['share_count'],
+                            'author_avatar' => $videoData['author_avatar'],
+                            'author_avatar_medium' => $videoData['author_avatar_medium'],
+                            'author_avatar_larger' => $videoData['author_avatar_larger'],
+                            'music_title' => $videoData['music_title'],
+                            'video_description' => $videoData['video_description'],
+                            'thumbnail_url' => $videoData['thumbnail_url']
+                        ]);
+                        $updatedCount++;
+                    } else {
+                        TikTokVideo::create($videoData);
+                        $syncedCount++;
+                    }
+
+                    DB::commit();
+
+                    Log::info("Video processed successfully", [
+                        'video_id' => $video['video_id'],
+                        'type' => $existingVideo ? 'updated' : 'new'
                     ]);
-                    $updatedCount++;
-                } else {
-                    TikTokVideo::create($videoData);
-                    $syncedCount++;
+
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    $failedCount++;
+
+                    $errors[] = [
+                        'video_id' => $video['video_id'],
+                        'error' => $e->getMessage()
+                    ];
+
+                    Log::error("Failed to process video", [
+                        'video_id' => $video['video_id'],
+                        'error' => $e->getMessage()
+                    ]);
+
+                    // Continue with next video instead of stopping
+                    continue;
                 }
             }
 
-            DB::commit();
-
             Log::info("TikTok Sync Complete", [
                 'new' => $syncedCount,
-                'updated' => $updatedCount
+                'updated' => $updatedCount,
+                'failed' => $failedCount
             ]);
 
             return [
                 'success' => true,
                 'synced' => $syncedCount,
                 'updated' => $updatedCount,
+                'failed' => $failedCount,
                 'total' => $syncedCount + $updatedCount,
+                'errors' => $errors
             ];
 
         } catch (\Exception $e) {
-            DB::rollBack();
             Log::error("TikTok Sync Error: " . $e->getMessage());
 
             return [
@@ -588,6 +627,7 @@ class TikTokService
         // NEW: Download and store thumbnail locally
         // ========================================
         $localThumbnail = null;
+        $localVideoUrl = null;
         if (!$existingVideo || (isset($existingVideo->thumbnail_url) && empty($existingVideo?->thumbnail_url))) {
             if ($originCover) {
                 $localThumbnail = $this->thumbnailService->downloadAndStore($originCover, $videoId);
@@ -605,7 +645,7 @@ class TikTokService
         // ========================================
         $localVideoUrl = null;
 
-        if (!$existingVideo || empty($existingVideo->local_video_url)) {
+        if (!$existingVideo || (isset($existingVideo->local_video_url) && empty($existingVideo?->local_video_url))) {
             // New video OR existing video without local storage
             if ($playUrl) {
                 Log::info('Downloading video for storage', [
@@ -942,4 +982,57 @@ class TikTokService
             'videos' => [],
         ];
     }
+
+
+    public function cleanupUnusedLocalVideos(bool $debug = false): array
+    {
+        $folderPath = storage_path('app/public/videos/tiktok');
+
+        if (!File::exists($folderPath)) {
+            Log::warning("TikTok cleanup: folder not found => {$folderPath}");
+            return [
+                'success' => true,
+                'unused_count' => 0,
+                'deleted' => 0
+            ];
+        }
+
+        $allFiles = collect(File::files($folderPath))
+            ->map(fn($file) => $file->getFilename())
+            ->toArray();
+
+        $usedFiles = TikTokVideo::pluck('local_video_url')
+            ->filter()
+            ->map(fn($path) => basename($path))
+            ->unique()
+            ->toArray();
+
+        $unusedFiles = array_diff($allFiles, $usedFiles);
+
+        $deletedCount = 0;
+
+        foreach ($unusedFiles as $filename) {
+            $filePath = $folderPath . '/' . $filename;
+
+            if (!File::exists($filePath)) {
+                continue;
+            }
+
+            if ($debug) {
+                Log::info("TikTok cleanup (debug): Would delete => {$filename}");
+            }
+
+            Storage::disk('public')->delete('videos/tiktok/' . $filename);
+            $deletedCount++;
+
+            Log::info("TikTok cleanup: Deleted => {$filename}");
+        }
+
+        return [
+            'success' => true,
+            'unused_count' => count($unusedFiles),
+            'deleted' => $deletedCount
+        ];
+    }
+
 }

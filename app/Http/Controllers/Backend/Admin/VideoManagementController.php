@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Backend\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\CleanupUnusedTiktokVideosJob;
 use App\Jobs\RedownloadMissingVideosJob;
 use App\Jobs\CleanupExpiredVideosJob;
 use App\Jobs\VerifyAndFixBrokenVideosJob;
 use App\Jobs\DeleteOldVideosJob;
+use App\Services\StorageService;
 use App\Services\VideoManagementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -15,10 +17,12 @@ use Illuminate\Support\Facades\Cache;
 class VideoManagementController extends Controller
 {
     protected $videoManagementService;
+    protected $storageService;
 
-    public function __construct(VideoManagementService $videoManagementService)
+    public function __construct(VideoManagementService $videoManagementService, StorageService $storageService)
     {
         $this->videoManagementService = $videoManagementService;
+        $this->storageService = $storageService;
     }
 
     /**
@@ -29,8 +33,11 @@ class VideoManagementController extends Controller
         // Get statistics
         $statsResult = $this->videoManagementService->getStorageStatistics();
         $stats = $statsResult['success'] ? $statsResult['statistics'] : [];
+        $diskUsage = $this->storageService->getDiskUsage();
+        $breakdown = $this->storageService->getStorageBreakdown();
+        $alert = $this->storageService->getStorageAlert();
 
-        return view('backend.admin.pages.video_manager', compact('stats'));
+        return view('backend.admin.pages.video_manager', compact('stats', 'diskUsage', 'breakdown', 'alert'));
     }
 
     /**
@@ -299,6 +306,25 @@ class VideoManagementController extends Controller
                 'success' => false,
                 'message' => 'Failed to get statistics: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function deleteUnusedVideos()
+    {
+        try {
+            // Dispatch the job
+            $job = new CleanupUnusedTiktokVideosJob();
+            dispatch($job);
+
+            return redirect()->back()->with('info', 'Cleanup job has been queued. It will process in the background.');
+
+        } catch (\Exception $e) {
+            Log::error("Failed to dispatch redownload job", [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()->back()->with('error', 'Failed to queue job: ' . $e->getMessage());
         }
     }
 }

@@ -19,6 +19,11 @@
                     <flux:icon icon="clock" class="w-4 h-4" />
                     Jobs Progress
                 </x-ui.button>
+                <x-ui.button href="{{ route('admin.vm.cleanup-unused-videos') }}" variant="secondary"
+                    class="w-full py-2! sm:w-auto">
+                    <flux:icon icon="clock" class="w-4 h-4" />
+                    Junk Cleanup
+                </x-ui.button>
             </div>
         </div>
 
@@ -29,7 +34,8 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-600 mb-1">Total Videos</p>
-                        <p class="text-3xl font-bold text-gray-900" id="stat-total">{{ $stats['total_videos'] ?? 0 }}
+                        <p class="text-3xl font-bold text-gray-900" id="stat-total">
+                            {{ $stats['total_videos'] ? number_format($stats['total_videos']) : 0 }}
                         </p>
                     </div>
                     <div class="bg-blue-100 rounded-full p-3">
@@ -48,7 +54,7 @@
                     <div>
                         <p class="text-sm text-gray-600 mb-1">Stored Locally</p>
                         <p class="text-3xl font-bold text-green-600" id="stat-local">
-                            {{ $stats['with_local_storage'] ?? 0 }}</p>
+                            {{ $stats['with_local_storage'] ? number_format($stats['with_local_storage']) : 0 }}</p>
                         <p class="text-xs text-gray-500 mt-1">{{ $stats['storage_percentage'] ?? 0 }}%</p>
                     </div>
                     <div class="bg-green-100 rounded-full p-3">
@@ -66,7 +72,8 @@
                     <div>
                         <p class="text-sm text-gray-600 mb-1">Missing Local</p>
                         <p class="text-3xl font-bold text-yellow-600" id="stat-missing">
-                            {{ $stats['without_local_storage'] ?? 0 }}</p>
+                            {{ $stats['without_local_storage'] ? number_format($stats['without_local_storage']) : 0 }}
+                        </p>
                     </div>
                     <div class="bg-yellow-100 rounded-full p-3">
                         <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,8 +91,8 @@
                     <div>
                         <p class="text-sm text-gray-600 mb-1">Storage Used</p>
                         <p class="text-3xl font-bold text-purple-600" id="stat-storage">
-                            {{ isset($stats['storage_size_mb']) ? number_format($stats['storage_size_mb'], 2) : '0' }}
-                            MB
+                            {{ isset($stats['storage_size_mb']) ? number_format($stats['storage_size_mb'] / 1024, 2) : '0' }}
+                            GB
                         </p>
                     </div>
                     <div class="bg-purple-100 rounded-full p-3">
@@ -94,6 +101,181 @@
                                 d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4">
                             </path>
                         </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Storage Availability Section --}}
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Storage Availability</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {{-- Total Space --}}
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Total Space</p>
+                            <p class="text-3xl font-bold text-gray-900">
+                                {{ $diskUsage['total_formatted'] ?? '0 B' }}
+                            </p>
+                        </div>
+                        <div class="bg-indigo-100 rounded-full p-3">
+                            <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Used Space --}}
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Used Space</p>
+                            <p class="text-3xl font-bold text-blue-600">
+                                {{ $diskUsage['used_formatted'] ?? '0 B' }}
+                            </p>
+                            <p class="text-xs text-gray-500 mt-1">{{ $diskUsage['used_percentage'] ?? 0 }}%</p>
+                        </div>
+                        <div class="bg-blue-100 rounded-full p-3">
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Free Space --}}
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">Free Space</p>
+                            <p class="text-3xl font-bold text-green-600">
+                                {{ $diskUsage['free_formatted'] ?? '0 B' }}
+                            </p>
+                            <p class="text-xs text-gray-500 mt-1">{{ $diskUsage['free_percentage'] ?? 0 }}%</p>
+                        </div>
+                        <div class="bg-green-100 rounded-full p-3">
+                            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Storage Status --}}
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div class="w-full">
+                            <p class="text-sm text-gray-600 mb-1">Storage Status</p>
+                            <p class="text-2xl font-bold mb-2" style="color: {{ $alert['color'] ?? 'green' }}">
+                                {{ ucfirst($alert['status'] ?? 'Normal') }}
+                            </p>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+                                <div class="h-2 rounded-full transition-all duration-300"
+                                    style="width: {{ $diskUsage['used_percentage'] ?? 0 }}%;
+                                    background-color: {{ ($diskUsage['used_percentage'] ?? 0) >= 90
+                                        ? '#EF4444'
+                                        : (($diskUsage['used_percentage'] ?? 0) >= 80
+                                            ? '#F59E0B'
+                                            : (($diskUsage['used_percentage'] ?? 0) >= 70
+                                                ? '#FBBF24'
+                                                : '#10B981')) }}">
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-500">{{ $alert['message'] ?? 'Storage is healthy' }}</p>
+                        </div>
+                        <div class="rounded-full p-3 ml-3"
+                            style="background-color: {{ ($diskUsage['used_percentage'] ?? 0) >= 90
+                                ? '#FEE2E2'
+                                : (($diskUsage['used_percentage'] ?? 0) >= 80
+                                    ? '#FEF3C7'
+                                    : (($diskUsage['used_percentage'] ?? 0) >= 70
+                                        ? '#FEF9C3'
+                                        : '#D1FAE5')) }}">
+                            <svg class="w-8 h-8"
+                                style="color: {{ ($diskUsage['used_percentage'] ?? 0) >= 90
+                                    ? '#EF4444'
+                                    : (($diskUsage['used_percentage'] ?? 0) >= 80
+                                        ? '#F59E0B'
+                                        : (($diskUsage['used_percentage'] ?? 0) >= 70
+                                            ? '#FBBF24'
+                                            : '#10B981')) }}"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Storage Breakdown Details (Optional Expandable Section) --}}
+            <div class="mt-4 bg-white rounded-lg shadow p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Storage Breakdown</h3>
+                    <button onclick="toggleBreakdown()" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                        <span id="breakdown-toggle-text">Show Details</span>
+                        <svg id="breakdown-arrow" class="inline-block w-4 h-4 ml-1 transition-transform"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div id="breakdown-details" class="hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="border rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-gray-700">Videos Storage</span>
+                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <p class="text-2xl font-bold text-gray-900">{{ $breakdown['videos_formatted'] ?? '0 B' }}
+                            </p>
+                        </div>
+
+                        <div class="border rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-gray-700">Thumbnails</span>
+                                <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <p class="text-2xl font-bold text-gray-900">
+                                {{ $breakdown['thumbnails_formatted'] ?? '0 B' }}</p>
+                        </div>
+
+                        <div class="border rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-gray-700">Total App Storage</span>
+                                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <p class="text-2xl font-bold text-gray-900">
+                                {{ $breakdown['total_app_formatted'] ?? '0 B' }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -119,7 +301,8 @@
                         <div class="flex items-center gap-3 mb-4  flex-col sm:flex-row w-full sm:w-auto">
                             <div class="w-full">
                                 <label class="text-xs text-gray-600">Limit</label>
-                                <input type="number" id="redownload-limit" value="50" min="1" max="500"
+                                <input type="number" id="redownload-limit" value="50" min="1"
+                                    max="500"
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
                                 <strong><small>Max Limit: 500</small></strong>
                             </div>
@@ -500,11 +683,11 @@
                                     <dl class="space-y-3">
                                         <div class="flex justify-between">
                                             <dt class="text-purple-700">Total Size:</dt>
-                                            <dd class="font-bold text-purple-900">${(stats.storage_size_mb || 0).toFixed(2)} MB</dd>
+                                            <dd class="font-bold text-purple-900">${((stats.storage_size_mb/1024 || 0)).toFixed(2)} GB</dd>
                                         </div>
                                         <div class="flex justify-between">
                                             <dt class="text-purple-700">Total Size (GB):</dt>
-                                            <dd class="font-bold text-purple-900">${((stats.storage_size_mb || 0) / 1024).toFixed(2)} GB</dd>
+                                            <dd class="font-bold text-purple-900">${((stats.storage_size_mb/1024 || 0)).toFixed(2)} GB</dd>
                                         </div>
                                         <div class="flex justify-between">
                                             <dt class="text-purple-700">Average Size:</dt>
@@ -625,23 +808,23 @@
                                     <p class="text-sm text-gray-700 mb-2">${progress.message || 'Processing...'}</p>
 
                                     ${progress.data && Object.keys(progress.data).length > 0 ? `
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="mt-3 bg-white rounded p-3 text-xs">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ${Object.entries(progress.data).map(([key, value]) => {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            if (typeof value !== 'object') {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                const label = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                return `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="mt-3 bg-white rounded p-3 text-xs">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ${Object.entries(progress.data).map(([key, value]) => {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            if (typeof value !== 'object') {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                const label = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                return `
                                                             <div>
                                                                 <span class="text-gray-500">${label}:</span>
                                                                 <span class="font-semibold ml-1">${value}</span>
                                                             </div>
                                                         `;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            return '';
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }).join('')}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ` : ''}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            return '';
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }).join('')}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ` : ''}
 
                                     <p class="text-xs text-gray-500 mt-2">Job ID: ${job.id}</p>
                                     <p class="text-xs text-gray-500">Updated: ${progress.updated_at || 'N/A'}</p>
@@ -907,8 +1090,9 @@
                         document.getElementById('stat-total').textContent = stats.total_videos || 0;
                         document.getElementById('stat-local').textContent = stats.with_local_storage || 0;
                         document.getElementById('stat-missing').textContent = stats.without_local_storage || 0;
-                        document.getElementById('stat-storage').textContent = (stats.storage_size_mb || 0).toFixed(2) +
-                            ' MB';
+                        document.getElementById('stat-storage').textContent = (stats.storage_size_mb / 1024 || 0).toFixed(
+                                2) +
+                            ' GB';
                     }
                 } catch (error) {
                     console.error('Error refreshing statistics:', error);
@@ -930,6 +1114,24 @@
                     closeJobsModal();
                 }
             });
+        </script>
+
+        <script>
+            function toggleBreakdown() {
+                const details = document.getElementById('breakdown-details');
+                const toggleText = document.getElementById('breakdown-toggle-text');
+                const arrow = document.getElementById('breakdown-arrow');
+
+                if (details.classList.contains('hidden')) {
+                    details.classList.remove('hidden');
+                    toggleText.textContent = 'Hide Details';
+                    arrow.style.transform = 'rotate(180deg)';
+                } else {
+                    details.classList.add('hidden');
+                    toggleText.textContent = 'Show Details';
+                    arrow.style.transform = 'rotate(0deg)';
+                }
+            }
         </script>
     @endpush
 </x-admin::app>

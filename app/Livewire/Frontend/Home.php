@@ -86,7 +86,7 @@ class Home extends Component
                     'cover' => $video->cover,
                     'origin_cover' => $video->origin_cover,
                     'dynamic_cover' => $video->dynamic_cover,
-                    'play' => $video->local_video_url ?: $video->play_url,
+                    'play' => $video->local_video_url ? storage_url($video->local_video_url) : $video->play_url,
                     'create_time' => strtotime($video->create_time),
                     'play_count' => $video->play_count,
                     'digg_count' => $video->digg_count,

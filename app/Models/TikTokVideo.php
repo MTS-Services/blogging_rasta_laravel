@@ -80,7 +80,7 @@ class TikTokVideo extends BaseModel
     public function getPlaybackUrlAttribute()
     {
         // Use local video if available, otherwise fall back to CDN URL
-        return $this->local_video_url ?? $this->play_url;
+        return $this->local_video_url ? storage_url($this->local_video_url) : $this->play_url;
     }
 
     /**

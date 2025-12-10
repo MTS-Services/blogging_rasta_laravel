@@ -3,7 +3,7 @@
     [x-cloak] { display: none !important; }
 </style>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
+
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-gray-900 mb-2">Featured TikTok Creators</h1>
             <p class="text-gray-600">Latest videos from your featured content creators</p>
@@ -18,7 +18,7 @@
                     $followerCount = $profile['stats']['followerCount'] ?? 0;
                     $nickname = $userInfo['nickname'] ?? $user['display_name'];
                 @endphp
-                
+
                 <button wire:click="filterByUser('{{ $user['username'] }}')" class="group relative bg-white rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 @if($selectedUser === $user['username']) ring-4 ring-{{ $user['color'] }}-500 @endif">
                     <div class="flex justify-center mb-3">
                         @if($avatar)
@@ -29,10 +29,10 @@
                             </div>
                         @endif
                     </div>
-                    
+
                     <h3 class="font-semibold text-gray-900 text-sm mb-1 truncate">{{ $nickname }}</h3>
                     <p class="text-xs text-gray-500 truncate">{{ '@' . $user['username'] }}</p>
-                    
+
                     @if($followerCount > 0)
                         <p class="text-xs text-gray-600 mt-2">
                             <span class="font-semibold">{{ $this->formatNumber($followerCount) }}</span> Followers
@@ -62,7 +62,7 @@
                     Showing <span class="font-semibold text-gray-900">{{ count($filteredVideos) }}</span> videos from <span class="font-semibold">{{ '@' . $selectedUser }}</span>
                 @endif
             </div>
-            
+
             <button wire:click="refresh" class="inline-flex items-center px-5 py-2.5 bg-white border border-gray-300 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:shadow-md transition-all duration-200" wire:loading.attr="disabled">
                 <svg wire:loading.remove wire:target="refresh" class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
@@ -109,7 +109,7 @@
                         $title = $video['title'] ?? 'TikTok Video';
                         $createTime = $video['create_time'] ?? time();
                         $cover = $video['cover'] ?? $video['origin_cover'] ?? $video['ai_dynamic_cover'] ?? '';
-                        $playUrl = $video['play'] ?? $video['wmplay'] ?? '';
+                        $playUrl = $video['play'] ?? '';
                         $duration = $video['duration'] ?? 0;
                         $playCount = $video['play_count'] ?? 0;
                         $diggCount = $video['digg_count'] ?? 0;
@@ -121,17 +121,17 @@
                         $musicInfo = $video['music_info'] ?? [];
                         $musicTitle = $musicInfo['title'] ?? 'Original Sound';
                     @endphp
-                    
+
                     <div x-data="{ playing: false, playVideo() { this.playing = true; this.$nextTick(() => { const video = this.$refs.video; if (video) { document.querySelectorAll('video').forEach(v => { if (v !== video && !v.paused) { v.pause(); } }); video.play().catch(err => { console.error('Play error:', err); alert('Unable to play video.'); this.playing = false; }); } }); }, stopVideo() { this.playing = false; if (this.$refs.video) { this.$refs.video.pause(); this.$refs.video.currentTime = 0; } } }" class="group bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2">
                         <div class="relative aspect-[9/16] bg-gradient-to-br from-pink-100 to-purple-100 overflow-hidden">
                             @if($playUrl)
                                 <video x-ref="video" x-show="playing" x-on:ended="stopVideo()" x-on:error="playing = false; alert('Video error');" class="w-full h-full object-cover" poster="{{ $cover }}" controls playsinline preload="metadata" controlsList="nodownload" style="display: none;" x-cloak>
                                     <source src="{{ $playUrl }}" type="video/mp4">
                                 </video>
-                                
+
                                 <div x-show="!playing" x-on:click="playVideo()" class="absolute inset-0 cursor-pointer">
                                     <img src="{{ $cover }}" alt="{{ $title }}" class="w-full h-full object-cover" loading="lazy">
-                                    
+
                                     <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center transition-all duration-300 hover:bg-opacity-50">
                                         <div class="transform hover:scale-110 transition-transform duration-300">
                                             <div class="w-20 h-20 rounded-full bg-white bg-opacity-90 flex items-center justify-center shadow-2xl">
@@ -173,7 +173,7 @@
                                             {{ $this->formatNumber($playCount) }}
                                         </div>
                                     @endif
-                                    
+
                                     @if($diggCount > 0)
                                         <div class="flex items-center justify-center backdrop-blur-sm bg-white/20 rounded-full px-2 py-1">
                                             <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -182,7 +182,7 @@
                                             {{ $this->formatNumber($diggCount) }}
                                         </div>
                                     @endif
-                                    
+
                                     @if($commentCount > 0)
                                         <div class="flex items-center justify-center backdrop-blur-sm bg-white/20 rounded-full px-2 py-1">
                                             <svg class="w-3.5 h-3.5 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -199,7 +199,7 @@
                             <p class="text-gray-900 text-sm font-medium mb-2 line-clamp-2 min-h-[2.5rem]">
                                 {{ $title }}
                             </p>
-                            
+
                             @if($musicTitle)
                                 <div class="flex items-center text-xs text-gray-500 mb-3">
                                     <svg class="w-3.5 h-3.5 mr-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -208,7 +208,7 @@
                                     <span class="truncate">{{ $musicTitle }}</span>
                                 </div>
                             @endif
-                            
+
                             <div class="flex items-center justify-between text-xs text-gray-500 mb-3">
                                 @if($createTime)
                                     <span class="flex items-center">
@@ -231,7 +231,7 @@
                                         </span>
                                     </button>
                                 @endif
-                                
+
                                 <a href="https://www.tiktok.com/@{{ $username }}/video/{{ $videoId }}" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-bold rounded-lg transition-all duration-200 flex items-center justify-center" title="View on TikTok">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>

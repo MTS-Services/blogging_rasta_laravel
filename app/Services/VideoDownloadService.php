@@ -223,4 +223,63 @@ class VideoDownloadService
             return false;
         }
     }
+
+    /**
+     * Delete local video file
+     *
+     * @param string $localPath
+     * @return bool
+     */
+    public function deleteVideo($localPath)
+    {
+        try {
+            if (empty($localPath)) {
+                return false;
+            }
+
+            // Extract path from full URL if needed
+            $path = str_replace(Storage::disk($this->disk)->url(''), '', $localPath);
+
+            if (Storage::disk($this->disk)->exists($path)) {
+                Storage::disk($this->disk)->delete($path);
+                Log::info('Video deleted successfully', ['path' => $path]);
+                return true;
+            }
+
+            return false;
+
+        } catch (\Exception $e) {
+            Log::error('Failed to delete video', [
+                'path' => $localPath,
+                'error' => $e->getMessage()
+            ]);
+            return false;
+        }
+    }
+
+    /**
+     * Get video file size
+     *
+     * @param string $localPath
+     * @return int|null Size in bytes
+     */
+    public function getVideoSize($localPath)
+    {
+        try {
+            $path = str_replace(Storage::disk($this->disk)->url(''), '', $localPath);
+
+            if (Storage::disk($this->disk)->exists($path)) {
+                return Storage::disk($this->disk)->size($path);
+            }
+
+            return null;
+
+        } catch (\Exception $e) {
+            Log::error('Failed to get video size', [
+                'path' => $localPath,
+                'error' => $e->getMessage()
+            ]);
+            return null;
+        }
+    }
 }
