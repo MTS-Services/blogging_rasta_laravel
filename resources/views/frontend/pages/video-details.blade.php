@@ -2,7 +2,7 @@
 
     @switch(Route::currentRouteName())
         @case('video.details')
-            <x-slot name="title">{{ $data->title }}</x-slot>
+            <x-slot name="title">{{ Str::limit($data->title, 50) }}</x-slot>
             <x-slot name="pageSlug">{{ __('video_details') }}</x-slot>
             <livewire:frontend.video-details :data="$data" />
         @break

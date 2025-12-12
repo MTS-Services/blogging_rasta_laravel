@@ -2,22 +2,26 @@
 
     @section('meta')
         {{-- SEO PRIMARY TAGS --}}
-        <meta name="title" content="">
-        <meta name="description" content="">
+        <meta name="title" content="Conditions Générales d'Utilisation | DiodioGlow CGU">
+        <meta name="description"
+            content="Veuillez lire attentivement les conditions générales d'utilisation de DiodioGlow. Tout ce que vous devez savoir sur les règles, les droits et l'accès à notre plateforme.">
+        <meta name="keywords" content="Conditions d'utilisation, CGU, Règlement site web, Termes légaux">
 
         {{-- Open Graph / Facebook --}}
         <meta property="og:type" content="website">
-        <meta property="og:title" content="">
-        <meta property="og:description" content="">
-        <meta property="og:image" content="">
+        <meta property="og:title" content="Conditions Générales d'Utilisation | DiodioGlow CGU">
+        <meta property="og:description"
+            content="Veuillez lire attentivement les conditions générales d'utilisation de DiodioGlow. Tout ce que vous devez savoir sur les règles, les droits et l'accès à notre plateforme.">
+        <meta property="og:image" content="{{ site_logo() }}">
         <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:image:secure_url" content="">
-        <link rel="image_src" href="">
+        <meta property="og:image:secure_url" content="{{ site_logo() }}">
+        <link rel="image_src" href="{{ site_logo() }}">
 
         {{-- Twitter --}}
-        <meta name="twitter:card" content="{{ site_name() }}">
-        <meta name="twitter:title" content="">
-        <meta name="twitter:description" content="">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Conditions Générales d'Utilisation | DiodioGlow CGU">
+        <meta name="twitter:description"
+            content="Veuillez lire attentivement les conditions générales d'utilisation de DiodioGlow. Tout ce que vous devez savoir sur les règles, les droits et l'accès à notre plateforme.">
         <meta name="twitter:image" content="{{ site_logo() }}">
 
         {{-- Canonical URL --}}
@@ -25,12 +29,12 @@
     @endsection
     <section class="bg-second-500/15  py-24">
         <div class="container">
-            <h2 class="text-4xl md:text-5xl font-bold font-montserrat text-text-primary text-center mb-6">
-                {{ __('Terms of Service') }}</h2>
+            <h1 class="text-4xl md:text-5xl font-bold font-montserrat text-text-primary text-center mb-6">
+                {{ __('Terms of Service') }}</h1>
 
-            <p class="text-base font-normal font-montserrat text-text-primary">
+            <h2 class="text-base font-normal font-montserrat text-text-primary">
                 {{ __('By using DiodioGlow, you agree to the following terms:') }}
-            </p>
+            </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 justify-between items-center mt-6">
                 <div class="flex gap-2 p-6 border border-zinc-200 rounded-lg h-full">

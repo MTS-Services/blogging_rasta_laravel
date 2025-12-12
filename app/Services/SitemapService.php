@@ -49,7 +49,7 @@ class SitemapService
         }
         $videos = TikTokVideo::active()->get();
         foreach ($videos as $video) {
-            $sitemap->add(Url::create(route('video.details', $video->video_id))
+            $sitemap->add(Url::create(route('video.details', $video->slug ?? $video->video_id))
                 ->setLastModificationDate($video->updated_at)
                 ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
                 ->setPriority(0.8));

@@ -1,22 +1,26 @@
 <div>
     @section('meta')
         {{-- SEO PRIMARY TAGS --}}
-        <meta name="title" content="">
-        <meta name="description" content="">
+        <meta name="title" content="Flux Vidéos & Tendances TikTok | DiodioGlow TV">
+        <meta name="description"
+            content="Regardez en continu les dernières vidéos virales du Sénégal. Accédez au flux exclusif des tendances beauté, astuces skincare et lifestyle sur DiodioGlow.">
+        <meta name="keywords" content="Flux vidéo TikTok, Vidéos virales Sénégal, Tendances beauté en direct, Clips skincare">
 
         {{-- Open Graph / Facebook --}}
         <meta property="og:type" content="website">
-        <meta property="og:title" content="">
-        <meta property="og:description" content="">
-        <meta property="og:image" content="">
+        <meta property="og:title" content="Flux Vidéos & Tendances TikTok | DiodioGlow TV">
+        <meta property="og:description"
+            content="Regardez en continu les dernières vidéos virales du Sénégal. Accédez au flux exclusif des tendances beauté, astuces skincare et lifestyle sur DiodioGlow.">
+        <meta property="og:image" content="{{ site_logo() }}">
         <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:image:secure_url" content="">
-        <link rel="image_src" href="">
+        <meta property="og:image:secure_url" content="{{ site_logo() }}">
+        <link rel="image_src" href="{{ site_logo() }}">
 
         {{-- Twitter --}}
-        <meta name="twitter:card" content="{{ site_name() }}">
-        <meta name="twitter:title" content="">
-        <meta name="twitter:description" content="">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Flux Vidéos & Tendances TikTok | DiodioGlow TV">
+        <meta name="twitter:description"
+            content="Regardez en continu les dernières vidéos virales du Sénégal. Accédez au flux exclusif des tendances beauté, astuces skincare et lifestyle sur DiodioGlow.">
         <meta name="twitter:image" content="{{ site_logo() }}">
 
         {{-- Canonical URL --}}
@@ -32,9 +36,9 @@
                     <h1 class="text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-bold text-text-primary mb-1.5 sm:mb-3">
                         {{ __('Video Feed') }}
                     </h1>
-                    <p class="text-text-secondary text-base">
+                    <h2 class="text-text-secondary text-base">
                         {{ __('Trending skincare routines and beauty tips from TikTok') }}
-                    </p>
+                    </h2>
                 </div>
 
                 <div>
@@ -95,7 +99,7 @@
                                 'activeUser' => $user['username'],
                                 'selectedCategory' => $selectedCategory,
                             ]) }}"
-                                wire:navigate
+                                title="{{ $user['username'] }}" wire:navigate
                                 class="px-1.5 sm:px-3 py-2 rounded-lg font-inter text-xs sm:text-sm font-medium transition-colors
                             {{ $activeUser === $user['username']
                                 ? 'bg-second-500 text-white'
@@ -298,8 +302,9 @@
                                         <div x-show="!playing" x-on:click="playVideo()"
                                             class="absolute inset-0 cursor-pointer">
                                             @if ($thumbnail_url)
-                                                <img src="{{ $thumbnail_url }}" alt="{{ $desc }}"
-                                                    class="w-full h-full object-cover" loading="lazy">
+                                                <img src="{{ $thumbnail_url }}" alt="{{ $videoTitle }}"
+                                                    title="{{ $videoTitle }}" class="w-full h-full object-cover"
+                                                    loading="lazy">
                                             @else
                                                 <div
                                                     class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
@@ -328,8 +333,9 @@
                                         <div
                                             class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
                                             @if ($thumbnail_url)
-                                                <img src="{{ $thumbnail_url }}" alt="{{ $desc }}"
-                                                    class="w-full h-full object-cover" loading="lazy">
+                                                <img src="{{ $thumbnail_url }}" alt="{{ $videoTitle }}"
+                                                    title="{{ $videoTitle }}" class="w-full h-full object-cover"
+                                                    loading="lazy">
                                             @else
                                                 <div class="flex flex-col items-center justify-center text-white">
                                                     <svg class="w-16 h-16 mb-2" fill="currentColor"
@@ -346,7 +352,8 @@
 
                                 {{-- Video Info --}}
                                 <div>
-                                    <a href="{{ route('video.details', $slug) }}" class="block mb-2" wire:navigate>
+                                    <a href="{{ route('video.details', $slug) }}" title="{{ $videoTitle }}"
+                                        class="block mb-2" wire:navigate>
                                         @if ($videoTitle)
                                             <p class="font-bold text-text-primary mb-1 line-clamp-1"
                                                 title="{{ $videoTitle }}">
@@ -501,6 +508,7 @@
                                                     <div class="mb-6 p-4 bg-second-50 rounded-xl">
                                                         <div class="flex items-center gap-3">
                                                             <img :src="videoData.cover" :alt="videoData.title"
+                                                                :title="videoData.title"
                                                                 class="w-20 h-20 rounded-lg object-cover">
                                                             <div class="flex-1 min-w-0">
                                                                 <p class="font-semibold text-text-primary font-inter truncate"

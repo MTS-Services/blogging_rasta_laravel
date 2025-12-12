@@ -1,22 +1,27 @@
 <div>
     @section('meta')
         {{-- SEO PRIMARY TAGS --}}
-        <meta name="title" content="">
-        <meta name="description" content="">
+        <meta name="title" content="Politique de Confidentialité & Données | DiodioGlow">
+        <meta name="description"
+            content="Votre vie privée est notre priorité. Consultez notre politique de confidentialité pour comprendre comment DiodioGlow collecte, utilise et protège vos données personnelles.">
+        <meta name="keywords"
+            content="Politique de confidentialité, Protection des données, Sécurité vie privée, Données personnelles">
 
         {{-- Open Graph / Facebook --}}
         <meta property="og:type" content="website">
-        <meta property="og:title" content="">
-        <meta property="og:description" content="">
-        <meta property="og:image" content="">
+        <meta property="og:title" content="Politique de Confidentialité & Données | DiodioGlow">
+        <meta property="og:description"
+            content="Votre vie privée est notre priorité. Consultez notre politique de confidentialité pour comprendre comment DiodioGlow collecte, utilise et protège vos données personnelles.">
+        <meta property="og:image" content="{{ site_logo() }}">
         <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:image:secure_url" content="">
-        <link rel="image_src" href="">
+        <meta property="og:image:secure_url" content="{{ site_logo() }}">
+        <link rel="image_src" href="{{ site_logo() }}">
 
         {{-- Twitter --}}
-        <meta name="twitter:card" content="{{ site_name() }}">
-        <meta name="twitter:title" content="">
-        <meta name="twitter:description" content="">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Politique de Confidentialité & Données | DiodioGlow">
+        <meta name="twitter:description"
+            content="Votre vie privée est notre priorité. Consultez notre politique de confidentialité pour comprendre comment DiodioGlow collecte, utilise et protège vos données personnelles.">
         <meta name="twitter:image" content="{{ site_logo() }}">
 
         {{-- Canonical URL --}}
@@ -25,12 +30,12 @@
 
     <section class="bg-second-500/15  py-24">
         <div class="container">
-            <h2 class="text-4xl md:text-5xl font-bold font-montserrat text-text-primary text-center mb-6">
-                {{ __('Privacy Policy') }}</h2>
+            <h1 class="text-4xl md:text-5xl font-bold font-montserrat text-text-primary text-center mb-6">
+                {{ __('Privacy Policy') }}</h1>
 
-            <p class="text-base font-normal font-montserrat text-text-primary">
+            <h2 class="text-base font-normal font-montserrat text-text-primary">
                 {{ __('At DiodioGlow, we value your privacy and are committed to protecting your personal information. This policy explains what data we collect, how we use it, and your rights.') }}
-            </p>
+            </h2>
 
             <div class="mt-6">
                 <p class="text-base font-semibold font-inter text-text-primary mt-6">{{ __('Information We Collect') }}

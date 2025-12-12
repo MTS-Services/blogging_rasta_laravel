@@ -1,22 +1,26 @@
 <div>
     @section('meta')
         {{-- SEO PRIMARY TAGS --}}
-        <meta name="title" content="">
-        <meta name="description" content="">
+        <meta name="title" content="Divulgation d'Affiliation & Transparence | DiodioGlow">
+        <meta name="description"
+            content="Engagement de transparence : découvrez comment nous travaillons avec nos partenaires et comment fonctionnent nos liens d'affiliation pour recommander les meilleurs produits.">
+        <meta name="keywords" content="Divulgation affiliation, Transparence liens, Partenariats commerciaux, Publicité">
 
         {{-- Open Graph / Facebook --}}
         <meta property="og:type" content="website">
-        <meta property="og:title" content="">
-        <meta property="og:description" content="">
-        <meta property="og:image" content="">
+        <meta property="og:title" content="Divulgation d'Affiliation & Transparence | DiodioGlow">
+        <meta property="og:description"
+            content="Engagement de transparence : découvrez comment nous travaillons avec nos partenaires et comment fonctionnent nos liens d'affiliation pour recommander les meilleurs produits.">
+        <meta property="og:image" content="{{ site_logo() }}">
         <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:image:secure_url" content="">
-        <link rel="image_src" href="">
+        <meta property="og:image:secure_url" content="{{ site_logo() }}">
+        <link rel="image_src" href="{{ site_logo() }}">
 
         {{-- Twitter --}}
         <meta name="twitter:card" content="{{ site_name() }}">
-        <meta name="twitter:title" content="">
-        <meta name="twitter:description" content="">
+        <meta name="twitter:title" content="Divulgation d'Affiliation & Transparence | DiodioGlow">
+        <meta name="twitter:description"
+            content="Engagement de transparence : découvrez comment nous travaillons avec nos partenaires et comment fonctionnent nos liens d'affiliation pour recommander les meilleurs produits.">
         <meta name="twitter:image" content="{{ site_logo() }}">
 
         {{-- Canonical URL --}}

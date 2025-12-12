@@ -8,7 +8,7 @@
         @break
 
         @default
-            <x-slot name="title">{{ __('Video Feed') }}</x-slot>
+            <x-slot name="title">{{ __('Flux Vidéos & Tendances TikTok | DiodioGlow TV') }}</x-slot>
             <x-slot name="pageSlug">{{ __('video-feed') }}</x-slot>
             <livewire:frontend.video-feed />
     @endswitch

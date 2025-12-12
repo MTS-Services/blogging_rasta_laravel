@@ -1,22 +1,26 @@
 <div>
     @section('meta')
         {{-- SEO PRIMARY TAGS --}}
-        <meta name="title" content="">
-        <meta name="description" content="">
+        <meta name="title" content="Support Client & Centre d'Aide | DiodioGlow Assistance">
+        <meta name="description"
+            content="Besoin d'aide ? Contactez l'équipe de support DiodioGlow pour toute question technique, problème d'accès ou demande d'information sur nos services.">
+        <meta name="keywords" content="Support client, Assistance technique, Centre d'aide, FAQ DiodioGlow">
 
         {{-- Open Graph / Facebook --}}
         <meta property="og:type" content="website">
-        <meta property="og:title" content="">
-        <meta property="og:description" content="">
-        <meta property="og:image" content="">
+        <meta property="og:title" content="Support Client & Centre d'Aide | DiodioGlow Assistance">
+        <meta property="og:description"
+            content="Besoin d'aide ? Contactez l'équipe de support DiodioGlow pour toute question technique, problème d'accès ou demande d'information sur nos services.">
+        <meta property="og:image" content="{{ site_logo() }}">
         <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:image:secure_url" content="">
-        <link rel="image_src" href="">
+        <meta property="og:image:secure_url" content="{{ site_logo() }}">
+        <link rel="image_src" href="{{ site_logo() }}">
 
         {{-- Twitter --}}
-        <meta name="twitter:card" content="{{ site_name() }}">
-        <meta name="twitter:title" content="">
-        <meta name="twitter:description" content="">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Support Client & Centre d'Aide | DiodioGlow Assistance">
+        <meta name="twitter:description"
+            content="Besoin d'aide ? Contactez l'équipe de support DiodioGlow pour toute question technique, problème d'accès ou demande d'information sur nos services.">
         <meta name="twitter:image" content="{{ site_logo() }}">
 
         {{-- Canonical URL --}}
@@ -25,12 +29,12 @@
 
     <section class="bg-second-500/15  py-24">
         <div class="container">
-            <h2 class="text-4xl md:text-5xl font-bold font-montserrat text-text-primary text-center mb-6">
-                {{ __('Support') }}</h2>
+            <h1 class="text-4xl md:text-5xl font-bold font-montserrat text-text-primary text-center mb-6">
+                {{ __('Support') }}</h1>
 
-            <p class="text-base font-normal font-montserrat text-text-primary">
+            <h2 class="text-base font-normal font-montserrat text-text-primary">
                 {{ __('Need help? We’re here for you.') }}
-            </p>
+            </h2>
 
             <div class="flex flex-col lg:flex-row gap-10 items-stretch">
                 <!-- Left Column: 2-column grid -->
@@ -50,7 +54,8 @@
                     <div class="flex gap-2 p-6 border border-zinc-200 rounded-lg">
                         <flux:icon name="mail" class="w-5 h-5 mr-2 text-second-500 flex-shrink-0" />
                         <div>
-                            <h6 class="text-base font-semibold font-inter text-text-primary">{{ __('Contact Us') }}</h6>
+                            <h6 class="text-base font-semibold font-inter text-text-primary">{{ __('Contact Us') }}
+                            </h6>
                             <a href="mailto:diodioglowsn@gmail.com"
                                 class="text-base font-normal font-inter text-muted mt-2 block">
                                 {{ __('Email: diodioglowsn@gmail.com') }}
