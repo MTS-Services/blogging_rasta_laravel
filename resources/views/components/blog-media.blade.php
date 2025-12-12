@@ -1,4 +1,4 @@
-@props(['file'])
+@props(['file', 'alt'])
 
 @php
     $path = storage_path('app/public/' . $file);
@@ -6,7 +6,7 @@
 @endphp
 
 @if ($type === 'image')
-    <img src="{{ storage_url($file) }}" class="w-full h-full" alt="">
+    <img src="{{ storage_url($file) }}" class="w-full h-full" alt="{{ $alt }}" title="{{ $alt }}">
 @elseif ($type === 'video')
     <video class="w-full h-full" controls playsinline preload="metadata">
         <source src="{{ storage_url($file) }}" type="video/mp4">

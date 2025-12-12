@@ -1,22 +1,26 @@
 <div>
     @section('meta')
         {{-- SEO PRIMARY TAGS --}}
-        <meta name="title" content="">
-        <meta name="description" content="">
+        <meta name="title" content="Contactez-Nous & Service Client | DiodioGlow">
+        <meta name="description"
+            content="Une question ou une proposition de partenariat ? Contactez l'équipe DiodioGlow dès maintenant. Nous sommes là pour répondre à tous vos besoins beauté.">
+        <meta name="keywords" content="Contact DiodioGlow, Service client, Partenariat beauté, Support">
 
         {{-- Open Graph / Facebook --}}
         <meta property="og:type" content="website">
-        <meta property="og:title" content="">
-        <meta property="og:description" content="">
-        <meta property="og:image" content="">
+        <meta property="og:title" content="Contactez-Nous & Service Client | DiodioGlow">
+        <meta property="og:description"
+            content="Une question ou une proposition de partenariat ? Contactez l'équipe DiodioGlow dès maintenant. Nous sommes là pour répondre à tous vos besoins beauté.">
+        <meta property="og:image" content="{{ site_logo() }}">
         <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:image:secure_url" content="">
-        <link rel="image_src" href="">
+        <meta property="og:image:secure_url" content="{{ site_logo() }}">
+        <link rel="image_src" href="{{ site_logo() }}">
 
         {{-- Twitter --}}
-        <meta name="twitter:card" content="{{ site_name() }}">
-        <meta name="twitter:title" content="">
-        <meta name="twitter:description" content="">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Contactez-Nous & Service Client | DiodioGlow">
+        <meta name="twitter:description"
+            content="Une question ou une proposition de partenariat ? Contactez l'équipe DiodioGlow dès maintenant. Nous sommes là pour répondre à tous vos besoins beauté.">
         <meta name="twitter:image" content="{{ site_logo() }}">
 
         {{-- Canonical URL --}}
@@ -34,17 +38,18 @@
                     <button id="prevBtn" aria-label="Previous"
                         class="absolute top-1/2 -translate-y-1/2 z-20 bg-white/70 rounded-xl backdrop-blur-sm p-2 ">
                         <img src="{{ asset('/assets/images/blog_page/image 6.png') }}"
-                            class="lg:h-140 lg:w-200 sm:w-full sm:h-full" alt="">
+                            class="lg:h-140 lg:w-200 sm:w-full sm:h-full" alt="{{ __('Contact Image') }}"
+                            title="{{ __('Contact Image') }}">
                     </button>
 
                     <div id="indicators" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-20"></div>
                 </div>
 
                 <div class="p-8 md:p-12 flex flex-col justify-center md:order-2 order-1">
-                    <h2 class="text-3xl font-semibold mb-2">{{ __('Contact Us') }}</h2>
-                    <p class="text-text-secondary mb-6">
+                    <h1 class="text-3xl font-semibold mb-2">{{ __('Contact Us') }}</h1>
+                    <h2 class="text-text-secondary mb-6">
                         {{ __("We'd love to hear from you. Slide through some of our locations and reach out using the form below or via the listed contact methods.") }}
-                    </p>
+                    </h2>
 
                     <div id="slideContent" class="space-y-6">
                     </div>
@@ -94,6 +99,7 @@
                         {{-- <p><strong>{{ __('Phone:') }}</strong> +1 (555) 123-4567</p> --}}
                         <p><strong>{{ __('Email:') }}</strong>
                             <a href="mailto:{{ $aboutCms->contact_email ?? 'diodioglowsn@gmail.com' }}"
+                                title="{{ __('Email') }}"
                                 class="hover:underline duration-300 hover:text-zinc-300">{{ $aboutCms->contact_email ?? 'diodioglowsn@gmail.com' }}</a>
                         </p>
 
