@@ -8,8 +8,7 @@
     @yield('meta')
     <link rel="icon" href="{{ site_favicon() }}" type="image/x-icon" />
     <title>
-        {{ isset($title) ? $title . ' - ' : '' }}
-        {{ site_name() }}
+        {{ isset($title) ? $title : site_name() }}
     </title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @fluxAppearance()
@@ -58,7 +57,7 @@
     {{-- @if (!(request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.request') || request()->routeIs('password.reset') || request()->routeIs('verify-reset-otp') || request()->routeIs('verification.notice') || request()->routeIs('verify-otp') || request()->routeIs('verification.verify') || request()->routeIs('two-factor.*') || request()->routeIs('two-factor.login') || request()->routeIs('two-factor.login.store') || request()->routeIs('admin.*'))) --}}
 
     <livewire:frontend.partials.header />
- 
+
     {{-- @endif --}}
     <main class="flex-1">
         {{ $slot }}
@@ -68,7 +67,7 @@
     {{-- @endif --}}
 
     <livewire:frontend.partials.footer />
-    
+
 
 
 
@@ -82,7 +81,7 @@
             <div class="w-4 h-4 rounded-full bg-accent animate-[bounce-dot_1.2s_infinite]"></div>
         </div>
     </div>
-  
+
 
     @fluxScripts()
 
