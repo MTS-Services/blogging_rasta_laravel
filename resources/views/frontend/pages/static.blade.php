@@ -14,7 +14,7 @@
         @break
 
         @case('contact')
-            <x-slot name="title">{{ __('Contact Us ') }}</x-slot>
+            <x-slot name="title">{{ __('Contactez-Nous & Service Client ') }}</x-slot>
             <x-slot name="pageSlug">{{ __('Contact_Us') }}</x-slot>
             <livewire:frontend.contact />
         @break

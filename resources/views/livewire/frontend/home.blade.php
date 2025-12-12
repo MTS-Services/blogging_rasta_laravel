@@ -1,22 +1,26 @@
 <div>
     @section('meta')
         {{-- SEO PRIMARY TAGS --}}
-        <meta name="title" content="">
-        <meta name="description" content="">
+        <meta name="title" content="Tendances TikTok & Skincare Viral au Sénégal | DiodioGlow">
+        <meta name="description"
+            content="Les meilleures vidéos TikTok virales et tendances beauté au Sénégal. Retrouvez les routines skincare et produits qui font le buzz sur DiodioGlow.">
+        <meta name="keywords" content="Tendances TikTok Sénégal, Skincare viral, Vidéos beauté, DiodioGlow">
 
         {{-- Open Graph / Facebook --}}
         <meta property="og:type" content="website">
-        <meta property="og:title" content="">
-        <meta property="og:description" content="">
-        <meta property="og:image" content="">
+        <meta property="og:title" content="Tendances TikTok & Skincare Viral au Sénégal | DiodioGlow">
+        <meta property="og:description"
+            content="les meilleures vidéos TikTok virales et tendances beauté au Sénégal. Retrouvez les routines skincare et produits qui font le buzz sur DiodioGlow.">
+        <meta property="og:image" content="{{ site_logo() }}">
         <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:image:secure_url" content="">
-        <link rel="image_src" href="">
+        <meta property="og:image:secure_url" content="{{ site_logo() }}">
+        <link rel="image_src" href="{{ site_logo() }}">
 
         {{-- Twitter --}}
-        <meta name="twitter:card" content="{{ site_name() }}">
-        <meta name="twitter:title" content="">
-        <meta name="twitter:description" content="">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Tendances TikTok & Skincare Viral au Sénégal | DiodioGlow">
+        <meta name="twitter:description"
+            content="les meilleures vidéos TikTok virales et tendances beauté au Sénégal. Retrouvez les routines skincare et produits qui font le buzz sur DiodioGlow.">
         <meta name="twitter:image" content="{{ site_logo() }}">
 
         {{-- Canonical URL --}}
@@ -40,27 +44,10 @@
 
                     {{-- Heading --}}
 
-                    <h2
+                    <h1
                         class="text-5xl md:text-7xl lg:text-8xl font-semibold font-montserrat text-second-800 mb-6 text-zinc-900">
                         {{ (app()->getLocale() === 'en' ? $banner?->title_en : $banner?->title_fr) ?? __('Discover routines that actually work') }}
-                    </h2>
-                    {{-- <h2
-                        class="text-5xl md:text-7xl lg:text-8xl font-semibold font-montserrat text-second-800 mb-6 text-zinc-900">
-                        {{ __('Glow') }}</h2>
-
-                    <h2
-                        class="font-semibold font-montserrat text-second-800 mb-6 wrap-break-word
-                        @if (session('locale') === 'fr') text-4xl
-                            md:text-6xl
-                            lg:text-7xl
-                        @else
-                            text-5xl
-                            md:text-7xl
-                            lg:text-8xl @endif
-                        ">
-                        {{ __('Naturally') }}
-                    </h2> --}}
-
+                    </h1>
                     {{-- Description --}}
                     <p class="text-lg md:text-xl text-text-primary font-medium font-inter max-w-lg mx-auto lg:mx-0">
                         {{ (app()->getLocale() === 'en' ? $banner?->description_en : $banner?->description_fr) ?? __('Discover routines that actually work. Explore trending videos, shop vetted products, and get personalized advice tailored to your skin type.') }}
@@ -68,13 +55,13 @@
 
                     {{-- Buttons --}}
                     <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mt-8">
-                        <x-ui.button href="{{ 'product' }}"
+                        <x-ui.button href="{{ 'product' }}" title="{{ __('Discover Your Glow') }}"
                             class="py-4 px-8 bg-lradient-to-r from-second-500 to-zinc-500 hover:shadow-lg transition-all duration-300">
                             <span class="text-white">{{ __('Discover Your Glow') }}</span>
                             <flux:icon name="arrow-right" class="w-4 h-4 stroke-white" />
                         </x-ui.button>
 
-                        <x-ui.button href="{{ 'video-feed' }}" variant="secondary"
+                        <x-ui.button href="{{ 'video-feed' }}" title="{{ __('Watch Stories') }}" variant="secondary"
                             class="py-4 px-8 border border-second-500 group transition-all duration-300">
                             <flux:icon name="play"
                                 class="w-4 h-4 stroke-text-primary group-hover:stroke-white transition-colors" />
@@ -112,14 +99,11 @@
                             </div>
                         </div>
                     @else
-                        <img src="{{ asset('assets/images/home_page/image 2.png') }}" alt="Banner image"
+                        <img src="{{ asset('assets/images/home_page/home-banner-image.png') }}"
+                            title="Home Banner image" alt="Home Banner image"
                             class="w-full max-w-[500px] lg:max-w-none h-auto rounded-lg object-cover block">
                     @endif
                 </div>
-                {{-- <div class="w-full lg:w-1/2 flex justify-center">
-                    <img src="{{ asset('assets/images/home_page/image 2.png') }}" alt="Banner image"
-                        class="w-full max-w-[500px] lg:max-w-none h-auto rounded-lg object-cover block">
-                </div> --}}
             </div>
 
             {{-- Stats Section --}}
@@ -300,7 +284,8 @@
                                     @endif
                                 </div>
                                 {{-- Creator Info --}}
-                                <a href="{{ route('video.details', $video['slug']) }}" wire:navigate>
+                                <a href="{{ route('video.details', $video['slug']) }}" title="{{ $title }}"
+                                    wire:navigate>
                                     <div class="flex items-center gap-3 mt-3">
                                         <div class="w-10 h-10 flex-shrink-0">
                                             <img src="{{ $authorAvatar }}" alt="{{ $authorName }}"
@@ -596,7 +581,7 @@
 
             {{-- CTA Button --}}
             <div class="w-fit mx-auto">
-                <x-ui.button href="{{ route('product') }}"
+                <x-ui.button href="{{ route('product') }}" title="{{ __('Discover Your Glow') }}"
                     class="py-4 px-8 bg-gradient-to-r from-second-500 to-zinc-500 hover:shadow-lg transition-all duration-300">
                     <span class="text-white">{{ __('Discover Your Glow') }}</span>
                     <flux:icon name="arrow-right" class="w-4 h-4 stroke-white" />

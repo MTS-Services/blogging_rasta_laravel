@@ -1,22 +1,26 @@
 <div>
     @section('meta')
         {{-- SEO PRIMARY TAGS --}}
-        <meta name="title" content="">
-        <meta name="description" content="">
+        <meta name="title" content="Meilleurs Produits de Beauté & Soins | DiodioGlow Shop">
+        <meta name="description"
+            content="Explorez notre sélection de produits de beauté viraux et soins pour la peau. Achetez les essentiels skincare recommandés par les influenceuses sénégalaises.">
+        <meta name="keywords" content="Produits de beauté Sénégal, Soins visage, Achat cosmétiques, Tendance skincare">
 
         {{-- Open Graph / Facebook --}}
         <meta property="og:type" content="website">
-        <meta property="og:title" content="">
-        <meta property="og:description" content="">
-        <meta property="og:image" content="">
+        <meta property="og:title" content="Meilleurs Produits de Beauté & Soins | DiodioGlow Shop">
+        <meta property="og:description"
+            content="Explorez notre sélection de produits de beauté viraux et soins pour la peau. Achetez les essentiels skincare recommandés par les influenceuses sénégalaises.">
+        <meta property="og:image" content="{{ site_logo() }}">
         <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:image:secure_url" content="">
-        <link rel="image_src" href="">
+        <meta property="og:image:secure_url" content="{{ site_logo() }}">
+        <link rel="image_src" href="{{ site_logo() }}">
 
         {{-- Twitter --}}
-        <meta name="twitter:card" content="{{ site_name() }}">
-        <meta name="twitter:title" content="">
-        <meta name="twitter:description" content="">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Meilleurs Produits de Beauté & Soins | DiodioGlow Shop">
+        <meta name="twitter:description"
+            content="Explorez notre sélection de produits de beauté viraux et soins pour la peau. Achetez les essentiels skincare recommandés par les influenceuses sénégalaises.">
         <meta name="twitter:image" content="{{ site_logo() }}">
 
         {{-- Canonical URL --}}
@@ -24,10 +28,10 @@
     @endsection
     {{-- Product Section --}}
     <div class="container py-24">
-        <h2 class="text-text-primary text-5xl font-bold font-montserrat">{{ __('Curated Products') }}</h2>
-        <h6 class="text-base text-muted font-semibold font-inter mt-4">
+        <h1 class="text-text-primary text-5xl font-bold font-montserrat">{{ __('Curated Products') }}</h1>
+        <h2 class="text-base text-muted font-semibold font-inter mt-4">
             {{ __('All products handpicked by Diodio Glow • Shop from trusted affiliate stores') }}
-        </h6>
+        </h2>
 
         {{-- Category Filter --}}
         <div>
@@ -83,6 +87,7 @@
                         {{-- Thumbnail --}}
                         <div class="relative w-full h-[300px] overflow-hidden rounded-2xl">
                             <img src="{{ storage_url($product->image) }}" alt="{{ $product->title }}"
+                                title="{{ $product->title }}"
                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
                         </div>
 
@@ -112,8 +117,8 @@
                             </div>
 
                             <div class="w-full mt-2">
-                                <x-ui.button href="{{ $product->affiliate_link ?? '#' }}" :wire="false"
-                                    target="_blank"
+                                <x-ui.button href="{{ $product->affiliate_link ?? route('product') }}"
+                                    title="{{ $product->title }}" :wire="false" target="_blank"
                                     class="py-2! px-8! bg-gradient-to-r from-second-500 to-zinc-500 hover:shadow-lg transition-all duration-300">
                                     <span class="text-white">{{ __('Discover Your Glow') }}</span>
                                     <flux:icon name="arrow-right" class="w-4 h-4 stroke-white" />

@@ -2,22 +2,26 @@
 
     @section('meta')
         {{-- SEO PRIMARY TAGS --}}
-        <meta name="title" content="">
-        <meta name="description" content="">
+        <meta name="title" content="À Propos de Nous & Notre Mission | DiodioGlow">
+        <meta name="description"
+            content="En savoir plus sur DiodioGlow, la référence des tendances beauté au Sénégal. Découvrez notre histoire et notre mission pour révéler votre éclat naturel.">
+        <meta name="keywords" content="À propos DiodioGlow, Passion beauté Sénégal, Notre mission, Expert beauté">
 
         {{-- Open Graph / Facebook --}}
         <meta property="og:type" content="website">
-        <meta property="og:title" content="">
-        <meta property="og:description" content="">
-        <meta property="og:image" content="">
+        <meta property="og:title" content="À Propos de Nous & Notre Mission | DiodioGlow">
+        <meta property="og:description"
+            content="En savoir plus sur DiodioGlow, la référence des tendances beauté au Sénégal. Découvrez notre histoire et notre mission pour révéler votre éclat naturel.">
+        <meta property="og:image" content="{{ site_logo() }}">
         <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:image:secure_url" content="">
-        <link rel="image_src" href="">
+        <meta property="og:image:secure_url" content="{{ site_logo() }}">
+        <link rel="image_src" href="{{ site_logo() }}">
 
         {{-- Twitter --}}
-        <meta name="twitter:card" content="{{ site_name() }}">
-        <meta name="twitter:title" content="">
-        <meta name="twitter:description" content="">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="À Propos de Nous & Notre Mission | DiodioGlow">
+        <meta name="twitter:description"
+            content="En savoir plus sur DiodioGlow, la référence des tendances beauté au Sénégal. Découvrez notre histoire et notre mission pour révéler votre éclat naturel.">
         <meta name="twitter:image" content="{{ site_logo() }}">
 
         {{-- Canonical URL --}}
@@ -55,7 +59,8 @@
                             </div>
                         </div>
                     @else
-                        <img src="{{ asset('assets/images/home_page/image 2.png') }}" alt="Banner image"
+                        <img src="{{ asset('assets/images/home_page/image 2.png') }}" alt="About Us Banner image"
+                            title="About Us Banner Image"
                             class="w-full max-w-[500px] lg:max-w-none h-auto rounded-lg object-cover block">
                     @endif
                 </div>
@@ -67,10 +72,10 @@
                         <p class="text-xs font-normal text-muted font-inter pb-4 text-center lg:text-left">
                             {{ __('About Diodio Glow') }}</p>
                         {{-- Heading --}}
-                        <h2
+                        <h1
                             class="text-3xl font-bold font-montserrat text-second-800 pb-6 text-text-primary lg:text-left">
                             {{ (app()->getLocale() === 'en' ? $aboutCms?->title_en : $aboutCms?->title_fr) ?? __('Your Source for Viral Beauty Trends & Skincare Inspiration') }}
-                        </h2>
+                        </h1>
                         {{-- Description --}}
 
                     </div>
@@ -120,7 +125,7 @@
                 @endphp
 
 
-                <a href="{{ route('blog') }}" wire:navigate class="{{ $cardClasses }}">
+                <a href="{{ route('blog') }}" wire:navigate class="{{ $cardClasses }}" title="{{ __('Blog') }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="{{ $iconClasses }}" viewBox="0 0 24 24"
                         fill="none" stroke="#ff86a2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
@@ -132,7 +137,8 @@
                     <p class="text-sm text-gray-500">Read the latest tips</p>
                 </a>
 
-                <a href="{{ route('video-feed') }}" wire:navigate class="{{ $cardClasses }}">
+                <a href="{{ route('video-feed') }}" title="{{ __('Video Feed') }}" wire:navigate
+                    class="{{ $cardClasses }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="{{ $iconClasses }}" viewBox="0 0 24 24"
                         fill="none" stroke="#ff6a8f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1"></path>
@@ -142,7 +148,8 @@
                     <p class="text-sm text-gray-500">Watch our tutorials</p>
                 </a>
 
-                <a href="{{ route('product') }}" wire:navigate class="{{ $cardClasses }}">
+                <a href="{{ route('product') }}" title="{{ __('Products') }}" wire:navigate
+                    class="{{ $cardClasses }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="{{ $iconClasses }}" viewBox="0 0 24 24"
                         fill="none" stroke="#ff7c9c" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -155,7 +162,7 @@
                 </a>
 
                 <a href="mailto:{{ $aboutCms?->contact_email ?? 'diodioglowsn@gmail.com' }}"
-                    class="{{ $cardClasses }} lg:max-w-full">
+                    title="{{ __('Contact') }}" class="{{ $cardClasses }} lg:max-w-full">
                     <svg xmlns="http://www.w3.org/2000/svg" class="{{ $iconClasses }}" viewBox="0 0 24 24"
                         fill="none" stroke="#ff98b1" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
