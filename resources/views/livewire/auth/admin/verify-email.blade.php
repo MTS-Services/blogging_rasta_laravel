@@ -52,7 +52,7 @@
              <!-- Footer -->
              <div class="text-center text-gray-200 text-sm">
                  {{__('Don’t have an account?')}}
-                 <a href="{{ route('register') }}" class="text-purple-400 hover:underline">{{__('Sign up')}}</a>
+                 <a href="{{ route('register') }}" title="Register" class="text-purple-400 hover:underline">{{__('Sign up')}}</a>
              </div>
          </form>
      </div>

@@ -40,16 +40,9 @@
                     <x-ui.input-error :messages="$errors->get('password')" />
                 </div>
 
-                <!-- Error message -->
-
-                <!-- Forgot password -->
-                {{-- <div class="text-right px-2 sm:px-6 mb-6">
-                    <a href="#" class="text-md text-[#853fee] hover:underline">Forgot password?</a>
-                </div> --}}
-
                 @if (Route::has('password.request'))
                     <div class=" text-right px-2 sm:px-6 mb-2">
-                        <a href="{{ route('password.request') }}" wire:navigate
+                        <a href="{{ route('password.request') }}" title="Forgot Password" wire:navigate
                             class="text-md text-accent hover:underline">
                             {{ __('Forgot password?') }}
                         </a>
@@ -73,18 +66,18 @@
                 <div>
                     <!-- Social login -->
                     <div class="flex justify-center gap-4 mb-2">
-                        <a href="{{ route('google.redirect') }}"
+                        <a href="{{ route('google.redirect') }}" title="Google Login"
                             class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-white rounded-md">
                             <img src="{{ asset('assets/icons/icons8-google.svg') }}" class="w-8 sm:w-10 h-8 sm:h-10"
                                 alt="Google" />
                         </a>
-                        <a href="{{ route('apple.login') }}"
+                        <a href="{{ route('apple.login') }}" title="Apple Login"
                             class="w-10 h-10 sm:w-12 sm:h-12 flex z-30 items-center justify-center bg-white rounded-md">
                             <img src="{{ asset('assets/icons/icons8-apple-logo.svg') }}"
                                 class="w-8 sm:w-10 h-8 sm:h-10" alt="Apple" />
                         </a>
 
-                        <a href="{{ route('auth.facebook') }}"
+                        <a href="{{ route('auth.facebook') }}" title="Facebook Login"
                             class="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-white rounded-md">
                             <img src="{{ asset('assets/icons/icons8-facebook.svg') }}" class="w-8 sm:w-10 h-8 sm:h-10"
                                 alt="Facebook" />
@@ -94,7 +87,7 @@
                     <!-- Sign up link -->
                     <div class="text-center text-sm text-text-white">
                        {{ __(' Don’t have an account?') }}
-                        <a href="{{ route('register') }}"
+                        <a href="{{ route('register') }}" title="Register"
                             class="text-purple-400 hover:underline">{{ __('Sign up') }}</a>
                     </div>
                 </div>

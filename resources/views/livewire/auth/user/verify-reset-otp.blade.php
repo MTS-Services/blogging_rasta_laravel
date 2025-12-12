@@ -56,7 +56,7 @@
 
             <!-- Back to login page -->
             <div>
-                <x-ui.button href="{{ route('login') }}" variant='secondary' class="w-auto py-2!">
+                <x-ui.button href="{{ route('login') }}" title="Back" variant='secondary' class="w-auto py-2!">
                     {{ __('Back') }}
                 </x-ui.button>
             </div>

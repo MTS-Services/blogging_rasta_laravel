@@ -128,7 +128,7 @@
                             <label for="terms_accepted"
                                 class="ms-3 text-sm text-gray-700 dark:text-gray-300 cursor-pointer select-none">
                                 {{ __('I agree to the') }}
-                                <a href="#"
+                                <a href="{{ route('TermsOfService') }}" title="Term Of Service"
                                     class="font-semibold text-zinc-600 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-400 underline decoration-2 underline-offset-2 transition-colors">
                                     {{ __('Terms of Service') }}
                                 </a>
@@ -145,7 +145,7 @@
                             <label for="privacy_accepted"
                                 class="ms-3 text-sm text-gray-700 dark:text-gray-300 cursor-pointer select-none">
                                 {{ __('I agree to the') }}
-                                <a href="#"
+                                <a href="{{ route('PrivacyPolicy') }}" title="Privacy Policy"
                                     class="font-semibold text-zinc-600 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-400 underline decoration-2 underline-offset-2 transition-colors">
                                     {{ __('Privacy Policy') }}
                                 </a>
@@ -170,7 +170,7 @@
                 <div class="text-center">
                     <p class="text-sm text-gray-600 dark:text-gray-400">
                         {{ __('Already have an account?') }}
-                        <a href="{{ route('login') }}" wire:navigate
+                        <a href="{{ route('login') }}" title="Login" wire:navigate
                             class="font-semibold text-zinc-600 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-400 transition-colors ml-1">
                             {{ __('Log in') }} →
                         </a>

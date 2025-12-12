@@ -57,15 +57,9 @@
                 @error('password')
                     <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
                 @enderror
-
-                <!-- Forgot password -->
-                {{-- <div class="text-right px-2 sm:px-6 mb-6">
-                    <a href="#" class="text-md text-[#853fee] hover:underline">Forgot password?</a>
-                </div> --}}
-
                 @if (Route::has('admin.password.request'))
                     <div class=" text-right px-2 sm:px-6 mb-2">
-                        <a href="{{ route('admin.password.request') }}" wire:navigate
+                        <a href="{{ route('admin.password.request') }}" title="Forgot password?" wire:navigate
                             class="text-md text-accent hover:underline">
                             {{ __('Forgot password?') }}
                         </a>

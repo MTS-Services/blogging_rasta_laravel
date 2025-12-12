@@ -32,7 +32,7 @@
             </div>
 
 
-            <x-ui.button type="submit" href="{{ route('admin.login') }}"  variant="secondary" class="w-auto py-2!">
+            <x-ui.button type="submit" href="{{ route('admin.login') }}" variant="secondary" class="w-auto py-2!" title="Back">
                 {{ __('Back') }}
             </x-ui.button>
         </form>

@@ -88,7 +88,7 @@
 
     <!-- Back to Login -->
     <div class="mt-6 text-center">
-        <a href="{{ route('admin.login') }}" class="text-sm text-accent hover:text-accent-content dark:text-accent-foreground transition-colors">
+        <a href="{{ route('admin.login') }}" title="Back To Login" class="text-sm text-accent hover:text-accent-content dark:text-accent-foreground transition-colors">
             ← {{ __('Back to Login') }}
         </a>
     </div>

@@ -116,7 +116,7 @@
                         <!-- Sign up link -->
                         <div class="text-center text-sm text-text-white">
                             {{ __('Don’t have an account?') }}
-                            <a href="{{ route('register') }}" class="text-purple-400 hover:underline" wire:navigate>{{__('Sign up')}}</a>
+                            <a href="{{ route('register') }}" title="Register" class="text-purple-400 hover:underline" wire:navigate>{{__('Sign up')}}</a>
                         </div>
                     </div>
                 </form>
