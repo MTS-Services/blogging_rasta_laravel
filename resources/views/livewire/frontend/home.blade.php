@@ -247,7 +247,8 @@
                                             class="absolute inset-0 cursor-pointer">
                                             @if ($thumbnail_url)
                                                 <img src="{{ $thumbnail_url }}" alt="{{ $title }}"
-                                                    class="w-full h-full object-cover" loading="lazy">
+                                                    title="{{ $title }}" class="w-full h-full object-cover"
+                                                    loading="lazy">
                                             @else
                                                 <div
                                                     class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
@@ -289,6 +290,7 @@
                                     <div class="flex items-center gap-3 mt-3">
                                         <div class="w-10 h-10 flex-shrink-0">
                                             <img src="{{ $authorAvatar }}" alt="{{ $authorName }}"
+                                                title="{{ $authorName }}"
                                                 class="w-full h-full rounded-full object-cover border-2 border-purple-500"
                                                 onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($authorName) }}&size=200&background=667eea&color=fff'">
                                         </div>
