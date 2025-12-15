@@ -21,8 +21,9 @@
         <link rel="canonical" href="{{ url()->current() }}">
     @endsection
 
-    @section('head_scripts')
-        <script type="application/ld+json">
+    @once('video-schema-' . $data->slug)
+        @push('head_scripts')
+            <script type="application/ld+json">
             @php
             echo json_encode([
                 "@context" => "https://schema.org",
@@ -44,7 +45,8 @@
             ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             @endphp
         </script>
-    @endsection
+        @endpush
+    @endonce
 
 
     {{-- Hero Section with Video --}}

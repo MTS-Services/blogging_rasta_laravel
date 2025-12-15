@@ -15,8 +15,9 @@
         <meta name="twitter:image" content="{{ $video['thumbnail_url'] }}">
     @endsection
 
-    @section('head_scripts')
-        <script type="application/ld+json">
+    @once('video-schema-embed-' . $video['slug'])
+        @push('head_scripts')
+            <script type="application/ld+json">
             @php
             echo json_encode([
                 "@context" => "https://schema.org",
@@ -38,14 +39,16 @@
             ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             @endphp
         </script>
-    @endsection
+        @endpush
+    @endonce
 
     <style>
-        header{
-            display:none !important;
+        header {
+            display: none !important;
         }
-        footer{
-            display:none !important;
+
+        footer {
+            display: none !important;
         }
     </style>
 
@@ -104,14 +107,15 @@
         <div class="relative w-full aspect-[1/1.1] overflow-hidden rounded-2xl">
             @if ($playUrl)
                 {{-- Video Element --}}
-                <video x-ref="video"  height='100vh' width='100%' x-show="playing" x-on:ended="stopVideo()" x-on:error="playing = false"
-                    class="w-full h-screen object-cover" poster="{{ $thumbnail_url }}" playsinline preload="metadata"
-                    controls controlsList="nodownload" x-cloak>
+                <video x-ref="video" height='100vh' width='100%' x-show="playing" x-on:ended="stopVideo()"
+                    x-on:error="playing = false" class="w-full h-screen object-cover" poster="{{ $thumbnail_url }}"
+                    playsinline preload="metadata" controls controlsList="nodownload" x-cloak>
                     <source src="{{ $playUrl }}" type="video/mp4">
                 </video>
 
                 {{-- Thumbnail --}}
-                <div x-show="!playing" style="height:100vh; width:100%" x-on:click="playVideo()" class="absolute inset-0 cursor-pointer">
+                <div x-show="!playing" style="height:100vh; width:100%" x-on:click="playVideo()"
+                    class="absolute inset-0 cursor-pointer">
                     @if ($thumbnail_url)
                         <img src="{{ $thumbnail_url }}" alt="{{ $title }}" class="w-full h-screen object-cover"
                             loading="lazy">
