@@ -40,7 +40,7 @@
     @stack('head_scripts')
 
     {{-- Google tag (gtag.js) --}}
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-F0VX14ZLZ9"></script>
+    {{-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-F0VX14ZLZ9"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
 
@@ -49,7 +49,7 @@
         }
         gtag('js', new Date());
         gtag('config', 'G-F0VX14ZLZ9');
-    </script>
+    </script> --}}
 </head>
 
 <body class="min-h-screen flex flex-col bg-linear-to-br from-start! to-end! text-text-primary">
