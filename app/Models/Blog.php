@@ -13,6 +13,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Blog extends BaseModel implements Auditable
 {
+    /**
+     * Exclude description from audit to avoid "Data too long for column 'new_values'"
+     * when description contains embedded base64 images from the editor.
+     */
+    protected $auditExclude = ['description'];
+
     protected $fillable = [
         'sort_order',
         'title',
