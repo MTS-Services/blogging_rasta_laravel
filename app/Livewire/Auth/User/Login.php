@@ -51,7 +51,7 @@ class Login extends Component
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        $this->redirectIntended(default: route('user.purchased-orders', absolute: false), navigate: true);
+        $this->redirectIntended(default: route('user.account', absolute: false), navigate: true);
     }
 
     /**
@@ -105,7 +105,7 @@ class Login extends Component
     {
 
         if (Auth::guard('web')->check()) {
-            return $this->redirectIntended(default: route('user.purchased-orders', absolute: false), navigate: true);
+            return $this->redirectIntended(default: route('user.account', absolute: false), navigate: true);
         }
     }
 }

@@ -19,6 +19,7 @@ class BlogForm extends Form
     public ?string $title = '';
     public ?string $slug = '';
     public string $status = BlogStatus::UNPUBLISHED->value;
+    public ?int $blog_category_id = null;
 
     public ?UploadedFile $file = null;
     public bool $remove_file = false;
@@ -38,6 +39,7 @@ class BlogForm extends Form
             'title'             => 'required|string|max:255',
             'slug'              => 'required|string|max:255|unique:blogs,slug,' . $this->id,
             'status' => 'required|string|in:' . implode(',', array_column(BlogStatus::cases(), 'value')),
+            'blog_category_id' => 'nullable|integer|exists:blog_categories,id',
 
             'file'              => 'nullable',
             'remove_file'      => 'boolean',
@@ -58,6 +60,7 @@ class BlogForm extends Form
         $this->title             = $data->title;
         $this->slug              = $data->slug;
         $this->status            = $data->status->value;
+        $this->blog_category_id  = $data->blog_category_id;
         $this->description       = $data->description ?? '';
 
         $this->meta_title        = $data->meta_title ?? '';
@@ -75,6 +78,7 @@ class BlogForm extends Form
         $this->title = '';
         $this->slug = '';
         $this->status = BlogStatus::UNPUBLISHED->value;
+        $this->blog_category_id = null;
         $this->file = null;
         $this->description = '';
 

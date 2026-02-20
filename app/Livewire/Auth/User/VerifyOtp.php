@@ -30,7 +30,7 @@ class VerifyOtp extends Component
 
         // Redirect if already verified
         if (is_email_verified(user())) {
-            return redirect()->route('user.purchased-orders');
+            return redirect()->route('user.account');
         }
 
         // Load resend attempts from cache
@@ -140,7 +140,7 @@ class VerifyOtp extends Component
             $this->success('Email verified successfully!');
             $this->dispatch('clear-auth-code');
 
-            $this->redirect(route('user.purchased-orders'), navigate: true);
+            $this->redirect(route('user.account'), navigate: true);
 
         } catch (ValidationException $e) {
             throw $e;

@@ -142,8 +142,11 @@
                         'active' => 'audit-log-management',
                     ],
                 ]" /> --}}
-            <x-backend.navlink type="single" icon="folder" name="Blog" :route="route('admin.blog.index')" active="blog"
-                :page_slug="$active" />
+            <x-backend.navlink type="dropdown" icon="folder" name="Blog" :page_slug="$active"
+                :items="[
+                    ['name' => 'Blogs', 'route' => route('admin.blog.index'), 'icon' => 'file-text', 'active' => 'blog'],
+                    ['name' => 'Categories', 'route' => route('admin.blog-category.index'), 'icon' => 'folder', 'active' => 'blog-category'],
+                ]" />
             <x-backend.navlink type="single" icon="phone" name="Contact" :route="route('admin.contact.index')" active="contact"
                 :page_slug="$active" />
             <x-backend.navlink type="single" icon="folder" :wire="false" name="About CMS" :route="route('admin.about-cms')"

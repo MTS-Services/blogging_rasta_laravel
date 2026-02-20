@@ -52,10 +52,11 @@ class UpdateAction
                 $newData['file'] = null;
             }
 
-            if (!$newData['remove_file'] && !$newSingleAvatarPath) {
-                $newData['file'] = $oldAvatarPath ?? null;
+            if (!isset($newData['remove_file']) || !$newData['remove_file']) {
+                if (!$newSingleAvatarPath) {
+                    $newData['file'] = $oldAvatarPath ?? null;
+                }
             }
-
             unset($newData['remove_file']);
 
 

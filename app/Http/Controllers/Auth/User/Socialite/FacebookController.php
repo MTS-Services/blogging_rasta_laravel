@@ -89,7 +89,7 @@ class FacebookController extends Controller
             }
             Auth::login($user, true);
 
-            return redirect()->intended('user/orders/purchased-orders');
+            return redirect()->intended(route('user.account'));
         } catch (InvalidStateException $e) {
             Log::error('Facebook Login: Invalid State Exception - ' . $e->getMessage());
             return redirect('/login')->withErrors(['error' => 'Session expired. Please try logging in again.']);

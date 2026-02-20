@@ -65,32 +65,14 @@
                         </div>
                     </div>
 
-                    <!-- Phone and Country Grid -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <!-- Phone -->
-                        <div>
-                            <x-ui.label for="phone" :value="__('Phone number')" />
-                            <div class="relative">
-                                <x-ui.input wire:model="phone" id="phone" type="tel" autocomplete="tel"
-                                    :placeholder="__('+1 (555) 123-4567')" />
-                            </div>
-                            <x-ui.input-error :messages="$errors->get('phone')" class="mt-1" />
+                    <!-- Phone (optional) -->
+                    <div>
+                        <x-ui.label for="phone" :value="__('Phone number')" />
+                        <div class="relative">
+                            <x-ui.input wire:model="phone" id="phone" type="tel" autocomplete="tel"
+                                :placeholder="__('+1 (555) 123-4567')" />
                         </div>
-
-                        <!-- Country -->
-                        <div>
-                            <x-ui.label for="country_id" :value="__('Country')" />
-                            <div class="relative">
-
-                                <x-ui.select wire:model="country_id" id="country_id">
-                                    <option value="">{{ __('Select your country') }}</option>
-                                    @foreach ($countries as $country)
-                                        <option value="{{ $country->id }}"> {{ $country->name }}</option>
-                                    @endforeach
-                                </x-ui.select>
-                            </div>
-                            <x-ui.input-error :messages="$errors->get('country_id')" class="mt-1" />
-                        </div>
+                        <x-ui.input-error :messages="$errors->get('phone')" class="mt-1" />
                     </div>
 
                     <!-- Password Fields Grid -->

@@ -48,7 +48,7 @@ class AppleAuthController extends Controller
 
             Auth::login($user, true);
 
-            return redirect()->intended('user/orders/purchased-orders');
+            return redirect()->intended(route('user.account'));
         } catch (\Exception $e) {
             return redirect('/login')->with('error', 'Unable to login with Apple. Please try again.');
         }

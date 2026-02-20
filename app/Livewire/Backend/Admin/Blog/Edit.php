@@ -6,6 +6,7 @@ use App\Enums\AdminStatus;
 use App\Enums\BlogStatus;
 use App\Livewire\Forms\BlogForm;
 use App\Models\Blog;
+use App\Services\BlogCategoryService;
 use App\Services\BlogService;
 use App\Traits\Livewire\WithNotification;
 use Illuminate\Support\Facades\Log;
@@ -24,9 +25,12 @@ class Edit extends Component
 
     protected BlogService $service;
 
-    public function boot(BlogService $service)
+    protected BlogCategoryService $blogCategoryService;
+
+    public function boot(BlogService $service, BlogCategoryService $blogCategoryService)
     {
         $this->service = $service;
+        $this->blogCategoryService = $blogCategoryService;
     }
 
     public function mount(Blog $data): void
@@ -77,6 +81,7 @@ class Edit extends Component
     {
         return view('livewire.backend.admin.blog.edit', [
             'statuses' => BlogStatus::options(),
+            'categories' => $this->blogCategoryService->getActiveCategories(),
         ]);
     }
 

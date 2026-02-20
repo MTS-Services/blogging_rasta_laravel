@@ -10,6 +10,7 @@ class BlogDetails extends Component
     public Blog $data;
     public function mount(Blog $data): void
     {
+        $data->load('category');
         $this->data = $data;
     }
     public function render()

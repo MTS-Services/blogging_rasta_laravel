@@ -39,7 +39,28 @@
             </a>
         </nav>
 
-        <div class="hidden md:block">
+        <div class="hidden md:flex items-center gap-4">
+            @auth
+                <a href="{{ route('user.account') }}" title="{{ __('My Account') }}" wire:navigate
+                    class="text-text-muted font-inter transition-colors hover:text-second-500 border-b-2 border-transparent hover:border-second-500">
+                    {{ __('Profile') }}
+                </a>
+                <form method="POST" action="{{ route('logout') }}" class="inline">
+                    @csrf
+                    <button type="submit" class="text-text-muted font-inter transition-colors hover:text-second-500">
+                        {{ __('Log out') }}
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" title="{{ __('Log in') }}" wire:navigate
+                    class="text-text-muted font-inter transition-colors hover:text-second-500 border-b-2 border-transparent hover:border-second-500">
+                    {{ __('Log in') }}
+                </a>
+                <a href="{{ route('register') }}" title="{{ __('Register') }}" wire:navigate
+                    class="px-3 py-1.5 rounded-lg font-inter text-sm font-medium bg-second-500 text-white hover:opacity-90 transition">
+                    {{ __('Register') }}
+                </a>
+            @endauth
             <x-language />
         </div>
 
@@ -79,6 +100,27 @@
                 class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('about') ? 'text-second-500!! ' : 'hover:text-second-500!!' }}">
                 {{ __('About') }}
             </a>
+            @auth
+                <a href="{{ route('user.account') }}" title="{{ __('My Account') }}" wire:navigate
+                    class="text-text-muted font-medium font-inter transition-colors hover:text-second-500!">
+                    {{ __('Profile') }}
+                </a>
+                <form method="POST" action="{{ route('logout') }}" class="inline">
+                    @csrf
+                    <button type="submit" class="text-text-muted font-medium font-inter transition-colors hover:text-second-500! w-full text-left">
+                        {{ __('Log out') }}
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" title="{{ __('Log in') }}" wire:navigate
+                    class="text-text-muted font-medium font-inter transition-colors hover:text-second-500!">
+                    {{ __('Log in') }}
+                </a>
+                <a href="{{ route('register') }}" title="{{ __('Register') }}" wire:navigate
+                    class="text-text-muted font-medium font-inter transition-colors hover:text-second-500!">
+                    {{ __('Register') }}
+                </a>
+            @endauth
             <x-language />
         </nav>
     </div>

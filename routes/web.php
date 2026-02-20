@@ -22,17 +22,16 @@ Route::middleware(['auth'])->group(function () {
     //     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 });
 
-
-
-// Individual user page (optional)
-Route::get('/user/{username}', function ($username) {
-    return view('tiktok-single-user', ['username' => $username]);
-})->name('user.profile');
-
 Route::post('language', [MultiLangController::class, 'langChange'])->name('lang.change');
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/user.php';
+
+// Individual user page by username (must be after /user/account so "account" is not captured)
+Route::get('/user/{username}', function ($username) {
+    return view('tiktok-single-user', ['username' => $username]);
+})->name('user.profile');
+
 require __DIR__ . '/admin.php';
 require __DIR__ . '/frontend.php';
 // require __DIR__ . '/fortify-admin.php';

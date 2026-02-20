@@ -34,10 +34,10 @@
                 'fullscreen', 'insertdatetime', 'charmap', 'wordcount'
             ],
 
-            toolbar: 'undo redo | blocks fontsize | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link table | removeformat code fullscreen preview searchreplace',
+            toolbar: 'undo redo | blocks fontsize | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image table media | removeformat code fullscreen preview searchreplace',
 
             toolbar_mode: 'sliding',
-            contextmenu: 'link image table',
+            contextmenu: 'link image table media',
             placeholder: '{{ $placeholder }}',
             readonly: {{ $disabled ? 'true' : 'false' }},
 

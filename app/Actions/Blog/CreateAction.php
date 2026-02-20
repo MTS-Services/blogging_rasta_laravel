@@ -15,14 +15,16 @@ class CreateAction
     public function execute(array $data): Blog
     {
         return DB::transaction(function () use ($data) {
-
-            if ($data['file']) {
+            $file = $data['file'] ?? null;
+            if ($file instanceof \Illuminate\Http\UploadedFile) {
                 $prefix = uniqid('IMX') . '-' . time() . '-' . uniqid();
-                $fileName = $prefix . '-' . $data['file']->getClientOriginalName();
-                $data['file'] = Storage::disk('public')->putFileAs('blogs',  $data['file'], $fileName);
+                $fileName = $prefix . '-' . $file->getClientOriginalName();
+                $data['file'] = Storage::disk('public')->putFileAs('blogs', $file, $fileName);
+            } else {
+                $data['file'] = null;
             }
 
-            // Create user
+            // Create blog
             $model = $this->interface->create($data);
 
             return $model->fresh();

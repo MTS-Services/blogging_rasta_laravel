@@ -49,6 +49,17 @@
                 </div>
 
                 <div class="w-full">
+                    <x-ui.label value="{{ __('Blog Category') }}" class="mb-1" />
+                    <x-ui.select wire:model="form.blog_category_id">
+                        <option value="">{{ __('None') }}</option>
+                        @foreach ($categories as $cat)
+                            <option value="{{ $cat->id }}">{{ $cat->title }}</option>
+                        @endforeach
+                    </x-ui.select>
+                    <x-ui.input-error :messages="$errors->get('form.blog_category_id')" />
+                </div>
+
+                <div class="w-full">
                     <x-ui.label value="Meta Title" class="mb-1" />
                     <x-ui.input type="text" placeholder="Meta Title" id="meta_title" wire:model="form.meta_title" />
                     <x-ui.input-error :messages="$errors->get('form.meta_title')" />

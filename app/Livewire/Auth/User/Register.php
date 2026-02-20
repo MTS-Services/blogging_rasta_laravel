@@ -3,9 +3,7 @@
 namespace App\Livewire\Auth\User;
 
 use App\Models\User;
-use App\Models\Country;
-use App\Enums\UserType;
-use App\Enums\UserAccountStatus;
+use App\Enums\UserStatus;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -23,21 +21,8 @@ class Register extends Component
     public string $phone = '';
     public string $password = '';
     public string $password_confirmation = '';
-    public ?int $country_id = null;
     public bool $terms_accepted = false;
     public bool $privacy_accepted = false;
-
-    public $countries = [];
-
-    /**
-     * Mount component and load countries
-     */
-    public function mount(): void
-    {
-        $this->countries = Country::select('id', 'name')
-            ->orderBy('name')
-            ->get();
-    }
 
     /**
      * Validation rules
@@ -50,7 +35,6 @@ class Register extends Component
             'last_name' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             'phone' => ['nullable', 'string', 'max:20'],
-            'country_id' => ['required', 'integer', 'exists:countries,id'],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
             'terms_accepted' => ['accepted', 'boolean'],
             'privacy_accepted' => ['accepted', 'boolean'],
@@ -69,8 +53,6 @@ class Register extends Component
             'email.required' => 'Email address is required.',
             'email.unique' => 'This email is already registered.',
             'email.email' => 'Please provide a valid email address.',
-            'country_id.required' => 'Please select your country.',
-            'country_id.exists' => 'Selected country is invalid.',
             'password.required' => 'Password is required.',
             'password.confirmed' => 'Password confirmation does not match.',
             'terms_accepted.accepted' => 'You must accept the Terms of Service.',
@@ -85,26 +67,18 @@ class Register extends Component
     {
         $validated = $this->validate();
 
-        // Create user with all required fields
+        $name = trim(($validated['first_name'] ?? '') . ' ' . ($validated['last_name'] ?? '')) ?: $validated['username'];
+
         $user = User::create([
             'username' => $validated['username'],
-            'first_name' => $validated['first_name'] ?? null,
-            'last_name' => $validated['last_name'] ?? null,
-            // 'display_name' => trim(($validated['first_name'] ?? '') . ' ' . ($validated['last_name'] ?? '')) ?: $validated['username'],
+            'name' => $name,
             'email' => $validated['email'],
-            'phone' => $validated['phone'] ?? null,
-            'country_id' => $validated['country_id'],
+            'email_verified_at' => now(),
             'password' => Hash::make($validated['password']),
-            'user_type' => UserType::BUYER,
-            'account_status' => UserAccountStatus::PENDING_VERIFICATION,
-            'terms_accepted_at' => now(),
-            'privacy_accepted_at' => now(),
+            'status' => UserStatus::ACTIVE,
             'last_login_at' => now(),
             'last_login_ip' => request()->ip(),
         ]);
-
-        // Load country relationship for newly created user
-        $user->load('country');
 
         // Fire registered event
         event(new Registered($user));
@@ -116,7 +90,7 @@ class Register extends Component
         Session::regenerate();
 
         // Redirect to profile or dashboard
-        $this->redirect(route('user.purchased-orders', absolute: false), navigate: true);
+        $this->redirect(route('user.account', absolute: false), navigate: true);
     }
 
     #[Layout('layouts.guest')]

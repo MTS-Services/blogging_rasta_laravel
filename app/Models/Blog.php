@@ -9,6 +9,7 @@ use Laravel\Scout\Attributes\SearchUsingPrefix;
 use Illuminate\Database\Eloquent\Builder;
 
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Blog extends BaseModel implements Auditable
 {
@@ -17,6 +18,7 @@ class Blog extends BaseModel implements Auditable
         'title',
         'slug',
         'status',
+        'blog_category_id',
         'file',
         'description',
         'meta_title',
@@ -51,6 +53,16 @@ class Blog extends BaseModel implements Auditable
     |           Query Scopes                                       |
     =#=#=#=#=#=#=#=#=#=#==#=#=#=#= =#=#=#=#=#=#=#=#=#=#==#=#=#=#=#= */
 
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(BlogCategory::class, 'blog_category_id');
+    }
+
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(BlogComment::class)->orderBy('created_at', 'desc');
+    }
+
     public function scopeFilter(Builder $query, array $filters): Builder
     {
         return $query
@@ -58,6 +70,10 @@ class Blog extends BaseModel implements Auditable
                 $filters['status'] ?? null,
                 fn($q, $status) =>
                 $q->where('status', $status)
+            )
+            ->when(
+                isset($filters['blog_category_id']) && $filters['blog_category_id'] !== '' && $filters['blog_category_id'] !== null,
+                fn($q) => $q->where('blog_category_id', $filters['blog_category_id'])
             );
     }
 

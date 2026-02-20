@@ -45,9 +45,9 @@ class BlogService
     }
 
 
-    public function getPaginatedData(int $perPage = 15, array $filters = []): LengthAwarePaginator
+    public function getPaginatedData(int $perPage = 15, array $filters = [], ?int $page = null): LengthAwarePaginator
     {
-        return $this->interface->paginate(perPage: $perPage, filters: $filters);
+        return $this->interface->paginate(perPage: $perPage, filters: $filters, page: $page);
     }
 
 

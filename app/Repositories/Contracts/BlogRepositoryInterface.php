@@ -19,7 +19,7 @@ interface BlogRepositoryInterface
 
     public function findTrashed($column_value, string $column_name = 'id'): ?Blog;
 
-    public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator;
+    public function paginate(int $perPage = 15, array $filters = [], ?int $page = null): LengthAwarePaginator;
 
     public function trashPaginate(int $perPage = 15, array $filters = []): LengthAwarePaginator;
 

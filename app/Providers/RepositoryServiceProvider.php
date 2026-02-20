@@ -31,7 +31,10 @@ use App\Repositories\Contracts\UserCategoryRepositoryInterface;
 use App\Repositories\Eloquent\UserCategoryRepository;
 use App\Repositories\Contracts\TikTokUserRepositoryInterface;
 use App\Repositories\Eloquent\TikTokUserRepository;
-
+use App\Repositories\Contracts\BlogCategoryRepositoryInterface;
+use App\Repositories\Eloquent\BlogCategoryRepository;
+use App\Repositories\Contracts\BlogCommentRepositoryInterface;
+use App\Repositories\Eloquent\BlogCommentRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -98,6 +101,16 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             TikTokUserRepositoryInterface::class,
             TikTokUserRepository::class
+        );
+
+        $this->app->bind(
+            BlogCategoryRepositoryInterface::class,
+            BlogCategoryRepository::class
+        );
+
+        $this->app->bind(
+            BlogCommentRepositoryInterface::class,
+            BlogCommentRepository::class
         );
     }
 

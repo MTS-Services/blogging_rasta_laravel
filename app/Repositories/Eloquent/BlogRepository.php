@@ -42,24 +42,26 @@ class BlogRepository implements BlogRepositoryInterface
         return $model->where($column_name, $column_value)->first();
     }
 
-    public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator
+    public function paginate(int $perPage = 15, array $filters = [], ?int $page = null): LengthAwarePaginator
     {
         $search = $filters['search'] ?? null;
         $sortField = $filters['sort_field'] ?? 'created_at';
         $sortDirection = $filters['sort_direction'] ?? 'desc';
 
         if ($search) {
-            // Scout Search
-            return Blog::search($search)
-                ->query(fn($query) => $query->filter($filters)->orderBy($sortField, $sortDirection))
-                ->paginate($perPage);
+            $query = Blog::search($search)
+                ->query(fn($query) => $query->filter($filters)->orderBy($sortField, $sortDirection));
+            return $page !== null
+                ? $query->paginate($perPage, ['*'], 'page', $page)
+                : $query->paginate($perPage);
         }
 
-        // Normal Eloquent Query
-        return $this->model->query()
+        $query = $this->model->query()
             ->filter($filters)
-            ->orderBy($sortField, $sortDirection)
-            ->paginate($perPage);
+            ->orderBy($sortField, $sortDirection);
+        return $page !== null
+            ? $query->paginate($perPage, ['*'], 'page', $page)
+            : $query->paginate($perPage);
     }
 
 
@@ -81,7 +83,6 @@ class BlogRepository implements BlogRepositoryInterface
             ->filter($filters)
             ->orderBy($sortField, $sortDirection)
             ->paginate($perPage);
-        return $query->paginate($perPage);
     }
 
 

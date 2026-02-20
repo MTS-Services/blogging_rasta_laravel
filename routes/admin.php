@@ -7,6 +7,7 @@ use Firebase\JWT\Key;
 use App\Livewire\Frontend\Blog;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\Admin\BlogController;
+use App\Http\Controllers\Backend\Admin\BlogCategoryController;
 use App\Http\Controllers\Backend\Admin\KeywordController;
 use App\Http\Controllers\Backend\Admin\AuditingController;
 use App\Http\Controllers\Backend\Admin\Settings\LanguageController;
@@ -88,6 +89,13 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
         Route::get('/trash', 'trash')->name('trash');
     });
     Route::controller(BlogController::class)->name('blog.')->prefix('blog')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::get('/edit/{id}', 'edit')->name('edit');
+        Route::get('/view/{id}', 'view')->name('view');
+        Route::get('/trash', 'trash')->name('trash');
+    });
+    Route::controller(BlogCategoryController::class)->name('blog-category.')->prefix('blog-category')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
         Route::get('/edit/{id}', 'edit')->name('edit');

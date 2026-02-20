@@ -76,7 +76,7 @@ class TwoFactorAuthenticatedSessionController extends Controller
         // Clear the login session data
         $request->session()->forget(['login.id', 'login.remember']);
 
-        return redirect()->intended(route('user.purchased-orders', absolute: false));
+        return redirect()->intended(route('user.account', absolute: false));
     }
 
     /**
