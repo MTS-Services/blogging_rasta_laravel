@@ -11,6 +11,7 @@ class View extends Component
     public Blog $data;
     public function mount(Blog $data): void
     {
+        $data->load(['comments' => fn ($q) => $q->with('user:id,name,avatar')->latest()]);
         $this->data = $data;
     }
     public function render()

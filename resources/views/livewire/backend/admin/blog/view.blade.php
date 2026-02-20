@@ -22,14 +22,19 @@
 
                 <div class="grid lg:grid-cols-3 gap-6">
 
-                    {{-- Left Column --}}
-                    <div class="flex flex-col h-auto p-4   ">
-                        <h2 class="text-xl text-text-primary font-semibold mb-6">{{ __('Profile Image') }}</h2>
-                        <div class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-pink-100 overflow-hidden">
-                            <img src="{{ storage_url($data->file) }}" alt="Profile Image"
-                                class="w-full h-full object-cover">
-                        </div>
-
+                    {{-- Left Column - Blog Image --}}
+                    <div class="flex flex-col h-auto p-4 lg:p-6">
+                        <h2 class="text-xl text-text-primary font-semibold mb-4">{{ __('Blog Image') }}</h2>
+                        @if($data->file)
+                            <div class="w-full max-w-sm aspect-video rounded-xl overflow-hidden border-2 border-zinc-200 dark:border-zinc-600 bg-zinc-100 dark:bg-zinc-800">
+                                <img src="{{ storage_url($data->file) }}" alt="{{ $data->title }}"
+                                    class="w-full h-full object-cover">
+                            </div>
+                        @else
+                            <div class="w-full max-w-sm aspect-video rounded-xl border-2 border-dashed border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50 flex items-center justify-center">
+                                <span class="text-zinc-400 dark:text-zinc-500 text-sm">{{ __('No image') }}</span>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <div class="glass-card shadow-glass-card rounded-xl p-6 min-h-[500px]">
@@ -157,6 +162,37 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            {{-- Blog Comments Section --}}
+            <div class="bg-bg-primary rounded-2xl shadow-lg overflow-hidden border border-gray-500/20 mt-6">
+                <div class="p-6 border-b border-zinc-200 dark:border-zinc-700">
+                    <h2 class="text-xl font-bold text-text-primary">{{ __('Blog Comments') }} ({{ $data->comments->count() }})</h2>
+                </div>
+                <div class="p-6">
+                    @if($data->comments->isEmpty())
+                        <p class="text-zinc-500 dark:text-zinc-400">{{ __('No comments yet.') }}</p>
+                    @else
+                        <div class="space-y-4">
+                            @foreach($data->comments as $comment)
+                                <div class="flex gap-4 p-4 rounded-lg bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700">
+                                    <div class="flex-shrink-0 w-10 h-10 rounded-full overflow-hidden bg-second-500/20 border border-second-500/40">
+                                        @php
+                                            $commenter = $comment->user;
+                                            $avatarUrl = $commenter ? $commenter->avatar_url : 'https://ui-avatars.com/api/?name=U';
+                                        @endphp
+                                        <img src="{{ $avatarUrl }}" alt="{{ $commenter->name ?? 'User' }}" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="font-semibold text-text-primary">{{ $comment->user->name ?? __('User') }}</p>
+                                        <p class="text-xs text-zinc-500 dark:text-zinc-400">{{ $comment->created_at->format('M j, Y g:i A') }}</p>
+                                        <p class="mt-2 text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap">{{ $comment->body }}</p>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
