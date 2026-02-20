@@ -97,7 +97,7 @@
             {{-- meta description --}}
             <div class="w-full ">
                 <x-ui.label value="{{ __('Meta Description') }}" class="mb-1" />
-                <x-ui.text-editor model="form.meta_description" id="meta_description"
+                <x-ui.textarea wire:model="form.meta_description" id="meta_description"
                     placeholder="Enter your main content here..." :height="350" />
 
                 <x-ui.input-error :messages="$errors->get('form.description')" />
@@ -106,7 +106,7 @@
             <div class="w-full mt-5">
                 <x-ui.label value="{{ __('Description') }}" class="mb-1" />
                 <x-ui.text-editor model="form.description" id="description"
-                    placeholder="Enter your main content here..." :height="350" />
+                    placeholder="Enter your main content here..." :height="600" />
 
                 <x-ui.input-error :messages="$errors->get('form.description')" />
             </div>
