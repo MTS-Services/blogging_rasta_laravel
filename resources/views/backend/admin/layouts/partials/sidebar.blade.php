@@ -146,6 +146,7 @@
                 :items="[
                     ['name' => 'Blogs', 'route' => route('admin.blog.index'), 'icon' => 'file-text', 'active' => 'blog'],
                     ['name' => 'Categories', 'route' => route('admin.blog-category.index'), 'icon' => 'folder', 'active' => 'blog-category'],
+                    ['name' => 'Comments', 'route' => route('admin.blog-comment.index'), 'icon' => 'chat-bubble-left-right', 'active' => 'blog-comment'],
                 ]" />
             <x-backend.navlink type="single" icon="phone" name="Contact" :route="route('admin.contact.index')" active="contact"
                 :page_slug="$active" />

@@ -8,6 +8,7 @@ use App\Livewire\Frontend\Blog;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\Admin\BlogController;
 use App\Http\Controllers\Backend\Admin\BlogCategoryController;
+use App\Http\Controllers\Backend\Admin\BlogCommentController;
 use App\Http\Controllers\Backend\Admin\KeywordController;
 use App\Http\Controllers\Backend\Admin\AuditingController;
 use App\Http\Controllers\Backend\Admin\Settings\LanguageController;
@@ -101,6 +102,9 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
         Route::get('/edit/{id}', 'edit')->name('edit');
         Route::get('/view/{id}', 'view')->name('view');
         Route::get('/trash', 'trash')->name('trash');
+    });
+    Route::controller(BlogCommentController::class)->name('blog-comment.')->prefix('blog-comment')->group(function () {
+        Route::get('/', 'index')->name('index');
     });
 
     Route::group(['prefix' => 'application-settings', 'as' => 'as.'], function () {
