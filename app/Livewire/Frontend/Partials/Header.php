@@ -12,6 +12,7 @@ class Header extends Component
     {
         $this->pageSlug = $pageSlug;
     }
+
     public function render()
     {
         return view('livewire.frontend.partials.header');

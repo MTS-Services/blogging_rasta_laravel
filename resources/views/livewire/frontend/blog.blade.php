@@ -37,44 +37,18 @@
             @if ($categories->isNotEmpty())
                 @php
                     $currentCategorySlug = request()->query('category');
-                    $selectedCategoryTitle = $currentCategorySlug
-                        ? ($categories->firstWhere('slug', $currentCategorySlug)?->title ?? __('All Categories'))
-                        : __('All Categories');
                 @endphp
-                <div class="flex py-5 xl:py-8 mx-auto">
-                    <div class="relative w-48" x-data="{ open: false }">
-                        <button type="button" @click="open = !open"
-                            class="w-full px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors bg-second-500 text-white flex items-center justify-between shadow-md hover:shadow-lg">
-                            <span class="text-white truncate">{{ $selectedCategoryTitle }}</span>
-                            <svg class="w-4 h-4 flex-shrink-0 ml-2 transition-transform" :class="{ 'rotate-180': open }" fill="none"
-                                stroke="#fff" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-
-                        <div x-show="open" @click.away="open = false"
-                            x-transition:enter="transition ease-out duration-200"
-                            x-transition:enter-start="opacity-0 scale-95"
-                            x-transition:enter-end="opacity-100 scale-100"
-                            x-transition:leave="transition ease-in duration-150"
-                            x-transition:leave-start="opacity-100 scale-100"
-                            x-transition:leave-end="opacity-0 scale-95"
-                            class="absolute z-10 mt-2 w-full rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 max-h-64 overflow-y-auto overflow-x-hidden">
-                            <div class="py-1">
-                                <a href="{{ route('blog') }}" wire:navigate @click="open = false"
-                                    class="w-full text-left block px-4 py-2 text-sm transition-colors {{ !$currentCategorySlug ? 'bg-second-500 text-white' : 'text-gray-700 hover:bg-second-500 hover:text-white' }}">
-                                    {{ __('All Categories') }}
-                                </a>
-                                @foreach ($categories as $cat)
-                                    <a href="{{ route('blog', ['category' => $cat->slug]) }}" wire:navigate @click="open = false"
-                                        class="w-full text-left block px-4 py-2 text-sm transition-colors {{ $currentCategorySlug === $cat->slug ? 'bg-second-500 text-white' : 'text-gray-700 hover:bg-second-500 hover:text-white' }}">
-                                        {{ $cat->title }}
-                                    </a>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
+                <div class="flex flex-wrap items-center justify-center gap-2 py-5 xl:py-8 mx-auto">
+                    <a href="{{ route('blog') }}" wire:navigate
+                        class="px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors {{ !$currentCategorySlug ? 'bg-second-500 text-white shadow-md' : 'bg-white dark:bg-zinc-800 text-text-primary hover:bg-second-500 hover:text-white border border-zinc-200 dark:border-zinc-600' }}">
+                        {{ __('All Categories') }}
+                    </a>
+                    @foreach ($categories as $cat)
+                        <a href="{{ route('blog', ['category' => $cat->slug]) }}" wire:navigate
+                            class="px-4 py-2 rounded-lg font-inter text-sm font-medium transition-colors {{ $currentCategorySlug === $cat->slug ? 'bg-second-500 text-white shadow-md' : 'bg-white dark:bg-zinc-800 text-text-primary hover:bg-second-500 hover:text-white border border-zinc-200 dark:border-zinc-600' }}">
+                            {{ $cat->title }}
+                        </a>
+                    @endforeach
                 </div>
             @endif
 

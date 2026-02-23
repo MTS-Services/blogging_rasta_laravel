@@ -16,6 +16,7 @@ class BlogCommentRepository implements BlogCommentRepositoryInterface
     {
         return $this->model->query()
             ->where('blog_id', $blogId)
+            ->where('is_approved', true)
             ->with('user:id,name,email,avatar')
             ->orderBy('created_at', 'desc')
             ->get();
