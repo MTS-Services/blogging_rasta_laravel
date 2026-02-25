@@ -39,7 +39,7 @@
             </a>
         </nav>
 
-        <div class="hidden md:flex items-center gap-4">
+       {{--<div class="hidden md:flex items-center gap-4">
             @auth
                 <a href="{{ route('user.account') }}" title="{{ __('My Account') }}" wire:navigate
                     class="text-text-muted font-inter transition-colors hover:text-second-500 border-b-2 border-transparent hover:border-second-500">
@@ -62,7 +62,7 @@
                 </a>
             @endauth
             <x-language />
-        </div>
+        </div> --}} 
 
 
         <!-- Mobile Menu Button -->
@@ -100,7 +100,7 @@
                 class="text-text-muted font-medium font-inter transition-colors {{ request()->routeIs('about') ? 'text-second-500!! ' : 'hover:text-second-500!!' }}">
                 {{ __('About') }}
             </a>
-            @auth
+            {{-- @auth
                 <a href="{{ route('user.account') }}" title="{{ __('My Account') }}" wire:navigate
                     class="text-text-muted font-medium font-inter transition-colors hover:text-second-500!">
                     {{ __('Profile') }}
@@ -120,7 +120,7 @@
                     class="text-text-muted font-medium font-inter transition-colors hover:text-second-500!">
                     {{ __('Register') }}
                 </a>
-            @endauth
+            @endauth --}}
             <x-language />
         </nav>
     </div>

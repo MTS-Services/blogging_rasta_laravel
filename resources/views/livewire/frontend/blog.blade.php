@@ -59,7 +59,7 @@
                     <div class="flex gap-12 items-center justify-between my-6 flex-col-reverse md:flex-row">
                         <div class="bg-second-500/15 p-6 flex-1 lg:flex-1/2 w-full">
                             @if ($blog->category)
-                                <a href="{{ route('blog', ['category' => $blog->category->slug]) }}" wire:navigate class="text-sm text-bg-primary font-medium">{{ $blog->category->title }}</a>
+                                <p><a href="{{ route('blog', ['category' => $blog->category->slug]) }}" wire:navigate class="text-sm font-medium">{{ $blog->category->title }}</a></p>
                             @endif
                             <a href="{{ route('blog.details', $blog->slug) }}" title="{{ $blog->title }}" wire:navigate
                                 class="inline-block mt-4 text-text-secondary">
