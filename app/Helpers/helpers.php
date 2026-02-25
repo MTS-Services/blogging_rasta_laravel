@@ -63,7 +63,9 @@ if (!function_exists('storage_url')) {
             $count = 0;
             $itemCount = count($urlOrArray);
             foreach ($urlOrArray as $index => $url) {
-                $result .= $url ? (Str::startsWith($url, 'https://') ? $url : asset('storage/' . $url)) : $image;
+                $result .= $url
+                    ? (Str::startsWith($url, ['http://', 'https://']) ? $url : url('storage/' . ltrim($url, '/')))
+                    : $image;
 
                 if ($count === $itemCount - 1) {
                     $result .= '';
@@ -74,7 +76,9 @@ if (!function_exists('storage_url')) {
             }
             return $result;
         } else {
-            return $urlOrArray ? (Str::startsWith($urlOrArray, 'https://') ? $urlOrArray : asset('storage/' . $urlOrArray)) : $image;
+            return $urlOrArray
+                ? (Str::startsWith($urlOrArray, ['http://', 'https://']) ? $urlOrArray : url('storage/' . ltrim($urlOrArray, '/')))
+                : $image;
         }
     }
 }
