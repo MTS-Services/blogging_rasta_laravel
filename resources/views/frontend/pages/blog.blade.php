@@ -10,9 +10,7 @@
                     $path = storage_path('app/public/' . $data->file);
                     $type = detectFileType($path);
                     if ($type === 'image') {
-                        $ogImage = absolute_og_url('storage/' . ltrim($data->file, '/'));
-                        $ext = strtolower(pathinfo($data->file, PATHINFO_EXTENSION));
-                        $ogImageType = $ext === 'png' ? 'image/png' : ($ext === 'gif' ? 'image/gif' : 'image/jpeg');
+                        $ogImage = absolute_og_url('og-image/' . rawurlencode($data->slug));
                     } else {
                         $ogImage = absolute_og_url(site_logo());
                     }

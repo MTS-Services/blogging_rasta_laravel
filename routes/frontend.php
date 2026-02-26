@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Frontend\VideoDetailsController;
 use App\Http\Controllers\Frontend\VideoEmbedController;
+use App\Http\Controllers\Frontend\OgImageController;
 use App\Http\Controllers\ImageProxyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\BlogController;
@@ -19,6 +20,7 @@ Route::get('/user-video-feed/{username}', [VideoFeedController::class, 'userVide
 Route::get('/product', [ProductController::class, 'product'])->name('product');
 Route::get('/blog', [BlogController::class, 'blog'])->name('blog');
 Route::get('/blog/details/{slug}', [BlogController::class, 'details'])->name('blog.details');
+Route::get('/og-image/{slug}', OgImageController::class)->name('blog.og-image');
 Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/privacy-policy', [StaticController::class, 'PrivacyPolicy'])->name('PrivacyPolicy');
 Route::get('/terms-of-service', [StaticController::class, 'TermsOfService'])->name('TermsOfService');
