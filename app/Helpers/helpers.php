@@ -119,6 +119,23 @@ if (!function_exists('site_name')) {
     }
 }
 
+/**
+ * Build an absolute HTTPS URL for Open Graph / social crawlers (Facebook, WhatsApp, etc.).
+ * Uses APP_URL so the URL is correct even when the request host or scheme differs.
+ */
+if (!function_exists('absolute_og_url')) {
+    function absolute_og_url(string $pathOrUrl): string
+    {
+        if (Str::startsWith($pathOrUrl, ['http://', 'https://'])) {
+            return Str::startsWith($pathOrUrl, 'http://')
+                ? 'https://' . substr($pathOrUrl, 7)
+                : $pathOrUrl;
+        }
+        $base = rtrim(preg_replace('#^http://#i', 'https://', config('app.url')), '/');
+        return $base . '/' . ltrim($pathOrUrl, '/');
+    }
+}
+
 // ==================== NEW OTP Helpers ====================
 
 if (!function_exists('generate_otp')) {
