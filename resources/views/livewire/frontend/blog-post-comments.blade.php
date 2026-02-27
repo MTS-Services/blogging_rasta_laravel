@@ -77,23 +77,74 @@
 @guest
     @if($recaptchaSiteKey)
         @push('head_scripts')
-            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+            <script>
+                window.DioDioGlow = window.DioDioGlow || {};
+                window.DioDioGlow.blogCommentRecaptchaSiteKey = "{{ $recaptchaSiteKey }}";
+                window.DioDioGlow.blogCommentRecaptchaLoaded = false;
+                window.onBlogCommentRecaptchaLoaded = function () {
+                    window.DioDioGlow.blogCommentRecaptchaLoaded = true;
+                };
+            </script>
+            <script src="https://www.google.com/recaptcha/api.js?onload=onBlogCommentRecaptchaLoaded&render=explicit" async defer></script>
         @endpush
         @push('scripts')
             <script>
                 (function() {
+                    function renderBlogCommentRecaptcha() {
+                        var container = document.getElementById('recaptcha-comment-container');
+                        if (!container) return;
+
+                        // Avoid rendering multiple times into the same container.
+                        if (container.getAttribute('data-rendered') === '1') {
+                            return;
+                        }
+
+                        if (typeof grecaptcha === 'undefined' || typeof grecaptcha.render !== 'function') {
+                            return;
+                        }
+
+                        var siteKey = container.getAttribute('data-sitekey')
+                            || (window.DioDioGlow && window.DioDioGlow.blogCommentRecaptchaSiteKey)
+                            || '';
+
+                        if (!siteKey) {
+                            return;
+                        }
+
+                        try {
+                            grecaptcha.render(container, {
+                                sitekey: siteKey,
+                            });
+                            container.setAttribute('data-rendered', '1');
+                        } catch (e) {
+                            // Fail silently; form validation will still block submission without a token.
+                        }
+                    }
+
                     function initCommentRecaptcha() {
                         var form = document.getElementById('blog-comment-form');
                         if (!form) return;
-                        form.id = 'blog-comment-form';
+
+                        // Only bind the submit handler once per page lifecycle.
+                        if (form.getAttribute('data-recaptcha-bound') === '1') {
+                            renderBlogCommentRecaptcha();
+                            return;
+                        }
+                        form.setAttribute('data-recaptcha-bound', '1');
+
+                        renderBlogCommentRecaptcha();
+
                         form.addEventListener('submit', function(e) {
                             var container = document.getElementById('recaptcha-comment-container');
                             if (!container || typeof grecaptcha === 'undefined') return;
+
                             e.preventDefault();
                             var token = grecaptcha.getResponse();
                             var wrapper = form.closest('[wire\\:id]');
                             if (wrapper) {
-                                var comp = window.Livewire.find(wrapper.getAttribute('wire:id'));
+                                var comp = window.Livewire && window.Livewire.find
+                                    ? window.Livewire.find(wrapper.getAttribute('wire:id'))
+                                    : null;
                                 if (comp) {
                                     comp.set('recaptcha_token', token);
                                     comp.call('submit');
@@ -101,17 +152,33 @@
                             }
                         });
                     }
-                    if (document.readyState === 'loading') {
-                        document.addEventListener('DOMContentLoaded', initCommentRecaptcha);
-                    } else {
+
+                    function bootstrapRecaptcha() {
+                        // If the API script has already fired its onload callback, try rendering now.
+                        if (window.DioDioGlow && window.DioDioGlow.blogCommentRecaptchaLoaded) {
+                            renderBlogCommentRecaptcha();
+                        }
                         initCommentRecaptcha();
                     }
-                    document.addEventListener('livewire:navigated', initCommentRecaptcha);
-                    Livewire.on('recaptcha-reset', function () {
-                        if (typeof grecaptcha !== 'undefined' && document.getElementById('recaptcha-comment-container')) {
-                            try { grecaptcha.reset(); } catch (e) {}
-                        }
+
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', bootstrapRecaptcha);
+                    } else {
+                        bootstrapRecaptcha();
+                    }
+
+                    document.addEventListener('livewire:navigated', function () {
+                        // Slight delay to ensure Livewire has finished injecting the DOM.
+                        setTimeout(bootstrapRecaptcha, 0);
                     });
+
+                    if (window.Livewire && window.Livewire.on) {
+                        Livewire.on('recaptcha-reset', function () {
+                            if (typeof grecaptcha !== 'undefined') {
+                                try { grecaptcha.reset(); } catch (e) {}
+                            }
+                        });
+                    }
                 })();
             </script>
         @endpush
