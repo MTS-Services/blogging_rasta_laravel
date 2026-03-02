@@ -22,6 +22,7 @@ use App\Http\Controllers\Backend\Admin\TikTokManagement\TikTokMixedFeedControlle
 use App\Http\Controllers\Backend\Admin\TikTokManagement\UserCategoryController;
 use App\Http\Controllers\Backend\Admin\ApplicationSettings\ApplicationSettingsController;
 use App\Http\Controllers\Backend\Admin\ContactController;
+use App\Http\Controllers\Backend\Admin\TinyMceUploadController;
 
 Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
@@ -177,6 +178,8 @@ Route::middleware(['auth:admin', 'admin', 'adminVerify'])->name('admin.')->prefi
 
 
     });
+
+    Route::post('/tinymce/upload-image', [TinyMceUploadController::class, 'uploadImage'])->name('tinymce.upload-image');
 
     Route::get('/sitemap-generate', [SitemapController::class, 'generate'])->name('sitemap.generate');
 

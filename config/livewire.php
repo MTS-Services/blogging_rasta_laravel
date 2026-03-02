@@ -170,4 +170,8 @@ return [
     */
 
     'pagination_theme' => 'tailwind',
+
+    'payload' => [
+        'max_size' => 20480, // size in KB (e.g., 20MB)
+    ],
 ];
