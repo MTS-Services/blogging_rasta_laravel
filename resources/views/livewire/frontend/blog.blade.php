@@ -61,7 +61,7 @@
                             @if ($blog->category)
                                 <p><a href="{{ route('blog', ['category' => $blog->category->slug]) }}" wire:navigate class="text-sm font-medium">{{ $blog->category->title }}</a></p>
                             @endif
-                            <a href="{{ route('blog.details', $blog->slug) }}" title="{{ $blog->title }}" wire:navigate
+                            <a href="{{ route('blog.details', $blog->slug) }}" title="{{ $blog->title }}"
                                 class="inline-block mt-4 text-text-secondary">
                                 <h3 class="text-3xl font-semibold text-text-primary line-clamp-2">
                                     {{ $blog->title }}
@@ -90,7 +90,7 @@
                                 <p><a href="{{ route('blog', ['category' => $blog->category->slug]) }}" wire:navigate class="text-sm font-medium">{{ $blog->category->title }}</a></p>
                             @endif
                             <a href="{{ route('blog.details', $blog->slug) }}" title="{{ $blog->title }}"
-                                wire:navigate class="inline-block mt-4 text-text-secondary">
+                                 class="inline-block mt-4 text-text-secondary">
                                 <h2 class="text-3xl font-semibold text-text-primary line-clamp-2">
                                     {{ $blog->title }}
                                 </h2>
