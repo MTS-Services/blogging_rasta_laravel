@@ -85,22 +85,29 @@
                     });
                 },
 
-                media_url_resolver: function(data, resolve) {
-                    const url = data.url || '';
-                    const appUrl = @js(rtrim(config('app.url'), '/'));
+                media_url_resolver: function(data, resolve, reject) {
+                    try {
+                        const url = data.url || '';
+                        const appUrl = @js(rtrim(config('app.url'), '/'));
 
-                    const videoPagePattern = new RegExp('^' + appUrl.replace(/[.*+?^${}()|[\]\\]/g,
-                        '\\$&') + '/video/(.+)$');
-                    const match = url.match(videoPagePattern);
+                        const videoPagePattern = new RegExp('^' + appUrl.replace(/[.*+?^${}()|[\]\\]/g,
+                            '\\$&') + '/video/(.+)$');
+                        const match = url.match(videoPagePattern);
 
-                    if (match) {
-                        const slug = match[1];
-                        const embedUrl = appUrl + '/embed/' + slug;
-                        resolve({
-                            html: '<iframe src="' + embedUrl +
-                                '" width="560" height="600" frameborder="0" allowfullscreen style="border-radius:12px; max-width:100%;"></iframe>'
-                        });
-                    } else {
+                        if (match) {
+                            const slug = match[1];
+                            const embedUrl = appUrl + '/embed/' + slug;
+                            resolve({
+                                html: '<iframe src="' + embedUrl +
+                                    '" width="560" height="600" frameborder="0" allowfullscreen style="border-radius:12px; max-width:100%;"></iframe>'
+                            });
+                        } else {
+                            resolve({
+                                html: ''
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Media resolver error:', error);
                         resolve({
                             html: ''
                         });
