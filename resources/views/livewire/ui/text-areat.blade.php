@@ -99,7 +99,7 @@
                             const embedUrl = appUrl + '/embed/' + slug;
                             resolve({
                                 html: '<iframe src="' + embedUrl +
-                                    '" width="560" height="600" frameborder="0" allowfullscreen style="border-radius:12px; max-width:100%;"></iframe>'
+                                    '" width="560" height="600" frameborder="0" allowfullscreen style="border-radius:12px;"></iframe>'
                             });
                         } else {
                             resolve({

@@ -353,7 +353,7 @@
                 $embedCode =
                     '<iframe src="' .
                     $embedUrl .
-                    '" width="560" height="315" frameborder="0" allowfullscreen style="border-radius:12px; max-width:100%;"></iframe>';
+                    '" width="560" height="315" frameborder="0" allowfullscreen style="border-radius:12px;"></iframe>';
             @endphp
 
             {{-- Copy Link / Embed Section --}}
