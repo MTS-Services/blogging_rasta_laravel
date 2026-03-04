@@ -176,13 +176,13 @@ return [
     | Request Payload Limits
     |--------------------------------------------------------------------------
     |
-    | Livewire compares payload size in BYTES. Increase max_size so rich text
-    | editor content (e.g. blog description with images) does not trigger
-    | PayloadTooLargeException. 10MB = 10 * 1024 * 1024 bytes.
+    | Livewire compares payload size in BYTES. Rich text blog content (long
+    | articles, embedded images) can exceed 300KB+. Set max_size high enough
+    | to avoid PayloadTooLargeException. 20MB = 20 * 1024 * 1024 bytes.
     |
     */
 
     'payload' => [
-        'max_size' => 10 * 1024 * 1024, // 10MB in bytes
+        'max_size' => 20 * 1024 * 1024, // 20MB in bytes (long articles + images)
     ],
 ];
