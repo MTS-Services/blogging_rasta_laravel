@@ -171,7 +171,18 @@ return [
 
     'pagination_theme' => 'tailwind',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Request Payload Limits
+    |--------------------------------------------------------------------------
+    |
+    | Livewire compares payload size in BYTES. Increase max_size so rich text
+    | editor content (e.g. blog description with images) does not trigger
+    | PayloadTooLargeException. 10MB = 10 * 1024 * 1024 bytes.
+    |
+    */
+
     'payload' => [
-        'max_size' => 20480, // size in KB (e.g., 20MB)
+        'max_size' => 10 * 1024 * 1024, // 10MB in bytes
     ],
 ];
