@@ -26,13 +26,13 @@
 
                             // Plugins
                             plugins: [
-                                'code', 'table', 'lists', 'link', 'image', 'media',
+                                'code', 'table', 'lists', 'link', 'image',
                                 'preview', 'anchor', 'searchreplace', 'visualblocks',
                                 'fullscreen', 'insertdatetime', 'charmap', 'wordcount'
                             ],
 
                             // Toolbar
-                            toolbar: 'undo redo | blocks fontsize | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | removeformat code fullscreen preview',
+                            toolbar: 'undo redo | blocks fontsize | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image table | removeformat code fullscreen preview',
 
                             // Additional options
                             toolbar_mode: 'sliding',
@@ -68,61 +68,32 @@
                                         }
                                     };
 
-                                    xhr.onload = function() {
-                                        if (xhr.status === 200) {
-                                            const json = JSON.parse(xhr
-                                                .responseText);
-                                            resolve(json.location);
-                                        } else if (xhr.status === 422) {
-                                            const json = JSON.parse(xhr
-                                                .responseText);
-                                            reject('Validation error: ' + (json
-                                                .message ||
-                                                'Invalid image file.'));
-                                        } else {
-                                            reject('Image upload failed. HTTP Error: ' +
-                                                xhr.status);
-                                        }
-                                    };
-
-                                    xhr.onerror = function() {
-                                        reject(
-                                            'Image upload failed due to a network error.'
-                                            );
-                                    };
-
-                                    xhr.send(formData);
-                                });
-                            },
-
-                            media_url_resolver: function(data, resolve, reject) {
-                                try {
-                                    const url = data.url || '';
-                                    const appUrl = '{{ rtrim(config('app.url'), '/') }}';
-
-                                    const videoPagePattern = new RegExp('^' + appUrl.replace(
-                                        /[.*+?^${}()|[\]\\]/g, '\\$&') + '/video/(.+)$');
-                                    const match = url.match(videoPagePattern);
-
-                                    if (match) {
-                                        const slug = match[1];
-                                        const embedUrl = appUrl + '/embed/' + slug;
-                                        resolve({
-                                            html: '<iframe src="' + embedUrl +
-                                                '" width="560" height="600" frameborder="0" allowfullscreen style="border-radius:12px; max-width:100%;"></iframe>'
-                                        });
-                                    } else {
-                                        resolve({
-                                            html: ''
-                                        });
-                                    }
-                                } catch (error) {
-                                    console.error('Media resolver error:', error);
-                                    resolve({
-                                        html: ''
-                                    });
+                            xhr.onload = function() {
+                                if (xhr.status === 200) {
+                                    const json = JSON.parse(xhr
+                                        .responseText);
+                                    resolve(json.location);
+                                } else if (xhr.status === 422) {
+                                    const json = JSON.parse(xhr
+                                        .responseText);
+                                    reject('Validation error: ' + (json
+                                        .message ||
+                                        'Invalid image file.'));
+                                } else {
+                                    reject('Image upload failed. HTTP Error: ' +
+                                        xhr.status);
                                 }
-                            },
+                            };
+
+                            xhr.onerror = function() {
+                                reject(
+                                    'Image upload failed due to a network error.'
+                                    );
+                            };
+
+                            xhr.send(formData);
+                        });
+                    },
 
                             setup: function(editor) {
                                 self.editor = editor;

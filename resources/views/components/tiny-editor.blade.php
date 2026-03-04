@@ -32,14 +32,18 @@
                     branding: false,
                     license_key: 'gpl',
                     promotion: false,
+                    relative_urls: false,
+                    remove_script_host: false,
+                    convert_urls: false,
+                    sandbox_iframes: false,
 
                     plugins: [
-                        'code', 'table', 'lists', 'link', 'image', 'media',
+                        'code', 'table', 'lists', 'link', 'image',
                         'preview', 'anchor', 'searchreplace', 'visualblocks',
                         'fullscreen', 'insertdatetime', 'charmap', 'wordcount'
                     ],
 
-                    toolbar: 'undo redo | blocks fontsize | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | removeformat code fullscreen preview',
+                    toolbar: 'undo redo | blocks fontsize | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image table | removeformat code fullscreen preview',
 
                     toolbar_mode: 'sliding',
                     contextmenu: 'link image table',
@@ -81,29 +85,6 @@
 
                             xhr.send(formData);
                         });
-                    },
-
-                    media_url_resolver: function(data, resolve, reject) {
-                        try {
-                            const url = data.url || '';
-                            const appUrl = '{{ rtrim(config("app.url"), "/") }}';
-
-                            const videoPagePattern = new RegExp('^' + appUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '/video/(.+)$');
-                            const match = url.match(videoPagePattern);
-
-                            if (match) {
-                                const slug = match[1];
-                                const embedUrl = appUrl + '/embed/' + slug;
-                                resolve({
-                                    html: '<iframe src="' + embedUrl + '" width="560" height="600" frameborder="0" allowfullscreen style="border-radius:12px; max-width:100%;"></iframe>'
-                                });
-                            } else {
-                                resolve({ html: '' });
-                            }
-                        } catch (error) {
-                            console.error('Media resolver error:', error);
-                            resolve({ html: '' });
-                        }
                     },
 
                     setup: function(editor) {
