@@ -170,4 +170,19 @@ return [
     */
 
     'pagination_theme' => 'tailwind',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Request Payload Limits
+    |--------------------------------------------------------------------------
+    |
+    | Livewire compares payload size in BYTES. Rich text blog content (long
+    | articles, embedded images) can exceed 300KB+. Set max_size high enough
+    | to avoid PayloadTooLargeException. 20MB = 20 * 1024 * 1024 bytes.
+    |
+    */
+
+    'payload' => [
+        'max_size' => 20 * 1024 * 1024, // 20MB in bytes (long articles + images)
+    ],
 ];

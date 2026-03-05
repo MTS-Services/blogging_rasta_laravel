@@ -6,6 +6,7 @@ use App\Models\Blog;
 use App\Services\BlogCommentService;
 use App\Services\RecaptchaService;
 use App\Traits\Livewire\WithNotification;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
 
 class BlogPostComments extends Component
@@ -63,6 +64,13 @@ class BlogPostComments extends Component
 
     public function submit(): void
     {
+        $key = 'blog-comment:'.request()->ip();
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            $this->addError('body', __('You have posted too many comments. Please try again later.'));
+
+            return;
+        }
+
         $this->validate();
 
         if (! auth()->check() && config('recaptcha.secret_key')) {
@@ -73,11 +81,19 @@ class BlogPostComments extends Component
             }
         }
 
+        // Block links inside comments for additional spam protection
+        if (preg_match('/https?:\/\/|www\./i', $this->body)) {
+            $this->addError('body', __('Links are not allowed in comments.'));
+
+            return;
+        }
+
         try {
             $payload = [
                 'blog_id' => $this->blog->id,
                 'body' => $this->body,
-                'is_approved' => auth()->check(), // logged-in comments auto-approved; guests need moderation
+                // Auto-approve when automated protections pass
+                'is_approved' => true,
             ];
 
             if (auth()->check()) {
@@ -89,15 +105,15 @@ class BlogPostComments extends Component
 
             $this->blogCommentService->createData($payload);
 
+            RateLimiter::hit($key, 3600);
+
             $this->body = '';
             $this->guest_name = '';
             $this->guest_email = '';
             $this->recaptcha_token = '';
             $this->resetValidation();
             $this->dispatch('recaptcha-reset');
-            $this->success(auth()->check()
-                ? __('Comment posted successfully.')
-                : __('Comment posted successfully. It may be visible after moderation.'));
+            $this->success(__('Comment posted successfully.'));
         } catch (\Exception $e) {
             $this->error(__('Failed to post comment.'));
         }

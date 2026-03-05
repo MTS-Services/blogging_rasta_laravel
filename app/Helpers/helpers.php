@@ -63,7 +63,9 @@ if (!function_exists('storage_url')) {
             $count = 0;
             $itemCount = count($urlOrArray);
             foreach ($urlOrArray as $index => $url) {
-                $result .= $url ? (Str::startsWith($url, 'https://') ? $url : asset('storage/' . $url)) : $image;
+                $result .= $url
+                    ? (Str::startsWith($url, ['http://', 'https://']) ? $url : url('storage/' . ltrim($url, '/')))
+                    : $image;
 
                 if ($count === $itemCount - 1) {
                     $result .= '';
@@ -74,7 +76,9 @@ if (!function_exists('storage_url')) {
             }
             return $result;
         } else {
-            return $urlOrArray ? (Str::startsWith($urlOrArray, 'https://') ? $urlOrArray : asset('storage/' . $urlOrArray)) : $image;
+            return $urlOrArray
+                ? (Str::startsWith($urlOrArray, ['http://', 'https://']) ? $urlOrArray : url('storage/' . ltrim($urlOrArray, '/')))
+                : $image;
         }
     }
 }
@@ -112,6 +116,23 @@ if (!function_exists('site_name')) {
     function site_name()
     {
         return app(ApplicationSettingsService::class)->findData('app_name', 'LA');
+    }
+}
+
+/**
+ * Build an absolute HTTPS URL for Open Graph / social crawlers (Facebook, WhatsApp, etc.).
+ * Uses APP_URL so the URL is correct even when the request host or scheme differs.
+ */
+if (!function_exists('absolute_og_url')) {
+    function absolute_og_url(string $pathOrUrl): string
+    {
+        if (Str::startsWith($pathOrUrl, ['http://', 'https://'])) {
+            return Str::startsWith($pathOrUrl, 'http://')
+                ? 'https://' . substr($pathOrUrl, 7)
+                : $pathOrUrl;
+        }
+        $base = rtrim(preg_replace('#^http://#i', 'https://', config('app.url')), '/');
+        return $base . '/' . ltrim($pathOrUrl, '/');
     }
 }
 

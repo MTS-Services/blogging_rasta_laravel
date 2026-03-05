@@ -43,6 +43,19 @@
     @endonce
 
     <style>
+        html,
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            min-height: 0 !important;
+            overflow: hidden !important;
+        }
+
+        main {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
         header {
             display: none !important;
         }
@@ -104,20 +117,19 @@
         }
     }" class="group w-full">
         {{-- Video Container --}}
-        <div class="relative w-full aspect-[1/1.1] overflow-hidden rounded-2xl">
+        <div class="relative w-full aspect-[16/9] overflow-hidden rounded-2xl">
             @if ($playUrl)
                 {{-- Video Element --}}
-                <video x-ref="video" height='100vh' width='100%' x-show="playing" x-on:ended="stopVideo()"
-                    x-on:error="playing = false" class="w-full h-screen object-cover" poster="{{ $thumbnail_url }}"
+                <video x-ref="video" x-show="playing" x-on:ended="stopVideo()"
+                    x-on:error="playing = false" class="w-full h-full object-cover" poster="{{ $thumbnail_url }}"
                     playsinline preload="metadata" controls controlsList="nodownload" x-cloak>
                     <source src="{{ $playUrl }}" type="video/mp4">
                 </video>
 
                 {{-- Thumbnail --}}
-                <div x-show="!playing" style="height:100vh; width:100%" x-on:click="playVideo()"
-                    class="absolute inset-0 cursor-pointer">
+                <div x-show="!playing" x-on:click="playVideo()" class="absolute inset-0 cursor-pointer">
                     @if ($thumbnail_url)
-                        <img src="{{ $thumbnail_url }}" alt="{{ $title }}" class="w-full h-screen object-cover"
+                        <img src="{{ $thumbnail_url }}" alt="{{ $title }}" class="w-full h-full object-cover"
                             loading="lazy">
                     @else
                         <div

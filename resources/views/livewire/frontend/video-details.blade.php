@@ -348,29 +348,63 @@
                 </div>
             </div>
 
-            {{-- Copy Link Section --}}
-            <div class="space-y-3">
+            @php
+                $embedUrl = route('video.embed', $data->slug);
+                $embedCode =
+                    '<iframe src="' .
+                    $embedUrl .
+                    '" width="560" height="315" frameborder="0" allowfullscreen style="border-radius:12px;"></iframe>';
+            @endphp
+
+            {{-- Copy Link / Embed Section --}}
+            <div class="space-y-4">
                 <p class="text-sm font-semibold text-text-primary font-inter">
-                    {{ __('Or copy link:') }}
+                    {{ __('Copy link & embed code:') }}
                 </p>
-                <div class="flex gap-2">
-                    <input type="text" id="shareLink" value="{{ url()->current() }}" readonly
-                        class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl font-inter text-sm text-text-primary focus:outline-none focus:border-second-500">
-                    <button onclick="copyLink()"
-                        class="px-6 py-3 bg-gradient-to-r from-second-500 to-zinc-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                        </svg>
-                        <span class="hidden sm:inline">{{ __('Copy') }}</span>
-                    </button>
+
+                {{-- Video page URL --}}
+                <div class="space-y-1">
+                    <p class="text-xs font-medium text-text-muted">{{ __('Video page URL') }}</p>
+                    <div class="flex gap-2">
+                        <input type="text" id="shareLink" value="{{ url()->current() }}" readonly
+                            class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl font-inter text-sm text-text-primary focus:outline-none focus:border-second-500">
+                        <button onclick="copyLink('shareLink', 'copySuccessPage')"
+                            class="px-6 py-3 bg-gradient-to-r from-second-500 to-zinc-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            <span class="hidden sm:inline">{{ __('Copy') }}</span>
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Embed code (iframe) --}}
+                <div class="space-y-1">
+                    <p class="text-xs font-medium text-text-muted">{{ __('Embed code (iframe)') }}</p>
+                    <div class="flex gap-2">
+                        <input type="text" id="embedCode" value="{{ $embedCode }}" readonly
+                            class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl font-inter text-xs text-text-primary focus:outline-none focus:border-second-500">
+                        <button onclick="copyLink('embedCode', 'copySuccessEmbedCode')"
+                            class="px-6 py-3 bg-gradient-to-r from-second-500 to-zinc-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            <span class="hidden sm:inline">{{ __('Copy') }}</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            {{-- Success Message --}}
-            <div id="copySuccess"
+            {{-- Success Messages --}}
+            <div id="copySuccessPage"
                 class="hidden mt-3 p-3 bg-green-50 text-green-700 rounded-xl text-sm font-inter text-center">
-                ✓ {{ __('Link copied to clipboard!') }}
+                ✓ {{ __('Video page link copied to clipboard!') }}
+            </div>
+            <div id="copySuccessEmbedCode"
+                class="hidden mt-2 p-3 bg-green-50 text-green-700 rounded-xl text-sm font-inter text-center">
+                ✓ {{ __('Embed iframe code copied to clipboard!') }}
             </div>
         </div>
     </div>
@@ -408,7 +442,8 @@
             function closeShareModal() {
                 document.getElementById('shareModal').classList.add('hidden');
                 document.body.style.overflow = 'auto';
-                document.getElementById('copySuccess').classList.add('hidden');
+                document.getElementById('copySuccessPage').classList.add('hidden');
+                document.getElementById('copySuccessEmbedCode').classList.add('hidden');
             }
 
             // Close modal on outside click
@@ -455,18 +490,35 @@
                 }
             }
 
-            // Copy link function
-            function copyLink() {
-                const linkInput = document.getElementById('shareLink');
-                linkInput.select();
-                document.execCommand('copy');
+            // Copy link function (page or embed)
+            function copyLink(inputId, successId) {
+                const linkInput = document.getElementById(inputId);
+                if (!linkInput) return;
 
-                const successMsg = document.getElementById('copySuccess');
-                successMsg.classList.remove('hidden');
-
-                setTimeout(() => {
-                    successMsg.classList.add('hidden');
-                }, 3000);
+                // Prefer modern clipboard API if available
+                const value = linkInput.value;
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(value).then(() => {
+                        const successMsg = document.getElementById(successId);
+                        if (successMsg) {
+                            successMsg.classList.remove('hidden');
+                            setTimeout(() => {
+                                successMsg.classList.add('hidden');
+                            }, 3000);
+                        }
+                    });
+                } else {
+                    // Fallback for older browsers
+                    linkInput.select();
+                    document.execCommand('copy');
+                    const successMsg = document.getElementById(successId);
+                    if (successMsg) {
+                        successMsg.classList.remove('hidden');
+                        setTimeout(() => {
+                            successMsg.classList.add('hidden');
+                        }, 3000);
+                    }
+                }
             }
 
             // ESC key to close modal
