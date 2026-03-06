@@ -67,7 +67,7 @@
                                     {{ $blog->title }}
                                 </h3>
                             </a>
-                            <div class="line-clamp-6">
+                            <div class="blog-content line-clamp-6">
                                 {!! $blog->description !!}
                             </div>
 
@@ -97,7 +97,7 @@
                             </a>
 
 
-                            <div class="line-clamp-6">
+                            <div class="blog-content line-clamp-6">
                                 {!! $blog->description !!}
                             </div>
 
