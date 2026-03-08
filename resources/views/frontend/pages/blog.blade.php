@@ -51,4 +51,28 @@
             <x-slot name="pageSlug">{{ __('blog') }}</x-slot>
             <livewire:frontend.blog />
     @endswitch
+
+    @push('scripts')
+    <script>
+        (function() {
+            function wrapBlogIframes() {
+                document.querySelectorAll('.blog-content').forEach(function(container) {
+                    container.querySelectorAll('iframe').forEach(function(iframe) {
+                        if (iframe.closest('.blog-video-wrapper')) return;
+                        var wrapper = document.createElement('div');
+                        wrapper.className = 'blog-video-wrapper';
+                        iframe.parentNode.insertBefore(wrapper, iframe);
+                        wrapper.appendChild(iframe);
+                    });
+                });
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', wrapBlogIframes);
+            } else {
+                wrapBlogIframes();
+            }
+            document.addEventListener('livewire:navigated', wrapBlogIframes);
+        })();
+    </script>
+    @endpush
 </x-frontend::app>
