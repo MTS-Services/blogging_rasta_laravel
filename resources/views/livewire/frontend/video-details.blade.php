@@ -34,7 +34,7 @@
                             : $data->title,
                 "thumbnailUrl" => [$data->thumbnail_url],
                 "uploadDate" => \Carbon\Carbon::parse($data->created_at)->toIso8601String(),
-                "contentUrl" => $data->play_url,
+                "contentUrl" => $data->playback_url,
                 'duration'=>'PT' .$data->duration . 'S',
                 "embedUrl" => route('video.embed', $data->slug),
                 "interactionStatistic" => [
@@ -78,13 +78,13 @@
                         }
                     }"
                         class="relative w-full aspect-[1/1] max-w-[500px] mx-auto lg:max-w-none overflow-hidden rounded-2xl shadow-2xl">
-                        @if ($data->play_url)
-                            {{-- Video Element --}}
+                        @if ($data->playback_url)
+                            {{-- Video Element (storage URL preferred over API URL) --}}
                             <video x-ref="mainVideo" x-show="playing" x-on:ended="stopVideo()"
                                 x-on:error="playing = false" class="w-full h-full object-cover"
                                 poster="{{ $data->thumbnail_url }}" playsinline preload="metadata" controls
                                 controlsList="nodownload" x-cloak>
-                                <source src="{{ $data->play_url }}" type="video/mp4">
+                                <source src="{{ $data->playback_url }}" type="video/mp4">
                             </video>
 
                             {{-- Thumbnail --}}
