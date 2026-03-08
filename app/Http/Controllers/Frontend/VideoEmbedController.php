@@ -22,7 +22,7 @@ class VideoEmbedController extends Controller
         $video['cover'] = $data->cover;
         $video['origin_cover'] = $data->origin_cover;
         $video['dynamic_cover'] = $data->dynamic_cover;
-        $video['play'] = $data->play_url;
+        $video['play'] = $data->playback_url;
         $video['create_time'] = strtotime($data->create_time);
         $video['play_count'] = $data->play_count;
         $video['digg_count'] = $data->digg_count;

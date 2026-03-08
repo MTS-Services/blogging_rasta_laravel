@@ -399,6 +399,47 @@
     .mobile-nav-item{
         @apply text-text-primary hover:bg-bg-secondary block px-3 py-2 rounded-md text-base font-medium;
     }
+
+    /* Make embedded iframes in blog content responsive (e.g. TinyMCE video embeds).
+       Mobile-first: full width on small screens; wrapper gives iframe explicit dimensions so video plays reliably. */
+    .blog-content {
+        overflow: hidden;
+    }
+
+    /* Mobile-responsive: 100% width, aspect-ratio for height; min-width:0 prevents overflow in flex/grid */
+    .blog-video-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        aspect-ratio: 16 / 9;
+        margin-bottom: 1rem;
+        overflow: hidden;
+    }
+
+    .blog-video-wrapper iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        display: block;
+    }
+
+    /* Fallback when JS has not wrapped yet */
+    .blog-content iframe {
+        max-width: 100%;
+        display: block;
+    }
+}
+
+/* Desktop only: limit video wrapper to standard size and center (mobile stays full width) */
+@media (min-width: 1024px) {
+    .blog-video-wrapper {
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 @utility container {

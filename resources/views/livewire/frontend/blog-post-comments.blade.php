@@ -83,6 +83,9 @@
                 window.DioDioGlow.blogCommentRecaptchaLoaded = false;
                 window.onBlogCommentRecaptchaLoaded = function () {
                     window.DioDioGlow.blogCommentRecaptchaLoaded = true;
+                    if (typeof window.__blogCommentRecaptchaRender === 'function') {
+                        window.__blogCommentRecaptchaRender();
+                    }
                 };
             </script>
             <script src="https://www.google.com/recaptcha/api.js?onload=onBlogCommentRecaptchaLoaded&render=explicit" async defer></script>
@@ -92,40 +95,41 @@
                 (function() {
                     function renderBlogCommentRecaptcha() {
                         var container = document.getElementById('recaptcha-comment-container');
-                        if (!container) return;
+                        if (!container) return false;
 
-                        // Avoid rendering multiple times into the same container.
                         if (container.getAttribute('data-rendered') === '1') {
-                            return;
+                            return true;
                         }
 
                         if (typeof grecaptcha === 'undefined' || typeof grecaptcha.render !== 'function') {
-                            return;
+                            return false;
                         }
 
                         var siteKey = container.getAttribute('data-sitekey')
                             || (window.DioDioGlow && window.DioDioGlow.blogCommentRecaptchaSiteKey)
                             || '';
 
-                        if (!siteKey) {
-                            return;
-                        }
+                        if (!siteKey) return false;
 
                         try {
                             grecaptcha.render(container, {
                                 sitekey: siteKey,
                             });
                             container.setAttribute('data-rendered', '1');
+                            return true;
                         } catch (e) {
-                            // Fail silently; form validation will still block submission without a token.
+                            return false;
                         }
                     }
+
+                    window.__blogCommentRecaptchaRender = function () {
+                        renderBlogCommentRecaptcha();
+                    };
 
                     function initCommentRecaptcha() {
                         var form = document.getElementById('blog-comment-form');
                         if (!form) return;
 
-                        // Only bind the submit handler once per page lifecycle.
                         if (form.getAttribute('data-recaptcha-bound') === '1') {
                             renderBlogCommentRecaptcha();
                             return;
@@ -153,10 +157,26 @@
                         });
                     }
 
+                    function scheduleRetryRender() {
+                        var container = document.getElementById('recaptcha-comment-container');
+                        if (!container) return;
+                        if (container.getAttribute('data-rendered') === '1') return;
+
+                        var attempts = 0;
+                        var maxAttempts = 25;
+                        var interval = setInterval(function () {
+                            attempts++;
+                            if (renderBlogCommentRecaptcha() || attempts >= maxAttempts) {
+                                clearInterval(interval);
+                            }
+                        }, 300);
+                    }
+
                     function bootstrapRecaptcha() {
-                        // If the API script has already fired its onload callback, try rendering now.
                         if (window.DioDioGlow && window.DioDioGlow.blogCommentRecaptchaLoaded) {
                             renderBlogCommentRecaptcha();
+                        } else {
+                            scheduleRetryRender();
                         }
                         initCommentRecaptcha();
                     }
@@ -168,8 +188,7 @@
                     }
 
                     document.addEventListener('livewire:navigated', function () {
-                        // Slight delay to ensure Livewire has finished injecting the DOM.
-                        setTimeout(bootstrapRecaptcha, 0);
+                        setTimeout(bootstrapRecaptcha, 100);
                     });
 
                     if (window.Livewire && window.Livewire.on) {
