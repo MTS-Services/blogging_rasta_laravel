@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -17,16 +18,15 @@ class ThumbnailStreamController extends Controller
     /**
      * Stream thumbnail image from S3 or local disk. Preserves same public URL for SEO.
      */
-    public function stream(string $path): StreamedResponse
+    public function stream(Request $request, string $path): StreamedResponse
     {
         $storagePath = self::THUMBNAIL_PATH_PREFIX . $path;
 
-        // Security: path must not contain .. or absolute segments
         if (preg_match('#\.\.|^/|\\\\#', $path)) {
             abort(404);
         }
 
-        // 1) Try S3 first (primary storage for new thumbnails)
+        // 1) Try S3 first
         if (config('filesystems.disks.s3.bucket')) {
             try {
                 if (Storage::disk('s3')->exists($storagePath)) {
@@ -37,7 +37,7 @@ class ThumbnailStreamController extends Controller
             }
         }
 
-        // 2) Fallback: local disk (existing thumbnails / legacy)
+        // 2) Fallback: local disk
         if (Storage::disk('public')->exists($storagePath)) {
             return $this->streamFromLocal($storagePath);
         }
