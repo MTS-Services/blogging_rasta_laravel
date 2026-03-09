@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 class ThumbnailDownloadService
 {
     /** Whether to store new thumbnails on S3 (true) or only on local (false). */
-    protected bool $useS3ForStorage = true;
+    protected bool $useS3ForStorage = false;
 
     /**
      * Download thumbnail from TikTok CDN and store (S3 primary; local commented).

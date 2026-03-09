@@ -15,7 +15,7 @@ class VideoDownloadService
     protected $videoPath = 'videos/tiktok';
 
     /** Whether to store new videos on S3 (true) or only on local (false). */
-    protected bool $useS3ForStorage = true;
+    protected bool $useS3ForStorage = false;
 
     public function __construct()
     {
