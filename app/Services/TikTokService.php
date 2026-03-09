@@ -984,6 +984,10 @@ class TikTokService
     }
 
 
+    /**
+     * Clean up unused video files from LOCAL disk only.
+     * Videos are now primarily stored on S3; this cleans legacy local copies only.
+     */
     public function cleanupUnusedLocalVideos(bool $debug = false): array
     {
         $folderPath = storage_path('app/public/videos/tiktok');

@@ -152,21 +152,16 @@ class TikTokVideo extends BaseModel
     {
         $thumbnail = $this->getRawOriginal('thumbnail_url');
 
-        // Priority 1: Local stored thumbnail (not from TikTok CDN)
-        if ($thumbnail && !str_contains($thumbnail, 'tiktokcdn')) {
-            return $thumbnail;
+        // TikTok CDN: fallback to default
+        if ($thumbnail && str_contains($thumbnail, 'tiktokcdn')) {
+            return asset('assets/images/default_thumb.jpg');
         }
 
-        // Priority 2: Use image proxy for TikTok CDN URLs
-        // if ($this->origin_cover) {
-        //     return route('image.proxy', ['url' => $this->origin_cover]);
-        // }
+        // Path or full URL: storage_url() uses current APP_URL (works on local and production)
+        if ($thumbnail) {
+            return storage_url($thumbnail);
+        }
 
-        // if ($this->cover) {
-        //     return route('image.proxy', ['url' => $this->cover]);
-        // }
-
-        // Priority 3: Fallback to default
         return asset('assets/images/default_thumb.jpg');
     }
 

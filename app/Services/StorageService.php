@@ -67,6 +67,7 @@ class StorageService
             $storagePath = storage_path('app/public');
 
             $breakdown = [
+                // Local disk only; TikTok videos are primarily on S3
                 'videos' => $this->getDirectorySize($storagePath . '/videos/tiktok'),
                 'thumbnails' => $this->getDirectorySize($storagePath . '/thumbnails'),
                 'total_app' => $this->getDirectorySize($storagePath),

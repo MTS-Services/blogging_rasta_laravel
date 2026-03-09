@@ -446,7 +446,7 @@ class VideoManagementService
     }
 
     /**
-     * Get total storage size in MB
+     * Get total storage size in MB (local disk only; S3 size not included).
      *
      * @return float
      */

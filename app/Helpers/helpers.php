@@ -55,18 +55,33 @@ if (!function_exists('admin')) {
 // ==================== Existing Storage Helpers ====================
 
 if (!function_exists('storage_url')) {
+    /**
+     * Build storage URL from path or full URL. Full URLs to /storage/... are normalized
+     * to current APP_URL so local/production both work (no hardcoded domain).
+     */
     function storage_url($urlOrArray)
     {
         $image = asset('assets/images/no_img.jpg');
+        $normalize = function ($url) use ($image) {
+            if (!$url) {
+                return $image;
+            }
+            // Already a full URL to our storage path → use current app URL
+            if (Str::startsWith($url, ['http://', 'https://']) && str_contains($url, '/storage/')) {
+                $path = preg_replace('#^https?://[^/]+/storage/#', '', $url);
+                return url('storage/' . ltrim($path, '/'));
+            }
+            if (Str::startsWith($url, ['http://', 'https://'])) {
+                return $url;
+            }
+            return url('storage/' . ltrim($url, '/'));
+        };
         if (is_array($urlOrArray) || is_object($urlOrArray)) {
             $result = '';
             $count = 0;
             $itemCount = count($urlOrArray);
             foreach ($urlOrArray as $index => $url) {
-                $result .= $url
-                    ? (Str::startsWith($url, ['http://', 'https://']) ? $url : url('storage/' . ltrim($url, '/')))
-                    : $image;
-
+                $result .= $normalize($url);
                 if ($count === $itemCount - 1) {
                     $result .= '';
                 } else {
@@ -75,11 +90,8 @@ if (!function_exists('storage_url')) {
                 $count++;
             }
             return $result;
-        } else {
-            return $urlOrArray
-                ? (Str::startsWith($urlOrArray, ['http://', 'https://']) ? $urlOrArray : url('storage/' . ltrim($urlOrArray, '/')))
-                : $image;
         }
+        return $urlOrArray ? $normalize($urlOrArray) : $image;
     }
 }
 

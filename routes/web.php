@@ -1,7 +1,17 @@
 <?php
 
+use App\Http\Controllers\Frontend\ThumbnailStreamController;
+use App\Http\Controllers\Frontend\VideoStreamController;
 use App\Http\Controllers\MultiLangController;
 use Illuminate\Support\Facades\Route;
+
+// SEO-safe streams: same URLs — serve from S3 then local fallback
+Route::get('storage/videos/tiktok/{path}', [VideoStreamController::class, 'stream'])
+    ->where('path', '.*')
+    ->name('storage.video.stream');
+Route::get('storage/thumbnails/{path}', [ThumbnailStreamController::class, 'stream'])
+    ->where('path', '.*')
+    ->name('storage.thumbnail.stream');
 use App\Livewire\Frontend\Pages\Home;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;

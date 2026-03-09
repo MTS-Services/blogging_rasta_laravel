@@ -10,8 +10,12 @@ use GuzzleHttp\Exception\RequestException;
 class VideoDownloadService
 {
     protected $client;
+    /** @var string Primary disk for new uploads: 's3'. Legacy/local is 'public'. */
     protected $disk = 'public';
     protected $videoPath = 'videos/tiktok';
+
+    /** Whether to store new videos on S3 (true) or only on local (false). */
+    protected bool $useS3ForStorage = true;
 
     public function __construct()
     {
@@ -34,6 +38,7 @@ class VideoDownloadService
             ]
         ]);
 
+        // Ensure local directory exists for legacy/fallback (commented: was required for local-only store)
         $fullDirPath = storage_path("app/public/{$this->videoPath}");
         if (!file_exists($fullDirPath)) {
             mkdir($fullDirPath, 0755, true);
@@ -41,7 +46,34 @@ class VideoDownloadService
     }
 
     /**
-     * Download and store video - Returns storage path for database
+     * Normalize path: from full URL or path to relative storage path (e.g. videos/tiktok/file.mp4).
+     */
+    protected function normalizeStoragePath(string $urlOrPath): string
+    {
+        $path = $urlOrPath;
+        $path = str_replace([
+            Storage::disk('public')->url(''),
+            url('storage/'),
+            url('/storage/'),
+        ], '', $path);
+        return ltrim($path, '/');
+    }
+
+    /**
+     * Check if video exists on S3 (primary) or local (legacy).
+     */
+    protected function existsOnS3(string $storagePath): bool
+    {
+        try {
+            return config('filesystems.disks.s3.bucket') && Storage::disk('s3')->exists($storagePath);
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Download and store video - Returns storage path for database (same path format for SEO URL).
+     * New videos are stored on S3; existing local logic is commented for reference.
      *
      * @param string $videoUrl
      * @param string $videoId
@@ -59,14 +91,20 @@ class VideoDownloadService
         }
 
         $filename = $this->generateFilename($videoId, $username);
-        $storagePath = "{$this->videoPath}/{$filename}"; // Path to save in database
-        $fullPath = storage_path("app/public/{$storagePath}");
-        $tempPath = $fullPath . '.tmp';
+        $storagePath = "{$this->videoPath}/{$filename}"; // Same path for DB and URL (SEO)
+
+        // Temp file in system temp (not inside public storage)
+        $tempPath = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'tiktok_' . $filename . '.tmp';
 
         try {
-            // Check if already exists
-            if (file_exists($fullPath)) {
-                Log::info('Video already exists', ['video_id' => $videoId]);
+            // Check if already exists: S3 first, then local (legacy)
+            if ($this->useS3ForStorage && $this->existsOnS3($storagePath)) {
+                Log::info('Video already exists on S3', ['video_id' => $videoId]);
+                return $storagePath;
+            }
+            // Legacy: check local disk
+            if (Storage::disk($this->disk)->exists($storagePath)) {
+                Log::info('Video already exists (local)', ['video_id' => $videoId]);
                 return $storagePath;
             }
 
@@ -80,53 +118,63 @@ class VideoDownloadService
                     'video_id' => $videoId,
                     'status' => $response->getStatusCode()
                 ]);
-                if (file_exists($tempPath))
-                    unlink($tempPath);
+                if (file_exists($tempPath)) {
+                    @unlink($tempPath);
+                }
                 return null;
             }
 
-            // Verify file
             if (!file_exists($tempPath)) {
                 Log::error('Temp file not created', ['video_id' => $videoId]);
                 return null;
             }
 
             $sizeInMB = filesize($tempPath) / (1024 * 1024);
-
             if ($sizeInMB < 0.1) {
                 Log::error('File too small', ['video_id' => $videoId, 'size_mb' => $sizeInMB]);
-                unlink($tempPath);
+                @unlink($tempPath);
                 return null;
             }
 
-            // Move to final location
-            rename($tempPath, $fullPath);
+            // Store on S3 (primary) — same path so URL stays /storage/videos/tiktok/...
+            if ($this->useS3ForStorage && config('filesystems.disks.s3.bucket')) {
+                try {
+                    $contents = file_get_contents($tempPath);
+                    Storage::disk('s3')->put($storagePath, $contents); // private; served via app route (same URL for SEO)
+                    Log::info('Video stored on S3', [
+                        'video_id' => $videoId,
+                        'path' => $storagePath,
+                        'size_mb' => round($sizeInMB, 2)
+                    ]);
+                } catch (\Throwable $e) {
+                    Log::error('S3 upload failed', ['video_id' => $videoId, 'error' => $e->getMessage()]);
+                    @unlink($tempPath);
+                    return null;
+                }
+            }
 
-            Log::info('Video downloaded successfully', [
-                'video_id' => $videoId,
-                'path' => $storagePath,
-                'size_mb' => round($sizeInMB, 2)
-            ]);
+            // ---------- EXISTING LOCAL-ONLY STORAGE (commented, not removed) ----------
+            // $fullPath = storage_path("app/public/{$storagePath}");
+            // if (file_exists($fullPath)) { return $storagePath; }
+            // rename($tempPath, $fullPath);
+            // ---------- END COMMENTED LOCAL STORAGE ----------
 
-            // Return path for database: "videos/tiktok/username_id_timestamp.mp4"
+            if (file_exists($tempPath)) {
+                @unlink($tempPath);
+            }
+
             return $storagePath;
-
         } catch (RequestException $e) {
-            Log::error('Request failed', [
-                'video_id' => $videoId,
-                'error' => $e->getMessage()
-            ]);
-            if (file_exists($tempPath))
-                unlink($tempPath);
+            Log::error('Request failed', ['video_id' => $videoId, 'error' => $e->getMessage()]);
+            if (file_exists($tempPath)) {
+                @unlink($tempPath);
+            }
             return null;
-
         } catch (\Exception $e) {
-            Log::error('Download exception', [
-                'video_id' => $videoId,
-                'error' => $e->getMessage()
-            ]);
-            if (file_exists($tempPath))
-                unlink($tempPath);
+            Log::error('Download exception', ['video_id' => $videoId, 'error' => $e->getMessage()]);
+            if (file_exists($tempPath)) {
+                @unlink($tempPath);
+            }
             return null;
         }
     }
@@ -141,7 +189,7 @@ class VideoDownloadService
     }
 
     /**
-     * Get full URL from database path
+     * Get full URL from database path (same URL format for SEO — no change).
      *
      * @param string $storagePath Path from database like "videos/tiktok/file.mp4"
      * @return string Full URL
@@ -152,42 +200,50 @@ class VideoDownloadService
     }
 
     /**
-     * Check if video file exists
+     * Check if video file exists (S3 or local).
      *
      * @param string $storagePath Path from database
      * @return bool
      */
     public function exists($storagePath)
     {
+        if ($this->existsOnS3($storagePath)) {
+            return true;
+        }
         return Storage::disk($this->disk)->exists($storagePath);
     }
 
     /**
-     * Delete video file
+     * Delete video file from S3 and/or local.
      *
      * @param string $storagePath Path from database
      * @return bool
      */
     public function delete($storagePath)
     {
+        $deleted = false;
         try {
+            if ($this->existsOnS3($storagePath)) {
+                Storage::disk('s3')->delete($storagePath);
+                Log::info('Video deleted from S3', ['path' => $storagePath]);
+                $deleted = true;
+            }
             if (Storage::disk($this->disk)->exists($storagePath)) {
                 Storage::disk($this->disk)->delete($storagePath);
-                Log::info('Video deleted', ['path' => $storagePath]);
-                return true;
+                Log::info('Video deleted (local)', ['path' => $storagePath]);
+                $deleted = true;
             }
-            return false;
+            return $deleted;
         } catch (\Exception $e) {
             Log::error('Delete failed', ['path' => $storagePath, 'error' => $e->getMessage()]);
             return false;
         }
     }
 
-
     /**
-     * Check if local video exists and is valid
+     * Check if local/S3 video exists and is valid (path or URL).
      *
-     * @param string $localPath
+     * @param string $localPath Storage path or full URL
      * @return bool
      */
     public function videoExists($localPath)
@@ -196,38 +252,26 @@ class VideoDownloadService
             if (empty($localPath)) {
                 return false;
             }
-
-            // Extract path from URL more reliably
-            $path = str_replace([
-                Storage::disk($this->disk)->url(''),
-                url('storage/'),
-                url('/storage/')
-            ], '', $localPath);
-
-            // Clean up the path
-            $path = ltrim($path, '/');
-
+            $path = $this->normalizeStoragePath($localPath);
+            if ($this->existsOnS3($path)) {
+                $size = Storage::disk('s3')->size($path);
+                return $size > 0;
+            }
             if (!Storage::disk($this->disk)->exists($path)) {
                 return false;
             }
-
-            // Check if file has content
             $size = Storage::disk($this->disk)->size($path);
             return $size > 0;
-
         } catch (\Exception $e) {
-            Log::error('videoExists check failed', [
-                'path' => $localPath,
-                'error' => $e->getMessage()
-            ]);
+            Log::error('videoExists check failed', ['path' => $localPath, 'error' => $e->getMessage()]);
             return false;
         }
     }
 
     /**
-     * Delete local video file
+     * Delete local/S3 video file (path or URL).
      *
-     * @param string $localPath
+     * @param string $localPath Storage path or full URL
      * @return bool
      */
     public function deleteVideo($localPath)
@@ -236,49 +280,36 @@ class VideoDownloadService
             if (empty($localPath)) {
                 return false;
             }
-
-            // Extract path from full URL if needed
-            $path = str_replace(Storage::disk($this->disk)->url(''), '', $localPath);
-
-            if (Storage::disk($this->disk)->exists($path)) {
-                Storage::disk($this->disk)->delete($path);
-                Log::info('Video deleted successfully', ['path' => $path]);
-                return true;
-            }
-
-            return false;
-
+            $path = $this->normalizeStoragePath($localPath);
+            return $this->delete($path);
         } catch (\Exception $e) {
-            Log::error('Failed to delete video', [
-                'path' => $localPath,
-                'error' => $e->getMessage()
-            ]);
+            Log::error('Failed to delete video', ['path' => $localPath, 'error' => $e->getMessage()]);
             return false;
         }
     }
 
     /**
-     * Get video file size
+     * Get video file size (S3 or local).
      *
-     * @param string $localPath
+     * @param string $localPath Storage path or full URL
      * @return int|null Size in bytes
      */
     public function getVideoSize($localPath)
     {
         try {
-            $path = str_replace(Storage::disk($this->disk)->url(''), '', $localPath);
-
+            if (empty($localPath)) {
+                return null;
+            }
+            $path = $this->normalizeStoragePath($localPath);
+            if ($this->existsOnS3($path)) {
+                return Storage::disk('s3')->size($path);
+            }
             if (Storage::disk($this->disk)->exists($path)) {
                 return Storage::disk($this->disk)->size($path);
             }
-
             return null;
-
         } catch (\Exception $e) {
-            Log::error('Failed to get video size', [
-                'path' => $localPath,
-                'error' => $e->getMessage()
-            ]);
+            Log::error('Failed to get video size', ['path' => $localPath, 'error' => $e->getMessage()]);
             return null;
         }
     }
