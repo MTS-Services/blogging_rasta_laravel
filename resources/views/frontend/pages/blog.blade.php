@@ -9,7 +9,8 @@
                 if (!empty($data->file)) {
                     $path = storage_path('app/public/' . $data->file);
                     $type = detectFileType($path);
-                    if ($type === 'image') {
+                    // Local missing but path is an image → still use /og-image (S3/local resolved in controller)
+                    if ($type === 'image' || ($type === 'missing' && is_likely_raster_image_storage_path($data->file))) {
                         $ogImage = absolute_og_url('og-image/' . rawurlencode($data->slug));
                     } else {
                         $ogImage = absolute_og_url(site_logo());

@@ -1,4 +1,5 @@
 <?php
+
 // File: app/Helpers/helpers.php (Add to existing helpers file)
 
 use App\Enums\OtpType;
@@ -8,44 +9,42 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-
-
 // ==================== Existing Auth Helpers ====================
 
-if (!function_exists('timeFormat')) {
+if (! function_exists('timeFormat')) {
     function timeFormat($time, $compareValue = null)
     {
         return $time && $time != $compareValue ? date(('H:i A'), strtotime($time)) : 'N/A';
     }
 }
 
-if (!function_exists('dateFormat')) {
+if (! function_exists('dateFormat')) {
     function dateFormat($date, $compareValue = null)
     {
         return $date && $date != $compareValue ? date(('d M Y'), strtotime($date)) : 'N/A';
     }
 }
-if (!function_exists('dateTimeFormat')) {
+if (! function_exists('dateTimeFormat')) {
     function dateTimeFormat($dateTime, $compareValue = null)
     {
-        return $dateTime && $dateTime != $compareValue ? dateFormat($dateTime) . ' ' . timeFormat($dateTime) : 'N/A';
+        return $dateTime && $dateTime != $compareValue ? dateFormat($dateTime).' '.timeFormat($dateTime) : 'N/A';
     }
 }
-if (!function_exists('dateTimeHumanFormat')) {
+if (! function_exists('dateTimeHumanFormat')) {
     function dateTimeHumanFormat($dateTime, $compareValue = null): mixed
     {
         return $dateTime && $dateTime != $compareValue ? Carbon::parse($dateTime)->diffForHumans() : 'N/A';
     }
 }
 
-if (!function_exists('user')) {
+if (! function_exists('user')) {
     function user()
     {
         return Auth::guard('web')->user();
     }
 }
 
-if (!function_exists('admin')) {
+if (! function_exists('admin')) {
     function admin()
     {
         return Auth::guard('admin')->user();
@@ -54,7 +53,7 @@ if (!function_exists('admin')) {
 
 // ==================== Existing Storage Helpers ====================
 
-if (!function_exists('storage_url')) {
+if (! function_exists('storage_url')) {
     /**
      * Build storage URL from path or full URL. Full URLs to /storage/... are normalized
      * to current APP_URL so local/production both work (no hardcoded domain).
@@ -63,18 +62,20 @@ if (!function_exists('storage_url')) {
     {
         $image = asset('assets/images/no_img.jpg');
         $normalize = function ($url) use ($image) {
-            if (!$url) {
+            if (! $url) {
                 return $image;
             }
             // Already a full URL to our storage path → use current app URL
             if (Str::startsWith($url, ['http://', 'https://']) && str_contains($url, '/storage/')) {
                 $path = preg_replace('#^https?://[^/]+/storage/#', '', $url);
-                return url('storage/' . ltrim($path, '/'));
+
+                return url('storage/'.ltrim($path, '/'));
             }
             if (Str::startsWith($url, ['http://', 'https://'])) {
                 return $url;
             }
-            return url('storage/' . ltrim($url, '/'));
+
+            return url('storage/'.ltrim($url, '/'));
         };
         if (is_array($urlOrArray) || is_object($urlOrArray)) {
             $result = '';
@@ -89,42 +90,45 @@ if (!function_exists('storage_url')) {
                 }
                 $count++;
             }
+
             return $result;
         }
+
         return $urlOrArray ? $normalize($urlOrArray) : $image;
     }
 }
 
-if (!function_exists('auth_storage_url')) {
+if (! function_exists('auth_storage_url')) {
     function auth_storage_url($url)
     {
         $image = asset('assets/images/other.png');
+
         return $url ? $url : $image;
     }
 }
 
 // ==================== Existing Application Setting Helpers ====================
 
-if (!function_exists('site_short_name')) {
+if (! function_exists('site_short_name')) {
     function site_short_name()
     {
         return app(ApplicationSettingsService::class)->findData('short_name', 'LA');
     }
 }
-if (!function_exists('site_logo')) {
+if (! function_exists('site_logo')) {
     function site_logo()
     {
         return storage_url(app(ApplicationSettingsService::class)->findData('app_logo'));
     }
 }
-if (!function_exists('site_favicon')) {
+if (! function_exists('site_favicon')) {
     function site_favicon()
     {
         return storage_url(app(ApplicationSettingsService::class)->findData('favicon'));
     }
 }
 
-if (!function_exists('site_name')) {
+if (! function_exists('site_name')) {
     function site_name()
     {
         return app(ApplicationSettingsService::class)->findData('app_name', 'LA');
@@ -135,32 +139,33 @@ if (!function_exists('site_name')) {
  * Build an absolute HTTPS URL for Open Graph / social crawlers (Facebook, WhatsApp, etc.).
  * Uses APP_URL so the URL is correct even when the request host or scheme differs.
  */
-if (!function_exists('absolute_og_url')) {
+if (! function_exists('absolute_og_url')) {
     function absolute_og_url(string $pathOrUrl): string
     {
         if (Str::startsWith($pathOrUrl, ['http://', 'https://'])) {
             return Str::startsWith($pathOrUrl, 'http://')
-                ? 'https://' . substr($pathOrUrl, 7)
+                ? 'https://'.substr($pathOrUrl, 7)
                 : $pathOrUrl;
         }
         $base = rtrim(preg_replace('#^http://#i', 'https://', config('app.url')), '/');
-        return $base . '/' . ltrim($pathOrUrl, '/');
+
+        return $base.'/'.ltrim($pathOrUrl, '/');
     }
 }
 
 // ==================== NEW OTP Helpers ====================
 
-if (!function_exists('generate_otp')) {
+if (! function_exists('generate_otp')) {
     /**
      * Generate a random OTP code
      *
-     * @param int $digits Number of digits (default: 6)
-     * @return string
+     * @param  int  $digits  Number of digits (default: 6)
      */
     function generate_otp(int $digits = 6): string
     {
         $min = pow(10, $digits - 1);
         $max = pow(10, $digits) - 1;
+
         return (string) mt_rand($min, $max);
     }
 }
@@ -241,18 +246,33 @@ if (!function_exists('generate_otp')) {
 //     }
 // }
 
-if (!function_exists('detectFileType')) {
+if (! function_exists('is_likely_raster_image_storage_path')) {
+    /**
+     * True when the stored path looks like a raster image (cover may exist only on S3).
+     */
+    function is_likely_raster_image_storage_path(?string $relativePath): bool
+    {
+        if (! $relativePath || ! is_string($relativePath)) {
+            return false;
+        }
+        $ext = strtolower(pathinfo($relativePath, PATHINFO_EXTENSION));
+
+        return in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'], true);
+    }
+}
+
+if (! function_exists('detectFileType')) {
     function detectFileType($filePath)
     {
         // Check if the file exists
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             return 'missing';
         }
 
         // Get MIME type
         $mime = mime_content_type($filePath);
 
-        if (!$mime) {
+        if (! $mime) {
             return 'unknown';
         }
 
@@ -271,63 +291,57 @@ if (!function_exists('detectFileType')) {
     }
 }
 
-
-if (!function_exists('format_otp_time')) {
+if (! function_exists('format_otp_time')) {
     /**
      * Format OTP remaining time in human-readable format
-     *
-     * @param int|null $seconds
-     * @return string
      */
     function format_otp_time(?int $seconds): string
     {
-        if (!$seconds || $seconds <= 0) {
+        if (! $seconds || $seconds <= 0) {
             return 'Expired';
         }
 
         if ($seconds < 60) {
-            return $seconds . ' second' . ($seconds > 1 ? 's' : '');
+            return $seconds.' second'.($seconds > 1 ? 's' : '');
         }
 
         $minutes = floor($seconds / 60);
         $remainingSeconds = $seconds % 60;
 
         if ($remainingSeconds > 0) {
-            return $minutes . ' minute' . ($minutes > 1 ? 's' : '') . ' ' .
-                $remainingSeconds . ' second' . ($remainingSeconds > 1 ? 's' : '');
+            return $minutes.' minute'.($minutes > 1 ? 's' : '').' '.
+                $remainingSeconds.' second'.($remainingSeconds > 1 ? 's' : '');
         }
 
-        return $minutes . ' minute' . ($minutes > 1 ? 's' : '');
+        return $minutes.' minute'.($minutes > 1 ? 's' : '');
     }
 }
 
-if (!function_exists('is_email_verified')) {
+if (! function_exists('is_email_verified')) {
     /**
      * Check if user/admin email is verified
      *
-     * @param mixed $model
-     * @return bool
+     * @param  mixed  $model
      */
     function is_email_verified($model): bool
     {
-        return !is_null($model?->email_verified_at);
+        return ! is_null($model?->email_verified_at);
     }
 }
 
-if (!function_exists('is_phone_verified')) {
+if (! function_exists('is_phone_verified')) {
     /**
      * Check if user/admin phone is verified
      *
-     * @param mixed $model
-     * @return bool
+     * @param  mixed  $model
      */
     function is_phone_verified($model): bool
     {
-        return !is_null($model?->phone_verified_at);
+        return ! is_null($model?->phone_verified_at);
     }
 }
 
-if (!function_exists('availableTimezones')) {
+if (! function_exists('availableTimezones')) {
     function availableTimezones()
     {
         $timezones = [];
@@ -335,7 +349,7 @@ if (!function_exists('availableTimezones')) {
 
         foreach ($timezoneIdentifiers as $timezoneIdentifier) {
             $timezone = new DateTimeZone($timezoneIdentifier);
-            $offset = $timezone->getOffset(new DateTime());
+            $offset = $timezone->getOffset(new DateTime);
             $offsetPrefix = $offset < 0 ? '-' : '+';
             $offsetFormatted = gmdate('H:i', abs($offset));
 
@@ -348,7 +362,7 @@ if (!function_exists('availableTimezones')) {
         return $timezones;
     }
 
-    if (!function_exists('getAuditorName')) {
+    if (! function_exists('getAuditorName')) {
         function getAuditorName($model)
         {
             return $model && $model->name ? $model->name : 'N/A';

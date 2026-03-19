@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
+use App\Services\ApplicationSettingsService;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,6 +14,9 @@ use Illuminate\Support\Facades\Storage;
  * - Output as JPEG (WhatsApp prefers JPG/PNG; JPEG keeps size down)
  * - Kept under 600KB (WhatsApp limit)
  * - Absolute URL used in og:image so crawlers can fetch it.
+ *
+ * Blog cover is resolved from local public disk first, then S3 (same relative key as `blogs/...`).
+ * Fallback returns JPEG bytes (HTTP 200) when possible — redirects break Facebook/WhatsApp scrapers.
  */
 class OgImageController extends Controller
 {
@@ -29,34 +33,81 @@ class OgImageController extends Controller
             ->first();
 
         if (! $blog || empty($blog->file)) {
-            return $this->redirectToFallback();
+            return $this->fallbackLogoResponse();
         }
 
-        $path = storage_path('app/public/' . $blog->file);
-        if (! is_file($path) || ! is_readable($path)) {
-            return $this->redirectToFallback();
+        $resolved = $this->resolvePublicDiskRelative((string) $blog->file);
+        if ($resolved === null) {
+            return $this->fallbackLogoResponse();
         }
 
+        [$path, $cleanup] = $resolved;
+        try {
+            $response = $this->renderJpegResponse($path);
+
+            return $response ?? $this->fallbackLogoResponse();
+        } finally {
+            $cleanup();
+        }
+    }
+
+    /**
+     * @return array{0: string, 1: callable}|null [filesystem path, cleanup]
+     */
+    private function resolvePublicDiskRelative(string $relativePath): ?array
+    {
+        $relativePath = ltrim($relativePath, '/');
+        $local = storage_path('app/public/'.$relativePath);
+        if (is_file($local) && is_readable($local)) {
+            return [$local, static fn () => null];
+        }
+
+        if (! config('filesystems.disks.s3.bucket')) {
+            return null;
+        }
+
+        try {
+            if (! Storage::disk('s3')->exists($relativePath)) {
+                return null;
+            }
+            $binary = Storage::disk('s3')->get($relativePath);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return null;
+        }
+
+        $tmp = tempnam(sys_get_temp_dir(), 'og_blog_');
+        if ($tmp === false) {
+            return null;
+        }
+        file_put_contents($tmp, $binary);
+
+        return [$tmp, static fn () => @unlink($tmp)];
+    }
+
+    private function renderJpegResponse(string $path): ?Response
+    {
         $mime = mime_content_type($path);
         if (! $mime || ! str_starts_with($mime, 'image/')) {
-            return $this->redirectToFallback();
+            return null;
         }
 
         $image = $this->loadImage($path, $mime);
         if (! $image) {
-            return $this->redirectToFallback();
+            return null;
         }
 
         $resized = $this->resizeToFit($image, self::MAX_WIDTH, self::MAX_HEIGHT);
         imagedestroy($image);
         if (! $resized) {
-            return $this->redirectToFallback();
+            return null;
         }
 
         $jpeg = $this->toJpegUnderSize($resized, self::MAX_BYTES);
         imagedestroy($resized);
         if ($jpeg === null) {
-            return $this->redirectToFallback();
+            return null;
         }
 
         return response($jpeg, 200, [
@@ -64,6 +115,28 @@ class OgImageController extends Controller
             'Cache-Control' => 'public, max-age=86400', // 1 day
             'Content-Length' => (string) strlen($jpeg),
         ]);
+    }
+
+    private function fallbackLogoResponse(): Response|\Illuminate\Http\RedirectResponse
+    {
+        $logoRel = app(ApplicationSettingsService::class)->findData('app_logo');
+        if (! $logoRel) {
+            return $this->redirectToFallback();
+        }
+
+        $resolved = $this->resolvePublicDiskRelative((string) $logoRel);
+        if ($resolved === null) {
+            return $this->redirectToFallback();
+        }
+
+        [$path, $cleanup] = $resolved;
+        try {
+            $response = $this->renderJpegResponse($path);
+
+            return $response ?? $this->redirectToFallback();
+        } finally {
+            $cleanup();
+        }
     }
 
     private function loadImage(string $path, string $mime): \GdImage|false
@@ -101,8 +174,10 @@ class OgImageController extends Controller
         }
         if (! imagecopyresampled($out, $image, 0, 0, 0, 0, $newW, $newH, $w, $h)) {
             imagedestroy($out);
+
             return false;
         }
+
         return $out;
     }
 
@@ -122,12 +197,15 @@ class OgImageController extends Controller
         ob_start();
         imagejpeg($image, null, 50);
         $jpeg = ob_get_clean();
+
         return ($jpeg !== false && strlen($jpeg) <= $maxBytes) ? $jpeg : null;
     }
 
+    /** Last resort: SVG or unreadable logo still needs a URL redirect. */
     private function redirectToFallback(): \Illuminate\Http\RedirectResponse
     {
         $url = absolute_og_url(site_logo());
+
         return redirect()->away($url, 302);
     }
 }
