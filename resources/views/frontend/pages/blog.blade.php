@@ -3,21 +3,74 @@
     @switch(Route::currentRouteName())
         @case('blog.details')
             @php
-                $ogImageWidth = 1200;
-                $ogImageHeight = 630;
+                // Default: site logo (OG/Twitter need absolute HTTPS URLs)
+                $ogImage = absolute_og_url(site_logo());
                 $ogImageType = 'image/jpeg';
-                if (!empty($data->file)) {
-                    $path = storage_path('app/public/' . $data->file);
-                    $type = detectFileType($path);
-                    // Local missing but path is an image → still use /og-image (S3/local resolved in controller)
-                    if ($type === 'image' || ($type === 'missing' && is_likely_raster_image_storage_path($data->file))) {
-                        $ogImage = absolute_og_url('og-image/' . rawurlencode($data->slug));
-                    } else {
-                        $ogImage = absolute_og_url(site_logo());
-                    }
-                } else {
-                    $ogImage = absolute_og_url(site_logo());
+                $ogImageWidth = null;
+                $ogImageHeight = null;
+
+                $logoRel = app(\App\Services\ApplicationSettingsService::class)->findData('app_logo');
+                if ($logoRel) {
+                    $ogImageType = match (strtolower(pathinfo((string) $logoRel, PATHINFO_EXTENSION))) {
+                        'webp' => 'image/webp',
+                        'png' => 'image/png',
+                        'gif' => 'image/gif',
+                        default => 'image/jpeg',
+                    };
                 }
+
+                $fileRaw = $data->file ?? null;
+                if (! empty($fileRaw)) {
+                    if (\Illuminate\Support\Str::startsWith($fileRaw, ['http://', 'https://']) && str_contains((string) $fileRaw, '/storage/')) {
+                        $ogImage = absolute_og_url($fileRaw);
+                        $pathForExt = parse_url($ogImage, PHP_URL_PATH) ?? '';
+                        $ext = strtolower(pathinfo($pathForExt, PATHINFO_EXTENSION));
+                        if ($ext === '') {
+                            $ext = strtolower(pathinfo((string) $fileRaw, PATHINFO_EXTENSION));
+                        }
+                        $ogImageType = match ($ext) {
+                            'webp' => 'image/webp',
+                            'png' => 'image/png',
+                            'gif' => 'image/gif',
+                            default => 'image/jpeg',
+                        };
+                    } else {
+                        $relative = normalize_blog_storage_relative_path($fileRaw);
+                        if ($relative && ! is_likely_video_storage_path($relative)) {
+                            $localPath = storage_path('app/public/'.$relative);
+                            $type = detectFileType($localPath);
+                            $isRaster = is_likely_raster_image_storage_path($relative);
+                            // "unknown" = file exists but mime_content_type not image/* (common for webp) — still use cover
+                            $useBlogCover = $type === 'image'
+                                || ($type === 'unknown' && is_file($localPath) && $isRaster)
+                                || ($type === 'missing' && $isRaster);
+
+                            if ($useBlogCover) {
+                                if ($type === 'image' || ($type === 'unknown' && is_file($localPath) && $isRaster)) {
+                                    $ogImage = absolute_og_url('storage/'.$relative);
+                                    $ext = strtolower(pathinfo($relative, PATHINFO_EXTENSION));
+                                    $ogImageType = match ($ext) {
+                                        'webp' => 'image/webp',
+                                        'png' => 'image/png',
+                                        'gif' => 'image/gif',
+                                        default => 'image/jpeg',
+                                    };
+                                    $dims = @getimagesize($localPath);
+                                    if (is_array($dims)) {
+                                        $ogImageWidth = $dims[0];
+                                        $ogImageHeight = $dims[1];
+                                    }
+                                } else {
+                                    $ogImage = absolute_og_url('og-image/'.rawurlencode($data->slug));
+                                    $ogImageType = 'image/jpeg';
+                                    $ogImageWidth = 1200;
+                                    $ogImageHeight = 630;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 $canonicalUrl = absolute_og_url(request()->path());
             @endphp
             <x-slot name="meta">
@@ -29,8 +82,10 @@
                 <meta property="og:description" content="{!! $data->meta_description ?? Str::limit(strip_tags($data->description), 200) !!}">
                 <meta property="og:image" content="{{ $ogImage }}">
                 <meta property="og:image:secure_url" content="{{ $ogImage }}">
-                <meta property="og:image:width" content="{{ $ogImageWidth }}">
-                <meta property="og:image:height" content="{{ $ogImageHeight }}">
+                @if ($ogImageWidth && $ogImageHeight)
+                    <meta property="og:image:width" content="{{ $ogImageWidth }}">
+                    <meta property="og:image:height" content="{{ $ogImageHeight }}">
+                @endif
                 <meta property="og:image:type" content="{{ $ogImageType }}">
                 <meta property="og:url" content="{{ $canonicalUrl }}">
                 <meta property="og:site_name" content="{{ config('app.name') }}">

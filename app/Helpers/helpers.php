@@ -261,6 +261,40 @@ if (! function_exists('is_likely_raster_image_storage_path')) {
     }
 }
 
+if (! function_exists('normalize_blog_storage_relative_path')) {
+    /**
+     * DB may store "blogs/foo.webp" or "storage/blogs/foo.webp" — normalize to disk path under storage/app/public/.
+     */
+    function normalize_blog_storage_relative_path(mixed $file): ?string
+    {
+        if ($file === null || $file === '') {
+            return null;
+        }
+        $file = trim(str_replace('\\', '/', (string) $file));
+        if (Str::startsWith($file, ['http://', 'https://'])) {
+            return null;
+        }
+        $file = ltrim($file, '/');
+        if (str_starts_with($file, 'storage/')) {
+            $file = (string) substr($file, strlen('storage/'));
+        }
+
+        return $file !== '' ? $file : null;
+    }
+}
+
+if (! function_exists('is_likely_video_storage_path')) {
+    function is_likely_video_storage_path(?string $relativePath): bool
+    {
+        if (! $relativePath) {
+            return false;
+        }
+        $ext = strtolower(pathinfo($relativePath, PATHINFO_EXTENSION));
+
+        return in_array($ext, ['mp4', 'webm', 'mov', 'm4v', 'avi'], true);
+    }
+}
+
 if (! function_exists('detectFileType')) {
     function detectFileType($filePath)
     {
